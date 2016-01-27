@@ -6,13 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 @Component
 public class JmsSender {
@@ -43,18 +40,4 @@ public class JmsSender {
         }
     }
 
-//    public void sendMessage(String destinationName, File file, String fileName, String providerId) {
-//        this.jmsTemplate.send(destinationName, session -> createMessage(session, file, fileName, providerId));
-//    }
-
-//    private Message createMessage(Session session, File file, String fileName, String providerId) {
-//        try {
-//            BytesMessage message = session.createBytesMessage();
-//            message.writeBytes(Files.readAllBytes(file.toPath());
-//            message.setStringProperty(PROVIDER_ID, providerId);
-////            message.  file name
-//        } catch (JMSException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 }
