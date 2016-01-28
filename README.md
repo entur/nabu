@@ -17,4 +17,4 @@ logging.level.org.apache=INFO
 
 * Testing with curl
  
-`curl -vX POST -F "file=@pom.xml; filename=pom.xml" -F "providerId=2" http://localhost:8080/opstatus/uploadFile`
+`curl -vX POST -F "file=@pom.xml; filename=pom.xml" http://localhost:8080/opstatus/2/uploadFile`

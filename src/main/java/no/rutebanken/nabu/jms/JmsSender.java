@@ -14,8 +14,8 @@ import java.io.File;
 @Component
 public class JmsSender {
 
-    public static final String PROVIDER_ID = "ProviderId";
-    private static final String FILE_NAME = "FileName";
+    public static final String PROVIDER_ID = "RutebankenProviderId";
+    public static final String CAMEL_FILE_NAME = "CamelFileName";
 
     private final JmsTemplate jmsTemplate;
 
@@ -24,15 +24,15 @@ public class JmsSender {
         this.jmsTemplate = jmsTemplate;
     }
 
-    public void sendBlobMessage(String destinationName, File file, String fileName, String providerId) {
+    public void sendBlobMessage(String destinationName, File file, String fileName, Long providerId) {
         this.jmsTemplate.send(destinationName, session -> createBlobMessage(session, file, fileName, providerId));
     }
 
-    private Message createBlobMessage(Session session, File file, String fileName, String providerId) {
+    private Message createBlobMessage(Session session, File file, String fileName, Long providerId) {
         try {
             BlobMessage message = ((ActiveMQSession) session).createBlobMessage(file);
-            message.setStringProperty(PROVIDER_ID, providerId);
-            message.setStringProperty(FILE_NAME, fileName);
+            message.setLongProperty(PROVIDER_ID, providerId);
+            message.setStringProperty(CAMEL_FILE_NAME, fileName);
             message.setName(fileName);
             return message;
         } catch (JMSException e) {
