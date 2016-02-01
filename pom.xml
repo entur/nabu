@@ -31,7 +31,7 @@
 
         <fabric8.service.name>springboot-webmvc</fabric8.service.name>
         <fabric8.service.port>80</fabric8.service.port>
-        <fabric8.service.containerPort>8080</fabric8.service.containerPort>
+        <fabric8.service.containerPort>9004</fabric8.service.containerPort>
 
         <!-- fabric8.env.AB_JOLOKIA_AUTH_OPENSHIFT>true</fabric8.env.AB_JOLOKIA_AUTH_OPENSHIFT -->
         <fabric8.label.component>${project.artifactId}</fabric8.label.component>

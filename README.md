@@ -3,6 +3,9 @@
 * Example application.properties file
 
 ```
+# server settings
+server.port=9004
+
 # activemq settings
 spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl=http://localhost:8161/fileserver/
 spring.activemq.user=admin
@@ -23,7 +26,7 @@ logging.level.org.apache=INFO
 
 * Testing with curl
 
-`curl -vX POST -F "file=@pom.xml; filename=pom.xml" http://localhost:8080/opstatus/2/uploadFile`
+`curl -vX POST -F "file=@pom.xml; filename=pom.xml" http://localhost:9004/opstatus/2/uploadFile`
 
 * Running in docker (development)
 
