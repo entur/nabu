@@ -3,18 +3,18 @@
 * Example application.properties file
 
 ```
-# server settings
 server.port=9004
 
 # activemq settings
-spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl=http://localhost:8161/fileserver/
+spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl=http://activemq:8161/fileserver/
+#spring.activemq.pooled=true
 spring.activemq.user=admin
-spring.activemq.password=your_password
+spring.activemq.password=admin
 
-queue.gtfs.upload.destination.name=gtfsQueue
+queue.gtfs.upload.destination.name=ExternalFileUploadQueue
 
 # logging settings
-logging.level.no.rutebanken=DEBUG
+logging.level.no.rutebanken=INFO
 logging.level.org.apache=INFO
 ```
 

@@ -21,7 +21,6 @@ public class Status {
             "action": "IMPORT",
             "state": "PENDING",
             "date": "2015-09-02T00:00:00Z",
-            "status": "OK"
            }
         }
 
