@@ -10,9 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class JerseyConfig extends ResourceConfig {
 
     public JerseyConfig() {
-
-//        packages("org.glassfish.jersey.jaxb;com.fasterxml.jackson.jaxrs.xml");
-
         register(MultiPartFeature.class);
         register(FileUploadResource.class);
         register(StatusResource.class);
