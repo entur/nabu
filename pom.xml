@@ -165,7 +165,7 @@
         </dependency>
 
         <!-- Spring Security & Keycloak -->
-        <dependency>
+    <!--    <dependency>
 	      <groupId>org.keycloak</groupId>
 	      <artifactId>keycloak-tomcat8-adapter</artifactId>
 	      <version>${keycloak.version}</version>
@@ -175,7 +175,7 @@
          <groupId>org.keycloak</groupId>
          <artifactId>keycloak-spring-security-adapter</artifactId>
          <version>${keycloak.version}</version>
-        </dependency>
+        </dependency>  -->
 
         <dependency>
 			<groupId>org.apache.commons</groupId>
@@ -183,11 +183,6 @@
 			<version>3.4</version>
          </dependency>
 
-        <!--<dependency>
-            <groupId>ma.glasnost.orika</groupId>
-            <artifactId>orika-core</artifactId>
-            <version>1.4.6</version>
-        </dependency>-->
     </dependencies>
 
 
