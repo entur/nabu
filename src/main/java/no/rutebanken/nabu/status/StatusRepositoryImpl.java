@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.status;
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
@@ -17,14 +18,16 @@ public class StatusRepositoryImpl implements StatusRepository {
     private Table<Long, String, Status> statusTable = HashBasedTable.create();
 
     public void update(Status status){
-        logger.debug("Updating status");
+        logger.debug("Updating status " + status);
         statusTable.put(Long.valueOf(status.providerId), status.correlationId, status);
-        logger.debug("Added status");
+        logger.debug("Added status " + status);
     }
 
     public Collection<Status> getStatusForProvider(Long providerId) {
         logger.debug("Getting status for provider '" + providerId + "'");
-        return statusTable.row(providerId).values();
+        Collection<Status> values = statusTable.row(providerId).values();
+        logger.debug("Returning " + values);
+        return values;
     }
 
 }

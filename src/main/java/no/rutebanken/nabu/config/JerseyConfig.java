@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.config;
 
+import no.rutebanken.nabu.filter.CorsResponseFilter;
 import no.rutebanken.nabu.rest.FileUploadResource;
 import no.rutebanken.nabu.rest.StatusResource;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -16,6 +17,7 @@ public class JerseyConfig extends ResourceConfig {
         register(MultiPartFeature.class);
         register(FileUploadResource.class);
         register(StatusResource.class);
+        register(CorsResponseFilter.class);
     }
 
 }
