@@ -25,6 +25,7 @@ public class JmsSender {
     @Autowired
     public JmsSender(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
+        this.jmsTemplate.setPubSubDomain(false);
     }
 
     @Autowired

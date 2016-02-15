@@ -1,13 +1,14 @@
 package no.rutebanken.nabu.status;
 
-import com.google.common.collect.Collections2;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository     //TODO Implement persistence
 public class StatusRepositoryImpl implements StatusRepository {
