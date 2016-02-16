@@ -1,14 +1,16 @@
-package no.rutebanken.nabu.status;
+package no.rutebanken.nabu.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.persistence.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.time.Instant;
 import java.util.Date;
 
+@Entity
 public class Status {
 
     /* Example
@@ -20,7 +22,7 @@ public class Status {
             "provider_id": "2",
             "action": "IMPORT",
             "state": "PENDING",
-            "date": "2015-09-02T00:00:00Z",
+            "date": "2015-09-02T00:00:00Z"
            }
         }
 
@@ -30,11 +32,12 @@ public class Status {
 
     public enum State {PENDING, STARTED, FAILED, OK}
 
+    @JsonProperty("correlation_id")
+    @Id
+    public String correlationId;
+
     @JsonProperty("file_name")
     public String fileName;
-
-    @JsonProperty("correlation_id")
-    public String correlationId;
 
     @JsonProperty("provider_id")
     public Long providerId;
@@ -47,6 +50,7 @@ public class Status {
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss")
     @JsonProperty("date")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date date;
 
     public Status(String fileName, Long providerId, Action action, State state, String correlationId) {

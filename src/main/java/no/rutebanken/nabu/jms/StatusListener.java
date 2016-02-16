@@ -1,17 +1,12 @@
 package no.rutebanken.nabu.jms;
 
-import no.rutebanken.nabu.status.Status;
-import no.rutebanken.nabu.status.StatusRepository;
-import org.apache.activemq.command.ActiveMQTopic;
+import no.rutebanken.nabu.domain.Status;
+import no.rutebanken.nabu.repository.StatusRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.stereotype.Component;
-
-import javax.jms.Topic;
 
 @Component
 public class StatusListener {
