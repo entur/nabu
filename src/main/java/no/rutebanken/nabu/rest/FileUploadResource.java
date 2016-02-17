@@ -23,7 +23,7 @@ import java.io.File;
 @Path("/opstatus")
 public class FileUploadResource {
 
-    @Value("${queue.gtfs.upload.destination.name}")
+    @Value("${queue.gtfs.upload.destination.name:ExternalFileUploadQueue}")
     private String destinationName;
 
     @Autowired
