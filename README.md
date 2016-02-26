@@ -11,7 +11,12 @@ spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl
 spring.activemq.user=admin
 spring.activemq.password=admin
 
+# marduk file upload queue
 queue.gtfs.upload.destination.name=ExternalFileUploadQueue
+
+# JPA settings (in-memory)
+spring.jpa.show-sql=false
+spring.jpa.hibernate.ddl-auto=create
 
 # logging settings
 logging.level.no.rutebanken=INFO
@@ -30,6 +35,7 @@ spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl
 spring.activemq.user=admin
 spring.activemq.password=admin
 
+# marduk file upload queue
 queue.gtfs.upload.destination.name=ExternalFileUploadQueue
 
 # logging settings
@@ -40,13 +46,17 @@ logging.level.org.springframework.orm.hibernate4.support=WARN
 logging.level.no.rutebanken=INFO
 logging.level.org.apache=INFO
 
-# db config
-spring.jpa.database=POSTGRESQL
-spring.datasource.platform=postgres
-spring.jpa.show-sql=true
-spring.jpa.hibernate.ddl-auto=none
-spring.database.driverClassName=org.postgresql.Driver
-spring.datasource.url=jdbc:postgresql://localhost:5532/postgres
+# JPA settings (in-memory) 
+spring.jpa.show-sql=false
+spring.jpa.hibernate.ddl-auto=create
+
+# JPA settings (postgres)
+# spring.jpa.database=POSTGRESQL
+# spring.datasource.platform=postgres
+# spring.jpa.show-sql=true
+# spring.jpa.hibernate.ddl-auto=none
+# spring.database.driverClassName=org.postgresql.Driver
+# spring.datasource.url=jdbc:postgresql://localhost:5532/postgres
 
 spring.datasource.username=postgres
 spring.datasource.password=mysecretpassword
