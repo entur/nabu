@@ -1,0 +1,3 @@
+insert into status(correlation_id, provider_id, file_name, action, state, date) values ('123456789', '2', '00011-gtfs.zip', '1', '1', '2015-09-02 00:00:00Z')
+insert into status(correlation_id, provider_id, file_name, action, state, date) values ('123456789', '2', '00012-gtfs.zip', '1', '2', '2015-09-02 12:45:00Z')
+insert into status(correlation_id, provider_id, file_name, action, state, date) values ('1234567', '2', '00013-gtfs.zip', '2', '2', '2015-09-02 13:01:47Z')

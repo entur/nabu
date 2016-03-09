@@ -1,28 +1,19 @@
 package no.rutebanken.nabu.filter;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.ext.Provider;
 
-/**
- * https://github.com/Smartling/spring-security-keycloak/issues/1
- */
-public class CorsResponseFilter implements Filter {
+@Provider
+public class CorsResponseFilter implements ContainerResponseFilter {
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {}
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*"); //TODO: not *
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-        httpServletResponse.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Accept");
-        httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
-        filterChain.doFilter(servletRequest,servletResponse);
+    public void filter(ContainerRequestContext request, ContainerResponseContext response) throws IOException {
+        response.getHeaders().add("Access-Control-Allow-Origin", "*");
+        response.getHeaders().add("Access-Control-Allow-Headers", "origin, content-type, accept, authorization");
+        response.getHeaders().add("Access-Control-Allow-Credentials", "true");
+        response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
     }
-
-    @Override
-    public void destroy() {}
 }
