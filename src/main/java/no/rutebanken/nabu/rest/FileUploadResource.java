@@ -47,6 +47,7 @@ public class FileUploadResource {
             statusRepository.update(new Status(fileName, providerId, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId));
             return Response.ok().build();
         } catch (RuntimeException e){
+            logger.warn("Failed to put file on queue.", e);
             statusRepository.update(new Status(fileName, providerId, Status.Action.FILE_TRANSFER, Status.State.FAILED, correlationId));
             return Response.serverError().build();
         }
