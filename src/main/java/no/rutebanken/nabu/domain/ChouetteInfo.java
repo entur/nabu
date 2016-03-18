@@ -1,9 +1,6 @@
 package no.rutebanken.nabu.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class ChouetteInfo {
@@ -13,6 +10,7 @@ public class ChouetteInfo {
     public String prefix;
     public String dataSpace;
     public String organisation;
+    @Column(name="cuser")
     public String user;
 
     public ChouetteInfo(){}
