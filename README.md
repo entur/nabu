@@ -10,6 +10,7 @@ spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl
 #spring.activemq.pooled=true
 spring.activemq.user=admin
 spring.activemq.password=admin
+spring.jms.pub-sub-domain=true
 
 # marduk file upload queue
 queue.gtfs.upload.destination.name=ExternalFileUploadQueue
@@ -44,19 +45,17 @@ logging.level.org.hibernate.SQL=INFO
 logging.level.org.hibernate.type=WARN
 logging.level.org.springframework.orm.hibernate4.support=WARN
 logging.level.no.rutebanken=INFO
-logging.level.org.apache=INFO
-
-# JPA settings (in-memory) 
-spring.jpa.show-sql=false
-spring.jpa.hibernate.ddl-auto=create
+logging.level.org.apache=WARN
 
 # JPA settings (postgres)
-# spring.jpa.database=POSTGRESQL
-# spring.datasource.platform=postgres
-# spring.jpa.show-sql=true
-# spring.jpa.hibernate.ddl-auto=none
-# spring.database.driverClassName=org.postgresql.Driver
-# spring.datasource.url=jdbc:postgresql://localhost:5532/postgres
+spring.jpa.database=POSTGRESQL
+spring.datasource.platform=postgres
+spring.jpa.show-sql=false
+spring.jpa.hibernate.ddl-auto=update
+spring.database.driverClassName=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://nabudb:5432/nabu
+spring.datasource.username=nabu
+spring.datasource.password=topsecret
 
 spring.datasource.username=postgres
 spring.datasource.password=mysecretpassword
