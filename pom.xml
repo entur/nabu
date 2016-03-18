@@ -194,7 +194,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot-plugin.version}</version>
                 <configuration>
-                    <mainClass>no.rutebanken.nabu.NabuApplication</mainClass>
+                    <mainClass>no.rutebanken.nabu.App</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -1,6 +1,6 @@
 package no.rutebanken.nabu.repository;
 
-import no.rutebanken.nabu.NabuApplication;
+import no.rutebanken.nabu.App;
 import no.rutebanken.nabu.domain.Status;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +13,7 @@ import java.util.Collection;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(NabuApplication.class)
+@SpringApplicationConfiguration(App.class)
 public class JpaStatusRepositoryTest {
 
     @Autowired
