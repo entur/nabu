@@ -4,8 +4,10 @@ import javax.persistence.*;
 
 @Entity
 public class ChouetteInfo {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chouette_info_seq_gen")
+    @SequenceGenerator(name = "chouette_info_seq_gen", sequenceName = "chouette_info_seq_gen")
     public Long id;
     public String prefix;
     public String dataSpace;
