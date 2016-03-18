@@ -25,7 +25,6 @@ public class JmsSender {
     @Autowired
     public JmsSender(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
-        this.jmsTemplate.setPubSubDomain(false);
     }
 
     public void sendBlobMessage(String destinationName, File file, String fileName, Long providerId, String correlationId) {

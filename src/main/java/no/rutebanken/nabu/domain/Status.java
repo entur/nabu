@@ -63,7 +63,7 @@ public class Status {
     }
 
     public Status(){
-        //Must be present for unmarshalling
+        //Must be present for JSON unmarshalling
     }
 
     public static Status fromString(String string) {

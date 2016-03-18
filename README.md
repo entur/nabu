@@ -10,7 +10,6 @@ spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl
 #spring.activemq.pooled=true
 spring.activemq.user=admin
 spring.activemq.password=admin
-spring.jms.pub-sub-domain=true
 
 # marduk file upload queue
 queue.gtfs.upload.destination.name=ExternalFileUploadQueue
@@ -35,7 +34,6 @@ spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl
 #spring.activemq.pooled=true
 spring.activemq.user=admin
 spring.activemq.password=admin
-spring.jms.pub-sub-domain=true
 
 # marduk file upload queue
 queue.gtfs.upload.destination.name=ExternalFileUploadQueue
