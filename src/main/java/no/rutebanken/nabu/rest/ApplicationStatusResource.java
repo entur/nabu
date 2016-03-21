@@ -29,7 +29,7 @@ public class ApplicationStatusResource {
     @GET
     @Path("/ready")
     public Response isReady() {
-        logger.info("Checking DB connections.");
+        logger.info("Checking DB connections...");
         if ( ((DbStatus) providerRepository).isDbUp() && ((DbStatus) statusRepository).isDbUp()){
            return Response.ok().build();
         } else {
@@ -40,7 +40,6 @@ public class ApplicationStatusResource {
     @GET
     @Path("/up")
     public Response isUp() {
-        logger.info("Checking DB connections.");
         return Response.ok().build();
     }
 
