@@ -29,7 +29,7 @@ public class ApplicationStatusResource {
     @GET
     @Path("/ready")
     public Response isReady() {
-        logger.info("Checking DB connections...");
+        logger.debug("Checking DB connections...");
         if ( ((DbStatus) providerRepository).isDbUp() && ((DbStatus) statusRepository).isDbUp()){
            return Response.ok().build();
         } else {
