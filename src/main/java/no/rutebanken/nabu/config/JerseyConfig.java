@@ -1,6 +1,7 @@
 package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.filter.CorsResponseFilter;
+import no.rutebanken.nabu.rest.ApplicationStatusResource;
 import no.rutebanken.nabu.rest.FileUploadResource;
 import no.rutebanken.nabu.rest.ProviderResource;
 import no.rutebanken.nabu.rest.StatusResource;
@@ -19,6 +20,7 @@ public class JerseyConfig extends ResourceConfig {
         register(FileUploadResource.class);
         register(StatusResource.class);
         register(ProviderResource.class);
+        register(ApplicationStatusResource.class);
         register(CorsResponseFilter.class);
     }
 

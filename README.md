@@ -1,5 +1,11 @@
 # Nabu
 
+## Liveness and readyiness
+In production, nabu can be probed with:
+- http://localhost:9004/jersey/appstatus/up
+- http://localhost:9004/jersey/appstatus/ready
+to check liveness and readiness, accordingly
+
 ## Example application.properties file for development
 
 ```
