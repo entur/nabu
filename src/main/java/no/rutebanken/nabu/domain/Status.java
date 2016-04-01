@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.persistence.*;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.time.Clock;
 import java.time.Instant;
 import java.util.Date;
 
@@ -48,7 +49,7 @@ public class Status {
     @JsonProperty("state")
     public State state;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss z")
     @JsonProperty("date")
     @Temporal(TemporalType.TIMESTAMP)
     public Date date;
@@ -59,7 +60,7 @@ public class Status {
         this.action = action;
         this.state = state;
         this.correlationId = correlationId;
-        this.date = Date.from(Instant.now());            //LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        this.date = Date.from(Instant.now(Clock.systemDefaultZone()));            //LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public Status(){
