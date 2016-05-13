@@ -12,6 +12,8 @@ public class ChouetteInfo {
     public String organisation;
     @Column(name="cuser")
     public String user;
+    public String regtoppVersion;
+    public String regtoppCoordinateProjection;
 
     public ChouetteInfo(){}
 
@@ -30,11 +32,13 @@ public class ChouetteInfo {
     @Override
     public String toString() {
         return "ChouetteInfo{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", prefix='" + prefix + '\'' +
                 ", dataSpace='" + dataSpace + '\'' +
                 ", organisation='" + organisation + '\'' +
                 ", user='" + user + '\'' +
+                ", regtoppVersion='" + regtoppVersion + '\'' +
+                ", regtoppCoordinateProjection='" + regtoppCoordinateProjection + '\'' +
                 '}';
     }
 

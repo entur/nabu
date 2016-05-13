@@ -292,6 +292,15 @@
             </build>
         </profile>
         <profile>
+            <id>h2</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>f8-local-deploy</id>
             <properties>
                 <fabric8.recreate>true</fabric8.recreate>
