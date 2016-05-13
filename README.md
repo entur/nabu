@@ -74,8 +74,8 @@ spring.datasource.initializationFailFast=false
 * Building
 `mvn clean install`
 
-* Building docker image
-`mvn -Pf8-build`
+* Building docker image (using profile h2 for in-memory DB)
+`mvn -Pf8-build,h2`
 
 * Testing with curl
 `curl -vX POST -F "file=@pom.xml; filename=pom.xml" http://localhost:9004/opstatus/2/uploadFile`
