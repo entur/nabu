@@ -1,20 +1,20 @@
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (1, 'OST', 'ost', 'Rutebanken', 'admin@rutebanken.org', 'R12N', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (2, 'RUT', 'rut', 'Rutebanken', 'admin@rutebanken.org', 'R13A', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (3, 'HED', 'hed', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (4, 'OPP', 'opp', 'Rutebanken', 'admin@rutebanken.org', 'R12N', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (5, 'BRA', 'bra', 'Rutebanken', 'admin@rutebanken.org', 'R12N', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (6, 'VKT', 'vkt', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (7, 'AKT', 'akt', 'ARutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (8, 'KOL', 'kol', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (9, 'HRD', 'hrd', 'Rutebanken', 'admin@rutebanken.org', null, null);
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (10, 'SOF', 'sof', 'Rutebanken', 'admin@rutebanken.org', 'R12N', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (11, 'MOR', 'mor', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (12, 'ATB', 'atb', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (13, 'NTR', 'ntr', 'Rutebanken', 'admin@rutebanken.org', 'R11D', 'EPSG:32632');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (14, 'NOR', 'nor', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:4326');  --THIS IS CORRECT
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (15, 'TRO', 'tro', 'Rutebanken', 'admin@rutebanken.org', 'R11D', 'EPSG:32633');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (16, 'FIN', 'fin', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32633');
-insert into public.chouette_info(id, prefix, data_space, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (17, 'TOG', 'tog', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (1, 'OST', 'ost', 'Rutebanken', 'admin@rutebanken.org', 'R12N', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (2, 'RUT', 'rut', 'Rutebanken', 'admin@rutebanken.org', 'R13A', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (3, 'HED', 'hed', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (4, 'OPP', 'opp', 'Rutebanken', 'admin@rutebanken.org', 'R12N', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (5, 'BRA', 'bra', 'Rutebanken', 'admin@rutebanken.org', 'R12N', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (6, 'VKT', 'vkt', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (7, 'AKT', 'akt', 'ARutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (8, 'KOL', 'kol', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (9, 'HRD', 'hrd', 'Rutebanken', 'admin@rutebanken.org', null, null);
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (10, 'SOF', 'sof', 'Rutebanken', 'admin@rutebanken.org', 'R12N', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (11, 'MOR', 'mor', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (12, 'ATB', 'atb', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (13, 'NTR', 'ntr', 'Rutebanken', 'admin@rutebanken.org', 'R11D', 'EPSG:32632');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (14, 'NOR', 'nor', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:4326');  --THIS IS CORRECT
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (15, 'TRO', 'tro', 'Rutebanken', 'admin@rutebanken.org', 'R11D', 'EPSG:32633');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (16, 'FIN', 'fin', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32633');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection) values (17, 'TOG', 'tog', 'Rutebanken', 'admin@rutebanken.org', 'R12', 'EPSG:32632');
 
 
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1, 'Østfold / Østfold Kollektivtrafikk', 'ostfold', 1);
