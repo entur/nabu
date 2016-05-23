@@ -22,7 +22,7 @@ insert into public.provider(id, name, sftp_account, chouette_info_id) values (2,
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (3, 'Hedmark / Hedmark-Trafikk', 'hedmark', 3);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (4, 'Oppland / Opplandstrafikk', 'oppland', 4);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (5, 'Buskerud / Brakar', 'buskerud', 5);
-insert into public.provider(id, name, sftp_account, chouette_info_id) values (6, 'Vestfold og Telemark / VkT', 'vesfold-telemark', 6);
+insert into public.provider(id, name, sftp_account, chouette_info_id) values (6, 'Vestfold og Telemark / VkT', 'vestfold-telemark', 6);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (7, 'Agder / AkT', 'agder', 7);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (8, 'Rogaland / Kolumbus', 'rogaland', 8);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (9, 'Hordaland / Skyss', 'hordaland', 9);
