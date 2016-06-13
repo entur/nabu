@@ -14,6 +14,7 @@ public class ChouetteInfo {
     public String user;
     public String regtoppVersion;
     public String regtoppCoordinateProjection;
+    public String dataFormat;
 
     public ChouetteInfo(){}
 
@@ -37,8 +38,8 @@ public class ChouetteInfo {
                 ", referential='" + referential + '\'' +
                 ", organisation='" + organisation + '\'' +
                 ", user='" + user + '\'' +
-                ", regtoppVersion='" + regtoppVersion + '\'' +
-                ", regtoppCoordinateProjection='" + regtoppCoordinateProjection + '\'' +
+                (regtoppVersion != null ? ", regtoppVersion='" + regtoppVersion + '\'' : "") +
+                (regtoppCoordinateProjection != null? ", regtoppCoordinateProjection='" + regtoppCoordinateProjection + '\'' : "")+
                 '}';
     }
 
