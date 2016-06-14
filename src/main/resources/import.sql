@@ -16,7 +16,7 @@ insert into public.chouette_info(id, prefix, referential, organisation, cuser, r
 insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format) values (16, 'FIN', 'fin', 'Rutebanken', 'admin@rutebanken.org', null, 'EPSG:32633','regtopp');
 insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format) values (17, 'TOG', 'tog', 'Rutebanken', 'admin@rutebanken.org', null, 'EPSG:4326','regtopp'); --THIS IS ALSO CORRECT
 insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format) values (18, 'TEL', 'telemark', 'Rutebanken', 'admin@rutebanken.org', null, 'EPSG:32632','regtopp');
-insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format) values (19, 'NRI', 'nri', 'Rutebanken', 'admin@rutebanken.org', null, null,'gtfs');
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format) values (19, 'NRI', 'nrii', 'Rutebanken', 'admin@rutebanken.org', null, null,'gtfs');
 
 
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1, 'Østfold / Østfold Kollektivtrafikk', 'ostfold', 1);
