@@ -14,6 +14,7 @@ public class ChouetteInfo {
     public String user;
     public String regtoppVersion;
     public String regtoppCoordinateProjection;
+    public String regtoppCalendarStrategy;
     public String dataFormat;
 
     public ChouetteInfo(){}
@@ -40,6 +41,7 @@ public class ChouetteInfo {
                 ", user='" + user + '\'' +
                 (regtoppVersion != null ? ", regtoppVersion='" + regtoppVersion + '\'' : "") +
                 (regtoppCoordinateProjection != null? ", regtoppCoordinateProjection='" + regtoppCoordinateProjection + '\'' : "")+
+                (regtoppCalendarStrategy != null? ", regtoppCalendarStrategy='" + regtoppCalendarStrategy + '\'' : "")+
                 '}';
     }
 
