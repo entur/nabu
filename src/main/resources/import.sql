@@ -37,4 +37,4 @@ insert into public.provider(id, name, sftp_account, chouette_info_id) values (15
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (16, 'Finnmark / Snelandia', 'finnmark', 16);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (17, 'Tog / NSB', 'tog', 17);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (18, 'Telemark', 'telemark', 18);
-insert into public.provider(id, name, sftp_account, chouette_info_id) values (19, 'Norsk reiseinformasjon', 'nri', 19);
+insert into public.provider(id, name, sftp_account, chouette_info_id) values (19, 'Norsk ReiseInformasjon', 'nri', 19);
