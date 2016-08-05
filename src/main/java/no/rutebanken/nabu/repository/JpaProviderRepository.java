@@ -35,4 +35,15 @@ public class JpaProviderRepository implements ProviderRepository, DbStatus {
     public boolean isDbUp() {
         return isPostgresUp(entityManager, logger);
     }
+
+	@Override
+	public void updateProvider(Provider provider) {
+		entityManager.merge(provider);
+	}
+
+	@Override
+	public Provider createProvider(Provider provider) {
+		 entityManager.persist(provider);
+		 return provider;
+	}
 }

@@ -9,5 +9,9 @@ public interface ProviderRepository {
     Collection<Provider> getProviders();
 
     Provider getProvider(Long id);
+    
+    void updateProvider(Provider provider);
+
+	Provider createProvider(Provider provider);
 
 }

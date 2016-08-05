@@ -6,6 +6,7 @@ import javax.persistence.*;
 public class ChouetteInfo {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     public Long id;
     public String prefix;
     public String referential;

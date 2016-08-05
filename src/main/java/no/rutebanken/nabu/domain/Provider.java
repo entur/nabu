@@ -1,17 +1,22 @@
 package no.rutebanken.nabu.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
 
 @Entity
 public class Provider {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     public Long id;
     public String name;
     public String sftpAccount;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     public ChouetteInfo chouetteInfo;
 
     public Provider(){}
