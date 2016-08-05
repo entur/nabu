@@ -46,4 +46,12 @@ public class JpaProviderRepository implements ProviderRepository, DbStatus {
 		 entityManager.persist(provider);
 		 return provider;
 	}
+
+	@Override
+	public void deleteProvider(Long providerId) {
+		Provider provider = getProvider(providerId);
+		if(provider != null) {
+			entityManager.remove(provider);
+		}
+	}
 }

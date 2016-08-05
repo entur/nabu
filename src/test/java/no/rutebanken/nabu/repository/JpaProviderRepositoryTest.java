@@ -39,7 +39,7 @@ public class JpaProviderRepositoryTest {
 
 
     @Test
-    public void testCreateAndUpdateProvider() {
+    public void testCreateAndUpdateAndDeleteProvider() {
     	
     	ChouetteInfo chouetteInfo = new ChouetteInfo(null,"prefix","refe","org","user");
 		Provider newProvider = new Provider(null,"junit provider","sftpAccount",chouetteInfo );
@@ -53,6 +53,11 @@ public class JpaProviderRepositoryTest {
     	
 		Assert.assertEquals(providerForUpdate.sftpAccount, providerForVerification.sftpAccount);
     	
+		repository.deleteProvider(newProvider.id);
+		
+		Provider noProvider = repository.getProvider(newProvider.id);
+		
+		Assert.assertNull(noProvider);
     }
 
 }

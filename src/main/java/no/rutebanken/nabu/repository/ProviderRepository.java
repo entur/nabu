@@ -14,4 +14,6 @@ public interface ProviderRepository {
 
 	Provider createProvider(Provider provider);
 
+	void deleteProvider(Long providerId);
+
 }

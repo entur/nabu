@@ -2,6 +2,7 @@ package no.rutebanken.nabu.rest;
 
 import java.util.Collection;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -35,6 +36,13 @@ public class ProviderResource {
         return providerRepository.getProvider(providerId);
     }
 
+    @DELETE
+    @Path("/{providerId}")
+    public void deleteProvider(@PathParam("providerId") Long providerId) {
+        logger.info("Deleting provider with id '" + providerId + "'");
+        providerRepository.deleteProvider(providerId);
+    }
+
     @PUT
     @Path("/update")
     public void updateProvider(Provider provider) {
@@ -45,7 +53,7 @@ public class ProviderResource {
     @POST
     @Path("/create")
     public Provider createProvider(Provider provider) {
-        logger.info("Updating provider "+provider);
+        logger.info("Creating provider "+provider);
         return providerRepository.createProvider(provider);
     }
 
