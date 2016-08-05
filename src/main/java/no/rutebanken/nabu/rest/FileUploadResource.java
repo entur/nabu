@@ -1,8 +1,15 @@
 package no.rutebanken.nabu.rest;
 
-import no.rutebanken.nabu.domain.Status;
-import no.rutebanken.nabu.jms.JmsSender;
-import no.rutebanken.nabu.repository.StatusRepository;
+import java.io.File;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -10,12 +17,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.File;
+import no.rutebanken.nabu.domain.Status;
+import no.rutebanken.nabu.jms.JmsSender;
+import no.rutebanken.nabu.repository.StatusRepository;
 
 
 @Component

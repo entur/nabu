@@ -1,17 +1,16 @@
 package no.rutebanken.nabu.jms;
 
-import no.rutebanken.nabu.domain.Status;
-import no.rutebanken.nabu.repository.StatusRepository;
+import java.io.File;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.Session;
+
 import org.apache.activemq.ActiveMQSession;
 import org.apache.activemq.BlobMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-import java.io.File;
 
 @Component
 public class JmsSender {
