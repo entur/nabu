@@ -1,6 +1,9 @@
 package no.rutebanken.nabu.rest;
 
 import java.io.File;
+import java.time.Clock;
+import java.time.Instant;
+import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -49,11 +52,11 @@ public class FileUploadResource {
             logger.info("Placing file '" + fileDetail.getFileName() + "' from provider with id '" + providerId + "' on queue '" + destinationName + "'");
             jmsSender.sendBlobMessage(destinationName, file, fileName, providerId, correlationId);
             logger.info("Done sending.");
-            statusRepository.update(new Status(fileName, providerId, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId));
+            statusRepository.add(new Status(fileName, providerId, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId,Date.from(Instant.now(Clock.systemDefaultZone()))));
             return Response.ok().build();
         } catch (RuntimeException e){
             logger.warn("Failed to put file on queue.", e);
-            statusRepository.update(new Status(fileName, providerId, Status.Action.FILE_TRANSFER, Status.State.FAILED, correlationId));
+            statusRepository.add(new Status(fileName, providerId, Status.Action.FILE_TRANSFER, Status.State.FAILED, correlationId,Date.from(Instant.now(Clock.systemDefaultZone()))));
             return Response.serverError().build();
         }
     }

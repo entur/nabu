@@ -1,13 +1,13 @@
 package no.rutebanken.nabu.repository;
 
-import no.rutebanken.nabu.domain.Status;
+import java.util.List;
 
-import java.util.Collection;
+import no.rutebanken.nabu.domain.Status;
 
 public interface StatusRepository {
 
-    Status update(Status status);
+    void add(Status status);
 
-    Collection<Status> getStatusForProvider(Long providerId);
+    List<Status> getStatusForProvider(Long providerId);
 
 }

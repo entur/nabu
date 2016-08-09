@@ -18,11 +18,9 @@ public class StatusListener {
 
     @JmsListener(destination = "ExternalProviderStatus")
     public void processMessage(String content) {
-        logger.debug("Got message: " + content);
         Status status = Status.fromString(content);
-        logger.debug("Converted to: " + status.toString());
-        logger.info("Received message. Updating status repository with status: " + status.toString());
-        statusRepository.update(status);
+        logger.info("Received status event: " + status.toString());
+        statusRepository.add(status);
     }
 
 }

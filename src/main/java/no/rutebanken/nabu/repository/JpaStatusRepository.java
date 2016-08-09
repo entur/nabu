@@ -1,16 +1,18 @@
 package no.rutebanken.nabu.repository;
 
-import no.rutebanken.nabu.domain.Status;
+import static no.rutebanken.nabu.repository.DbStatusChecker.isPostgresUp;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.Collection;
-
-import static no.rutebanken.nabu.repository.DbStatusChecker.isPostgresUp;
+import no.rutebanken.nabu.domain.Status;
 
 @Repository
 @Transactional
@@ -22,13 +24,13 @@ public class JpaStatusRepository implements StatusRepository, DbStatus {
     private EntityManager entityManager;
 
     @Override
-    public Status update(Status status) {
-        return entityManager.merge(status);
+    public void add(Status status) {
+        entityManager.persist(status);
     }
 
     @Override
-    public Collection<Status> getStatusForProvider(Long providerId) {
-        return this.entityManager.createQuery("SELECT s FROM Status s WHERE s.providerId = :providerId", Status.class)
+    public List<Status> getStatusForProvider(Long providerId) {
+        return this.entityManager.createQuery("SELECT s FROM Status s WHERE s.providerId = :providerId ORDER by s.correlationId, s.date", Status.class)
                 .setParameter("providerId", providerId)
                 .getResultList();
     }
