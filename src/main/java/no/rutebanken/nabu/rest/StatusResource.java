@@ -53,7 +53,6 @@ public class StatusResource {
         		
         		// Create new Aggregation
         		currentAggregation = new JobStatus();
-        		currentAggregation.setAction(JobStatus.Action.valueOf(in.action.name()));
         		currentAggregation.setFirstEvent(in.date);
         		currentAggregation.setFileName(in.fileName);
         		currentAggregation.setCorrelationId(in.correlationId);

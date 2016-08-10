@@ -42,7 +42,7 @@ public class StatusResourceTest {
 		JobStatus a = listStatus.get(0);
 		
 		Assert.assertEquals("a", a.getCorrelationId());
-		Assert.assertEquals(JobStatus.Action.IMPORT,a.action);
+		Assert.assertEquals(JobStatus.Action.IMPORT,a.getEvents().get(0).action);
 		Assert.assertEquals(JobStatus.State.FAILED,a.getEndStatus());
 		Assert.assertEquals(3, a.getEvents().size());
 		Assert.assertEquals(new Date(now+1),a.getFirstEvent());
@@ -51,7 +51,7 @@ public class StatusResourceTest {
 		JobStatus b = listStatus.get(1);
 		
 		Assert.assertEquals("b", b.getCorrelationId());
-		Assert.assertEquals(JobStatus.Action.VALIDATION,b.action);
+		Assert.assertEquals(JobStatus.Action.VALIDATION,b.getEvents().get(0).action);
 		Assert.assertEquals(JobStatus.State.OK,b.getEndStatus());
 		Assert.assertEquals(3, b.getEvents().size());
 		Assert.assertEquals(new Date(now+4),b.getFirstEvent());

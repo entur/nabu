@@ -36,8 +36,6 @@ public class JobStatus {
 	@JsonProperty("fileName")
 	public String fileName;
 
-	@JsonProperty("action")
-	public Action action;
 
 	public List<JobStatusEvent> getEvents() {
 		return events;
@@ -85,14 +83,6 @@ public class JobStatus {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
-	}
-
-	public Action getAction() {
-		return action;
-	}
-
-	public void setAction(Action action) {
-		this.action = action;
 	}
 
 }
