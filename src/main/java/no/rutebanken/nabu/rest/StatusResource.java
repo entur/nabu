@@ -67,7 +67,11 @@ public class StatusResource {
         	JobStatusEvent event = agg.getEvents().get(agg.getEvents().size()-1);
 			agg.setLastEvent(event.date);
 			agg.setEndStatus(event.state);
+			long durationMillis = agg.getLastEvent().getTime() - agg.getFirstEvent().getTime();
+			agg.setDurationMillis(durationMillis);
         }
+
+        
         
         // Sort
         Collections.sort(list, new Comparator<JobStatus>() {

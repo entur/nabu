@@ -29,6 +29,9 @@ public class JobStatus {
 
 	@JsonProperty("lastEvent")
 	private Date lastEvent;
+	
+	@JsonProperty("durationMillis")
+	private Long durationMillis;
 
 	@JsonProperty("endState")
 	private State endStatus;
@@ -83,6 +86,14 @@ public class JobStatus {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	public Long getDurationMillis() {
+		return durationMillis;
+	}
+
+	public void setDurationMillis(Long durationMillis) {
+		this.durationMillis = durationMillis;
 	}
 
 }
