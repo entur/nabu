@@ -28,7 +28,7 @@ import no.rutebanken.nabu.repository.StatusRepository;
 
 @Component
 @Produces("application/json")
-@Path("/opstatus")
+@Path("/files")
 public class FileUploadResource {
 
     @Value("${queue.gtfs.upload.destination.name:ExternalFileUploadQueue}")
@@ -43,7 +43,7 @@ public class FileUploadResource {
     private static final Logger logger = LoggerFactory.getLogger(FileUploadResource.class);
 
     @POST
-    @Path("/{providerId}/uploadFile")
+    @Path("/{providerId}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@PathParam("providerId") Long providerId, @FormDataParam("file") File file, @FormDataParam("file") FormDataContentDisposition fileDetail) {
         String correlationId =  "" + System.currentTimeMillis();

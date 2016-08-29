@@ -23,7 +23,6 @@ import no.rutebanken.nabu.rest.domain.JobStatusEvent;
 
 @Component
 @Produces("application/json")
-@Path("/jobs")
 public class StatusResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -32,7 +31,7 @@ public class StatusResource {
     StatusRepository statusRepository;
 
     @GET
-    @Path("/{providerId}")
+    @Path("/{providerId}/jobs")
     public List<JobStatus> listStatus(@PathParam("providerId") Long providerId) {
         logger.info("Returning status for provider with id '" + providerId + "'");
         List<Status> statusForProvider = statusRepository.getStatusForProvider(providerId);
