@@ -17,6 +17,7 @@ insert into public.chouette_info(id, prefix, referential, organisation, cuser, r
 insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation) values (17, 'TOG', 'tog', 'Rutebanken', 'admin@rutebanken.org', null, 'EPSG:4326','regtopp',null,true); --THIS IS ALSO CORRECT
 insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation) values (18, 'TEL', 'tel', 'Rutebanken', 'admin@rutebanken.org', null, 'EPSG:32632','regtopp',null,true);
 insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation) values (19, 'NRI', 'nri', 'Rutebanken', 'admin@rutebanken.org', null, null,'gtfs',null,false);
+insert into public.chouette_info(id, prefix, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation) values (20, 'NORWAY', 'norway', 'NOR-WAY Bussekspress AS', 'admin+norway@rutebanken.org', null, null,'regtopp',null,true);
 
 
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1, 'Østfold / Østfold Kollektivtrafikk', 'ostfold', 1);
@@ -38,4 +39,5 @@ insert into public.provider(id, name, sftp_account, chouette_info_id) values (16
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (17, 'Tog / NSB', 'tog', 17);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (18, 'Telemark', 'telemark', 18);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (19, 'Norsk ReiseInformasjon', 'nri', 19);
+insert into public.provider(id, name, sftp_account, chouette_info_id) values (20, 'NOR-WAY Bussekspress', 'norway', 20);
 
