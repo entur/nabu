@@ -31,7 +31,7 @@ public class Status {
 	 */
 
 	public enum Action {
-		FILE_TRANSFER, IMPORT, EXPORT, VALIDATION
+		FILE_TRANSFER, IMPORT, EXPORT, VALIDATION, DATASPACE_TRANSFER
 	}
 
 	public enum State {

@@ -18,6 +18,7 @@ public class ChouetteInfo {
     public String regtoppCalendarStrategy;
     public String dataFormat;
     public boolean enableValidation;
+    public Long migrateDataToProvider = null;
 
     public ChouetteInfo(){}
 
