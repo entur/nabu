@@ -57,7 +57,7 @@ public class Status {
 	@JsonProperty("state")
 	public State state;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "CET")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "CET")
 	@JsonProperty("date")
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date date;
