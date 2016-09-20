@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 public class JobStatus {
 
 	public enum Action {
-		FILE_TRANSFER, IMPORT, EXPORT, VALIDATION
+		FILE_TRANSFER, IMPORT, EXPORT, VALIDATION, DATASPACE_TRANSFER
 	}
 
 	public enum State {
