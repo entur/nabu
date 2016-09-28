@@ -34,3 +34,6 @@ gradlew.bat
 
 # OS X file for storing custom attributes of a folder
 .DS_Store
+
+# local log files
+.log
