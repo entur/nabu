@@ -12,14 +12,14 @@ to check liveness and readiness, accordingly
 server.port=9004
 
 # activemq settings
-spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl=http://activemq:8161/fileserver/
+spring.activemq.broker-url=tcp://activemq:61616
 #spring.activemq.pooled=true
 spring.activemq.user=admin
 spring.activemq.password=admin
 spring.jms.pub-sub-domain=true
 
 # marduk file upload queue
-queue.gtfs.upload.destination.name=ExternalFileUploadQueue
+queue.gtfs.upload.destination.name=MardukInboundQueue
 
 # JPA settings (in-memory)
 spring.jpa.show-sql=false
@@ -37,13 +37,13 @@ logging.level.org.apache=INFO
 server.port=9006
 
 # activemq settings
-spring.activemq.broker-url=tcp://activemq:61616?jms.blobTransferPolicy.uploadUrl=http://activemq:8161/fileserver/
+spring.activemq.broker-url=tcp://activemq:61616
 #spring.activemq.pooled=true
 spring.activemq.user=admin
 spring.activemq.password=admin
 
 # marduk file upload queue
-queue.gtfs.upload.destination.name=ExternalFileUploadQueue
+queue.gtfs.upload.destination.name=MardukInboundQueue
 
 # logging settings
 logging.level.org.hibernate.tool.hbm2ddl=INFO
@@ -52,6 +52,11 @@ logging.level.org.hibernate.type=WARN
 logging.level.org.springframework.orm.hibernate4.support=WARN
 logging.level.no.rutebanken=INFO
 logging.level.org.apache=WARN
+
+# blobstore settings
+blobstore.gcs.project.id=carbon-1287
+blobstore.gcs.container.name=marduk-exchange
+blobstore.gcs.credential.path=/home/tomgag/.ssh/Carbon-a4d50ca8176c.json
 
 # JPA settings (postgres)
 spring.jpa.database=POSTGRESQL
@@ -78,7 +83,7 @@ spring.datasource.initializationFailFast=false
 `mvn -Pf8-build,h2`
 
 * Testing with curl
-`curl -vX POST -F "file=@pom.xml; filename=pom.xml" http://localhost:9004/opstatus/2/uploadFile`
+`curl -vX POST -F "file=@\"avinor-netex_201609291122.zip\"" http://localhost:9004/jersey/files/21`
 
 * Running in docker (development)
 `docker rm -f nabu ; docker run -it --name nabu -e JAVA_OPTIONS="-Xmx1280m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" --link activemq -p 5005:5005 -v /git/config/nabu/dev/application.properties:/app/config/application.properties:ro dr.rutebanken.org/rutebanken/nabu:0.0.1-SNAPSHOT`

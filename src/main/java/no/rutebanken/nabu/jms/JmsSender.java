@@ -1,16 +1,12 @@
 package no.rutebanken.nabu.jms;
 
-import java.io.File;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
-
-import org.apache.activemq.ActiveMQSession;
-import org.apache.activemq.BlobMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.JmsTemplate;
-import org.springframework.stereotype.Component;
 
 @Component
 public class JmsSender {
@@ -26,17 +22,16 @@ public class JmsSender {
         this.jmsTemplate = jmsTemplate;
     }
 
-    public void sendBlobMessage(String destinationName, File file, String fileName, Long providerId, String correlationId) {
-        this.jmsTemplate.send(destinationName, session -> createBlobMessage(session, file, fileName, providerId, correlationId));
+    public void sendBlobNotificationMessage(String destinationName, String fileName, Long providerId, String correlationId) {
+        this.jmsTemplate.send(destinationName, session -> createMessage(session, fileName, providerId, correlationId));
     }
 
-    private Message createBlobMessage(Session session, File file, String fileName, Long providerId, String correlationId) {
+    private Message createMessage(Session session, String fileName, Long providerId, String correlationId) {
         try {
-            BlobMessage message = ((ActiveMQSession) session).createBlobMessage(file);
+            Message message = session.createMessage();
             message.setLongProperty(PROVIDER_ID, providerId);
             message.setStringProperty(CAMEL_FILE_NAME, fileName);
             message.setStringProperty(CORRELATION_ID, correlationId);
-            message.setName(fileName);
             return message;
         } catch (JMSException e) {
             throw new RuntimeException(e);
