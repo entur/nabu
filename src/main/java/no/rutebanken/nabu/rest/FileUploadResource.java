@@ -79,7 +79,7 @@ public class FileUploadResource {
             logger.info("Blob created is: " + blobName);
             BlobStoreHelper.uploadBlob(storage, containerName, blobName, new FileInputStream(file), false);
             logger.info("Notifying queue '" + destinationName + "' about the uploaded file.");
-            jmsSender.sendBlobNotificationMessage(destinationName, fileName, providerId, correlationId);
+            jmsSender.sendBlobNotificationMessage(destinationName, blobName, fileName, providerId, correlationId);
             logger.info("Done sending.");
             statusRepository.add(new Status(fileName, providerId, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId,Date.from(Instant.now(Clock.systemDefaultZone()))));
             return Response.ok().build();
