@@ -17,8 +17,8 @@
 	<description>Operational Status application</description>
 
 	<scm>
-		<connection>scm:git:ssh://git@bitbucket.org/rutebanken/nabu.git</connection>
-		<developerConnection>scm:git:ssh://git@bitbucket.org/rutebanken/nabu.git</developerConnection>
+		<connection>scm:git:ssh://git@github.org/rutebanken/nabu.git</connection>
+		<developerConnection>scm:git:ssh://git@github.org/rutebanken/nabu.git</developerConnection>
 	</scm>
 
 	<properties>
@@ -34,9 +34,9 @@
 		<postgresql.version>9.4-1201-jdbc41</postgresql.version>
 
 		<!-- Docker & Fabric8 Configs -->
-		<docker.from>dr.rutebanken.org/rutebanken/java-base-image</docker.from>
-		<fabric8.dockerUser>rutebanken/</fabric8.dockerUser>
-		<docker.image>dr.rutebanken.org/${fabric8.dockerUser}${project.artifactId}:${project.version}</docker.image>
+    <docker.from>eu.gcr.io/carbon-1287/java-base-image</docker.from>
+    <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
+    <docker.image>eu.gcr.io/${fabric8.dockerUser}${project.artifactId}:${project.version}</docker.image>
 
 		<fabric8.service.name>springboot-webmvc</fabric8.service.name>
 		<fabric8.service.port>80</fabric8.service.port>
@@ -197,8 +197,8 @@
 		</dependency>
 
 		<!-- Spring Security & Keycloak -->
-		<!-- <dependency> <groupId>org.keycloak</groupId> <artifactId>keycloak-tomcat8-adapter</artifactId> <version>${keycloak.version}</version> 
-			</dependency> <dependency> <groupId>org.keycloak</groupId> <artifactId>keycloak-spring-security-adapter</artifactId> <version>${keycloak.version}</version> 
+		<!-- <dependency> <groupId>org.keycloak</groupId> <artifactId>keycloak-tomcat8-adapter</artifactId> <version>${keycloak.version}</version>
+			</dependency> <dependency> <groupId>org.keycloak</groupId> <artifactId>keycloak-spring-security-adapter</artifactId> <version>${keycloak.version}</version>
 			</dependency> -->
 
 	</dependencies>
@@ -255,7 +255,7 @@
 							<build>
 								<from>${docker.from}</from>
 								<assembly>
-									<basedir>/app</basedir>
+									<basedir>/deployments</basedir>
 									<descriptorRef>artifact</descriptorRef>
 								</assembly>
 								<env>
@@ -269,8 +269,8 @@
 		</plugins>
 	</build>
 
-	<!-- Default sample commands: mvn -Pf8-build ... build Docker images and create OpenShift deployment configs mvn -Pf8-deploy 
-		... f8-build + push to Docker registry + applying deployment config to OpenShift mvn -Pf8-local-deploy ... deployment for 
+	<!-- Default sample commands: mvn -Pf8-build ... build Docker images and create OpenShift deployment configs mvn -Pf8-deploy
+		... f8-build + push to Docker registry + applying deployment config to OpenShift mvn -Pf8-local-deploy ... deployment for
 		a single node setup without pushing to a registry For individual goal usage please consult the fabric8 documentation -->
 
 	<profiles>
