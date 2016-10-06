@@ -75,7 +75,7 @@ public class FileUploadResource {
             String referential = provider.chouetteInfo.referential;
             LocalDateTime dateTime = LocalDateTime.now();
             String timeStamp = dateTime.format(formatter);
-            String blobName = "inbound/" + referential + "/" + referential + "-" + timeStamp + "-" + fileName;
+            String blobName = "inbound/received/" + referential + "/" + referential + "-" + timeStamp + "-" + fileName;
             logger.info("Blob created is: " + blobName);
             BlobStoreHelper.uploadBlob(storage, containerName, blobName, new FileInputStream(file), false);
             logger.info("Notifying queue '" + destinationName + "' about the uploaded file.");
