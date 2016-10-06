@@ -19,7 +19,12 @@ spring.activemq.password=admin
 spring.jms.pub-sub-domain=true
 
 # marduk file upload queue
-queue.gtfs.upload.destination.name=MardukInboundQueue
+queue.upload.destination.name=MardukInboundQueue
+
+# blob store config
+blobstore.gcs.project.id=carbon-1287
+blobstore.gcs.container.name=marduk-exchange
+blobstore.gcs.credential.path=/home/tomgag/.ssh/Carbon-a4d50ca8176c.json
 
 # JPA settings (in-memory)
 spring.jpa.show-sql=false
@@ -43,7 +48,7 @@ spring.activemq.user=admin
 spring.activemq.password=admin
 
 # marduk file upload queue
-queue.gtfs.upload.destination.name=MardukInboundQueue
+queue.upload.destination.name=MardukInboundQueue
 
 # logging settings
 logging.level.org.hibernate.tool.hbm2ddl=INFO
@@ -81,6 +86,9 @@ spring.datasource.initializationFailFast=false
 
 * Building docker image (using profile h2 for in-memory DB)
 `mvn -Pf8-build,h2`
+
+* Running
+`mvn spring-boot:run -Ph2 -Dspring.config.location=/path/to/application.properties`
 
 * Testing with curl
 `curl -vX POST -F "file=@\"avinor-netex_201609291122.zip\"" http://localhost:9004/jersey/files/21`
