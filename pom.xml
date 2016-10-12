@@ -17,8 +17,8 @@
 	<description>Operational Status application</description>
 
 	<scm>
-		<connection>scm:git:ssh://git@github.org/rutebanken/nabu.git</connection>
-		<developerConnection>scm:git:ssh://git@github.org/rutebanken/nabu.git</developerConnection>
+		<connection>scm:git:ssh://git@github.com/rutebanken/nabu.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/rutebanken/nabu.git</developerConnection>
 	</scm>
 
 	<properties>
