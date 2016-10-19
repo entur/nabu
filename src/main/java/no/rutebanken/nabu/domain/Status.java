@@ -24,9 +24,8 @@ public class Status {
 	/*
 	 * Example
 	 * 
-	 * { "status": { "file_name": "00011-gtfs.zip", "correlation_id":
-	 * "123456789", "provider_id": "2", "action": "IMPORT", "state": "PENDING",
-	 * "date": "2015-09-02T00:00:00Z" } }
+	 * {"file_name":"20160229_20161231_23_v3.zip","correlation_id":"4340263f-2342-4c37-8cdf-157c95499fb2",
+	 * "provider_id":2,"job_id":2345,"action":"IMPORT","state":"FAILED","date":"2016-10-19T14:00:14.196"}
 	 * 
 	 */
 
@@ -50,6 +49,9 @@ public class Status {
 
 	@JsonProperty("provider_id")
 	public Long providerId;
+
+	@JsonProperty("job_id")
+	public Long jobId;
 
 	@JsonProperty("action")
 	public Action action;
