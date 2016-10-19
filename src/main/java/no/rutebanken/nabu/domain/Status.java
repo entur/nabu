@@ -64,9 +64,10 @@ public class Status {
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date date;
 
-	public Status(String fileName, Long providerId, Action action, State state, String correlationId, Date date) {
+	public Status(String fileName, Long providerId, Long jobId, Action action, State state, String correlationId, Date date) {
 		this.fileName = fileName;
 		this.providerId = providerId;
+		this.jobId = jobId;
 		this.action = action;
 		this.state = state;
 		this.correlationId = correlationId;

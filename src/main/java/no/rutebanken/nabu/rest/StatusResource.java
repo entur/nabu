@@ -47,22 +47,28 @@ public class StatusResource {
         String correlationId = null;
         JobStatus currentAggregation = null;
         for(Status in : statusForProvider) {
+
         	if(!in.correlationId.equals(correlationId)) {
         		
         		correlationId = in.correlationId;
-        		
+
         		// Create new Aggregation
         		currentAggregation = new JobStatus();
         		currentAggregation.setFirstEvent(in.date);
         		currentAggregation.setFileName(in.fileName);
         		currentAggregation.setCorrelationId(in.correlationId);
-        		
+				currentAggregation.setChouetteJobId(in.jobId);
+
         		list.add(currentAggregation);
-        	} 
-        	
+        	}
+
+			if(in.jobId != null){
+				currentAggregation.setChouetteJobId(in.jobId);
+			}
+
         	currentAggregation.addEvent(JobStatusEvent.createFromStatus(in));
         }
-        
+
         for(JobStatus agg : list) {
         	JobStatusEvent event = agg.getEvents().get(agg.getEvents().size()-1);
 			agg.setLastEvent(event.date);
