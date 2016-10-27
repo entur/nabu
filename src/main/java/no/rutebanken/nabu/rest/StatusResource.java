@@ -1,24 +1,21 @@
 package no.rutebanken.nabu.rest;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-
+import no.rutebanken.nabu.domain.Status;
+import no.rutebanken.nabu.repository.StatusRepository;
+import no.rutebanken.nabu.rest.domain.JobStatus;
+import no.rutebanken.nabu.rest.domain.JobStatusEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import no.rutebanken.nabu.domain.Status;
-import no.rutebanken.nabu.repository.StatusRepository;
-import no.rutebanken.nabu.rest.domain.JobStatus;
-import no.rutebanken.nabu.rest.domain.JobStatusEvent;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 @Component
@@ -36,13 +33,11 @@ public class StatusResource {
     public List<JobStatus> listStatus(@PathParam("providerId") Long providerId) {
         logger.info("Returning status for provider with id '" + providerId + "'");
         List<Status> statusForProvider = statusRepository.getStatusForProvider(providerId);
-        
         return convert(statusForProvider);
-        
     }
 
 	public List<JobStatus> convert(List<Status> statusForProvider) {
-        List<JobStatus>  list = new ArrayList<JobStatus>();        
+        List<JobStatus>  list = new ArrayList<>();
         // Map from internal Status object to Rest service JobStatusEvent object
         String correlationId = null;
         JobStatus currentAggregation = null;
@@ -77,16 +72,8 @@ public class StatusResource {
 			agg.setDurationMillis(durationMillis);
         }
 
-        
-        
-        // Sort
-        Collections.sort(list, new Comparator<JobStatus>() {
+        Collections.sort(list, (o1, o2) -> o1.getFirstEvent().compareTo(o2.getFirstEvent()));
 
-			@Override
-			public int compare(JobStatus o1, JobStatus o2) {
-				return o1.getFirstEvent().compareTo(o2.getFirstEvent());
-			}});
-        
         return list;
 	}
 
