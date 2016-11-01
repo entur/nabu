@@ -6,8 +6,9 @@ import no.rutebanken.nabu.domain.Status;
 import no.rutebanken.nabu.jms.JmsSender;
 import no.rutebanken.nabu.repository.ProviderRepository;
 import no.rutebanken.nabu.repository.StatusRepository;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.glassfish.jersey.media.multipart.BodyPartEntity;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.rutebanken.helper.gcp.BlobStoreHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +19,13 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 
 @Component
@@ -61,15 +61,25 @@ public class FileUploadResource {
     @POST
     @Path("/{providerId}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFile(@PathParam("providerId") Long providerId, @FormDataParam("file") File file, @FormDataParam("file") FormDataContentDisposition fileDetail) {
-        String correlationId =  "" + System.currentTimeMillis();
-        if (fileDetail == null || fileDetail.getFileName() == null){
-            logger.debug("Missing fileName info");
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        String fileName = fileDetail.getFileName();
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response uploadFile(@PathParam("providerId") final Long providerId, final FormDataMultiPart multiPart) {
+        List<FormDataBodyPart> bodyParts = multiPart.getFields("files");
         try {
-            logger.info("Placing file '" + fileDetail.getFileName() + "' from provider with id '" + providerId + "' in blob store.");
+            for (int i = 0; i < bodyParts.size(); i++) {
+                BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
+                String fileName = bodyParts.get(i).getContentDisposition().getFileName();
+                String correlationId = "" + System.currentTimeMillis();
+                saveInBlobStore(bodyPartEntity.getInputStream(), fileName, providerId, correlationId);
+            }
+            return Response.accepted().build();
+        } catch (RuntimeException e) {
+            return Response.serverError().build();
+        }
+    }
+
+    void saveInBlobStore(InputStream inputStream, String fileName, Long providerId, String correlationId){
+        try {
+            logger.info("Placing file '" + fileName + "' from provider with id '" + providerId + "' and correlation id '" + correlationId + "' in blob store.");
             Provider provider = providerRepository.getProvider(providerId);
             Storage storage = BlobStoreHelper.getStorage(credentialPath, projectId);
             String referential = provider.chouetteInfo.referential;
@@ -77,16 +87,15 @@ public class FileUploadResource {
             String timeStamp = dateTime.format(formatter);
             String blobName = "inbound/received/" + referential + "/" + referential + "-" + timeStamp + "-" + fileName;
             logger.info("Blob created is: " + blobName);
-            BlobStoreHelper.uploadBlob(storage, containerName, blobName, new FileInputStream(file), false);
+            BlobStoreHelper.uploadBlob(storage, containerName, blobName, inputStream, false);
             logger.info("Notifying queue '" + destinationName + "' about the uploaded file.");
             jmsSender.sendBlobNotificationMessage(destinationName, blobName, fileName, providerId, correlationId);
             logger.info("Done sending.");
-            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId,Date.from(Instant.now(Clock.systemDefaultZone()))));
-            return Response.ok().build();
-        } catch (FileNotFoundException | RuntimeException e) {
-            logger.warn("Failed to put file in blobstore or notification on queue.", e);
+            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone()))));
+        } catch (RuntimeException e) {
+            String errorMessage = "Failed to put file '" + fileName + "' in blobstore or notification on queue.";
+            logger.warn(errorMessage, e);
             statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.FAILED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone()))));
-            return Response.serverError().build();
         }
     }
 
