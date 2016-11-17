@@ -21,16 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Table(name = "status", indexes = { @Index(name = "i_status", columnList = "providerId,correlationId,date") })
 public class Status {
 
-	/*
-	 * Example
-	 * 
-	 * {"file_name":"20160229_20161231_23_v3.zip","correlation_id":"4340263f-2342-4c37-8cdf-157c95499fb2",
-	 * "provider_id":2,"job_id":2345,"action":"IMPORT","state":"FAILED","date":"2016-10-19T14:00:14.196"}
-	 * 
-	 */
-
 	public enum Action {
-		FILE_TRANSFER, IMPORT, EXPORT, VALIDATION, CLEAN, DATASPACE_TRANSFER
+		FILE_TRANSFER, FILE_CLASSIFICATION, IMPORT, EXPORT, VALIDATION, CLEAN, DATASPACE_TRANSFER
 	}
 
 	public enum State {
