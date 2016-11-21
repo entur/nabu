@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Component
@@ -68,7 +69,7 @@ public class FileUploadResource {
             for (int i = 0; i < bodyParts.size(); i++) {
                 BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
                 String fileName = bodyParts.get(i).getContentDisposition().getFileName();
-                String correlationId = "" + System.currentTimeMillis();
+                String correlationId = UUID.randomUUID().toString();
                 saveInBlobStore(bodyPartEntity.getInputStream(), fileName, providerId, correlationId);
             }
             return Response.accepted().build();
