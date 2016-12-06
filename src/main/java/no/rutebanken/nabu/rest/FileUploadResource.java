@@ -40,9 +40,6 @@ public class FileUploadResource {
     @Value("${blobstore.gcs.credential.path}")
     private String credentialPath;
 
-    @Value("${blobstore.gcs.project.id}")
-    private String projectId;
-
     @Value("${blobstore.gcs.container.name}")
     private String containerName;
 
@@ -82,7 +79,7 @@ public class FileUploadResource {
         try {
             logger.info("Placing file '" + fileName + "' from provider with id '" + providerId + "' and correlation id '" + correlationId + "' in blob store.");
             Provider provider = providerRepository.getProvider(providerId);
-            Storage storage = BlobStoreHelper.getStorage(credentialPath, projectId);
+            Storage storage = BlobStoreHelper.getStorage(credentialPath);
             String referential = provider.chouetteInfo.referential;
             LocalDateTime dateTime = LocalDateTime.now();
             String timeStamp = dateTime.format(formatter);
