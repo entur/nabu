@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collection;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +32,14 @@ public class JpaProviderRepositoryTest {
     public void testGetProviderById() {
         Provider provider = repository.getProvider(42L);
         assertThat(provider).isEqualTo(new Provider(42L, "Flybussekspressen", "42",
-                new ChouetteInfo(1L, "flybussekspressen", "flybussekspressen", "Rutebanken", "admin@rutebanken.org")));
+                new ChouetteInfo(1L, "flybussekspressen","http://www.ns.1", "flybussekspressen", "Rutebanken", "admin@rutebanken.org")));
     }
 
 
     @Test
     public void testCreateAndUpdateAndDeleteProvider() {
     	
-    	ChouetteInfo chouetteInfo = new ChouetteInfo(null,"prefix","refe","org","user");
+    	ChouetteInfo chouetteInfo = new ChouetteInfo(null,"xmlns","xmlnsurl","refe","org","user");
 		Provider newProvider = new Provider(null,"junit provider","sftpAccount",chouetteInfo );
 		repository.createProvider(newProvider);
 		
