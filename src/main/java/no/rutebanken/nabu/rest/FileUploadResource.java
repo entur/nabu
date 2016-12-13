@@ -43,6 +43,9 @@ public class FileUploadResource {
     @Value("${blobstore.gcs.container.name}")
     private String containerName;
 
+    @Value("${blobstore.gcs.project.id}")
+    private String projectId;
+
     @Autowired
     StatusRepository statusRepository;
 
@@ -79,7 +82,7 @@ public class FileUploadResource {
         try {
             logger.info("Placing file '" + fileName + "' from provider with id '" + providerId + "' and correlation id '" + correlationId + "' in blob store.");
             Provider provider = providerRepository.getProvider(providerId);
-            Storage storage = BlobStoreHelper.getStorage(credentialPath);
+            Storage storage = BlobStoreHelper.getStorage(credentialPath, projectId);
             String referential = provider.chouetteInfo.referential;
             String blobName = "inbound/received/" + referential + "/" + fileName;
             logger.info("Blob created is: " + blobName);
