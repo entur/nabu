@@ -15,7 +15,7 @@ public class JobStatus {
 	}
 
 	public enum State {
-		PENDING, STARTED, TIMEOUT, FAILED, OK
+		PENDING, STARTED, TIMEOUT, FAILED, OK, DUPLICATE
 	}
 
 	@JsonProperty("events")
@@ -29,7 +29,7 @@ public class JobStatus {
 
 	@JsonProperty("lastEvent")
 	private Date lastEvent;
-	
+
 	@JsonProperty("durationMillis")
 	private Long durationMillis;
 

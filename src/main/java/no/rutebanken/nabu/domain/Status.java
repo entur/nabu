@@ -26,7 +26,7 @@ public class Status {
 	}
 
 	public enum State {
-		PENDING, STARTED, TIMEOUT, FAILED, OK
+		PENDING, STARTED, TIMEOUT, FAILED, OK, DUPLICATE
 	}
 
 	@Id
