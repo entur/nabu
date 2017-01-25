@@ -37,3 +37,4 @@ gradlew.bat
 
 # local log files
 .log
+/local_config/
