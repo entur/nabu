@@ -11,11 +11,11 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 public class JobStatus {
 
 	public enum Action {
-		FILE_TRANSFER, FILE_CLASSIFICATION, IMPORT, EXPORT, VALIDATION, CLEAN, DATASPACE_TRANSFER
+		FILE_TRANSFER, FILE_CLASSIFICATION, IMPORT, EXPORT,  VALIDATION_LEVEL_1, VALIDATION_LEVEL_2, CLEAN, DATASPACE_TRANSFER
 	}
 
 	public enum State {
-		PENDING, STARTED, TIMEOUT, FAILED, OK
+		PENDING, STARTED, TIMEOUT, FAILED, OK, DUPLICATE
 	}
 
 	@JsonProperty("events")
@@ -29,7 +29,7 @@ public class JobStatus {
 
 	@JsonProperty("lastEvent")
 	private Date lastEvent;
-	
+
 	@JsonProperty("durationMillis")
 	private Long durationMillis;
 
