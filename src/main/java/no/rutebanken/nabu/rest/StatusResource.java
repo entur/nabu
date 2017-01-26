@@ -32,8 +32,13 @@ public class StatusResource {
     @Path("/{providerId}")
     public List<JobStatus> listStatus(@PathParam("providerId") Long providerId) {
         logger.info("Returning status for provider with id '" + providerId + "'");
-        List<Status> statusForProvider = statusRepository.getStatusForProvider(providerId);
-        return convert(statusForProvider);
+        try {
+			List<Status> statusForProvider = statusRepository.getStatusForProvider(providerId);
+			return convert(statusForProvider);
+		} catch (Exception e) {
+			logger.error("Erring fetching status for provider with id "+providerId+": "+e.getMessage(),e);
+			throw e;
+		}
     }
 
 	public List<JobStatus> convert(List<Status> statusForProvider) {
