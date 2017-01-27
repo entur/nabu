@@ -36,31 +36,35 @@ public class StatusResourceTest {
 
 
 		List<JobStatus> listStatus = new StatusResource().convert(rawEvents);
-		
+
 		Assert.assertNotNull(listStatus);
 		Assert.assertEquals(2, listStatus.size());
-		
+
 		JobStatus a = listStatus.get(0);
-		
+
 		Assert.assertEquals("a", a.getCorrelationId());
 		Assert.assertEquals(Long.valueOf(2), a.getChouetteJobId());
-		Assert.assertEquals(JobStatus.Action.IMPORT,a.getEvents().get(0).action);
-		Assert.assertEquals(JobStatus.State.FAILED,a.getEndStatus());
+		Assert.assertEquals(JobStatus.Action.IMPORT, a.getEvents().get(0).action);
+		Assert.assertEquals(JobStatus.State.FAILED, a.getEndStatus());
 		Assert.assertEquals(3, a.getEvents().size());
-		Assert.assertEquals(new Date(now+1),a.getFirstEvent());
-		Assert.assertEquals(new Date(now+3),a.getLastEvent());
-		
+		Assert.assertEquals(new Date(now + 1), a.getFirstEvent());
+		Assert.assertEquals(new Date(now + 3), a.getLastEvent());
+
+		Assert.assertEquals(Long.valueOf(2), a.getEvents().get(1).chouetteJobId);
+
 		JobStatus b = listStatus.get(1);
-		
+
 		Assert.assertEquals("b", b.getCorrelationId());
 		Assert.assertEquals(Long.valueOf(1), b.getChouetteJobId());
-		Assert.assertEquals(JobStatus.Action.VALIDATION_LEVEL_1,b.getEvents().get(0).action);
-		Assert.assertEquals(JobStatus.State.OK,b.getEndStatus());
+		Assert.assertEquals(JobStatus.Action.VALIDATION_LEVEL_1, b.getEvents().get(0).action);
+		Assert.assertEquals(JobStatus.State.OK, b.getEndStatus());
 		Assert.assertEquals(3, b.getEvents().size());
-		Assert.assertEquals(new Date(now+4),b.getFirstEvent());
-		Assert.assertEquals(new Date(now+6),b.getLastEvent());
-		
-		
+		Assert.assertEquals(new Date(now + 4), b.getFirstEvent());
+		Assert.assertEquals(new Date(now + 6), b.getLastEvent());
+
+		Assert.assertEquals(Long.valueOf(1), b.getEvents().get(1).chouetteJobId);
+		Assert.assertEquals(Long.valueOf(1), b.getEvents().get(2).chouetteJobId);
+
 	}
 
 }

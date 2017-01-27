@@ -10,22 +10,26 @@ import no.rutebanken.nabu.rest.domain.JobStatus.State;
 
 public class JobStatusEvent {
 
-    @JsonProperty("state")
-    public State state;
+	@JsonProperty("state")
+	public State state;
 
-    @JsonProperty("date")
-    public Date date;
+	@JsonProperty("date")
+	public Date date;
 
 	@JsonProperty("action")
 	public Action action;
 
-	public JobStatusEvent(Action action, State state, Date date) {
-       this.action = action;
-        this.state = state;
-        this.date = date;
-    }
+	@JsonProperty("chouetteJobId")
+	public Long chouetteJobId;
 
-    public static JobStatusEvent createFromStatus(Status e) {
-    	return new JobStatusEvent(JobStatus.Action.valueOf(e.action.name()),JobStatus.State.valueOf(e.state.name()),e.date);
-    }
+	public JobStatusEvent(Action action, State state, Date date, Long chouetteJobId) {
+		this.action = action;
+		this.state = state;
+		this.date = date;
+		this.chouetteJobId = chouetteJobId;
+	}
+
+	public static JobStatusEvent createFromStatus(Status e) {
+		return new JobStatusEvent(JobStatus.Action.valueOf(e.action.name()), JobStatus.State.valueOf(e.state.name()), e.date, e.jobId);
+	}
 }
