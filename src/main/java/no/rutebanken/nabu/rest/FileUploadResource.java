@@ -90,11 +90,11 @@ public class FileUploadResource {
             logger.info("Notifying queue '" + destinationName + "' about the uploaded file.");
             jmsSender.sendBlobNotificationMessage(destinationName, blobName, fileName, providerId, correlationId);
             logger.info("Done sending.");
-            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone()))));
+            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone())),referential));
         } catch (RuntimeException e) {
             String errorMessage = "Failed to put file '" + fileName + "' in blobstore or notification on queue.";
             logger.warn(errorMessage, e);
-            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.FAILED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone()))));
+            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.FAILED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone())),null));
         }
     }
 

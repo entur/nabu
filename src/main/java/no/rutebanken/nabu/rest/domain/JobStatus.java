@@ -39,9 +39,6 @@ public class JobStatus {
 	@JsonProperty("fileName")
 	public String fileName;
 
-	@JsonProperty("chouetteJobId")
-	public Long chouetteJobId;
-
 	public List<JobStatusEvent> getEvents() {
 		return events;
 	}
@@ -98,11 +95,4 @@ public class JobStatus {
 		this.durationMillis = durationMillis;
 	}
 
-	public Long getChouetteJobId() {
-		return chouetteJobId;
-	}
-
-	public void setChouetteJobId(Long chouetteJobId) {
-		this.chouetteJobId = chouetteJobId;
-	}
 }

@@ -22,14 +22,20 @@ public class JobStatusEvent {
 	@JsonProperty("chouetteJobId")
 	public Long chouetteJobId;
 
-	public JobStatusEvent(Action action, State state, Date date, Long chouetteJobId) {
+	@JsonProperty("referential")
+	public String referential;
+
+
+	public JobStatusEvent(Action action, State state, Date date, Long chouetteJobId, String referential) {
 		this.action = action;
 		this.state = state;
 		this.date = date;
 		this.chouetteJobId = chouetteJobId;
+		this.referential = referential;
 	}
 
 	public static JobStatusEvent createFromStatus(Status e) {
-		return new JobStatusEvent(JobStatus.Action.valueOf(e.action.name()), JobStatus.State.valueOf(e.state.name()), e.date, e.jobId);
+		return new JobStatusEvent(JobStatus.Action.valueOf(e.action.name()),
+				                         JobStatus.State.valueOf(e.state.name()), e.date, e.jobId, e.referential);
 	}
 }

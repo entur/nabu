@@ -23,7 +23,7 @@ public class JpaStatusRepositoryTest {
 
 	@Test
 	public void testUpdate() throws Exception {
-		Status input = new Status("00013-gtfs.zip", 2L, 1L, Status.Action.IMPORT, Status.State.OK, "1234567", new Date());
+		Status input = new Status("00013-gtfs.zip", 2L, 1L, Status.Action.IMPORT, Status.State.OK, "1234567", new Date(),"ost");
 		repository.add(input);
 	}
 

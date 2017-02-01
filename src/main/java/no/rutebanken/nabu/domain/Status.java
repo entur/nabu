@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
-@Table(name = "status", indexes = { @Index(name = "i_status", columnList = "providerId,correlationId,date") })
+@Table(name = "status", indexes = {@Index(name = "i_status", columnList = "providerId,correlationId,date")})
 public class Status {
 
 	public enum Action {
@@ -51,12 +51,16 @@ public class Status {
 	@JsonProperty("state")
 	public State state;
 
+	@JsonProperty("referential")
+	public String referential;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "CET")
 	@JsonProperty("date")
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date date;
 
-	public Status(String fileName, Long providerId, Long jobId, Action action, State state, String correlationId, Date date) {
+	public Status(String fileName, Long providerId, Long jobId, Action action, State state, String correlationId,
+			             Date date, String referential) {
 		this.fileName = fileName;
 		this.providerId = providerId;
 		this.jobId = jobId;
@@ -64,6 +68,7 @@ public class Status {
 		this.state = state;
 		this.correlationId = correlationId;
 		this.date = date; // LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+		this.referential = referential;
 	}
 
 	public Status() {

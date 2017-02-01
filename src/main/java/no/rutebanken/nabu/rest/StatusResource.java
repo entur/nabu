@@ -57,14 +57,10 @@ public class StatusResource {
         		currentAggregation.setFirstEvent(in.date);
         		currentAggregation.setFileName(in.fileName);
         		currentAggregation.setCorrelationId(in.correlationId);
-				currentAggregation.setChouetteJobId(in.jobId);
 
         		list.add(currentAggregation);
         	}
 
-			if(in.jobId != null){
-				currentAggregation.setChouetteJobId(in.jobId);
-			}
 
         	currentAggregation.addEvent(JobStatusEvent.createFromStatus(in));
         }
