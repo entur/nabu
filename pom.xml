@@ -24,7 +24,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
-		<gcp-storage.version>0.0.2</gcp-storage.version>
+		<gcp-storage.version>0.0.3-SNAPSHOT</gcp-storage.version>
 		<fabric8.version>2.2.84</fabric8.version>
 		<docker.maven.plugin.version>0.13.9</docker.maven.plugin.version>
 		<spring-boot-plugin.version>1.3.3.RELEASE</spring-boot-plugin.version>
