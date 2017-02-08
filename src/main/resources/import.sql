@@ -20,6 +20,8 @@ insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation,
 insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (20, 'NWY', 'http://www.rutebanken.org/ns/nwy','nwy', 'Rutebanken', 'admin@rutebanken.org', null, null,'regtopp',null,true,1020);
 insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (21, 'AVI', 'http://www.rutebanken.org/ns/avi','avi', 'Rutebanken', 'admin@rutebanken.org', null, null,'netexprofile',null,true,1021);
 insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (22, 'FLT', 'http://www.rutebanken.org/ns/flt','flt', 'Rutebanken', 'admin@rutebanken.org', null, 'EPSG:4326','gtfs',null,true,1022); 
+insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (23, 'TSTEN', 'http://www.rutebanken.org/ns/tsten','test1', 'Rutebanken', 'admin@rutebanken.org', null, 'EPSG:4326','gtfs',null,true,1023); 
+insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (24, 'TSTTO', 'http://www.rutebanken.org/ns/tstto','test2', 'Rutebanken', 'admin@rutebanken.org', null, 'EPSG:4326','gtfs',null,true,1024); 
 
 insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (1001, 'OST', 'http://www.rutebanken.org/ns/ost','rb_ost', 'Rutebanken', 'admin+ost@rutebanken.org', null, null,'neptune',null,false,null);
 insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (1002, 'RUT', 'http://www.rutebanken.org/ns/rut','rb_rut', 'Rutebanken', 'admin+rut@rutebanken.org', null, null,'neptune',null,false,null);
@@ -43,6 +45,8 @@ insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation,
 insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (1020, 'NWY', 'http://www.rutebanken.org/ns/nwy','rb_nwy', 'Rutebanken', 'admin+nwy@rutebanken.org', null, null,'neptune',null,false,null);
 insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (1021, 'AVI', 'http://www.rutebanken.org/ns/avi','rb_avi', 'Rutebanken', 'admin+avi@rutebanken.org', null, null,'neptune',null,false,null);
 insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (1022, 'FLT', 'http://www.rutebanken.org/ns/flt','rb_flt', 'Rutebanken', 'admin+flt@rutebanken.org', null, null,'neptune',null,false,null); 
+insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (1023, 'TSTEN', 'http://www.rutebanken.org/ns/tsten','rb_test1', 'Rutebanken', 'admin+test1@rutebanken.org', null, null,'neptune',null,false,null); 
+insert into public.chouette_info(id, xmlns, xmlnsurl, referential, organisation, cuser, regtopp_version, regtopp_coordinate_projection, data_format,regtopp_calendar_strategy,enable_validation,migrate_data_to_provider) values (1024, 'TSTTO', 'http://www.rutebanken.org/ns/tstto','rb_test2', 'Rutebanken', 'admin+test2@rutebanken.org', null, null,'neptune',null,false,null); 
 
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1, 'Østfold / Østfold Kollektivtrafikk', 'ost', 1);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (2, 'Oslo og Akershus / Ruter', 'rut', 2);
@@ -66,6 +70,8 @@ insert into public.provider(id, name, sftp_account, chouette_info_id) values (19
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (20, 'NOR-WAY Bussekspress', 'nwy', 20);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (21, 'Avinor', null, 21);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (22, 'Flytoget', 'flt', 22);
+insert into public.provider(id, name, sftp_account, chouette_info_id) values (23, 'Test Organisasjon 1', 'test1', 23);
+insert into public.provider(id, name, sftp_account, chouette_info_id) values (24, 'Test Organisasjon 2', 'test2', 24);
 
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1001, 'RB/Østfold / Østfold Kollektivtrafikk', null, 1001);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1002, 'RB/Oslo og Akershus / Ruter', null, 1002);
@@ -89,3 +95,5 @@ insert into public.provider(id, name, sftp_account, chouette_info_id) values (10
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1020, 'RB/NOR-WAY Bussekspress', null, 1020);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1021, 'RB/Avinor', null, 1021);
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1022, 'RB/Flytoget', null, 1022);
+insert into public.provider(id, name, sftp_account, chouette_info_id) values (1023, 'RB/Test org 1', null, 1023);
+insert into public.provider(id, name, sftp_account, chouette_info_id) values (1024, 'RB/Test org 2', null, 1024);
