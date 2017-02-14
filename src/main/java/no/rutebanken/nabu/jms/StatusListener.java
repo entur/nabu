@@ -19,7 +19,7 @@ public class StatusListener {
     @JmsListener(destination = "ExternalProviderStatus")
     public void processMessage(String content) {
         Status status = Status.fromString(content);
-        logger.info("Received status event: " + status.toString());
+        logger.info("Received job status update: " + status.toString());
         statusRepository.add(status);
     }
 
