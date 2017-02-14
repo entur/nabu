@@ -1,6 +1,7 @@
 package no.rutebanken.nabu.rest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,19 +21,28 @@ import no.rutebanken.nabu.rest.domain.JobStatus;
 @SpringBootTest
 public class StatusResourceTest {
 
+
+	@Test
+	public void testEnumConversion() {
+		List<Status.Action> converted = new StatusResource().convertEnums(Arrays.asList(JobStatus.Action.CLEAN, JobStatus.Action.BUILD_GRAPH), Status.Action.class);
+		Assert.assertEquals(2,converted.size());
+		Assert.assertTrue(converted.contains(Action.BUILD_GRAPH));
+		Assert.assertTrue(converted.contains(Action.CLEAN));
+	}
+
 	@Test
 	public void testGetStatusForProvider() throws Exception {
 		long now = System.currentTimeMillis();
 		List<Status> rawEvents = new ArrayList<>();
 		// Job "b" -> OK
-		rawEvents.add(new Status("filename2", 2l, null, Action.VALIDATION_LEVEL_1, State.PENDING, "b", new Date(now + 4),"ost"));
-		rawEvents.add(new Status("filename2", 2l, 1l, Action.VALIDATION_LEVEL_1, State.STARTED, "b", new Date(now + 5),"pb"));
-		rawEvents.add(new Status("filename2", 2l, 1l, Action.VALIDATION_LEVEL_1, State.OK, "b", new Date(now + 6),"pb"));
+		rawEvents.add(new Status("filename2", 2l, null, Action.VALIDATION_LEVEL_1, State.PENDING, "b", new Date(now + 4), "ost"));
+		rawEvents.add(new Status("filename2", 2l, 1l, Action.VALIDATION_LEVEL_1, State.STARTED, "b", new Date(now + 5), "pb"));
+		rawEvents.add(new Status("filename2", 2l, 1l, Action.VALIDATION_LEVEL_1, State.OK, "b", new Date(now + 6), "pb"));
 
 		// Job "a" -> FAILED
-		rawEvents.add(new Status("filename1", 2l, null, Action.IMPORT, State.PENDING, "a", new Date(now + 1),"ost"));
-		rawEvents.add(new Status("filename1", 2l, 2l, Action.IMPORT, State.STARTED, "a", new Date(now + 2),"ost"));
-		rawEvents.add(new Status("filename1", 2l, 2l, Action.IMPORT, State.FAILED, "a", new Date(now + 3),"ost"));
+		rawEvents.add(new Status("filename1", 2l, null, Action.IMPORT, State.PENDING, "a", new Date(now + 1), "ost"));
+		rawEvents.add(new Status("filename1", 2l, 2l, Action.IMPORT, State.STARTED, "a", new Date(now + 2), "ost"));
+		rawEvents.add(new Status("filename1", 2l, 2l, Action.IMPORT, State.FAILED, "a", new Date(now + 3), "ost"));
 
 
 		List<JobStatus> listStatus = new StatusResource().convert(rawEvents);
