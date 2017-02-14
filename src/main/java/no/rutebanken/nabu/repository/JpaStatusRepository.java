@@ -72,8 +72,6 @@ public class JpaStatusRepository implements StatusRepository, DbStatus {
 		params.forEach((param, value) -> query.setParameter(param, value));
 
 		return query.getResultList();
-
-
 	}
 
 

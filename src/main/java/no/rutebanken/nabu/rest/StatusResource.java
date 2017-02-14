@@ -8,13 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.ws.rs.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static no.rutebanken.nabu.rest.mapper.EnumMapper.convertEnums;
 
 
 @Component
@@ -42,15 +43,6 @@ public class StatusResource {
 			logger.error("Erring fetching status for provider with id " + providerId + ": " + e.getMessage(), e);
 			throw e;
 		}
-	}
-
-	<T extends Enum<T>, O extends Enum<O>> List<T> convertEnums(List<O> org, Class<T> toEnum) {
-		List<T> converted = new ArrayList();
-		if (!CollectionUtils.isEmpty(org)) {
-			org.forEach(orgVal -> converted.add(T.valueOf(toEnum, orgVal.toString())));
-		}
-		return converted;
-
 	}
 
 	public List<JobStatus> convert(List<Status> statusForProvider) {

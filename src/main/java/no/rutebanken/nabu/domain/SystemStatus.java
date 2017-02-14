@@ -22,23 +22,31 @@ public class SystemStatus {
 	public Long id;
 
 	@JsonProperty("correlation_id")
-	private String correlationId;
+	public String correlationId;
 
 	@JsonProperty("action")
-	private SystemStatus.Action action;
+	public SystemStatus.Action action;
 
 	@JsonProperty("state")
-	private SystemStatus.State state;
+	public SystemStatus.State state;
 
 	@JsonProperty("entity")
-	private String entity;
+	public String entity;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "CET")
 	@JsonProperty("date")
-	private Date date;
+	public Date date;
 
 	public SystemStatus() {
 		// Must be present for JSON unmarshalling
+	}
+
+	public SystemStatus(String correlationId, Action action, State state, String entity, Date date) {
+		this.correlationId = correlationId;
+		this.action = action;
+		this.state = state;
+		this.entity = entity;
+		this.date = date;
 	}
 
 	public static SystemStatus fromString(String string) {
@@ -61,4 +69,18 @@ public class SystemStatus {
 		}
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SystemStatus that = (SystemStatus) o;
+
+		return id != null ? id.equals(that.id) : that.id == null;
+	}
+
+	@Override
+	public int hashCode() {
+		return id != null ? id.hashCode() : 0;
+	}
 }

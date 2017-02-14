@@ -1,10 +1,7 @@
 package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.filter.CorsResponseFilter;
-import no.rutebanken.nabu.rest.ApplicationStatusResource;
-import no.rutebanken.nabu.rest.FileUploadResource;
-import no.rutebanken.nabu.rest.ProviderResource;
-import no.rutebanken.nabu.rest.StatusResource;
+import no.rutebanken.nabu.rest.*;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +16,7 @@ public class JerseyConfig extends ResourceConfig {
         register(MultiPartFeature.class);
         register(FileUploadResource.class);
         register(StatusResource.class);
+        register(SystemJobResource.class);
         register(ProviderResource.class);
         register(ApplicationStatusResource.class);
         register(CorsResponseFilter.class);

@@ -21,15 +21,6 @@ import no.rutebanken.nabu.rest.domain.JobStatus;
 @SpringBootTest
 public class StatusResourceTest {
 
-
-	@Test
-	public void testEnumConversion() {
-		List<Status.Action> converted = new StatusResource().convertEnums(Arrays.asList(JobStatus.Action.CLEAN, JobStatus.Action.BUILD_GRAPH), Status.Action.class);
-		Assert.assertEquals(2,converted.size());
-		Assert.assertTrue(converted.contains(Action.BUILD_GRAPH));
-		Assert.assertTrue(converted.contains(Action.CLEAN));
-	}
-
 	@Test
 	public void testGetStatusForProvider() throws Exception {
 		long now = System.currentTimeMillis();
