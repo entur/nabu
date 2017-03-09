@@ -64,7 +64,7 @@ public class SystemJobResource {
 		}
 	}
 
-	private Collection<SystemStatusAggregation> convertToSystemStatusAggregation(List<SystemStatus> systemStatuses) {
+	Collection<SystemStatusAggregation> convertToSystemStatusAggregation(List<SystemStatus> systemStatuses) {
 		Map<String, SystemStatusAggregation> aggregationPerJobType = new HashMap<>();
 
 		for (SystemStatus in : systemStatuses) {
@@ -82,7 +82,7 @@ public class SystemJobResource {
 		return aggregationPerJobType.values();
 	}
 
-	private List<SystemJobStatus> convertToJobStatus(List<SystemStatus> systemStatuses) {
+	List<SystemJobStatus> convertToJobStatus(List<SystemStatus> systemStatuses) {
 
 		List<SystemJobStatus> list = new ArrayList<>();
 		// Map from internal Status object to Rest service SystemJobStatus object
