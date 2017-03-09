@@ -36,6 +36,9 @@ public class SystemStatus {
 	@JsonProperty("source")
 	public String source;
 
+	@JsonProperty("jobType")
+	public String jobType;
+
 	@JsonProperty("target")
 	public String target;
 
@@ -47,14 +50,20 @@ public class SystemStatus {
 		// Must be present for JSON unmarshalling
 	}
 
-	public SystemStatus(String correlationId, Action action, State state, String entity, String source, String target, Date date) {
+	public SystemStatus(String jobType, String correlationId, State state, Date date) {
+		this.jobType = jobType;
 		this.correlationId = correlationId;
-		this.action = action;
 		this.state = state;
+		this.date = date;
+	}
+
+
+	public SystemStatus(String jobType, String correlationId, Action action, State state, String entity, String source, String target, Date date) {
+		this(jobType, correlationId, state, date);
 		this.entity = entity;
 		this.source = source;
 		this.target = target;
-		this.date = date;
+		this.action = action;
 	}
 
 	public static SystemStatus fromString(String string) {

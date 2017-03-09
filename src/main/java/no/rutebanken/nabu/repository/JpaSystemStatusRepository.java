@@ -33,10 +33,18 @@ public class JpaSystemStatusRepository implements SystemStatusRepository, DbStat
 	}
 
 	@Override
-	public List<SystemStatus> getSystemStatus(Date from, Date to, List<SystemStatus.Action> actions,
+	public List<SystemStatus> getSystemStatus(Date from, Date to, List<String> jobTypes, List<SystemStatus.Action> actions,
 			                                         List<SystemStatus.State> states, List<String> entities,
 			                                         List<String> sources, List<String> targets) {
-		return new SystemStatusQueryBuilder(from, to, actions, states, entities, sources, targets).build().getResultList();
+		return new SystemStatusQueryBuilder(from, to, jobTypes, actions, states, entities, sources, targets).buildGetByCorrelationIdQuery().getResultList();
+	}
+
+	@Override
+	public List<SystemStatus> getLatestSystemStatus(List<String> jobTypes, List<SystemStatus.Action> actions,
+			                                               List<SystemStatus.State> states, List<String> entities,
+			                                               List<String> sources, List<String> targets) {
+
+		return new SystemStatusQueryBuilder(jobTypes, actions, states, entities, sources, targets).buildGetLatestQuery().getResultList();
 	}
 
 
@@ -52,12 +60,12 @@ public class JpaSystemStatusRepository implements SystemStatusRepository, DbStat
 		private List<String> sources;
 
 		private List<String> targets;
-
+		private List<String> jobTypes;
 
 		private Map<String, Object> params = new HashMap();
 
 
-		public SystemStatusQueryBuilder(Date from, Date to, List<SystemStatus.Action> actions, List<SystemStatus.State> states,
+		public SystemStatusQueryBuilder(Date from, Date to, List<String> jobTypes, List<SystemStatus.Action> actions, List<SystemStatus.State> states,
 				                               List<String> entities, List<String> sources, List<String> targets) {
 			this.from = from;
 			this.to = to;
@@ -66,15 +74,45 @@ public class JpaSystemStatusRepository implements SystemStatusRepository, DbStat
 			this.entities = entities;
 			this.sources = sources;
 			this.targets = targets;
+			this.jobTypes = jobTypes;
 		}
 
-		private TypedQuery<SystemStatus> build() {
+		public SystemStatusQueryBuilder(List<String> jobTypes, List<SystemStatus.Action> actions, List<SystemStatus.State> states,
+				                               List<String> entities, List<String> sources, List<String> targets) {
+			this(null, null, jobTypes, actions, states, entities, sources, targets);
+		}
+
+
+		private TypedQuery<SystemStatus> buildGetLatestQuery() {
+			sb = new StringBuilder("select sl from SystemStatus sl where (sl.jobType,sl.state,sl.date) " +
+					                       "in (select s.jobType,s.state,max(s.date) from SystemStatus s ");
+			addCriteria();
+
+			sb.append("group by s.jobType,s.state)");
+			return build();
+		}
+
+		private TypedQuery<SystemStatus> buildGetByCorrelationIdQuery() {
 			sb = new StringBuilder("SELECT sf FROM SystemStatus sf WHERE sf.correlationId in (select s.correlationId from SystemStatus s ");
+			addCriteria();
+
+			if (params.isEmpty()) {
+				throw new RuntimeException("At least one query param must be set");
+			}
+
+			sb.append(") ORDER by sf.correlationId, sf.date");
+			return build();
+		}
+
+		private void addCriteria() {
 			if (from != null) {
 				addCriteria("date", ">=", "from", from);
 			}
 			if (to != null) {
 				addCriteria("date", "<=", "to", to);
+			}
+			if (!CollectionUtils.isEmpty(jobTypes)) {
+				addCriteria("jobType", "in", "jobTypes", jobTypes);
 			}
 			if (!CollectionUtils.isEmpty(actions)) {
 				addCriteria("action", "in", "actions", actions);
@@ -92,21 +130,21 @@ public class JpaSystemStatusRepository implements SystemStatusRepository, DbStat
 				addCriteria("target", "in", "targets", targets);
 			}
 
-			if (params.isEmpty()) {
-				throw new RuntimeException("At least one query param must be set");
-			}
+		}
 
-			sb.append(") ORDER by sf.correlationId, sf.date");
+		private TypedQuery<SystemStatus> build() {
 			TypedQuery<SystemStatus> query = entityManager.createQuery(sb.toString(), SystemStatus.class);
 			params.forEach((param, value) -> query.setParameter(param, value));
 			return query;
 		}
 
+
 		private void addCriteria(String attribute, String operator, String paramName, Object paramValue) {
 			sb.append(params.size() > 0 ? " and " : " where ");
-			sb.append(" s." + attribute + " " + operator + " :" + paramName);
+			sb.append(" s." + attribute + " " + operator + " :" + paramName).append(" ");
 			params.put(paramName, paramValue);
 		}
+
 	}
 
 

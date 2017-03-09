@@ -44,6 +44,10 @@ public class SystemJobStatus {
 	@JsonProperty("target")
 	public String target;
 
+	@JsonProperty("jobType")
+	public String jobType;
+
+
 	public List<SystemJobStatusEvent> getEvents() {
 		return events;
 	}
@@ -110,6 +114,14 @@ public class SystemJobStatus {
 
 	public void addEvent(SystemJobStatusEvent event) {
 		events.add(event);
+	}
+
+	public String getJobType() {
+		return jobType;
+	}
+
+	public void setJobType(String jobType) {
+		this.jobType = jobType;
 	}
 
 	public String getSource() {
