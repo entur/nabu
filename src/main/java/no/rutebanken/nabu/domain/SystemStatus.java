@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "system_status", indexes = {@Index(name = "i_status", columnList = "action,correlationId,date")})
 public class SystemStatus {
 
-	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD_GRAPH}
+	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD, BUILD_GRAPH}
 
 	public enum State {PENDING, STARTED, TIMEOUT, FAILED, OK}
 
@@ -33,6 +33,12 @@ public class SystemStatus {
 	@JsonProperty("entity")
 	public String entity;
 
+	@JsonProperty("source")
+	public String source;
+
+	@JsonProperty("target")
+	public String target;
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "CET")
 	@JsonProperty("date")
 	public Date date;
@@ -41,11 +47,13 @@ public class SystemStatus {
 		// Must be present for JSON unmarshalling
 	}
 
-	public SystemStatus(String correlationId, Action action, State state, String entity, Date date) {
+	public SystemStatus(String correlationId, Action action, State state, String entity, String source, String target, Date date) {
 		this.correlationId = correlationId;
 		this.action = action;
 		this.state = state;
 		this.entity = entity;
+		this.source = source;
+		this.target = target;
 		this.date = date;
 	}
 

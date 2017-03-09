@@ -10,8 +10,7 @@ import java.util.List;
 @JsonRootName("systemJobStatus")
 public class SystemJobStatus {
 
-
-	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD_GRAPH}
+	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD, BUILD_GRAPH}
 
 	public enum State {PENDING, STARTED, TIMEOUT, FAILED, OK}
 
@@ -39,6 +38,11 @@ public class SystemJobStatus {
 	@JsonProperty("entity")
 	public String entity;
 
+	@JsonProperty("source")
+	public String source;
+
+	@JsonProperty("target")
+	public String target;
 
 	public List<SystemJobStatusEvent> getEvents() {
 		return events;
@@ -108,4 +112,19 @@ public class SystemJobStatus {
 		events.add(event);
 	}
 
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
 }

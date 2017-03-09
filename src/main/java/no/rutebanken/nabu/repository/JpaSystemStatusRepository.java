@@ -33,8 +33,10 @@ public class JpaSystemStatusRepository implements SystemStatusRepository, DbStat
 	}
 
 	@Override
-	public List<SystemStatus> getSystemStatus(Date from, Date to, List<SystemStatus.Action> actions, List<SystemStatus.State> states, List<String> entities) {
-		return new SystemStatusQueryBuilder(from, to, actions, states, entities).build().getResultList();
+	public List<SystemStatus> getSystemStatus(Date from, Date to, List<SystemStatus.Action> actions,
+			                                         List<SystemStatus.State> states, List<String> entities,
+			                                         List<String> sources, List<String> targets) {
+		return new SystemStatusQueryBuilder(from, to, actions, states, entities, sources, targets).build().getResultList();
 	}
 
 
@@ -47,16 +49,23 @@ public class JpaSystemStatusRepository implements SystemStatusRepository, DbStat
 		private List<SystemStatus.Action> actions;
 		private List<SystemStatus.State> states;
 		private List<String> entities;
+		private List<String> sources;
+
+		private List<String> targets;
+
 
 		private Map<String, Object> params = new HashMap();
 
 
-		public SystemStatusQueryBuilder(Date from, Date to, List<SystemStatus.Action> actions, List<SystemStatus.State> states, List<String> entities) {
+		public SystemStatusQueryBuilder(Date from, Date to, List<SystemStatus.Action> actions, List<SystemStatus.State> states,
+				                               List<String> entities, List<String> sources, List<String> targets) {
 			this.from = from;
 			this.to = to;
 			this.actions = actions;
 			this.states = states;
 			this.entities = entities;
+			this.sources = sources;
+			this.targets = targets;
 		}
 
 		private TypedQuery<SystemStatus> build() {
@@ -75,6 +84,12 @@ public class JpaSystemStatusRepository implements SystemStatusRepository, DbStat
 			}
 			if (!CollectionUtils.isEmpty(entities)) {
 				addCriteria("entity", "in", "entities", entities);
+			}
+			if (!CollectionUtils.isEmpty(sources)) {
+				addCriteria("source", "in", "sources", sources);
+			}
+			if (!CollectionUtils.isEmpty(targets)) {
+				addCriteria("target", "in", "targets", targets);
 			}
 
 			if (params.isEmpty()) {

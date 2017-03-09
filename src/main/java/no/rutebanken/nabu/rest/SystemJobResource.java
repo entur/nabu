@@ -33,11 +33,13 @@ public class SystemJobResource {
 	@Path("/status")
 	public List<SystemJobStatus> listSystemStatus(@QueryParam("from") Date from,
 			                                             @QueryParam("to") Date to, @QueryParam("action") List<SystemJobStatus.Action> actions,
-			                                             @QueryParam("state") List<SystemJobStatus.State> states, @QueryParam("entity") List<String> entities) {
+			                                             @QueryParam("state") List<SystemJobStatus.State> states, @QueryParam("entity") List<String> entities,
+			                                             @QueryParam("source") List<String> sources, @QueryParam("target") List<String> targets
+	) {
 		logger.info("Returning system status");
 		try {
 			List<SystemStatus> internalStatuses = systemStatusRepository.getSystemStatus(from, to,
-					convertEnums(actions, SystemStatus.Action.class), convertEnums(states, SystemStatus.State.class), entities);
+					convertEnums(actions, SystemStatus.Action.class), convertEnums(states, SystemStatus.State.class), entities,sources,targets);
 			return convert(internalStatuses);
 		} catch (Exception e) {
 			logger.error("Erring fetching system status: " + e.getMessage(), e);
@@ -62,6 +64,8 @@ public class SystemJobResource {
 				currentAggregation = new SystemJobStatus();
 				currentAggregation.setFirstEvent(in.date);
 				currentAggregation.setEntity(in.entity);
+				currentAggregation.setSource(in.source);
+				currentAggregation.setTarget(in.target);
 				currentAggregation.setAction(SystemJobStatus.Action.valueOf(in.action.name()));
 				currentAggregation.setCorrelationId(in.correlationId);
 
