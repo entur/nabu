@@ -10,7 +10,7 @@ import java.util.List;
 @JsonRootName("systemJobStatus")
 public class SystemJobStatus {
 
-	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD, BUILD_GRAPH}
+	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD}
 
 	public enum State {PENDING, STARTED, TIMEOUT, FAILED, OK}
 
