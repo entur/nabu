@@ -10,10 +10,11 @@ import java.io.StringWriter;
 import java.util.Date;
 
 @Entity
-@Table(name = "system_status", indexes = {@Index(name = "i_status", columnList = "action,correlationId,date")})
+@Table(name = "system_status", indexes = {@Index(name = "i_status", columnList = "action,correlationId,date"),
+		                                         @Index(name = "agg_status", columnList = "jobType,state,date")})
 public class SystemStatus {
 
-	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD, BUILD_GRAPH}
+	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD}
 
 	public enum State {PENDING, STARTED, TIMEOUT, FAILED, OK}
 
