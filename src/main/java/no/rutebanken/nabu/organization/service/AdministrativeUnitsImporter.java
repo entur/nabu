@@ -3,7 +3,6 @@ package no.rutebanken.nabu.organization.service;
 import com.vividsolutions.jts.geom.Polygon;
 import net.logstash.logback.encoder.org.apache.commons.lang.StringUtils;
 import no.rutebanken.nabu.organization.model.CodeSpace;
-import no.rutebanken.nabu.organization.model.Id;
 import no.rutebanken.nabu.organization.model.organization.AdministrativeZone;
 import no.rutebanken.nabu.organization.repository.AdministrativeZoneRepository;
 import no.rutebanken.nabu.organization.repository.CodeSpaceRepository;
@@ -37,11 +36,11 @@ public class AdministrativeUnitsImporter {
 	private static final String tmpFile = "files/tmp.geojson";
 
 	public void importAdministrativeUnits(String codeSpaceId) {
-		importAdministrativeUnits("files/fylker.geojson", "fylkesnr", codeSpaceId);
-		importAdministrativeUnits("files/kommuner.geojson", "komm", codeSpaceId);
+		importAdministrativeUnits("files/fylker.geojson", "fylkesnr", 2, codeSpaceId);
+		importAdministrativeUnits("files/kommuner.geojson", "komm", 4, codeSpaceId);
 	}
 
-	public void importAdministrativeUnits(String filePath, String idProperty, String codeSpaceId) {
+	public void importAdministrativeUnits(String filePath, String idProperty, int idLength, String codeSpaceId) {
 
 		new FeatureJSONFilter(filePath, tmpFile, idProperty, "area").filter();
 
@@ -62,17 +61,7 @@ public class AdministrativeUnitsImporter {
 				administrativeZone.setName(getProperty(feature, "navn"));
 				administrativeZone.setPolygon((Polygon) feature.getDefaultGeometry());
 
-				String id;
-				String type = getProperty(feature, "objtype");
-				if ("Fylke".equals(type)) {
-					id = StringUtils.leftPad("" + getProperty(feature, "fylkesnr"), 2, "0");
-				} else if ("Kommune".equals(type)) {
-					id = StringUtils.leftPad("" + getProperty(feature, "komm"), 4, "0");
-				} else {
-					logger.info("Ignoring unknown feature: " + type);
-					continue;
-				}
-
+				String id = StringUtils.leftPad("" + getProperty(feature, idProperty), idLength, "0");
 				administrativeZone.setPrivateCode(id);
 				administrativeZones.add(administrativeZone);
 			}
