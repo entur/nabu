@@ -65,7 +65,7 @@ public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, Res
 		return entity;
 	}
 
-	public ResponsibilitySetDTO toDTO(ResponsibilitySet entity) {
+	public ResponsibilitySetDTO toDTO(ResponsibilitySet entity, boolean fullDetails) {
 		ResponsibilitySetDTO dto = new ResponsibilitySetDTO();
 		dto.id = entity.getId();
 		dto.name = entity.getName();

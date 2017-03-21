@@ -23,18 +23,20 @@ public class AdministrativeZoneMapper implements DTOMapper<AdministrativeZone, A
 	protected CodeSpaceRepository codeSpaceRepository;
 
 
-	public AdministrativeZoneDTO toDTO(AdministrativeZone entity) {
+	public AdministrativeZoneDTO toDTO(AdministrativeZone entity, boolean fullDetails) {
 		AdministrativeZoneDTO dto = new AdministrativeZoneDTO();
 		dto.id = entity.getId();
 		dto.name = entity.getName();
 
-		dto.polygon = (org.wololo.geojson.Polygon) writer.write(entity.getPolygon());
+		if (fullDetails) {
+			dto.polygon = (org.wololo.geojson.Polygon) writer.write(entity.getPolygon());
+		}
 		return dto;
 	}
 
 	@Override
 	public AdministrativeZone createFromDTO(AdministrativeZoneDTO dto, Class<AdministrativeZone> clazz) {
-		AdministrativeZone entity=new AdministrativeZone();
+		AdministrativeZone entity = new AdministrativeZone();
 		entity.setPrivateCode(dto.privateCode);
 		entity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
 		return updateFromDTO(dto, new AdministrativeZone());

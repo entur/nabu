@@ -28,7 +28,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
 	@Autowired
 	private ResponsibilitySetRepository responsibilitySetRepository;
 
-	public UserDTO toDTO(User org) {
+	public UserDTO toDTO(User org, boolean fullDetails) {
 		UserDTO dto = new UserDTO();
 		dto.id = org.getId();
 		dto.username = org.getUsername();

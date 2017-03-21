@@ -45,12 +45,12 @@ public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO>
 	@Path("{id}")
 	public D get(@PathParam("id") String id) {
 		E entity = getExisting(id);
-		return getMapper().toDTO(entity);
+		return getMapper().toDTO(entity, true);
 	}
 
 	@GET
 	public List<D> listAll() {
-		return getRepository().findAll().stream().map(r -> getMapper().toDTO(r)).collect(Collectors.toList());
+		return getRepository().findAll().stream().map(r -> getMapper().toDTO(r, false)).collect(Collectors.toList());
 	}
 
 

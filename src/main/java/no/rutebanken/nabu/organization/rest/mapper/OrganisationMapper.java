@@ -19,7 +19,7 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 	@Autowired
 	protected CodeSpaceRepository codeSpaceRepository;
 
-	public OrganisationDTO toDTO(Organisation organisation) {
+	public OrganisationDTO toDTO(Organisation organisation, boolean fullDetails) {
 		OrganisationDTO dto = new OrganisationDTO();
 		dto.id = organisation.getId();
 

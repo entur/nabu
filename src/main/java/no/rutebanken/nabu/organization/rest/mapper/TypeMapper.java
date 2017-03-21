@@ -13,7 +13,7 @@ public class TypeMapper<R extends VersionedEntity & TypeEntity> implements DTOMa
 	@Autowired
 	protected CodeSpaceRepository codeSpaceRepository;
 
-	public TypeDTO toDTO(R entity) {
+	public TypeDTO toDTO(R entity, boolean fullDetails) {
 		TypeDTO dto = new TypeDTO();
 		dto.name = entity.getName();
 		dto.id = entity.getId();

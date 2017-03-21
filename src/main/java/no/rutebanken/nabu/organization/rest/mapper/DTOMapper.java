@@ -9,6 +9,6 @@ public interface DTOMapper<E extends VersionedEntity, D extends BaseDTO> {
 
 	E updateFromDTO(D dto, E entity);
 
-	D toDTO(E entity);
+	D toDTO(E entity, boolean fullDetails);
 
 }
