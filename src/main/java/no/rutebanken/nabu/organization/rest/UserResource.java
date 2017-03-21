@@ -7,12 +7,14 @@ import no.rutebanken.nabu.organization.rest.dto.user.UserDTO;
 import no.rutebanken.nabu.organization.rest.mapper.DTOMapper;
 import no.rutebanken.nabu.organization.rest.mapper.UserMapper;
 import no.rutebanken.nabu.organization.service.IamService;
-import no.rutebanken.nabu.organization.service.KeycloakIamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 @Component
 @Path("/users")
@@ -43,9 +45,10 @@ public class UserResource extends BaseResource<User, UserDTO> {
 	}
 
 	@POST
-	public void create(UserDTO dto) {
+	public Response create(UserDTO dto, @Context UriInfo uriInfo) {
 		User user = getRepository().save(getMapper().createFromDTO(dto, getEntityClass()));
 		iamService.createUser(user);
+		return buildCreatedResponse(uriInfo, user);
 	}
 
 	@PUT
