@@ -34,19 +34,24 @@ public class AdministrativeUnitsImporter {
 	@Autowired
 	private CodeSpaceRepository codeSpaceRepository;
 
+	private static final String tmpFile = "files/tmp.geojson";
 
 	public void importAdministrativeUnits(String codeSpaceId) {
-		importAdministrativeUnits("files/fylker.geojson", codeSpaceId);
-		importAdministrativeUnits("files/kommuner.geojson", codeSpaceId);
+		importAdministrativeUnits("files/fylker.geojson", "fylkesnr", codeSpaceId);
+		importAdministrativeUnits("files/kommuner.geojson", "komm", codeSpaceId);
 	}
 
-	public void importAdministrativeUnits(String filePath, String codeSpaceId) {
+	public void importAdministrativeUnits(String filePath, String idProperty, String codeSpaceId) {
+
+		new FeatureJSONFilter(filePath, tmpFile, idProperty, "area").filter();
+
+
 		CodeSpace codeSpace = codeSpaceRepository.getOneByPublicId(codeSpaceId);
 		List<AdministrativeZone> administrativeZones = new ArrayList<>();
 
 		try {
 			FeatureJSON fJson = new FeatureJSON();
-			FeatureIterator<SimpleFeature> itr = fJson.streamFeatureCollection(FileUtils.openInputStream(new File(filePath)));
+			FeatureIterator<SimpleFeature> itr = fJson.streamFeatureCollection(FileUtils.openInputStream(new File(tmpFile)));
 
 			while (itr.hasNext()) {
 				SimpleFeature feature = itr.next();
@@ -73,6 +78,8 @@ public class AdministrativeUnitsImporter {
 			}
 			itr.close();
 			repository.save(administrativeZones);
+
+			new File(tmpFile).delete();
 		} catch (Exception e) {
 			throw new RuntimeException("Import of admin units failed with exception: " + e.getMessage(), e);
 		}
