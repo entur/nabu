@@ -54,11 +54,9 @@ public class UserResource extends BaseResource<User, UserDTO> {
 	@PUT
 	@Path("{id}")
 	public void update(@PathParam("id") String id, UserDTO dto) {
-		User user = repository.getOneByPublicId(id);
+		User user = getExisting(id);
 		repository.save(mapper.updateFromDTO(dto, user));
 		iamService.updateUser(user);
 	}
-
-
 
 }

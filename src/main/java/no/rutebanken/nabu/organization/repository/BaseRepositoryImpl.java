@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
@@ -45,7 +46,7 @@ public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepo
 		if (results.size() == 1) {
 			return results.get(0);
 		} else if (results.isEmpty()) {
-			throw new NotFoundException(entityInformation.getEntityName() + " with id: [" + publicId + "] not found");
+			throw new EntityNotFoundException(entityInformation.getEntityName() + " with id: [" + publicId + "] not found");
 		}
 		throw new IllegalArgumentException("Query for one entity returned multiple: " + query);
 	}

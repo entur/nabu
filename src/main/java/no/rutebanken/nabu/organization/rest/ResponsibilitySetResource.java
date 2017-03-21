@@ -51,7 +51,7 @@ public class ResponsibilitySetResource extends BaseResource<ResponsibilitySet, R
 	@PUT
 	@Path("{id}")
 	public void update(@PathParam("id") String id, ResponsibilitySetDTO dto) {
-		ResponsibilitySet entity = repository.getOneByPublicId(id);
+		ResponsibilitySet entity = getExisting(id);
 		repository.save(mapper.updateFromDTO(dto, entity));
 		iamService.updateResponsibilitySet(entity);
 	}

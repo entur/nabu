@@ -4,8 +4,10 @@ import no.rutebanken.nabu.organization.model.VersionedEntity;
 import no.rutebanken.nabu.organization.repository.VersionedEntityRepository;
 import no.rutebanken.nabu.organization.rest.dto.BaseDTO;
 import no.rutebanken.nabu.organization.rest.mapper.DTOMapper;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -30,26 +32,20 @@ public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO>
 		return buildCreatedResponse(uriInfo, entity);
 	}
 
-	protected Response buildCreatedResponse(UriInfo uriInfo, E entity) {
-		UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-		builder.path(entity.getId());
-		return Response.created(builder.build()).build();
-	}
-
 
 	@PUT
 	@Path("{id}")
 	public void update(@PathParam("id") String id, D dto) {
-		E entity = getRepository().getOneByPublicId(id);
-
+		E entity = getExisting(id);
 		getRepository().save(getMapper().updateFromDTO(dto, entity));
 	}
+
 
 	@GET
 	@Path("{id}")
 	public D get(@PathParam("id") String id) {
-		E User = getRepository().getOneByPublicId(id);
-		return getMapper().toDTO(User);
+		E entity = getExisting(id);
+		return getMapper().toDTO(entity);
 	}
 
 	@GET
@@ -57,4 +53,18 @@ public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO>
 		return getRepository().findAll().stream().map(r -> getMapper().toDTO(r)).collect(Collectors.toList());
 	}
 
+
+	protected Response buildCreatedResponse(UriInfo uriInfo, E entity) {
+		UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+		builder.path(entity.getId());
+		return Response.created(builder.build()).build();
+	}
+
+	protected E getExisting(String id) {
+		try {
+			return getRepository().getOneByPublicId(id);
+		} catch (DataRetrievalFailureException e) {
+			throw new NotFoundException(getClass().getSimpleName() + " with id: [" + id + "] not found");
+		}
+	}
 }
