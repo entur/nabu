@@ -62,7 +62,7 @@ public class JpaSystemStatusRepository implements SystemStatusRepository, DbStat
 		private List<String> targets;
 		private List<String> jobTypes;
 
-		private Map<String, Object> params = new HashMap();
+		private Map<String, Object> params = new HashMap<>();
 
 
 		public SystemStatusQueryBuilder(Date from, Date to, List<String> jobTypes, List<SystemStatus.Action> actions, List<SystemStatus.State> states,

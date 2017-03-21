@@ -15,7 +15,7 @@ public class SystemJobStatus {
 	public enum State {PENDING, STARTED, TIMEOUT, FAILED, OK}
 
 	@JsonProperty("events")
-	private List<SystemJobStatusEvent> events = new ArrayList();
+	private List<SystemJobStatusEvent> events = new ArrayList<>();
 
 	@JsonProperty("action")
 	private SystemJobStatus.Action action;

@@ -35,7 +35,7 @@ public class JpaStatusRepository implements StatusRepository, DbStatus {
 	public List<Status> getStatusForProvider(Long providerId, Date from, Date to, List<Status.Action> actions, List<Status.State> states, List<Long> jobIds, List<String> fileNames) {
 		StringBuilder sb = new StringBuilder("SELECT sf FROM Status sf WHERE sf.correlationId in (select s.correlationId from Status s where s.providerId = :providerId");
 
-		Map<String, Object> params = new HashMap();
+		Map<String, Object> params = new HashMap<>();
 		if (from != null) {
 			params.put("from", from);
 			sb.append(" and s.date>=:from");
