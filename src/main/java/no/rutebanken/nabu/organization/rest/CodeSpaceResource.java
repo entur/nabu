@@ -50,7 +50,7 @@ public class CodeSpaceResource {
 	}
 
 	private CodeSpace fromDTO(CodeSpaceDTO dto, CodeSpace codeSpace) {
-		codeSpace.setPrivateCode(dto.id);
+		codeSpace.setPrivateCode(dto.privateCode);
 		codeSpace.setXmlns(dto.xmlns);
 		codeSpace.setXmlnsUrl(dto.xmlnsUrl);
 		return codeSpace;
