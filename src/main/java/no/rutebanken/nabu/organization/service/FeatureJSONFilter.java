@@ -12,12 +12,13 @@ import org.opengis.feature.simple.SimpleFeature;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FeatureJSONFilter {
 
-	private String sourceFilePath;
+	private InputStream sourceStream;
 
 	private String correlationProperty;
 
@@ -27,8 +28,8 @@ public class FeatureJSONFilter {
 
 	private final Map<Object, SimpleFeature> map = new HashMap<>();
 
-	public FeatureJSONFilter(String sourceFilePath, String targetFilePath, String correlationProperty, String comparatorProperty) {
-		this.sourceFilePath = sourceFilePath;
+	public FeatureJSONFilter(InputStream sourceStream, String targetFilePath, String correlationProperty, String comparatorProperty) {
+		this.sourceStream=sourceStream;
 		this.targetFilePath = targetFilePath;
 		this.correlationProperty = correlationProperty;
 		this.comparatorProperty = comparatorProperty;
@@ -39,7 +40,7 @@ public class FeatureJSONFilter {
 		try {
 
 			FeatureJSON fJson = new FeatureJSON();
-			FeatureIterator<SimpleFeature> itr = fJson.streamFeatureCollection(FileUtils.openInputStream(new File(sourceFilePath)));
+			FeatureIterator<SimpleFeature> itr = fJson.streamFeatureCollection(sourceStream);
 			while (itr.hasNext()) {
 				SimpleFeature simpleFeature = itr.next();
 				Object id = getProperty(simpleFeature, correlationProperty);
@@ -57,7 +58,7 @@ public class FeatureJSONFilter {
 			fJson.writeFeatureCollection(filteredCollection, new FileOutputStream(targetFilePath));
 
 		} catch (IOException ioE) {
-			throw new RuntimeException("Filtering failed for featureJSON file: " + sourceFilePath, ioE);
+			throw new RuntimeException("Filtering failed for featureJSON input stream");
 		}
 	}
 

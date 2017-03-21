@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,20 @@ public class AdministrativeZoneResource extends BaseResource<AdministrativeZone,
 	public void importFromFile(@PathParam("codeSpaceId") String codeSpaceId) {
 		importer.importAdministrativeUnits(codeSpaceId);
 	}
+
+	@POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Path("/import/{codeSpaceId}/kommuner")
+	public void importKommuner(@PathParam("codeSpaceId") String codeSpaceId, InputStream inputStream) {
+		importer.importKommuner(inputStream, codeSpaceId);
+	}
+
+	@POST
+	@Path("/import/{codeSpaceId}/fylker")
+	public void importFylker(@PathParam("codeSpaceId") String codeSpaceId, InputStream inputStream) {
+		importer.importFylker(inputStream, codeSpaceId);
+	}
+
 
 	@Override
 	protected VersionedEntityRepository<AdministrativeZone> getRepository() {

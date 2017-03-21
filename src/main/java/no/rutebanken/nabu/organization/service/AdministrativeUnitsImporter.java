@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,14 +36,26 @@ public class AdministrativeUnitsImporter {
 
 	private static final String tmpFile = "files/tmp.geojson";
 
-	public void importAdministrativeUnits(String codeSpaceId) {
-		importAdministrativeUnits("files/fylker.geojson", "fylkesnr", 2, codeSpaceId);
-		importAdministrativeUnits("files/kommuner.geojson", "komm", 4, codeSpaceId);
+	public void importKommuner(InputStream geoJSONStream, String codeSpaceId) {
+		importAdministrativeUnits(geoJSONStream, "komm", 4, codeSpaceId);
 	}
 
-	public void importAdministrativeUnits(String filePath, String idProperty, int idLength, String codeSpaceId) {
+	public void importFylker(InputStream geoJSONStream, String codeSpaceId) {
+		importAdministrativeUnits(geoJSONStream, "fylkesnr", 2, codeSpaceId);
+	}
 
-		new FeatureJSONFilter(filePath, tmpFile, idProperty, "area").filter();
+	public void importAdministrativeUnits(String codeSpaceId) {
+		try {
+			importFylker(FileUtils.openInputStream(new File("files/fylker.geojson")), codeSpaceId);
+			importKommuner(FileUtils.openInputStream(new File("files/kommuner.geojson")), codeSpaceId);
+		} catch (Exception e) {
+			throw new RuntimeException("Import of admin units failed:" + e.getMessage());
+		}
+	}
+
+	public void importAdministrativeUnits(InputStream inputStream, String idProperty, int idLength, String codeSpaceId) {
+
+		new FeatureJSONFilter(inputStream, tmpFile, idProperty, "area").filter();
 
 
 		CodeSpace codeSpace = codeSpaceRepository.getOneByPublicId(codeSpaceId);
