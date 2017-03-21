@@ -17,6 +17,14 @@ public class Role extends VersionedEntity implements TypeEntity {
 	@NotNull
 	private String name;
 
+	public Role() {
+	}
+
+	public Role(String privateCode, String name) {
+		setPrivateCode(privateCode);
+		this.name = name;
+	}
+
 	@Override
 	public String getName() {
 		return name;

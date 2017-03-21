@@ -1,6 +1,11 @@
 package no.rutebanken.nabu.organization.model.responsibility;
 
+import no.rutebanken.nabu.organization.model.CodeSpace;
 import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
+import no.rutebanken.nabu.organization.model.organization.Organisation;
+import no.rutebanken.nabu.organization.model.user.ContactDetails;
+import no.rutebanken.nabu.organization.model.user.Notification;
+import no.rutebanken.nabu.organization.model.user.User;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
@@ -36,6 +41,15 @@ public class ResponsibilitySet extends CodeSpaceEntity {
 		this.roles = roles;
 	}
 
+	public ResponsibilitySet() {
+	}
+
+	public ResponsibilitySet(CodeSpace codeSpace, String privateCode, String name, Set<ResponsibilityRoleAssignment> roles) {
+		setCodeSpace(codeSpace);
+		setPrivateCode(privateCode);
+		this.name = name;
+		this.roles = roles;
+	}
 
 	public ResponsibilityRoleAssignment getResponsibilityRoleAssignment(String id) {
 		if (id != null && !CollectionUtils.isEmpty(roles)) {
@@ -47,4 +61,5 @@ public class ResponsibilitySet extends CodeSpaceEntity {
 		}
 		return null;
 	}
+
 }

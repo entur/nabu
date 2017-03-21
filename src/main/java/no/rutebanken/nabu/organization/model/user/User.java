@@ -76,4 +76,48 @@ public class User extends VersionedEntity {
 		return Joiner.on(":").join(getType(), getPrivateCode());
 	}
 
+
+	public static User.Builder builder() {
+		return new User.Builder();
+	}
+
+
+	public static class Builder {
+		private User user = new User();
+
+		public Builder withPrivateCode(String privateCode) {
+			user.setPrivateCode(privateCode);
+			return this;
+		}
+
+
+		public Builder withUsername(String username) {
+			user.setUsername(username);
+			return this;
+		}
+
+		public Builder withOrganisation(Organisation organisation) {
+			user.setOrganisation(organisation);
+			return this;
+		}
+
+		public Builder withNotifications(Set<Notification> notifications) {
+			user.setNotifications(notifications);
+			return this;
+		}
+
+		public Builder withResponsibilitySets(Set<ResponsibilitySet> responsibilitySets) {
+			user.setResponsibilitySets(responsibilitySets);
+			return this;
+		}
+
+		public Builder withContactDetails(ContactDetails contactDetails) {
+			user.setContactDetails(contactDetails);
+			return this;
+		}
+
+		public User build() {
+			return user;
+		}
+	}
 }

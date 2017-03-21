@@ -60,4 +60,5 @@ public class UserResource extends BaseResource<User, UserDTO> {
 	}
 
 
+
 }

@@ -7,6 +7,7 @@ import no.rutebanken.nabu.organization.model.responsibility.EntityClassification
 import no.rutebanken.nabu.organization.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.nabu.organization.model.responsibility.ResponsibilitySet;
 import no.rutebanken.nabu.organization.model.user.User;
+import no.rutebanken.nabu.organization.repository.UserRepository;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -17,6 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -33,30 +37,55 @@ public class KeycloakIamService implements IamService {
 	@Autowired
 	private RealmResource iamRealm;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	public void createUser(User user) {
-		if (!enabled){
+		if (!enabled) {
 			logger.info("Keycloak disabled! Ignored createUser: " + user.getUsername());
 			return;
 		}
-		iamRealm.users().create(toKeycloakUser(user));
+		Response rsp = iamRealm.users().create(toKeycloakUser(user));
+		if (rsp.getStatus()>=300){
+			throw new WebApplicationException(rsp);
+		}
 	}
 
 	public void updateUser(User user) {
-		if (!enabled){
+		if (!enabled) {
 			logger.info("Keycloak disabled! Ignored updateUser: " + user.getUsername());
 			return;
 		}
 
-		UserResource iamUser = iamRealm.users().get(user.getUsername());
-		if (iamUser == null) {
-			throw new RuntimeException("Username not found in iam: " + user.getUsername());
-		}
+		UserResource iamUser = getUserResourceByUsername(user.getUsername());
 		iamUser.update(toKeycloakUser(user));
+	}
+
+	private UserResource getUserResourceByUsername(String username) {
+		List<UserRepresentation> userRepresentations = iamRealm.users().search(username, null, null, null, 0, 2);
+
+		if (userRepresentations.size() == 0) {
+			throw new BadRequestException("Username not found in KeyCloak: " + username);
+		} else if (userRepresentations.size() > 1) {
+			throw new BadRequestException("Username not unique in KeyCloak: " + username);
+		}
+		return iamRealm.users().get(userRepresentations.get(0).getId());
+	}
+
+	@Override
+	public void updateResponsibilitySet(ResponsibilitySet responsibilitySet) {
+		if (!enabled) {
+			logger.info("Keycloak disabled! Ignored updateResponsibilitySet: " + responsibilitySet.getName());
+			return;
+		}
+
+		userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> updateUser(u));
 	}
 
 	UserRepresentation toKeycloakUser(User user) {
 		UserRepresentation kcUser = new UserRepresentation();
 
+		kcUser.setEnabled(true);
 		kcUser.setUsername(user.getUsername());
 
 		if (user.getContactDetails() != null) {

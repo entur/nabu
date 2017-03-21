@@ -48,37 +48,21 @@ public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, Res
 
 	@Override
 	public ResponsibilitySet updateFromDTO(ResponsibilitySetDTO dto, ResponsibilitySet entity) {
-
 		entity.setName(dto.name);
-
 		Set<ResponsibilityRoleAssignment> roleAssignmentSet = new HashSet<>();
 
 		for (ResponsibilityRoleAssignmentDTO dtoRole : dto.roles) {
 			ResponsibilityRoleAssignment assignment = entity.getResponsibilityRoleAssignment(dtoRole.id);
-
 			if (assignment == null) {
 				assignment = fromDTO(dtoRole, entity.getCodeSpace());
 			} else {
 				assignment = fromDTO(dtoRole, assignment);
 			}
-
 			roleAssignmentSet.add(assignment);
 		}
 
 		entity.setRoles(roleAssignmentSet);
-
 		return entity;
-	}
-
-	private ResponsibilityRoleAssignment getResponsibilityRoleAssignment(Set<ResponsibilityRoleAssignment> assignments, String id) {
-		if (!CollectionUtils.isEmpty(assignments)) {
-			for (ResponsibilityRoleAssignment existingRole : assignments) {
-				if (id.equals(existingRole.getId())) {
-					return existingRole;
-				}
-			}
-		}
-		return null;
 	}
 
 	public ResponsibilitySetDTO toDTO(ResponsibilitySet entity) {

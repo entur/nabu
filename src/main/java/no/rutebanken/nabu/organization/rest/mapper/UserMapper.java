@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -55,6 +56,8 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
 		}
 		if (!CollectionUtils.isEmpty(dto.responsibilitySetRefs)) {
 			entity.setResponsibilitySets(dto.responsibilitySetRefs.stream().map(ref -> responsibilitySetRepository.getOneByPublicId(ref)).collect(Collectors.toSet()));
+		} else {
+			entity.setResponsibilitySets(new HashSet<>());
 		}
 		return entity;
 	}
