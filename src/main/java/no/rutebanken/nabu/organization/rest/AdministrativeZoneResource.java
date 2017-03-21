@@ -39,7 +39,6 @@ public class AdministrativeZoneResource extends BaseResource<AdministrativeZone,
 	}
 
 	@POST
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Path("/import/{codeSpaceId}/kommuner")
 	public void importKommuner(@PathParam("codeSpaceId") String codeSpaceId, InputStream inputStream) {
 		importer.importKommuner(inputStream, codeSpaceId);

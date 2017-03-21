@@ -1,6 +1,5 @@
 package no.rutebanken.nabu.organization.service;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.FeatureIterator;
@@ -9,7 +8,6 @@ import org.opengis.feature.Feature;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +27,7 @@ public class FeatureJSONFilter {
 	private final Map<Object, SimpleFeature> map = new HashMap<>();
 
 	public FeatureJSONFilter(InputStream sourceStream, String targetFilePath, String correlationProperty, String comparatorProperty) {
-		this.sourceStream=sourceStream;
+		this.sourceStream = sourceStream;
 		this.targetFilePath = targetFilePath;
 		this.correlationProperty = correlationProperty;
 		this.comparatorProperty = comparatorProperty;
@@ -58,7 +56,7 @@ public class FeatureJSONFilter {
 			fJson.writeFeatureCollection(filteredCollection, new FileOutputStream(targetFilePath));
 
 		} catch (IOException ioE) {
-			throw new RuntimeException("Filtering failed for featureJSON input stream");
+			throw new RuntimeException("Filtering failed for featureJSON input stream:" + ioE.getMessage());
 		}
 	}
 
