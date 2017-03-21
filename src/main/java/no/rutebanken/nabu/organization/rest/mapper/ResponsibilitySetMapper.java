@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -46,15 +48,43 @@ public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, Res
 
 	@Override
 	public ResponsibilitySet updateFromDTO(ResponsibilitySetDTO dto, ResponsibilitySet entity) {
-		return null; // TODO
+
+		entity.setName(dto.name);
+
+		Set<ResponsibilityRoleAssignment> roleAssignmentSet = new HashSet<>();
+
+		for (ResponsibilityRoleAssignmentDTO dtoRole : dto.roles) {
+			ResponsibilityRoleAssignment assignment = entity.getResponsibilityRoleAssignment(dtoRole.id);
+
+			if (assignment == null) {
+				assignment = fromDTO(dtoRole, entity.getCodeSpace());
+			} else {
+				assignment = fromDTO(dtoRole, assignment);
+			}
+
+			roleAssignmentSet.add(assignment);
+		}
+
+		entity.setRoles(roleAssignmentSet);
+
+		return entity;
+	}
+
+	private ResponsibilityRoleAssignment getResponsibilityRoleAssignment(Set<ResponsibilityRoleAssignment> assignments, String id) {
+		if (!CollectionUtils.isEmpty(assignments)) {
+			for (ResponsibilityRoleAssignment existingRole : assignments) {
+				if (id.equals(existingRole.getId())) {
+					return existingRole;
+				}
+			}
+		}
+		return null;
 	}
 
 	public ResponsibilitySetDTO toDTO(ResponsibilitySet entity) {
 		ResponsibilitySetDTO dto = new ResponsibilitySetDTO();
 		dto.id = entity.getId();
-
 		dto.name = entity.getName();
-
 		dto.roles = entity.getRoles().stream().map(ra -> toDTO(ra)).collect(Collectors.toList());
 		return dto;
 	}
@@ -80,6 +110,10 @@ public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, Res
 		entity.setCodeSpace(codeSpace);
 		entity.setPrivateCode(UUID.randomUUID().toString());
 
+		return fromDTO(dto, entity);
+	}
+
+	private ResponsibilityRoleAssignment fromDTO(ResponsibilityRoleAssignmentDTO dto, ResponsibilityRoleAssignment entity) {
 		entity.setTypeOfResponsibilityRole(roleRepository.getOneByPublicId(dto.typeOfResponsibilityRoleRef));
 		entity.setResponsibleOrganisation(organisationRepository.getOneByPublicId(dto.responsibleOrganisationRef));
 		if (dto.responsibleAreaRef != null) {

@@ -1,6 +1,7 @@
 package no.rutebanken.nabu.organization.model.responsibility;
 
 import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -33,5 +34,17 @@ public class ResponsibilitySet extends CodeSpaceEntity {
 
 	public void setRoles(Set<ResponsibilityRoleAssignment> roles) {
 		this.roles = roles;
+	}
+
+
+	public ResponsibilityRoleAssignment getResponsibilityRoleAssignment(String id) {
+		if (id != null && !CollectionUtils.isEmpty(roles)) {
+			for (ResponsibilityRoleAssignment existingRole : roles) {
+				if (id.equals(existingRole.getId())) {
+					return existingRole;
+				}
+			}
+		}
+		return null;
 	}
 }

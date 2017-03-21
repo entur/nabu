@@ -68,4 +68,23 @@ public abstract class VersionedEntity implements Serializable {
 	public void setEntityVersion(Long entityVersion) {
 		this.entityVersion = entityVersion;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		VersionedEntity that = (VersionedEntity) o;
+
+		if (entityVersion != null ? !entityVersion.equals(that.entityVersion) : that.entityVersion != null)
+			return false;
+		return privateCode != null ? privateCode.equals(that.privateCode) : that.privateCode == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = entityVersion != null ? entityVersion.hashCode() : 0;
+		result = 31 * result + (privateCode != null ? privateCode.hashCode() : 0);
+		return result;
+	}
 }
