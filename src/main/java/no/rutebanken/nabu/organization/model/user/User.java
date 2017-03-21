@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-@Table(uniqueConstraints = {
-		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+@Table(name = "user_account", uniqueConstraints = {
+		                                                  @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
 })
 public class User extends VersionedEntity {
 
