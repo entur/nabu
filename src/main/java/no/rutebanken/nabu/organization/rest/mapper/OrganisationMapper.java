@@ -3,8 +3,10 @@ package no.rutebanken.nabu.organization.rest.mapper;
 import no.rutebanken.nabu.organization.model.organization.Authority;
 import no.rutebanken.nabu.organization.model.organization.Organisation;
 import no.rutebanken.nabu.organization.model.organization.OrganisationPart;
+import no.rutebanken.nabu.organization.repository.CodeSpaceRepository;
 import no.rutebanken.nabu.organization.rest.dto.organisation.OrganisationDTO;
 import no.rutebanken.nabu.organization.rest.dto.organisation.OrganisationPartDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -12,11 +14,14 @@ import javax.ws.rs.BadRequestException;
 import java.util.stream.Collectors;
 
 @Service
-public class OrganisationMapper extends BaseDTOMapper<Organisation, OrganisationDTO> {
-	private AdministrativeZoneMapper administrativeZoneMapper = new AdministrativeZoneMapper();
+public class OrganisationMapper implements DTOMapper<Organisation, OrganisationDTO> {
+
+	@Autowired
+	protected CodeSpaceRepository codeSpaceRepository;
 
 	public OrganisationDTO toDTO(Organisation organisation) {
-		OrganisationDTO dto = toDTOBasics(organisation, new OrganisationDTO());
+		OrganisationDTO dto = new OrganisationDTO();
+		dto.id = organisation.getId();
 
 		dto.companyNumber = organisation.getCompanyNumber();
 		dto.name = organisation.getName();
@@ -33,16 +38,20 @@ public class OrganisationMapper extends BaseDTOMapper<Organisation, Organisation
 	}
 
 	@Override
-	public Organisation createFromDTO(OrganisationDTO dto,Class<Organisation> clazz) {
-		return updateFromDTO(dto, createByType(dto.organisationType));
+	public Organisation createFromDTO(OrganisationDTO dto, Class<Organisation> clazz) {
+		Organisation entity = createByType(dto.organisationType);
+		entity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
+		entity.setPrivateCode(dto.privateCode);
+		return updateFromDTO(dto, entity);
 	}
 
 	@Override
 	public Organisation updateFromDTO(OrganisationDTO dto, Organisation organisation) {
-		fromDTOBasics(organisation, dto);
+
 		organisation.setName(dto.name);
 		organisation.setCompanyNumber(dto.companyNumber);
 
+		// TODO parts
 
 		return organisation;
 	}
@@ -52,7 +61,7 @@ public class OrganisationMapper extends BaseDTOMapper<Organisation, Organisation
 		OrganisationPartDTO dto = new OrganisationPartDTO();
 		dto.name = part.getName();
 		if (!CollectionUtils.isEmpty(part.getAdministrativeZones())) {
-			dto.administrativeZones = part.getAdministrativeZones().stream().map(az -> administrativeZoneMapper.toDTO(az)).collect(Collectors.toList());
+			dto.administrativeZoneRefs = part.getAdministrativeZones().stream().map(az -> az.getId()).collect(Collectors.toList());
 		}
 
 		return dto;

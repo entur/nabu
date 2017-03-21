@@ -4,15 +4,18 @@ import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
 import no.rutebanken.nabu.organization.model.TypeEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(uniqueConstraints = {
+		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+})
 public class EntityType extends CodeSpaceEntity implements TypeEntity {
 
 	@NotNull
 	private String name;
-
-	private String privateCode;
 
 	@Override
 	public String getName() {
@@ -25,12 +28,7 @@ public class EntityType extends CodeSpaceEntity implements TypeEntity {
 	}
 
 	@Override
-	public String getPrivateCode() {
-		return privateCode;
-	}
-
-	@Override
-	public void setPrivateCode(String privateCode) {
-		this.privateCode = privateCode;
+	protected String getType() {
+		return "TypeOfEntity";
 	}
 }

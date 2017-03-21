@@ -8,5 +8,5 @@ public class OrganisationPartDTO extends BaseDTO {
 
 	public String name;
 
-	public List<AdministrativeZoneDTO> administrativeZones;
+	public List<String> administrativeZoneRefs;
 }

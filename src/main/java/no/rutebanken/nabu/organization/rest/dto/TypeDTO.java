@@ -4,7 +4,5 @@ public class TypeDTO extends BaseDTO {
 
 	public String name;
 
-	public String privateCode;
 
-	public TypeDTO parentType;
 }

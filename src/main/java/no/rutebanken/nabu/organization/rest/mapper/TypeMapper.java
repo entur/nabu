@@ -1,24 +1,36 @@
 package no.rutebanken.nabu.organization.rest.mapper;
 
+import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
 import no.rutebanken.nabu.organization.model.TypeEntity;
 import no.rutebanken.nabu.organization.model.VersionedEntity;
-import no.rutebanken.nabu.organization.model.organization.Organisation;
+import no.rutebanken.nabu.organization.repository.CodeSpaceRepository;
 import no.rutebanken.nabu.organization.rest.dto.TypeDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TypeMapper<R extends VersionedEntity & TypeEntity> extends BaseDTOMapper<R, TypeDTO> {
+public class TypeMapper<R extends VersionedEntity & TypeEntity> implements DTOMapper<R, TypeDTO> {
+	@Autowired
+	protected CodeSpaceRepository codeSpaceRepository;
 
 	public TypeDTO toDTO(R entity) {
-		TypeDTO dto = toDTOBasics(entity, new TypeDTO());
+		TypeDTO dto = new TypeDTO();
 		dto.name = entity.getName();
+		dto.id = entity.getId();
 		dto.privateCode = entity.getPrivateCode();
 		return dto;
 	}
 
 	@Override
 	public R createFromDTO(TypeDTO dto, Class<R> clazz) {
-		return updateFromDTO(dto, createInstance(clazz));
+		R entity = createInstance(clazz);
+
+		entity.setPrivateCode(dto.privateCode);
+		if (entity instanceof CodeSpaceEntity) {
+			((CodeSpaceEntity) entity).setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
+		}
+
+		return updateFromDTO(dto, entity);
 	}
 
 	private R createInstance(Class<R> clazz) {
@@ -31,9 +43,7 @@ public class TypeMapper<R extends VersionedEntity & TypeEntity> extends BaseDTOM
 
 	@Override
 	public R updateFromDTO(TypeDTO dto, R entity) {
-		fromDTOBasics(entity, dto);
 		entity.setName(dto.name);
-		entity.setPrivateCode(dto.privateCode);
 		return entity;
 	}
 

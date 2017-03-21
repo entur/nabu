@@ -4,10 +4,7 @@ import no.rutebanken.nabu.organization.model.CodeSpace;
 import no.rutebanken.nabu.organization.model.organization.Organisation;
 import no.rutebanken.nabu.organization.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.nabu.organization.model.responsibility.ResponsibilitySet;
-import no.rutebanken.nabu.organization.repository.AdministrativeZoneRepository;
-import no.rutebanken.nabu.organization.repository.EntityClassificationRepository;
-import no.rutebanken.nabu.organization.repository.OrganisationRepository;
-import no.rutebanken.nabu.organization.repository.RoleRepository;
+import no.rutebanken.nabu.organization.repository.*;
 import no.rutebanken.nabu.organization.rest.dto.responsibility.ResponsibilityRoleAssignmentDTO;
 import no.rutebanken.nabu.organization.rest.dto.responsibility.ResponsibilitySetDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class ResponsibilitySetMapper extends BaseDTOMapper<ResponsibilitySet, ResponsibilitySetDTO> {
+public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, ResponsibilitySetDTO> {
 	@Autowired
 	private RoleRepository roleRepository;
 
@@ -31,13 +28,16 @@ public class ResponsibilitySetMapper extends BaseDTOMapper<ResponsibilitySet, Re
 	@Autowired
 	private EntityClassificationRepository entityClassificationRepository;
 
-	public ResponsibilitySet createFromDTO(ResponsibilitySetDTO dto, Class<ResponsibilitySet> clazz) {
-		ResponsibilitySet entity = fromDTOBasics(new ResponsibilitySet(), dto);
+	@Autowired
+	protected CodeSpaceRepository codeSpaceRepository;
 
+	public ResponsibilitySet createFromDTO(ResponsibilitySetDTO dto, Class<ResponsibilitySet> clazz) {
+		ResponsibilitySet entity = new ResponsibilitySet();
+		entity.setPrivateCode(dto.privateCode);
+		entity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
 		entity.setName(dto.name);
 
 		if (!CollectionUtils.isEmpty(dto.roles)) {
-			dto.roles.forEach(d -> d.codeSpace = dto.codeSpace);
 			entity.setRoles(dto.roles.stream().map(ra -> fromDTO(ra, entity.getCodeSpace())).collect(Collectors.toSet()));
 		}
 
@@ -49,12 +49,13 @@ public class ResponsibilitySetMapper extends BaseDTOMapper<ResponsibilitySet, Re
 		return null; // TODO
 	}
 
-	public ResponsibilitySetDTO toDTO(ResponsibilitySet org) {
-		ResponsibilitySetDTO dto = toDTOBasics(org, new ResponsibilitySetDTO());
+	public ResponsibilitySetDTO toDTO(ResponsibilitySet entity) {
+		ResponsibilitySetDTO dto = new ResponsibilitySetDTO();
+		dto.id = entity.getId();
 
-		dto.name = org.getName();
+		dto.name = entity.getName();
 
-		dto.roles = org.getRoles().stream().map(ra -> toDTO(ra)).collect(Collectors.toList());
+		dto.roles = entity.getRoles().stream().map(ra -> toDTO(ra)).collect(Collectors.toList());
 		return dto;
 	}
 

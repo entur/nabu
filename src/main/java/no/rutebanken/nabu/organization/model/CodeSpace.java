@@ -2,9 +2,14 @@ package no.rutebanken.nabu.organization.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(uniqueConstraints = {
+		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+})
 public class CodeSpace extends VersionedEntity {
 
 	@NotNull

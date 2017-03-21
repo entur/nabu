@@ -19,6 +19,7 @@ public class AdministrativeZoneRepositoryTest extends CommonRepositoryTest {
 	public void testInsertAdministrativeZone() {
 		AdministrativeZone zone = new AdministrativeZone();
 		zone.setPrivateCode("0101");
+		zone.setName("name");
 		zone.setCodeSpace(defaultCodeSpace);
 
 		GeometryFactory fact = new GeometryFactory();

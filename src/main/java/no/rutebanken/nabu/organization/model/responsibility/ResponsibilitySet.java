@@ -2,13 +2,14 @@ package no.rutebanken.nabu.organization.model.responsibility;
 
 import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
+@Table(uniqueConstraints = {
+		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+})
 public class ResponsibilitySet extends CodeSpaceEntity {
 
 	@NotNull

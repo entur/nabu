@@ -5,9 +5,14 @@ import no.rutebanken.nabu.organization.model.TypeEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(uniqueConstraints = {
+		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+})
 public class EntityClassification extends CodeSpaceEntity implements TypeEntity {
 
 	@NotNull
@@ -16,7 +21,6 @@ public class EntityClassification extends CodeSpaceEntity implements TypeEntity 
 
 	@NotNull
 	private String name;
-	private String privateCode;
 
 	public EntityType getEntityType() {
 		return entityType;
@@ -37,12 +41,7 @@ public class EntityClassification extends CodeSpaceEntity implements TypeEntity 
 	}
 
 	@Override
-	public String getPrivateCode() {
-		return privateCode;
-	}
-
-	@Override
-	public void setPrivateCode(String privateCode) {
-		this.privateCode = privateCode;
+	protected String getType() {
+		return "TypeOfPoint";
 	}
 }

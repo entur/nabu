@@ -7,8 +7,6 @@ public class BaseDTO {
 
 	public String id;
 
-	public long version;
-
 	public String codeSpace;
 
 	public String privateCode;

@@ -19,7 +19,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class UserMapper extends BaseDTOMapper<User, UserDTO> {
+public class UserMapper implements DTOMapper<User, UserDTO> {
 
 	@Autowired
 	private OrganisationRepository organisationRepository;
@@ -28,7 +28,8 @@ public class UserMapper extends BaseDTOMapper<User, UserDTO> {
 	private ResponsibilitySetRepository responsibilitySetRepository;
 
 	public UserDTO toDTO(User org) {
-		UserDTO dto = toDTOBasics(org, new UserDTO());
+		UserDTO dto = new UserDTO();
+		dto.id = org.getId();
 		dto.username = org.getUsername();
 
 		dto.contactDetails = toDTO(org.getContactDetails());
