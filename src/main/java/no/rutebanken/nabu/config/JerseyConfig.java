@@ -2,8 +2,8 @@ package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.filter.CorsResponseFilter;
 import no.rutebanken.nabu.organization.rest.*;
+import no.rutebanken.nabu.organization.rest.exception.PersistenceExceptionMapper;
 import no.rutebanken.nabu.organization.rest.exception.SpringExceptionMapper;
-import no.rutebanken.nabu.organization.rest.exception.TransactionSystemExceptionMapper;
 import no.rutebanken.nabu.rest.*;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -33,7 +33,7 @@ public class JerseyConfig extends ResourceConfig {
 		register(EntityClassificationResource.class);
 		register(ResponsibilitySetResource.class);
 
-		register(TransactionSystemExceptionMapper.class);
+		register(PersistenceExceptionMapper.class);
 		register(SpringExceptionMapper.class);
 	}
 
