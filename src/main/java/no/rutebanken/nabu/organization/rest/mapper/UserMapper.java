@@ -55,9 +55,9 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
 			entity.setOrganisation(organisationRepository.getOneByPublicId(dto.organisationRef));
 		}
 		if (!CollectionUtils.isEmpty(dto.responsibilitySetRefs)) {
-			entity.setResponsibilitySets(dto.responsibilitySetRefs.stream().map(ref -> responsibilitySetRepository.getOneByPublicId(ref)).collect(Collectors.toSet()));
+			entity.replaceResponsibilitySets(dto.responsibilitySetRefs.stream().map(ref -> responsibilitySetRepository.getOneByPublicId(ref)).collect(Collectors.toSet()));
 		} else {
-			entity.setResponsibilitySets(new HashSet<>());
+			entity.replaceResponsibilitySets(new HashSet<>());
 		}
 		return entity;
 	}

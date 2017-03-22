@@ -2,6 +2,7 @@ package no.rutebanken.nabu.organization.model.user;
 
 import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import no.rutebanken.nabu.organization.model.VersionedEntity;
+import no.rutebanken.nabu.organization.model.organization.AdministrativeZone;
 import no.rutebanken.nabu.organization.model.organization.Organisation;
 import no.rutebanken.nabu.organization.model.responsibility.ResponsibilitySet;
 
@@ -75,6 +76,15 @@ public class User extends VersionedEntity {
 	private void removeResponsibilitySetConnections() {
 		if (responsibilitySets != null) {
 			responsibilitySets.clear();
+		}
+	}
+
+	public void replaceResponsibilitySets(Set<ResponsibilitySet> newResponsibilitySets) {
+		if (this.responsibilitySets == null) {
+			this.responsibilitySets = newResponsibilitySets;
+		} else {
+			responsibilitySets.clear();
+			responsibilitySets.addAll(newResponsibilitySets);
 		}
 	}
 

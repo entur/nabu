@@ -51,14 +51,16 @@ public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, Res
 		entity.setName(dto.name);
 		Set<ResponsibilityRoleAssignment> roleAssignmentSet = new HashSet<>();
 
-		for (ResponsibilityRoleAssignmentDTO dtoRole : dto.roles) {
-			ResponsibilityRoleAssignment assignment = entity.getResponsibilityRoleAssignment(dtoRole.id);
-			if (assignment == null) {
-				assignment = fromDTO(dtoRole, entity.getCodeSpace());
-			} else {
-				assignment = fromDTO(dtoRole, assignment);
+		if (dto.roles != null) {
+			for (ResponsibilityRoleAssignmentDTO dtoRole : dto.roles) {
+				ResponsibilityRoleAssignment assignment = entity.getResponsibilityRoleAssignment(dtoRole.id);
+				if (assignment == null) {
+					assignment = fromDTO(dtoRole, entity.getCodeSpace());
+				} else {
+					assignment = fromDTO(dtoRole, assignment);
+				}
+				roleAssignmentSet.add(assignment);
 			}
-			roleAssignmentSet.add(assignment);
 		}
 
 		entity.setRoles(roleAssignmentSet);

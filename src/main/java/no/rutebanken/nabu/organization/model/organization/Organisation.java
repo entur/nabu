@@ -1,6 +1,8 @@
 package no.rutebanken.nabu.organization.model.organization;
 
 import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
+import no.rutebanken.nabu.organization.model.responsibility.ResponsibilityRoleAssignment;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -42,6 +44,26 @@ public abstract class Organisation extends CodeSpaceEntity {
 
 	public void setParts(Set<OrganisationPart> parts) {
 		this.parts = parts;
+	}
+
+	public void replaceParts(Set<OrganisationPart> newParts) {
+		if (this.parts == null) {
+			this.parts = newParts;
+		} else {
+			parts.clear();
+			parts.addAll(newParts);
+		}
+	}
+
+	public OrganisationPart getOrganisationPart(String id) {
+		if (id != null && !CollectionUtils.isEmpty(parts)) {
+			for (OrganisationPart existingPart : parts) {
+				if (id.equals(existingPart.getId())) {
+					return existingPart;
+				}
+			}
+		}
+		return null;
 	}
 
 }

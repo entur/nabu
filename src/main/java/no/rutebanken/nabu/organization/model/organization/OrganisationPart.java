@@ -40,4 +40,13 @@ public class OrganisationPart extends CodeSpaceEntity {
 			administrativeZones.clear();
 		}
 	}
+
+	public void replaceAdministrativeZones(Set<AdministrativeZone> newAdministrativeZones) {
+		if (this.administrativeZones == null) {
+			this.administrativeZones = newAdministrativeZones;
+		} else {
+			administrativeZones.clear();
+			administrativeZones.addAll(newAdministrativeZones);
+		}
+	}
 }
