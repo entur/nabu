@@ -57,8 +57,7 @@
         <rest-assured.version>2.8.0</rest-assured.version>
         <geodb.version>0.7</geodb.version>
         <geotools.version>16.2</geotools.version>
-        <hibernate-spatial.version>5.2.8.Final</hibernate-spatial.version>
-        <hazelcast-hibernate5.version>1.2</hazelcast-hibernate5.version>
+        <hibernate.version>5.2.8.Final</hibernate.version>
     </properties>
 
     <dependencyManagement>
@@ -193,16 +192,10 @@
             <version>19.0</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-hibernate5</artifactId>
-            <version>${hazelcast-hibernate5.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-spatial</artifactId>
-            <version>${hibernate-spatial.version}</version>
+            <version>${hibernate.version}</version>
         </dependency>
         <dependency>
             <groupId>org.opengeo</groupId>
@@ -345,6 +338,21 @@
                         </image>
                     </images>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.hibernate.orm.tooling</groupId>
+                <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                <version>${hibernate.version}</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <enableLazyInitialization>true</enableLazyInitialization>
+                        </configuration>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
