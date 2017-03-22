@@ -120,8 +120,8 @@ insert into organisation(pk, dtype,entity_version,lock_version,code_space_pk,pri
 insert into responsibility_role_assignment (pk,entity_version,lock_version,private_code,code_space_pk,responsible_organisation_pk,type_of_responsibility_role_pk) VALUES (1,1,1,'1',1,1,1);
 insert into responsibility_role_assignment (pk,entity_version,lock_version,private_code,code_space_pk,responsible_organisation_pk,type_of_responsibility_role_pk) VALUES (2,1,1,'2',1,1,2);
 
-insert into responsibility_role_assignment_responsible_entity_classificatio (responsibility_role_assignment_pk, responsible_entity_classifications_pk) values (1,1);
-insert into responsibility_role_assignment_responsible_entity_classificatio (responsibility_role_assignment_pk, responsible_entity_classifications_pk) values (1,3);
+insert into RESPONSIBILITY_ROLE_ASSIGNMENT_ENTITY_CLASSIFICATIONS (responsibility_role_assignment_pk, responsible_entity_classifications_pk) values (1,1);
+insert into RESPONSIBILITY_ROLE_ASSIGNMENT_ENTITY_CLASSIFICATIONS (responsibility_role_assignment_pk, responsible_entity_classifications_pk) values (1,3);
 
 
 insert into responsibility_set (pk,entity_version,lock_version,private_code,code_space_pk,name) values (1,1,1,'1',1,'Test rsp set');

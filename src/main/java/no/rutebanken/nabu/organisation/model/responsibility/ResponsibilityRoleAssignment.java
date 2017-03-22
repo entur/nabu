@@ -29,6 +29,7 @@ public class ResponsibilityRoleAssignment extends CodeSpaceEntity {
 
 
 	@ManyToMany
+	@JoinTable(name="RESPONSIBILITY_ROLE_ASSIGNMENT_ENTITY_CLASSIFICATIONS")
 	private Set<EntityClassification> responsibleEntityClassifications;
 
 
