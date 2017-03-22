@@ -27,6 +27,8 @@ public class AdministrativeZoneMapper implements DTOMapper<AdministrativeZone, A
 		AdministrativeZoneDTO dto = new AdministrativeZoneDTO();
 		dto.id = entity.getId();
 		dto.name = entity.getName();
+		dto.privateCode = entity.getPrivateCode();
+		dto.codeSpace = entity.getCodeSpace().getId();
 
 		if (fullDetails) {
 			dto.polygon = (org.wololo.geojson.Polygon) writer.write(entity.getPolygon());

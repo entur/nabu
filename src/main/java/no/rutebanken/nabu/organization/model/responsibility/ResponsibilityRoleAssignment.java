@@ -10,6 +10,7 @@ import no.rutebanken.nabu.organization.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -59,13 +60,16 @@ public class ResponsibilityRoleAssignment extends CodeSpaceEntity {
 	}
 
 	public Set<EntityClassification> getResponsibleEntityClassifications() {
+		if (responsibleEntityClassifications == null) {
+			this.responsibleEntityClassifications = new HashSet<>();
+		}
 		return responsibleEntityClassifications;
 	}
 
 	public void setResponsibleEntityClassifications(Set<EntityClassification> responsibleEntityClassifications) {
-		this.responsibleEntityClassifications = responsibleEntityClassifications;
+		getResponsibleEntityClassifications().clear();
+		getResponsibleEntityClassifications().addAll(responsibleEntityClassifications);
 	}
-
 
 	public static Builder builder() {
 		return new Builder();

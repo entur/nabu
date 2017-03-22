@@ -4,10 +4,14 @@ import no.rutebanken.nabu.organization.model.CodeSpace;
 import no.rutebanken.nabu.organization.model.organization.Authority;
 import no.rutebanken.nabu.organization.model.organization.Organisation;
 import no.rutebanken.nabu.organization.model.organization.OrganisationPart;
+import no.rutebanken.nabu.organization.model.responsibility.ResponsibilityRoleAssignment;
+import no.rutebanken.nabu.organization.model.responsibility.ResponsibilitySet;
 import no.rutebanken.nabu.organization.repository.AdministrativeZoneRepository;
 import no.rutebanken.nabu.organization.repository.CodeSpaceRepository;
 import no.rutebanken.nabu.organization.rest.dto.organisation.OrganisationDTO;
 import no.rutebanken.nabu.organization.rest.dto.organisation.OrganisationPartDTO;
+import no.rutebanken.nabu.organization.rest.dto.responsibility.ResponsibilityRoleAssignmentDTO;
+import no.rutebanken.nabu.organization.rest.dto.responsibility.ResponsibilitySetDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -27,19 +31,20 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 	@Autowired
 	private AdministrativeZoneRepository administrativeZoneRepository;
 
-	public OrganisationDTO toDTO(Organisation organisation, boolean fullDetails) {
+	public OrganisationDTO toDTO(Organisation entity, boolean fullDetails) {
 		OrganisationDTO dto = new OrganisationDTO();
-		dto.id = organisation.getId();
+		dto.id = entity.getId();
+		dto.privateCode = entity.getPrivateCode();
+		dto.codeSpace = entity.getCodeSpace().getId();
+		dto.companyNumber = entity.getCompanyNumber();
+		dto.name = entity.getName();
 
-		dto.companyNumber = organisation.getCompanyNumber();
-		dto.name = organisation.getName();
-
-		if (organisation instanceof Authority) {
+		if (entity instanceof Authority) {
 			dto.organisationType = OrganisationDTO.OrganisationType.AUTHORITY;
 		}
 
-		if (!CollectionUtils.isEmpty(organisation.getParts())) {
-			dto.parts = organisation.getParts().stream().map(p -> toDTO(p)).collect(Collectors.toList());
+		if (!CollectionUtils.isEmpty(entity.getParts())) {
+			dto.parts = entity.getParts().stream().map(p -> toDTO(p)).collect(Collectors.toList());
 		}
 
 		return dto;
@@ -59,25 +64,30 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 		entity.setName(dto.name);
 		entity.setCompanyNumber(dto.companyNumber);
 
-		Set<OrganisationPart> parts = new HashSet<>();
 
-		if (dto.parts != null) {
-			for (OrganisationPartDTO dtoPart : dto.parts) {
-				OrganisationPart part = entity.getOrganisationPart(dtoPart.id);
-				if (part == null) {
-					part = fromDTO(dtoPart, entity.getCodeSpace());
-				} else {
-					part = fromDTO(dtoPart, part);
-				}
-				parts.add(part);
-			}
+		if (dto.parts == null) {
+			entity.getParts().clear();
+		} else {
+			mergeParts(dto, entity);
 		}
 
-		entity.replaceParts(parts);
 
 		return entity;
 	}
 
+	protected void mergeParts(OrganisationDTO dto, Organisation entity) {
+		Set<OrganisationPart> removed = new HashSet<>(entity.getParts());
+		for (OrganisationPartDTO dtoPart : dto.parts) {
+			if (dtoPart.id != null) {
+				OrganisationPart part = entity.getOrganisationPart(dtoPart.id);
+				removed.remove(part);
+				fromDTO(dtoPart, part);
+			} else {
+				entity.getParts().add(fromDTO(dtoPart, entity.getCodeSpace()));
+			}
+		}
+		entity.getParts().removeAll(removed);
+	}
 
 	private OrganisationPartDTO toDTO(OrganisationPart part) {
 		OrganisationPartDTO dto = new OrganisationPartDTO();
@@ -102,9 +112,9 @@ public class OrganisationMapper implements DTOMapper<Organisation, OrganisationD
 	private OrganisationPart fromDTO(OrganisationPartDTO dto, OrganisationPart entity) {
 		entity.setName(dto.name);
 		if (!CollectionUtils.isEmpty(dto.administrativeZoneRefs)) {
-			entity.replaceAdministrativeZones(dto.administrativeZoneRefs.stream().map(az -> administrativeZoneRepository.getOneByPublicId(az)).collect(Collectors.toSet()));
+			entity.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(az -> administrativeZoneRepository.getOneByPublicId(az)).collect(Collectors.toSet()));
 		} else {
-			entity.replaceAdministrativeZones(new HashSet<>());
+			entity.setAdministrativeZones(new HashSet<>());
 		}
 		return entity;
 	}

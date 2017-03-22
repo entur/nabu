@@ -5,7 +5,9 @@ import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
+import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,6 +32,9 @@ public class ResponsibilitySet extends CodeSpaceEntity {
 	}
 
 	public Set<ResponsibilityRoleAssignment> getRoles() {
+		if (roles == null) {
+			this.roles = new HashSet<>();
+		}
 		return roles;
 	}
 
@@ -55,7 +60,7 @@ public class ResponsibilitySet extends CodeSpaceEntity {
 				}
 			}
 		}
-		return null;
+		throw new EntityNotFoundException(getClass().getSimpleName() + " with id: " + id + " not found");
 	}
 
 	@PreRemove
@@ -64,5 +69,6 @@ public class ResponsibilitySet extends CodeSpaceEntity {
 			roles.clear();
 		}
 	}
+
 
 }

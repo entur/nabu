@@ -8,6 +8,7 @@ import no.rutebanken.nabu.organization.model.responsibility.ResponsibilitySet;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -65,6 +66,9 @@ public class User extends VersionedEntity {
 	}
 
 	public Set<ResponsibilitySet> getResponsibilitySets() {
+		if (responsibilitySets == null) {
+			this.responsibilitySets = new HashSet<>();
+		}
 		return responsibilitySets;
 	}
 
@@ -76,15 +80,6 @@ public class User extends VersionedEntity {
 	private void removeResponsibilitySetConnections() {
 		if (responsibilitySets != null) {
 			responsibilitySets.clear();
-		}
-	}
-
-	public void replaceResponsibilitySets(Set<ResponsibilitySet> newResponsibilitySets) {
-		if (this.responsibilitySets == null) {
-			this.responsibilitySets = newResponsibilitySets;
-		} else {
-			responsibilitySets.clear();
-			responsibilitySets.addAll(newResponsibilitySets);
 		}
 	}
 

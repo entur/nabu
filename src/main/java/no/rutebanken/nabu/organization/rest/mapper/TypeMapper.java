@@ -18,6 +18,9 @@ public class TypeMapper<R extends VersionedEntity & TypeEntity> implements DTOMa
 		dto.name = entity.getName();
 		dto.id = entity.getId();
 		dto.privateCode = entity.getPrivateCode();
+		if (entity instanceof CodeSpaceEntity) {
+			dto.codeSpace = ((CodeSpaceEntity) entity).getCodeSpace().getId();
+		}
 		return dto;
 	}
 

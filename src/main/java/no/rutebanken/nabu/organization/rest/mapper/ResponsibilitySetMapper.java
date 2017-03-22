@@ -49,27 +49,35 @@ public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, Res
 	@Override
 	public ResponsibilitySet updateFromDTO(ResponsibilitySetDTO dto, ResponsibilitySet entity) {
 		entity.setName(dto.name);
-		Set<ResponsibilityRoleAssignment> roleAssignmentSet = new HashSet<>();
 
-		if (dto.roles != null) {
-			for (ResponsibilityRoleAssignmentDTO dtoRole : dto.roles) {
-				ResponsibilityRoleAssignment assignment = entity.getResponsibilityRoleAssignment(dtoRole.id);
-				if (assignment == null) {
-					assignment = fromDTO(dtoRole, entity.getCodeSpace());
-				} else {
-					assignment = fromDTO(dtoRole, assignment);
-				}
-				roleAssignmentSet.add(assignment);
-			}
+		if (dto.roles == null) {
+			entity.getRoles().clear();
+		} else {
+			mergeRoles(dto, entity);
 		}
 
-		entity.setRoles(roleAssignmentSet);
 		return entity;
+	}
+
+	protected void mergeRoles(ResponsibilitySetDTO dto, ResponsibilitySet entity) {
+		Set<ResponsibilityRoleAssignment> removedAssignments = new HashSet<>(entity.getRoles());
+		for (ResponsibilityRoleAssignmentDTO dtoRole : dto.roles) {
+			if (dtoRole.id != null) {
+				ResponsibilityRoleAssignment assignment = entity.getResponsibilityRoleAssignment(dtoRole.id);
+				removedAssignments.remove(assignment);
+				fromDTO(dtoRole, assignment);
+			} else {
+				entity.getRoles().add(fromDTO(dtoRole, entity.getCodeSpace()));
+			}
+		}
+		entity.getRoles().removeAll(removedAssignments);
 	}
 
 	public ResponsibilitySetDTO toDTO(ResponsibilitySet entity, boolean fullDetails) {
 		ResponsibilitySetDTO dto = new ResponsibilitySetDTO();
 		dto.id = entity.getId();
+		dto.privateCode = entity.getPrivateCode();
+		dto.codeSpace = entity.getCodeSpace().getId();
 		dto.name = entity.getName();
 		dto.roles = entity.getRoles().stream().map(ra -> toDTO(ra)).collect(Collectors.toList());
 		return dto;

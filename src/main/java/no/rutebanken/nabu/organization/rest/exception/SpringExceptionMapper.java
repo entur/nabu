@@ -1,33 +1,16 @@
 package no.rutebanken.nabu.organization.rest.exception;
 
-import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;
-import org.springframework.dao.DataIntegrityViolationException;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.OptimisticLockException;
-import javax.persistence.PersistenceException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import javax.ws.rs.ext.Provider;
 
-public class SpringExceptionMapper implements ExceptionMapper<NestedRuntimeException> {
+@Provider
+public class SpringExceptionMapper extends ExceptionMapperBase implements ExceptionMapper<NestedRuntimeException> {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-	private Map<Response.Status, Set<Class<?>>> mapping;
-
-	public SpringExceptionMapper() {
-		mapping = new HashMap<>();
-		mapping.put(Response.Status.BAD_REQUEST,
-				Sets.newHashSet(OptimisticLockException.class, EntityNotFoundException.class, DataIntegrityViolationException.class));
-		mapping.put(Response.Status.CONFLICT, Sets.newHashSet(EntityExistsException.class));
-	}
 
 
 	@Override
@@ -38,20 +21,8 @@ public class SpringExceptionMapper implements ExceptionMapper<NestedRuntimeExcep
 			t = e.getRootCause();
 		}
 
-		return Response
-				       .status(toStatus(t))
-				       .type(MediaType.TEXT_PLAIN)
-				       .entity(t.getMessage())
-				       .build();
+		return super.buildResponse(t);
 	}
 
 
-	private int toStatus(Throwable e) {
-		for (Map.Entry<Response.Status, Set<Class<?>>> entry : mapping.entrySet()) {
-			if (entry.getValue().stream().anyMatch(c -> c.isAssignableFrom(e.getClass()))) {
-				return entry.getKey().getStatusCode();
-			}
-		}
-		return Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
-	}
 }

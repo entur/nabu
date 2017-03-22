@@ -4,6 +4,7 @@ import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -27,11 +28,16 @@ public class OrganisationPart extends CodeSpaceEntity {
 	}
 
 	public Set<AdministrativeZone> getAdministrativeZones() {
+
+		if (administrativeZones == null) {
+			administrativeZones = new HashSet<>();
+		}
 		return administrativeZones;
 	}
 
 	public void setAdministrativeZones(Set<AdministrativeZone> administrativeZones) {
-		this.administrativeZones = administrativeZones;
+		getAdministrativeZones().clear();
+		getAdministrativeZones().addAll(administrativeZones);
 	}
 
 	@PreRemove
@@ -41,12 +47,4 @@ public class OrganisationPart extends CodeSpaceEntity {
 		}
 	}
 
-	public void replaceAdministrativeZones(Set<AdministrativeZone> newAdministrativeZones) {
-		if (this.administrativeZones == null) {
-			this.administrativeZones = newAdministrativeZones;
-		} else {
-			administrativeZones.clear();
-			administrativeZones.addAll(newAdministrativeZones);
-		}
-	}
 }

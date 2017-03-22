@@ -5,7 +5,9 @@ import no.rutebanken.nabu.organization.model.responsibility.ResponsibilityRoleAs
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
+import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -39,21 +41,17 @@ public abstract class Organisation extends CodeSpaceEntity {
 	}
 
 	public Set<OrganisationPart> getParts() {
+		if (parts == null) {
+			this.parts = new HashSet<>();
+		}
 		return parts;
 	}
 
 	public void setParts(Set<OrganisationPart> parts) {
-		this.parts = parts;
+		getParts().clear();
+		getParts().addAll(parts);
 	}
 
-	public void replaceParts(Set<OrganisationPart> newParts) {
-		if (this.parts == null) {
-			this.parts = newParts;
-		} else {
-			parts.clear();
-			parts.addAll(newParts);
-		}
-	}
 
 	public OrganisationPart getOrganisationPart(String id) {
 		if (id != null && !CollectionUtils.isEmpty(parts)) {
@@ -63,7 +61,7 @@ public abstract class Organisation extends CodeSpaceEntity {
 				}
 			}
 		}
-		return null;
+		throw new ValidationException(getClass().getSimpleName() + " with id: " + id + " not found");
 	}
 
 }
