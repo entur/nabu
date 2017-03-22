@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.organization.rest;
 
+import no.rutebanken.nabu.organization.model.responsibility.EntityClassification;
 import no.rutebanken.nabu.organization.model.responsibility.EntityType;
 import no.rutebanken.nabu.organization.repository.EntityTypeRepository;
 import no.rutebanken.nabu.organization.repository.VersionedEntityRepository;
@@ -22,7 +23,10 @@ public class EntityTypeResource extends BaseResource<EntityType, TypeDTO> {
 	@Autowired
 	private EntityTypeRepository repository;
 	@Autowired
-	private TypeMapper<EntityType> mapper;
+	private TypeMapper<EntityType> entityTypeTypeMapper;
+
+	@Autowired
+	private TypeMapper<EntityClassification> entityClassificationMapper;
 
 	@Override
 	protected Class<EntityType> getEntityClass() {
@@ -36,6 +40,10 @@ public class EntityTypeResource extends BaseResource<EntityType, TypeDTO> {
 
 	@Override
 	protected DTOMapper<EntityType, TypeDTO> getMapper() {
-		return mapper;
+		return entityTypeTypeMapper;
 	}
+
+
+
+
 }

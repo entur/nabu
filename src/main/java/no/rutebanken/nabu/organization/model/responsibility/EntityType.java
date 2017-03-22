@@ -3,10 +3,9 @@ package no.rutebanken.nabu.organization.model.responsibility;
 import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
 import no.rutebanken.nabu.organization.model.TypeEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -30,5 +29,16 @@ public class EntityType extends CodeSpaceEntity implements TypeEntity {
 	@Override
 	protected String getType() {
 		return "TypeOfEntity";
+	}
+
+	@OneToMany(mappedBy = "entityType", fetch = FetchType.LAZY)
+	private Set<EntityClassification> classifications;
+
+	public Set<EntityClassification> getClassifications() {
+		return classifications;
+	}
+
+	public void setClassifications(Set<EntityClassification> classifications) {
+		this.classifications = classifications;
 	}
 }
