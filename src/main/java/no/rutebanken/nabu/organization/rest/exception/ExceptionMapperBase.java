@@ -6,9 +6,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.OptimisticLockException;
+import javax.validation.ValidationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.ValidationException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

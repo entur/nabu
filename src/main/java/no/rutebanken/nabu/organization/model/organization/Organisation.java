@@ -1,7 +1,6 @@
 package no.rutebanken.nabu.organization.model.organization;
 
 import no.rutebanken.nabu.organization.model.CodeSpaceEntity;
-import no.rutebanken.nabu.organization.model.responsibility.ResponsibilityRoleAssignment;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
