@@ -1,6 +1,5 @@
 package no.rutebanken.nabu.organisation.rest.exception;
 
-import no.rutebanken.nabu.organization.rest.exception.SpringExceptionMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.transaction.TransactionSystemException;
