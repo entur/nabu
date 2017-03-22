@@ -43,4 +43,5 @@ public abstract class Organisation extends CodeSpaceEntity {
 	public void setParts(Set<OrganisationPart> parts) {
 		this.parts = parts;
 	}
+
 }

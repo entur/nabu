@@ -1,6 +1,5 @@
 package no.rutebanken.nabu.organization.service;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.rutebanken.nabu.organization.model.responsibility.EntityClassification;
@@ -10,6 +9,7 @@ import no.rutebanken.nabu.organization.model.user.User;
 import no.rutebanken.nabu.organization.repository.UserRepository;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +23,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class KeycloakIamService implements IamService {
@@ -34,6 +31,10 @@ public class KeycloakIamService implements IamService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Value("${keycloak.integration.enabled:false}")
 	private boolean enabled;
+
+	@Value("${keycloak.default.password:Password123}")
+	private String defaultPassword;
+
 	@Autowired
 	private RealmResource iamRealm;
 
@@ -46,7 +47,7 @@ public class KeycloakIamService implements IamService {
 			return;
 		}
 		Response rsp = iamRealm.users().create(toKeycloakUser(user));
-		if (rsp.getStatus()>=300){
+		if (rsp.getStatus() >= 300) {
 			throw new WebApplicationException(rsp);
 		}
 	}
@@ -61,15 +62,14 @@ public class KeycloakIamService implements IamService {
 		iamUser.update(toKeycloakUser(user));
 	}
 
-	private UserResource getUserResourceByUsername(String username) {
-		List<UserRepresentation> userRepresentations = iamRealm.users().search(username, null, null, null, 0, 2);
-
-		if (userRepresentations.size() == 0) {
-			throw new BadRequestException("Username not found in KeyCloak: " + username);
-		} else if (userRepresentations.size() > 1) {
-			throw new BadRequestException("Username not unique in KeyCloak: " + username);
+	public void removeUser(User user) {
+		if (!enabled) {
+			logger.info("Keycloak disabled! Ignored removeUser: " + user.getUsername());
+			return;
 		}
-		return iamRealm.users().get(userRepresentations.get(0).getId());
+
+		UserResource iamUser = getUserResourceByUsername(user.getUsername());
+		iamUser.remove();
 	}
 
 	@Override
@@ -82,11 +82,28 @@ public class KeycloakIamService implements IamService {
 		userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> updateUser(u));
 	}
 
+
+	private UserResource getUserResourceByUsername(String username) {
+		List<UserRepresentation> userRepresentations = iamRealm.users().search(username, null, null, null, 0, 2);
+
+		if (userRepresentations.size() == 0) {
+			throw new BadRequestException("Username not found in KeyCloak: " + username);
+		} else if (userRepresentations.size() > 1) {
+			throw new BadRequestException("Username not unique in KeyCloak: " + username);
+		}
+		return iamRealm.users().get(userRepresentations.get(0).getId());
+	}
+
 	UserRepresentation toKeycloakUser(User user) {
 		UserRepresentation kcUser = new UserRepresentation();
 
 		kcUser.setEnabled(true);
 		kcUser.setUsername(user.getUsername());
+
+		CredentialRepresentation credential = new CredentialRepresentation();
+		credential.setType(CredentialRepresentation.PASSWORD);
+		credential.setValue(defaultPassword);
+		kcUser.setCredentials(Arrays.asList(credential));
 
 		if (user.getContactDetails() != null) {
 			kcUser.setFirstName(user.getContactDetails().getFirstName());
@@ -99,7 +116,9 @@ public class KeycloakIamService implements IamService {
 			List<String> roleAssignments = new ArrayList<>();
 
 			for (ResponsibilitySet responsibilitySet : user.getResponsibilitySets()) {
-				responsibilitySet.getRoles().forEach(rra -> roleAssignments.add(toAtr(rra)));
+				if (responsibilitySet.getRoles() != null) {
+					responsibilitySet.getRoles().forEach(rra -> roleAssignments.add(toAtr(rra)));
+				}
 			}
 
 			attributes.put("roles", roleAssignments);
@@ -119,10 +138,25 @@ public class KeycloakIamService implements IamService {
 		}
 
 		if (!CollectionUtils.isEmpty(roleAssignment.getResponsibleEntityClassifications())) {
-			roleAssignment.getResponsibleEntityClassifications().forEach(ec -> atr.addEntityClassification(ec));
+			roleAssignment.getResponsibleEntityClassifications().forEach(ec -> addEntityClassification(atr, ec));
 		}
 
 		return atr.toString();
+	}
+
+
+	private void addEntityClassification(RoleAssignmentAtr atr, EntityClassification entityClassification) {
+		if (atr.entities == null) {
+			atr.entities = new HashMap<>();
+		}
+
+		String entityTypeRef = entityClassification.getEntityType().getId();
+		List<String> entityClassificationsForEntityType = atr.entities.get(entityTypeRef);
+		if (entityClassificationsForEntityType == null) {
+			entityClassificationsForEntityType = new ArrayList<>();
+			atr.entities.put(entityTypeRef, entityClassificationsForEntityType);
+		}
+		entityClassificationsForEntityType.add(entityClassification.getId());
 	}
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
@@ -136,20 +170,6 @@ public class KeycloakIamService implements IamService {
 
 		public Map<String, List<String>> entities;
 
-		@JsonIgnore
-		private void addEntityClassification(EntityClassification entityClassification) {
-			if (entities == null) {
-				entities = new HashMap<>();
-			}
-
-			String entityTypeRef = entityClassification.getEntityType().getId();
-			List<String> entityClassificationsForEntityType = entities.get(entityTypeRef);
-			if (entityClassificationsForEntityType == null) {
-				entityClassificationsForEntityType = new ArrayList<>();
-				entities.put(entityTypeRef, entityClassificationsForEntityType);
-			}
-			entityClassificationsForEntityType.add(entityClassification.getId());
-		}
 
 		public String toString() {
 			try {

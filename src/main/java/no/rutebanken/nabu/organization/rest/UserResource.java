@@ -59,4 +59,14 @@ public class UserResource extends BaseResource<User, UserDTO> {
 		iamService.updateUser(user);
 	}
 
+
+	@DELETE
+	@Path("{id}")
+	public void delete(@PathParam("id") String id) {
+		User user=getExisting(id);
+		getRepository().delete(user);
+		iamService.removeUser(user);
+	}
+
+
 }

@@ -9,6 +9,7 @@ import no.rutebanken.nabu.organization.rest.dto.TypeDTO;
 import no.rutebanken.nabu.organization.rest.mapper.TypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -66,6 +67,12 @@ public class EntityClassificationResource {
 		return mapper.toDTO(entity, true);
 	}
 
+	@DELETE
+	@Path("{id}")
+	public void delete(@PathParam("entityTypeId") String entityTypeId, @PathParam("id") String id) {
+		repository.delete(getExisting(id, entityTypeId));
+	}
+
 	@GET
 	public List<TypeDTO> listAll(@PathParam("entityTypeId") String entityTypeId) {
 		EntityType entityType = getEntityType(entityTypeId);
@@ -86,11 +93,11 @@ public class EntityClassificationResource {
 		try {
 			EntityClassification entity = repository.getOneByPublicId(id);
 			if (!entity.getEntityType().getId().equals(entityTypeId)) {
-				throw new NotFoundException(getClass().getSimpleName() + " with id: [" + id + "] not found for entity type with id: " + entityTypeId);
+				throw new NotFoundException("EntityClassification with id: [" + id + "] not found for entity type with id: " + entityTypeId);
 			}
 			return entity;
 		} catch (DataRetrievalFailureException e) {
-			throw new NotFoundException(getClass().getSimpleName() + " with id: [" + id + "] not found");
+			throw new NotFoundException("EntityClassification with id: [" + id + "] not found");
 		}
 	}
 
@@ -98,7 +105,7 @@ public class EntityClassificationResource {
 		try {
 			return entityTypeRepository.getOneByPublicId(id);
 		} catch (DataRetrievalFailureException e) {
-			throw new NotFoundException("Entity type with id: [" + id + "] not found");
+			throw new NotFoundException("EntityType with id: [" + id + "] not found");
 		}
 	}
 }

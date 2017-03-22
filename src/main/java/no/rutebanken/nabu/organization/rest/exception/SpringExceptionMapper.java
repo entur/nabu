@@ -1,6 +1,8 @@
 package no.rutebanken.nabu.organization.rest.exception;
 
 import com.google.common.collect.Sets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -16,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class SpringExceptionMapper implements ExceptionMapper<NestedRuntimeException> {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private Map<Response.Status, Set<Class<?>>> mapping;
 
@@ -29,6 +32,7 @@ public class SpringExceptionMapper implements ExceptionMapper<NestedRuntimeExcep
 
 	@Override
 	public Response toResponse(NestedRuntimeException e) {
+		logger.debug("Operation failed with exception: " + e.getMessage(), e);
 		Throwable t = e;
 		if (e.getRootCause() != null) {
 			t = e.getRootCause();

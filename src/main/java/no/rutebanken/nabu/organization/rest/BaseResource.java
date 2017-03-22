@@ -5,6 +5,7 @@ import no.rutebanken.nabu.organization.repository.VersionedEntityRepository;
 import no.rutebanken.nabu.organization.rest.dto.BaseDTO;
 import no.rutebanken.nabu.organization.rest.mapper.DTOMapper;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
@@ -48,6 +49,12 @@ public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO>
 		return getMapper().toDTO(entity, true);
 	}
 
+	@DELETE
+	@Path("{id}")
+	public void delete(@PathParam("id") String id) {
+		getRepository().delete(getExisting(id));
+	}
+
 	@GET
 	public List<D> listAll() {
 		return getRepository().findAll().stream().map(r -> getMapper().toDTO(r, false)).collect(Collectors.toList());
@@ -64,7 +71,7 @@ public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO>
 		try {
 			return getRepository().getOneByPublicId(id);
 		} catch (DataRetrievalFailureException e) {
-			throw new NotFoundException(getClass().getSimpleName() + " with id: [" + id + "] not found");
+			throw new NotFoundException(getEntityClass().getSimpleName() + " with id: [" + id + "] not found");
 		}
 	}
 }

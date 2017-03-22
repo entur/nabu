@@ -9,5 +9,7 @@ public interface IamService {
 
 	void updateUser(User user);
 
+	void removeUser(User user);
+
 	void updateResponsibilitySet(ResponsibilitySet responsibilitySet);
 }

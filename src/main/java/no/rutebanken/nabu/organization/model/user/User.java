@@ -71,6 +71,13 @@ public class User extends VersionedEntity {
 		this.responsibilitySets = responsibilitySets;
 	}
 
+	@PreRemove
+	private void removeResponsibilitySetConnections() {
+		if (responsibilitySets != null) {
+			responsibilitySets.clear();
+		}
+	}
+
 	@Override
 	public String getId() {
 		return Joiner.on(":").join(getType(), getPrivateCode());
