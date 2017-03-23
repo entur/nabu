@@ -8,6 +8,8 @@ public class TestConstantsOrganisation {
 
 	public static final String RESPONSIBILITY_SET_ID = "TST:ResponsibilitySet:RspSetTst";
 
+	public static final String RESPONSIBILITY_SET_ID_2 = "TST:ResponsibilitySet:RspSetTst2";
+
 	public static final String ENTITY_TYPE_ID = "TST:TypeOfEntity:StopPlace";
 
 	public static final String ENTITY_CLASSIFICATION_ID = "TST:TypeOfPoint:busStop";

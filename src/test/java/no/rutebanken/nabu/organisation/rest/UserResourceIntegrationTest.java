@@ -1,6 +1,8 @@
 package no.rutebanken.nabu.organisation.rest;
 
 import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
+import no.rutebanken.nabu.organisation.rest.dto.organisation.OrganisationDTO;
+import no.rutebanken.nabu.organisation.rest.dto.organisation.OrganisationPartDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.NotificationDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.UserDTO;
@@ -16,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static no.rutebanken.nabu.organisation.TestConstantsOrganisation.ORGANISATION_ID;
@@ -46,10 +49,9 @@ public class UserResourceIntegrationTest {
 		assertUser(createUser, uri);
 
 		ContactDetailsDTO updateContactDetails = new ContactDetailsDTO("otherFirst", "otherLast", "otherEmail", null);
-		UserDTO updateUser = createUser(createUser.username, createUser.organisationRef, updateContactDetails, TestConstantsOrganisation.RESPONSIBILITY_SET_ID);
+		UserDTO updateUser = createUser(createUser.username, createUser.organisationRef, updateContactDetails);
 		restTemplate.put(uri, updateUser);
 		assertUser(updateUser, uri);
-
 
 		UserDTO[] allUsers =
 				restTemplate.getForObject(PATH, UserDTO[].class);
@@ -60,7 +62,29 @@ public class UserResourceIntegrationTest {
 		ResponseEntity<UserDTO> entity = restTemplate.getForEntity(uri,
 				UserDTO.class);
 		Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+	}
 
+	@Test
+	public void updateUsersResponsibilitySets() throws Exception {
+		UserDTO user = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, null);
+		URI uri = restTemplate.postForLocation(PATH, user);
+		assertUser(user, uri);
+
+		user.responsibilitySetRefs = Arrays.asList(TestConstantsOrganisation.RESPONSIBILITY_SET_ID);
+		restTemplate.put(uri, user);
+		assertUser(user, uri);
+
+		user.responsibilitySetRefs = Arrays.asList(TestConstantsOrganisation.RESPONSIBILITY_SET_ID, TestConstantsOrganisation.RESPONSIBILITY_SET_ID_2);
+		restTemplate.put(uri, user);
+		assertUser(user, uri);
+
+		user.responsibilitySetRefs = Arrays.asList(TestConstantsOrganisation.RESPONSIBILITY_SET_ID_2);
+		restTemplate.put(uri, user);
+		assertUser(user, uri);
+
+		user.responsibilitySetRefs = null;
+		restTemplate.put(uri, user);
+		assertUser(user, uri);
 	}
 
 	private void assertUserInArray(UserDTO user, UserDTO[] array) {
@@ -87,7 +111,14 @@ public class UserResourceIntegrationTest {
 		UserDTO outUser = rsp.getBody();
 		Assert.assertEquals(inUser.username, outUser.username);
 		Assert.assertEquals(inUser.privateCode, outUser.privateCode);
-		Assert.assertEquals(inUser.responsibilitySetRefs, outUser.responsibilitySetRefs);
+
+		if (CollectionUtils.isEmpty(inUser.responsibilitySetRefs)) {
+			Assert.assertTrue(CollectionUtils.isEmpty(outUser.responsibilitySetRefs));
+		} else {
+			Assert.assertEquals(inUser.responsibilitySetRefs.size(), outUser.responsibilitySetRefs.size());
+			Assert.assertTrue(inUser.responsibilitySetRefs.containsAll(outUser.responsibilitySetRefs));
+		}
+
 
 		if (inUser.contactDetails == null) {
 			Assert.assertNull(outUser.contactDetails);
