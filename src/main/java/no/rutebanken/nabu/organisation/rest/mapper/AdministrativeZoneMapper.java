@@ -41,7 +41,7 @@ public class AdministrativeZoneMapper implements DTOMapper<AdministrativeZone, A
 		AdministrativeZone entity = new AdministrativeZone();
 		entity.setPrivateCode(dto.privateCode);
 		entity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
-		return updateFromDTO(dto, new AdministrativeZone());
+		return updateFromDTO(dto, entity);
 	}
 
 	@Override
