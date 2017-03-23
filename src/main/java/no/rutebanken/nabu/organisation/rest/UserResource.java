@@ -34,6 +34,11 @@ public class UserResource extends BaseResource<User, UserDTO> {
 	@Autowired
 	private IamService iamService;
 
+	@GET
+	@Path("{id}")
+	public UserDTO get(@PathParam("id") String id) {
+		return super.getEntity(id);
+	}
 
 	@POST
 	public Response create(UserDTO dto, @Context UriInfo uriInfo) {

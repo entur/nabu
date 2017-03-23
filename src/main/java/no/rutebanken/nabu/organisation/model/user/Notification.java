@@ -3,6 +3,7 @@ package no.rutebanken.nabu.organisation.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Notification  {
@@ -12,6 +13,7 @@ public class Notification  {
 	private Long pk;
 
 	@Enumerated(EnumType.STRING)
+	@NotNull
 	private NotificationType notificationType;
 
 	// TODO Define trigger types
@@ -41,11 +43,14 @@ public class Notification  {
 
 		Notification that = (Notification) o;
 
-		return notificationType == that.notificationType;
+		if (notificationType != that.notificationType) return false;
+		return trigger != null ? trigger.equals(that.trigger) : that.trigger == null;
 	}
 
 	@Override
 	public int hashCode() {
-		return notificationType.hashCode();
+		int result = notificationType != null ? notificationType.hashCode() : 0;
+		result = 31 * result + (trigger != null ? trigger.hashCode() : 0);
+		return result;
 	}
 }

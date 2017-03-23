@@ -3,6 +3,7 @@ package no.rutebanken.nabu.organisation.rest.mapper;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.nabu.organisation.model.user.ContactDetails;
 import no.rutebanken.nabu.organisation.model.user.Notification;
+import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import no.rutebanken.nabu.organisation.model.user.User;
 import no.rutebanken.nabu.organisation.repository.OrganisationRepository;
 import no.rutebanken.nabu.organisation.repository.ResponsibilitySetRepository;
@@ -54,12 +55,27 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
 		if (dto.organisationRef != null) {
 			entity.setOrganisation(organisationRepository.getOneByPublicId(dto.organisationRef));
 		}
-		if (!CollectionUtils.isEmpty(dto.responsibilitySetRefs)) {
-			entity.setResponsibilitySets(dto.responsibilitySetRefs.stream().map(ref -> responsibilitySetRepository.getOneByPublicId(ref)).collect(Collectors.toSet()));
-		} else {
+		if (CollectionUtils.isEmpty(dto.responsibilitySetRefs)) {
 			entity.setResponsibilitySets(new HashSet<>());
+		} else {
+			entity.setResponsibilitySets(dto.responsibilitySetRefs.stream().map(ref -> responsibilitySetRepository.getOneByPublicId(ref)).collect(Collectors.toSet()));
 		}
+
+
+		if (CollectionUtils.isEmpty(dto.notifications)) {
+			entity.setNotifications(new HashSet<>());
+		} else {
+			entity.setNotifications(dto.notifications.stream().map(n -> fromDTO(n)).collect(Collectors.toSet()));
+		}
+
 		return entity;
+	}
+
+	private Notification fromDTO(NotificationDTO dto) {
+		Notification notification = new Notification();
+		notification.setTrigger(dto.trigger);
+		notification.setNotificationType(NotificationType.valueOf(dto.notificationType.name()));
+		return notification;
 	}
 
 

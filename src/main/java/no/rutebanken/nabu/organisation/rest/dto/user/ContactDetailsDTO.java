@@ -11,4 +11,13 @@ public class ContactDetailsDTO {
 
 	public String email;
 
+	public ContactDetailsDTO(String firstName, String lastName, String phone, String email) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.phone = phone;
+		this.email = email;
+	}
+
+	public ContactDetailsDTO() {
+	}
 }

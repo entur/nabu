@@ -19,14 +19,14 @@ public class User extends VersionedEntity {
 	@NotNull
 	private String username;
 
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private ContactDetails contactDetails;
 
 	@NotNull
 	@ManyToOne
 	private Organisation organisation;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
 	private Set<Notification> notifications;
 
 	@ManyToMany
