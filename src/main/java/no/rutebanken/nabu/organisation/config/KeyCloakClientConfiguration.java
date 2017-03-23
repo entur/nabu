@@ -14,7 +14,10 @@ public class KeyCloakClientConfiguration {
 	private String adminPath;
 
 	@Value("${keycloak.admin.realm:master}")
-	private String realm;
+	private String masterRealm;
+
+	@Value("${keycloak.admin.realm:Rutebanken}")
+	private String userRealm;
 
 	@Value("${keycloak.admin.username:user}")
 	private String username;
@@ -28,12 +31,12 @@ public class KeyCloakClientConfiguration {
 	public RealmResource keycloakAdminClient() {
 		return KeycloakBuilder.builder()
 				       .serverUrl(adminPath)
-				       .realm(realm)
+				       .realm(masterRealm)
 				       .username(username)
 				       .password(password)
 				       .clientId(clientId)
 				       .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build())
-				       .build().realm(realm);
+				       .build().realm(userRealm);
 
 	}
 }
