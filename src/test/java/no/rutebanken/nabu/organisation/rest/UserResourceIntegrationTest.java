@@ -89,7 +89,7 @@ public class UserResourceIntegrationTest {
 
 	private void assertUserInArray(UserDTO user, UserDTO[] array) {
 		Assert.assertNotNull(array);
-		Assert.assertTrue(Arrays.stream(array).anyMatch(r -> r.username.equals(user.username)));
+		Assert.assertTrue(Arrays.stream(array).anyMatch(r -> r.username.equals(user.username.toLowerCase())));
 	}
 
 	protected UserDTO createUser(String username, String orgRef, ContactDetailsDTO contactDetails, String... respSetRefs) {
@@ -109,7 +109,7 @@ public class UserResourceIntegrationTest {
 		Assert.assertNotNull(uri);
 		ResponseEntity<UserDTO> rsp = restTemplate.getForEntity(uri, UserDTO.class);
 		UserDTO outUser = rsp.getBody();
-		Assert.assertEquals(inUser.username, outUser.username);
+		Assert.assertEquals(inUser.username.toLowerCase(), outUser.username);
 		Assert.assertEquals(inUser.privateCode, outUser.privateCode);
 
 		if (CollectionUtils.isEmpty(inUser.responsibilitySetRefs)) {
