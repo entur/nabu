@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "user_account", uniqueConstraints = {
-		                                                  @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+		                                                  @UniqueConstraint(name = "user_unique_username", columnNames = {"privateCode", "entityVersion"})
 })
 public class User extends VersionedEntity {
 
