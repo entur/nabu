@@ -76,7 +76,8 @@ public class User extends VersionedEntity {
 	}
 
 	public void setResponsibilitySets(Set<ResponsibilitySet> responsibilitySets) {
-		this.responsibilitySets = responsibilitySets;
+		getResponsibilitySets().clear();
+		getResponsibilitySets().addAll(responsibilitySets);
 	}
 
 	@PreRemove
