@@ -34,11 +34,11 @@ public class RoleResourceIntegrationTest {
 	public void crudRole() throws Exception {
 		TypeDTO createRole = createRole("role name", "privateCode");
 		URI uri = restTemplate.postForLocation(PATH, createRole);
-		assertRole(createRole, uri);
+		ResourceTestUtils.assertType(createRole, uri, restTemplate);
 
 		TypeDTO updateRole = createRole("new name", createRole.privateCode);
 		restTemplate.put(uri, updateRole);
-		assertRole(updateRole, uri);
+		ResourceTestUtils.assertType(updateRole, uri, restTemplate);
 
 
 		TypeDTO[] allRoles =
@@ -65,18 +65,9 @@ public class RoleResourceIntegrationTest {
 		return role;
 	}
 
-
-	protected void assertRole(TypeDTO inRole, URI uri) {
-		Assert.assertNotNull(uri);
-		ResponseEntity<TypeDTO> rsp = restTemplate.getForEntity(uri, TypeDTO.class);
-		TypeDTO outRole = rsp.getBody();
-		Assert.assertEquals(inRole.name, outRole.name);
-		Assert.assertEquals(inRole.privateCode, outRole.privateCode);
-	}
-
 	@Test
 	public void createInvalidRole() throws Exception {
-		TypeDTO inRole = createRole("role name",null);
+		TypeDTO inRole = createRole("role name", null);
 		ResponseEntity<String> rsp = restTemplate.postForEntity(PATH, inRole, String.class);
 
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());

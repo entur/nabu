@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @RunWith(SpringRunner.class)
@@ -40,12 +41,12 @@ public class OrganisationResourceIntegrationTest {
 		URI uri = restTemplate.postForLocation(PATH, createOrganisation);
 		assertOrganisation(createOrganisation, uri);
 
-		OrganisationPartDTO orgPart = new OrganisationPartDTO();
-		orgPart.name = "part 1";
-		OrganisationDTO updateOrganisation = createOrganisation(createOrganisation.privateCode, "newOrg name", 2l, orgPart);
+		OrganisationPartDTO orgPart1 = new OrganisationPartDTO();
+		orgPart1.name = "part 1";
+
+		OrganisationDTO updateOrganisation = createOrganisation(createOrganisation.privateCode, "newOrg name", 2l, orgPart1);
 		restTemplate.put(uri, updateOrganisation);
 		assertOrganisation(updateOrganisation, uri);
-
 
 		OrganisationDTO[] allOrganisations =
 				restTemplate.getForObject(PATH, OrganisationDTO[].class);
@@ -58,6 +59,39 @@ public class OrganisationResourceIntegrationTest {
 		Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 
 	}
+
+	@Test
+	public void updateOrganisationParts() throws Exception {
+		OrganisationPartDTO orgPart1 = new OrganisationPartDTO();
+		orgPart1.name = "part 1";
+		orgPart1.administrativeZoneRefs = ResourceTestUtils.addAdminZones(restTemplate, "amd1", "adm2");
+
+		OrganisationPartDTO orgPart2 = new OrganisationPartDTO();
+		orgPart2.name = "part2";
+
+		OrganisationDTO organisation = createOrganisation("OrgWithParts", "Org name", null, orgPart1, orgPart2);
+		URI uri = restTemplate.postForLocation(PATH, organisation);
+		assertOrganisation(organisation, uri);
+
+		orgPart1.administrativeZoneRefs.remove(0);
+		orgPart1.administrativeZoneRefs.addAll(ResourceTestUtils.addAdminZones(restTemplate, "adm3"));
+
+		restTemplate.put(uri, organisation);
+		assertOrganisation(organisation, uri);
+		organisation.parts.remove(orgPart2);
+
+		OrganisationPartDTO orgPart3 = new OrganisationPartDTO();
+		orgPart3.name = "part3";
+		organisation.parts.add(orgPart3);
+
+		restTemplate.put(uri, organisation);
+		assertOrganisation(organisation, uri);
+
+		organisation.parts = null;
+		restTemplate.put(uri, organisation);
+		assertOrganisation(organisation, uri);
+	}
+
 
 	private void assertOrganisationInArray(OrganisationDTO organisation, OrganisationDTO[] array) {
 		Assert.assertNotNull(array);
@@ -72,7 +106,7 @@ public class OrganisationResourceIntegrationTest {
 		organisation.name = name;
 		organisation.companyNumber = companyNumber;
 		if (parts != null) {
-			organisation.parts = Arrays.asList(parts);
+			organisation.parts = new ArrayList<>(Arrays.asList(parts));
 		}
 
 		return organisation;

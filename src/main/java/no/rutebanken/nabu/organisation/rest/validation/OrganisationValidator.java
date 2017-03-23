@@ -31,6 +31,7 @@ public class OrganisationValidator implements DTOValidator<Organisation, Organis
 	}
 
 	private void validatePart(OrganisationPartDTO dto) {
+		Assert.notNull(dto, "parts cannot be empty");
 		Assert.hasLength(dto.name, "parts.name required");
 	}
 

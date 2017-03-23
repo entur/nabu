@@ -89,7 +89,7 @@ public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, Res
 		dto.typeOfResponsibilityRoleRef = entity.getTypeOfResponsibilityRole().getId();
 
 		if (entity.getResponsibleArea() != null) {
-			dto.typeOfResponsibilityRoleRef = entity.getResponsibleArea().getId();
+			dto.responsibleAreaRef = entity.getResponsibleArea().getId();
 		}
 		if (!CollectionUtils.isEmpty(entity.getResponsibleEntityClassifications())) {
 			dto.entityClassificationRefs = entity.getResponsibleEntityClassifications().stream().map(ec -> ec.getId()).collect(Collectors.toList());

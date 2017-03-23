@@ -17,6 +17,8 @@ import java.net.URI;
 import java.util.Arrays;
 
 import static no.rutebanken.nabu.organisation.TestConstantsOrganisation.CODE_SPACE_ID;
+import static no.rutebanken.nabu.organisation.rest.ResourceTestUtils.createAdministrativeZone;
+import static no.rutebanken.nabu.organisation.rest.ResourceTestUtils.validPolygon;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -63,19 +65,7 @@ public class AdministrativeZoneResourceIntegrationTest {
 		Assert.assertTrue(Arrays.stream(array).anyMatch(r -> r.privateCode.equals(administrativeZone.privateCode)));
 	}
 
-	protected AdministrativeZoneDTO createAdministrativeZone(String name, String privateCode, Polygon polygon) {
-		AdministrativeZoneDTO administrativeZone = new AdministrativeZoneDTO();
-		administrativeZone.name = name;
-		administrativeZone.privateCode = privateCode;
-		administrativeZone.polygon = polygon;
-		administrativeZone.codeSpace = CODE_SPACE_ID;
-		return administrativeZone;
-	}
 
-	private Polygon validPolygon() {
-		double[][][] coordinates =new double [][][]{{{1.0,1.0},{1.0,2.0},{2.0,2.0},{1.0,1.0}},{{1.0,1.0},{1.0,2.0},{2.0,2.0},{1.0,1.0}}};
-		return new Polygon(coordinates);
-	}
 
 	protected void assertAdministrativeZone(AdministrativeZoneDTO inAdministrativeZone, URI uri) {
 		Assert.assertNotNull(uri);

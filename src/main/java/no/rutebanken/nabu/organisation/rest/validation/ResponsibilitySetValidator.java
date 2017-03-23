@@ -24,9 +24,10 @@ public class ResponsibilitySetValidator implements DTOValidator<ResponsibilitySe
 
 	private void assertCommon(ResponsibilitySetDTO dto) {
 		Assert.hasLength(dto.name, "name required");
-		Assert.notEmpty(dto.roles);
-		for (ResponsibilityRoleAssignmentDTO roleDto:dto.roles){
-			Assert.hasLength(roleDto.responsibleAreaRef, "roles.responsibleAreaRef required");
+		Assert.notEmpty(dto.roles, "roles required");
+		for (ResponsibilityRoleAssignmentDTO roleDto : dto.roles) {
+			Assert.notNull(roleDto,"roles cannot be empty");
+			Assert.hasLength(roleDto.typeOfResponsibilityRoleRef, "roles.typeOfResponsibilityRoleRef required");
 			Assert.hasLength(roleDto.responsibleOrganisationRef, "roles.responsibleOrganisationRef required");
 		}
 	}
