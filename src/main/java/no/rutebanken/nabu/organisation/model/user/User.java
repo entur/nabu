@@ -49,11 +49,15 @@ public class User extends VersionedEntity {
 	}
 
 	public Set<Notification> getNotifications() {
+		if (notifications == null) {
+			notifications = new HashSet<>();
+		}
 		return notifications;
 	}
 
 	public void setNotifications(Set<Notification> notifications) {
-		this.notifications = notifications;
+		getNotifications().clear();
+		getNotifications().addAll(notifications);
 	}
 
 	public Organisation getOrganisation() {

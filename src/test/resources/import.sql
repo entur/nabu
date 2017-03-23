@@ -24,7 +24,7 @@ insert into entity_classification (pk, entity_version,lock_version,entity_type_p
 insert into entity_classification (pk, entity_version,lock_version,entity_type_pk,code_space_pk,private_code,name) VALUES (2,1,1,1,1,'tramStop','Tram stop');
 insert into entity_classification (pk, entity_version,lock_version,entity_type_pk,code_space_pk,private_code,name) VALUES (3,1,1,2,1,'*','All placeOfInterest');
 
-insert into organisation(pk, dtype,entity_version,lock_version,code_space_pk,private_code,name) values (nextval('hibernate_sequence'),'Authority',1,1,1,'testOrg','Test Org');
+insert into organisation(pk, dtype,entity_version,lock_version,code_space_pk,private_code,name) values (nextval('hibernate_sequence'),'Authority',1,1,1,'OrgTest','Test Org');
 
 insert into responsibility_role_assignment (pk,entity_version,lock_version,private_code,code_space_pk,responsible_organisation_pk,type_of_responsibility_role_pk) VALUES (1,1,1,'1',1,1,1);
 insert into responsibility_role_assignment (pk,entity_version,lock_version,private_code,code_space_pk,responsible_organisation_pk,type_of_responsibility_role_pk) VALUES (2,1,1,'2',1,1,2);
@@ -33,7 +33,7 @@ insert into RESPONSIBILITY_ROLE_ASSIGNMENT_ENTITY_CLASSIFICATIONS (responsibilit
 insert into RESPONSIBILITY_ROLE_ASSIGNMENT_ENTITY_CLASSIFICATIONS (responsibility_role_assignment_pk, responsible_entity_classifications_pk) values (1,3);
 
 
-insert into responsibility_set (pk,entity_version,lock_version,private_code,code_space_pk,name) values (1,1,1,'1',1,'Test rsp set');
+insert into responsibility_set (pk,entity_version,lock_version,private_code,code_space_pk,name) values (1,1,1,'RspSetTst',1,'Test rsp set');
 
 insert into responsibility_set_roles (responsibility_Set_pk,roles_pk) values (1,1);
 insert into responsibility_set_roles (responsibility_Set_pk,roles_pk) values (1,2);

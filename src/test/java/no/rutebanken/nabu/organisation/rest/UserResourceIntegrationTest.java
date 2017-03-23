@@ -35,21 +35,6 @@ public class UserResourceIntegrationTest {
 		Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 	}
 
-	@Test
-	public void createMinimalUser() throws Exception {
-		UserDTO inUser = new UserDTO();
-		inUser.username = "testUser";
-		inUser.organisationRef = ORGANISATION_ID;
-		URI uri = restTemplate.postForLocation(PATH, inUser);
-
-		Assert.assertNotNull(uri);
-
-		ResponseEntity<UserDTO> rsp = restTemplate.getForEntity(uri, UserDTO.class);
-		UserDTO outUser = rsp.getBody();
-		Assert.assertEquals(inUser.username, outUser.username);
-		Assert.assertEquals(inUser.organisationRef, outUser.organisationRef);
-	}
-
 
 	@Test
 	public void crudUser() throws Exception {
