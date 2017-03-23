@@ -16,15 +16,15 @@ public class KeyCloakClientConfiguration {
 	@Value("${keycloak.admin.realm:master}")
 	private String masterRealm;
 
-	@Value("${keycloak.admin.realm:Rutebanken}")
+	@Value("${keycloak.admin.realm:rutebanken}")
 	private String userRealm;
 
-	@Value("${keycloak.admin.username:user}")
+	@Value("${keycloak.admin.username:nabu}")
 	private String username;
 
 	@Value("${keycloak.admin.password:pass}")
 	private String password;
-	@Value("${keycloak.admin.client:Nabu}")
+	@Value("${keycloak.admin.client:nabu-bot}")
 	private String clientId;
 
 	@Bean

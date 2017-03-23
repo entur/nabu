@@ -48,7 +48,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
 	}
 
 	public User updateFromDTO(UserDTO dto, User entity) {
-		entity.setUsername(dto.username);
+		entity.setUsername(dto.username.toLowerCase());
 
 		entity.setContactDetails(fromDTO(dto.contactDetails));
 

@@ -50,6 +50,7 @@ public class KeycloakIamService implements IamService {
 		if (rsp.getStatus() >= 300) {
 			throw new WebApplicationException(rsp);
 		}
+		resetPassword(user.getUsername());
 	}
 
 	public void updateUser(User user) {
@@ -82,6 +83,15 @@ public class KeycloakIamService implements IamService {
 		userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> updateUser(u));
 	}
 
+	// Credentials may not be set when creating a user
+	private void resetPassword(String username) {
+		CredentialRepresentation credential = new CredentialRepresentation();
+		credential.setType(CredentialRepresentation.PASSWORD);
+		credential.setValue(defaultPassword);
+		credential.setTemporary(Boolean.TRUE);
+		getUserResourceByUsername(username).resetPassword(credential);
+	}
+
 
 	private UserResource getUserResourceByUsername(String username) {
 		List<UserRepresentation> userRepresentations = iamRealm.users().search(username, null, null, null, 0, 2);
@@ -99,11 +109,6 @@ public class KeycloakIamService implements IamService {
 
 		kcUser.setEnabled(true);
 		kcUser.setUsername(user.getUsername());
-
-		CredentialRepresentation credential = new CredentialRepresentation();
-		credential.setType(CredentialRepresentation.PASSWORD);
-		credential.setValue(defaultPassword);
-		kcUser.setCredentials(Arrays.asList(credential));
 
 		if (user.getContactDetails() != null) {
 			kcUser.setFirstName(user.getContactDetails().getFirstName());
