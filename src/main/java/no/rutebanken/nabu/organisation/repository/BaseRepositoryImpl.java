@@ -24,8 +24,7 @@ public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepo
 	}
 
 	@Override
-	public T getOneByPublicId(String publicId) {
-
+	public T getOneByPublicIdIfExists(String publicId) {
 		Id id = Id.fromString(publicId);
 
 		String jpql = "select e from " + entityInformation.getEntityName() + " e  where e.privateCode=:privateCode";
@@ -45,9 +44,18 @@ public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepo
 		if (results.size() == 1) {
 			return results.get(0);
 		} else if (results.isEmpty()) {
-			throw new EntityNotFoundException(entityInformation.getEntityName() + " with id: [" + publicId + "] not found");
+			return null;
 		}
 		throw new IllegalArgumentException("Query for one entity returned multiple: " + query);
+	}
+
+	@Override
+	public T getOneByPublicId(String publicId) {
+		T entity = getOneByPublicIdIfExists(publicId);
+		if (entity == null) {
+			throw new EntityNotFoundException(entityInformation.getEntityName() + " with id: [" + publicId + "] not found");
+		}
+		return entity;
 	}
 
 

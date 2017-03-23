@@ -8,6 +8,7 @@ import no.rutebanken.nabu.organisation.rest.validation.DTOValidator;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -29,7 +30,11 @@ public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO>
 
 	public E createEntity(D dto) {
 		getValidator().validateCreate(dto);
-		return getRepository().save(getMapper().createFromDTO(dto, getEntityClass()));
+		E entity = getMapper().createFromDTO(dto, getEntityClass());
+		if (getRepository().getOneByPublicIdIfExists(entity.getId()) != null) {
+			throw new ClientErrorException(Response.Status.CONFLICT);
+		}
+		return getRepository().save(entity);
 	}
 
 	public Response createEntity(D dto, UriInfo uriInfo) {
