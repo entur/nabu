@@ -98,3 +98,28 @@ spring.datasource.initializationFailFast=false
 
 * Running in docker (test ++)
 `docker run -it --name nabu -e JAVA_OPTIONS="-Xmx1280m" --link activemq --link some-postgres -v /git/config/nabu/test/application.properties:/app/config/application.properties:ro dr.rutebanken.org/rutebanken/nabu:0.0.1-SNAPSHOT`
+
+
+## Enable nabu to admin users in keycloak
+
+In order to mange keycloak users from Nabu 
+
+### Add user to Realm 'Master'
+ * Go to the keycloak admin console 
+ * Select realm=Master
+ * Select 'users'
+ * Create new user: nabu. 
+ * Go to 'Credentials' tab and assign password and toggle temporary to off.
+ * Go to 'Role mappings' tab and assign role 'Admin' as a 'Realm role'
+ 
+###  Add client to Realm 'Master'
+  * Go to the keycloak admin console 
+  * Select realm=Master
+  * Select 'clients'
+  * Create new client: nabu-bot
+
+ 
+### Configure nabu with username+password for new user and clientID for new client
+keycloak.admin.username=nabu
+keycloak.admin.password=....
+keycloak.admin.client=nabu-bot
