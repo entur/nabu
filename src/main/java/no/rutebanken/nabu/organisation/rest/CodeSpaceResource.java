@@ -2,7 +2,12 @@ package no.rutebanken.nabu.organisation.rest;
 
 import no.rutebanken.nabu.organisation.model.CodeSpace;
 import no.rutebanken.nabu.organisation.repository.CodeSpaceRepository;
+import no.rutebanken.nabu.organisation.repository.VersionedEntityRepository;
 import no.rutebanken.nabu.organisation.rest.dto.CodeSpaceDTO;
+import no.rutebanken.nabu.organisation.rest.mapper.CodeSpaceMapper;
+import no.rutebanken.nabu.organisation.rest.mapper.DTOMapper;
+import no.rutebanken.nabu.organisation.rest.validation.CodeSpaceValidator;
+import no.rutebanken.nabu.organisation.rest.validation.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,44 +20,36 @@ import java.util.stream.Collectors;
 @Produces("application/json")
 @Path("/code_spaces")
 @Transactional
-public class CodeSpaceResource {
+public class CodeSpaceResource extends AnnotatedBaseResource<CodeSpace, CodeSpaceDTO> {
 
 
 	@Autowired
 	private CodeSpaceRepository repository;
 
-	@POST
-	public void createCodeSpace(CodeSpaceDTO dto) {
-		repository.save(fromDTO(dto, new CodeSpace()));
+	@Autowired
+	private CodeSpaceValidator validator;
+
+	@Autowired
+	private CodeSpaceMapper mapper;
+
+
+	@Override
+	protected VersionedEntityRepository<CodeSpace> getRepository() {
+		return repository;
 	}
 
-	@PUT
-	@Path("{id}")
-	public void updateCodeSpace(@PathParam("id") String id, CodeSpaceDTO dto) {
-		CodeSpace codeSpace = repository.getOneByPublicId(id);
-		repository.save(fromDTO(dto, codeSpace));
+	@Override
+	protected DTOMapper<CodeSpace, CodeSpaceDTO> getMapper() {
+		return mapper;
 	}
 
-	@GET
-	@Path("{id}")
-	public CodeSpaceDTO getCodeSpace(@PathParam("id") String id) {
-		CodeSpace codeSpace = repository.getOneByPublicId(id);
-		return toDTO(codeSpace);
+	@Override
+	protected Class<CodeSpace> getEntityClass() {
+		return CodeSpace.class;
 	}
 
-	@GET
-	public List<CodeSpaceDTO> listAllCodeSpaces() {
-		return repository.findAll().stream().map(r -> toDTO(r)).collect(Collectors.toList());
-	}
-
-	private CodeSpaceDTO toDTO(CodeSpace codeSpace) {
-		return new CodeSpaceDTO(codeSpace.getId(), codeSpace.getXmlns(), codeSpace.getXmlnsUrl());
-	}
-
-	private CodeSpace fromDTO(CodeSpaceDTO dto, CodeSpace codeSpace) {
-		codeSpace.setPrivateCode(dto.privateCode);
-		codeSpace.setXmlns(dto.xmlns);
-		codeSpace.setXmlnsUrl(dto.xmlnsUrl);
-		return codeSpace;
+	@Override
+	protected DTOValidator<CodeSpace, CodeSpaceDTO> getValidator() {
+		return validator;
 	}
 }

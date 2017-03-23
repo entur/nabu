@@ -7,6 +7,7 @@ public class CodeSpaceDTO extends BaseDTO {
 
 	public CodeSpaceDTO(String id, String xmlns, String xmlnsUrl) {
 		this.id = id;
+		this.privateCode = id;
 		this.xmlns = xmlns;
 		this.xmlnsUrl = xmlnsUrl;
 	}

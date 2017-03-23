@@ -8,7 +8,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(uniqueConstraints = {
-		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+		                           @UniqueConstraint(name = "code_space_unique_private_code", columnNames = {"privateCode", "entityVersion"}),
+		                           @UniqueConstraint(name = "code_space_unique_xmlns", columnNames = {"xmlns", "entityVersion"})
 })
 public class CodeSpace extends VersionedEntity {
 

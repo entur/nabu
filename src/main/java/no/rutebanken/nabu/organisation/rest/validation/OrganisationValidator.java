@@ -13,24 +13,25 @@ public class OrganisationValidator implements DTOValidator<Organisation, Organis
 	public void validateCreate(OrganisationDTO dto) {
 		Assert.hasLength(dto.privateCode, "privateCode required");
 		Assert.hasLength(dto.codeSpace, "codeSpace required");
-		Assert.hasLength(dto.name, "name required");
 		Assert.notNull(dto.organisationType, "organisationType required");
 
+		assertCommon(dto);
+	}
+
+	@Override
+	public void validateUpdate(OrganisationDTO dto, Organisation entity) {
+		assertCommon(dto);
+	}
+
+	private void assertCommon(OrganisationDTO dto) {
+		Assert.hasLength(dto.name, "name required");
 		if (dto.parts != null) {
 			dto.parts.forEach(p -> validatePart(p));
 		}
-
 	}
 
 	private void validatePart(OrganisationPartDTO dto) {
 		Assert.hasLength(dto.name, "parts.name required");
 	}
 
-	@Override
-	public void validateUpdate(OrganisationDTO dto, Organisation entity) {
-		Assert.hasLength(dto.name, "name required");
-		if (dto.parts != null) {
-			dto.parts.forEach(p -> validatePart(p));
-		}
-	}
 }
