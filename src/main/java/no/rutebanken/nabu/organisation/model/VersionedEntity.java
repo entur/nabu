@@ -26,7 +26,7 @@ public abstract class VersionedEntity implements Serializable {
 	private Long entityVersion = Long.valueOf(1);
 
 	@JsonIgnore
-	protected String getType() {
+	public String getType() {
 		return getClass().getSimpleName();
 	}
 

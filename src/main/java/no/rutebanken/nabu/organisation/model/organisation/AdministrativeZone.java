@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(uniqueConstraints = {
-		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+		                           @UniqueConstraint(name = "adm_zone_unique_id", columnNames = {"code_space_pk","privateCode", "entityVersion"})
 })
 public class AdministrativeZone extends CodeSpaceEntity {
 

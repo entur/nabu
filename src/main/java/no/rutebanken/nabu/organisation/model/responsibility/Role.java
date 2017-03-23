@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(uniqueConstraints = {
-		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+		                           @UniqueConstraint(name = "role_unique_id", columnNames = {"privateCode", "entityVersion"})
 })
 public class Role extends VersionedEntity implements TypeEntity {
 

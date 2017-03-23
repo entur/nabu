@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {
-		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+		                           @UniqueConstraint(name = "rsp_role_assignment_unique_id", columnNames = {"code_space_pk","privateCode", "entityVersion"})
 })
 public class ResponsibilityRoleAssignment extends CodeSpaceEntity {
 

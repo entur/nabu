@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(uniqueConstraints = {
-		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+		                           @UniqueConstraint(name = "entity_classification_unique_id", columnNames = {"code_space_pk","privateCode", "entityVersion"})
 })
 public class EntityClassification extends CodeSpaceEntity implements TypeEntity {
 
@@ -41,7 +41,7 @@ public class EntityClassification extends CodeSpaceEntity implements TypeEntity 
 	}
 
 	@Override
-	protected String getType() {
+	public String getType() {
 		return "TypeOfPoint";
 	}
 }

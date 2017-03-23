@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {
-		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+		                           @UniqueConstraint(name = "entity_type_unique_id", columnNames = {"code_space_pk","privateCode", "entityVersion"})
 })
 public class EntityType extends CodeSpaceEntity implements TypeEntity {
 
@@ -27,7 +27,7 @@ public class EntityType extends CodeSpaceEntity implements TypeEntity {
 	}
 
 	@Override
-	protected String getType() {
+	public String getType() {
 		return "TypeOfEntity";
 	}
 

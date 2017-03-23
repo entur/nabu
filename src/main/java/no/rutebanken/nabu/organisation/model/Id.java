@@ -45,16 +45,12 @@ public class Id {
 		return codeSpace;
 	}
 
-	public void setCodeSpace(String codeSpace) {
-		this.codeSpace = codeSpace;
-	}
-
 	public String getPrivateCode() {
 		return privateCode;
 	}
 
-	public void setPrivateCode(String privateCode) {
-		this.privateCode = privateCode;
+	public String getType() {
+		return type;
 	}
 
 	public String toString() {

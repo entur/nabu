@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = {
-		                           @UniqueConstraint(columnNames = {"privateCode", "entityVersion"})
+		                           @UniqueConstraint(name = "org_part_unique_id", columnNames = {"code_space_pk","privateCode", "entityVersion"})
 })
 public class OrganisationPart extends CodeSpaceEntity {
 
