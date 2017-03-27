@@ -16,7 +16,7 @@ public class KeyCloakClientConfiguration {
 	@Value("${keycloak.admin.realm:master}")
 	private String masterRealm;
 
-	@Value("${keycloak.user.realm:Rutebanken}")
+	@Value("${keycloak.user.realm:rutebanken}")
 	private String userRealm;
 
 	@Value("${keycloak.admin.username:nabu}")
