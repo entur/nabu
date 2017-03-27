@@ -2,6 +2,7 @@ package no.rutebanken.nabu.organisation.rest.dto.responsibility;
 
 import no.rutebanken.nabu.organisation.rest.dto.BaseDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResponsibilityRoleAssignmentDTO extends BaseDTO {
@@ -10,7 +11,7 @@ public class ResponsibilityRoleAssignmentDTO extends BaseDTO {
 	public String responsibleOrganisationRef;
 	public String responsibleAreaRef;
 
-	public List<String> entityClassificationRefs;
+	public List<String> entityClassificationRefs = new ArrayList<>();
 
 	public ResponsibilityRoleAssignmentDTO() {
 	}

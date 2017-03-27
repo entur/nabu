@@ -60,7 +60,7 @@ public class ResponsibilitySet extends CodeSpaceEntity {
 				}
 			}
 		}
-		throw new ValidationException(getClass().getSimpleName() + " with id: " + id + " not found");
+		throw new IllegalArgumentException(getClass().getSimpleName() + " with id: " + id + " not found");
 	}
 
 	@PreRemove
