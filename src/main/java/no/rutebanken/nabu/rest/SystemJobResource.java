@@ -35,7 +35,7 @@ public class SystemJobResource {
 			                                             @QueryParam("state") List<SystemJobStatus.State> states, @QueryParam("entity") List<String> entities,
 			                                             @QueryParam("source") List<String> sources, @QueryParam("target") List<String> targets
 	) {
-		logger.info("Returning system status");
+		logger.debug("Returning system status");
 		try {
 			List<SystemStatus> internalStatuses = systemStatusRepository.getSystemStatus(from, to, jobTypes,
 					convertEnums(actions, SystemStatus.Action.class), convertEnums(states, SystemStatus.State.class), entities, sources, targets);
@@ -53,7 +53,7 @@ public class SystemJobResource {
 			                                                                @QueryParam("state") List<SystemJobStatus.State> states, @QueryParam("entity") List<String> entities,
 			                                                                @QueryParam("source") List<String> sources, @QueryParam("target") List<String> targets
 	) {
-		logger.info("Returning system status");
+		logger.debug("Returning aggregated system status");
 		try {
 			List<SystemStatus> internalStatuses = systemStatusRepository.getLatestSystemStatus(jobTypes,
 					convertEnums(actions, SystemStatus.Action.class), convertEnums(states, SystemStatus.State.class), entities, sources, targets);
