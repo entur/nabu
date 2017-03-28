@@ -4,9 +4,12 @@ import no.rutebanken.nabu.organisation.model.responsibility.EntityType;
 import no.rutebanken.nabu.organisation.repository.EntityTypeRepository;
 import no.rutebanken.nabu.organisation.repository.VersionedEntityRepository;
 import no.rutebanken.nabu.organisation.rest.dto.TypeDTO;
+import no.rutebanken.nabu.organisation.rest.dto.responsibility.EntityTypeDTO;
 import no.rutebanken.nabu.organisation.rest.mapper.DTOMapper;
+import no.rutebanken.nabu.organisation.rest.mapper.EntityTypeMapper;
 import no.rutebanken.nabu.organisation.rest.mapper.TypeMapper;
 import no.rutebanken.nabu.organisation.rest.validation.DTOValidator;
+import no.rutebanken.nabu.organisation.rest.validation.EntityTypeValidator;
 import no.rutebanken.nabu.organisation.rest.validation.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,14 +22,14 @@ import javax.ws.rs.Produces;
 @Path("/entity_types")
 @Produces("application/json")
 @Transactional
-public class EntityTypeResource extends AnnotatedBaseResource<EntityType, TypeDTO> {
+public class EntityTypeResource extends AnnotatedBaseResource<EntityType, EntityTypeDTO> {
 
 	@Autowired
 	private EntityTypeRepository repository;
 	@Autowired
-	private TypeMapper<EntityType> mapper;
+	private EntityTypeMapper mapper;
 	@Autowired
-	private TypeValidator<EntityType> validator;
+	private EntityTypeValidator validator;
 
 	@Override
 	protected Class<EntityType> getEntityClass() {
@@ -39,12 +42,12 @@ public class EntityTypeResource extends AnnotatedBaseResource<EntityType, TypeDT
 	}
 
 	@Override
-	protected DTOMapper<EntityType, TypeDTO> getMapper() {
+	protected DTOMapper<EntityType, EntityTypeDTO> getMapper() {
 		return mapper;
 	}
 
 	@Override
-	protected DTOValidator<EntityType, TypeDTO> getValidator() {
+	protected DTOValidator<EntityType, EntityTypeDTO> getValidator() {
 		return validator;
 	}
 }
