@@ -32,7 +32,7 @@ public class ProviderResource {
     @GET
     @Path("/{providerId}")
     public Provider getProvider(@PathParam("providerId") Long providerId) {
-        logger.info("Returning provider with id '" + providerId + "'");
+        logger.debug("Returning provider with id '" + providerId + "'");
         return providerRepository.getProvider(providerId);
     }
 
@@ -60,7 +60,7 @@ public class ProviderResource {
     @GET
     @Path("/all")
     public Collection<Provider> getProviders() {
-        logger.info("Returning all providers.");
+        logger.debug("Returning all providers.");
         return providerRepository.getProviders();
     }
 
