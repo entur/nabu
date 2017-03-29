@@ -1,6 +1,5 @@
 package no.rutebanken.nabu.organisation.service;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.rutebanken.nabu.organisation.model.OrganisationException;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -40,6 +38,9 @@ public class KeycloakIamService implements IamService {
 
 	@Value("${keycloak.default.password:Password123}")
 	private String defaultPassword;
+
+	@Value("#{'${keycloak.default.roles:rutebanken}'.split(',')}")
+	private List<String> defaultRoles;
 
 	@Autowired
 	private RealmResource iamRealm;
@@ -149,7 +150,7 @@ public class KeycloakIamService implements IamService {
 	}
 
 	private Set<String> getRoleNames(User user) {
-		Set<String> roleNames = new HashSet<>();
+		Set<String> roleNames = new HashSet<>(defaultRoles);
 		for (ResponsibilitySet responsibilitySet : user.getResponsibilitySets()) {
 			roleNames.addAll(responsibilitySet.getRoles().stream().map(r -> r.getTypeOfResponsibilityRole().getId()).collect(Collectors.toSet()));
 		}
