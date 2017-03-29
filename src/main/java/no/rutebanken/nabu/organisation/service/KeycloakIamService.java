@@ -15,6 +15,7 @@ import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.rutebanken.helper.organisation.RoleAssignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class KeycloakIamService implements IamService {
 			if (rsp.getEntity() instanceof String) {
 				msg += ": " + rsp.getEntity();
 			}
-			throw new OrganisationException(msg,rsp.getStatus());
+			throw new OrganisationException(msg, rsp.getStatus());
 		}
 
 		try {
@@ -225,58 +226,41 @@ public class KeycloakIamService implements IamService {
 	}
 
 	private String toAtr(ResponsibilityRoleAssignment roleAssignment) {
-		RoleAssignmentAtr atr = new RoleAssignmentAtr();
-		atr.role = roleAssignment.getTypeOfResponsibilityRole().getId();
-		atr.org = roleAssignment.getResponsibleOrganisation().getId();
+		RoleAssignment atr = new RoleAssignment();
+		atr.r = roleAssignment.getTypeOfResponsibilityRole().getId();
+		atr.o = roleAssignment.getResponsibleOrganisation().getId();
 
 		if (roleAssignment.getResponsibleArea() != null) {
-			atr.admZone = roleAssignment.getResponsibleArea().getId();
+			atr.z = roleAssignment.getResponsibleArea().getId();
 		}
 
 		if (!CollectionUtils.isEmpty(roleAssignment.getResponsibleEntityClassifications())) {
 			roleAssignment.getResponsibleEntityClassifications().forEach(ec -> addEntityClassification(atr, ec));
 		}
 
-		return atr.toString();
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			StringWriter writer = new StringWriter();
+			mapper.writeValue(writer, atr);
+			return writer.toString();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 
-	private void addEntityClassification(RoleAssignmentAtr atr, EntityClassification entityClassification) {
-		if (atr.entities == null) {
-			atr.entities = new HashMap<>();
+	private void addEntityClassification(RoleAssignment atr, EntityClassification entityClassification) {
+		if (atr.e == null) {
+			atr.e = new HashMap<>();
 		}
 
 		String entityTypeRef = entityClassification.getEntityType().getId();
-		List<String> entityClassificationsForEntityType = atr.entities.get(entityTypeRef);
+		List<String> entityClassificationsForEntityType = atr.e.get(entityTypeRef);
 		if (entityClassificationsForEntityType == null) {
 			entityClassificationsForEntityType = new ArrayList<>();
-			atr.entities.put(entityTypeRef, entityClassificationsForEntityType);
+			atr.e.put(entityTypeRef, entityClassificationsForEntityType);
 		}
 		entityClassificationsForEntityType.add(entityClassification.getId());
 	}
 
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private class RoleAssignmentAtr {
-
-		public String role;
-
-		public String org;
-
-		public String admZone;
-
-		public Map<String, List<String>> entities;
-
-
-		public String toString() {
-			try {
-				ObjectMapper mapper = new ObjectMapper();
-				StringWriter writer = new StringWriter();
-				mapper.writeValue(writer, this);
-				return writer.toString();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-	}
 }
