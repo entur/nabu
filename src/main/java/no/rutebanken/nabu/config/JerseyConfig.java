@@ -3,6 +3,7 @@ package no.rutebanken.nabu.config;
 import no.rutebanken.nabu.filter.CorsResponseFilter;
 import no.rutebanken.nabu.organisation.rest.*;
 import no.rutebanken.nabu.organisation.rest.exception.IllegalArgumentExceptionMapper;
+import no.rutebanken.nabu.organisation.rest.exception.OrganisationExceptionMapper;
 import no.rutebanken.nabu.organisation.rest.exception.PersistenceExceptionMapper;
 import no.rutebanken.nabu.organisation.rest.exception.SpringExceptionMapper;
 import no.rutebanken.nabu.rest.*;
@@ -37,6 +38,7 @@ public class JerseyConfig extends ResourceConfig {
 		register(PersistenceExceptionMapper.class);
 		register(SpringExceptionMapper.class);
 		register(IllegalArgumentExceptionMapper.class);
+		register(OrganisationExceptionMapper.class);
 	}
 
 }

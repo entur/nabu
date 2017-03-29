@@ -2,6 +2,7 @@ package no.rutebanken.nabu.organisation.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.rutebanken.nabu.organisation.model.OrganisationException;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
@@ -78,7 +79,11 @@ public class KeycloakIamService implements IamService {
 		}
 		Response rsp = iamRealm.users().create(toKeycloakUser(user));
 		if (rsp.getStatus() >= 300) {
-			throw new WebApplicationException("Failed to create user in Keycloak", rsp);
+			String msg = "Failed to create user in Keycloak";
+			if (rsp.getEntity() instanceof String) {
+				msg += ": " + rsp.getEntity();
+			}
+			throw new OrganisationException(msg,rsp.getStatus());
 		}
 
 		try {

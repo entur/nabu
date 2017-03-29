@@ -2,6 +2,7 @@ package no.rutebanken.nabu.organisation.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.jdo.annotations.Unique;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +21,8 @@ public class ContactDetails {
 
 	private String phone;
 
+	// Email address must be unique in Keycloak
+	@Unique
 	private String email;
 
 	public String getFirstName() {
