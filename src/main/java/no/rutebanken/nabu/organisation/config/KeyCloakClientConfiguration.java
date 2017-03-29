@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KeyCloakClientConfiguration {
 
-	@Value("${keycloak.admin.path:http://localhost:8080/auth}")
+	@Value("${keycloak.admin.path}")
 	private String adminPath;
 
 	@Value("${keycloak.admin.realm:master}")
@@ -22,8 +22,9 @@ public class KeyCloakClientConfiguration {
 	@Value("${keycloak.admin.username:nabu}")
 	private String username;
 
-	@Value("${keycloak.admin.password:pass}")
+	@Value("${keycloak.admin.password}")
 	private String password;
+
 	@Value("${keycloak.admin.client:nabu-bot}")
 	private String clientId;
 
