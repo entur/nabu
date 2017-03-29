@@ -227,11 +227,11 @@ public class KeycloakIamService implements IamService {
 
 	private String toAtr(ResponsibilityRoleAssignment roleAssignment) {
 		RoleAssignment atr = new RoleAssignment();
-		atr.r = roleAssignment.getTypeOfResponsibilityRole().getId();
-		atr.o = roleAssignment.getResponsibleOrganisation().getId();
+		atr.r = roleAssignment.getTypeOfResponsibilityRole().getPrivateCode();
+		atr.o = roleAssignment.getResponsibleOrganisation().getPrivateCode();
 
 		if (roleAssignment.getResponsibleArea() != null) {
-			atr.z = roleAssignment.getResponsibleArea().getId();
+			atr.z = roleAssignment.getResponsibleArea().getPrivateCode();
 		}
 
 		if (!CollectionUtils.isEmpty(roleAssignment.getResponsibleEntityClassifications())) {
@@ -254,13 +254,13 @@ public class KeycloakIamService implements IamService {
 			atr.e = new HashMap<>();
 		}
 
-		String entityTypeRef = entityClassification.getEntityType().getId();
+		String entityTypeRef = entityClassification.getEntityType().getPrivateCode();
 		List<String> entityClassificationsForEntityType = atr.e.get(entityTypeRef);
 		if (entityClassificationsForEntityType == null) {
 			entityClassificationsForEntityType = new ArrayList<>();
 			atr.e.put(entityTypeRef, entityClassificationsForEntityType);
 		}
-		entityClassificationsForEntityType.add(entityClassification.getId());
+		entityClassificationsForEntityType.add(entityClassification.getPrivateCode());
 	}
 
 }
