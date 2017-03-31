@@ -27,8 +27,8 @@
         <rutebanken.helpers.version>0.0.3-SNAPSHOT</rutebanken.helpers.version>
         <fabric8.version>2.2.84</fabric8.version>
         <docker.maven.plugin.version>0.13.9</docker.maven.plugin.version>
-        <spring-boot-plugin.version>1.3.3.RELEASE</spring-boot-plugin.version>
-        <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
+        <spring-boot-plugin.version>1.5.2.RELEASE</spring-boot-plugin.version>
+        <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
         <spring.security.version>4.0.3.RELEASE</spring.security.version>
         <keycloak.version>1.6.1.Final</keycloak.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
@@ -208,25 +208,6 @@
             <groupId>org.opengeo</groupId>
             <artifactId>geodb</artifactId>
             <version>${geodb.version}</version>
-            <!-- TODO tiamat is using patched xerces-->
-        </dependency>
-        <!-- TODO need all geotools deps?-->
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-referencing</artifactId>
-            <version>${geotools.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-jts-wrapper</artifactId>
-            <version>${geotools.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-epsg-hsql</artifactId>
-            <version>${geotools.version}</version>
         </dependency>
 
         <dependency>
