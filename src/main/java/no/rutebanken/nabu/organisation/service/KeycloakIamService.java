@@ -33,13 +33,13 @@ import java.util.stream.Collectors;
 public class KeycloakIamService implements IamService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	@Value("${keycloak.integration.enabled:false}")
+	@Value("${iam.keycloak.integration.enabled:true}")
 	private boolean enabled;
 
-	@Value("${keycloak.default.password:Password123}")
+	@Value("${iam.keycloak.default.password:Password123}")
 	private String defaultPassword;
 
-	@Value("#{'${keycloak.default.roles:rutebanken}'.split(',')}")
+	@Value("#{'${iam.keycloak.default.roles:rutebanken}'.split(',')}")
 	private List<String> defaultRoles;
 
 	@Autowired
