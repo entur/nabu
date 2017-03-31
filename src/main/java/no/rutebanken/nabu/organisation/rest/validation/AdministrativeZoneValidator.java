@@ -13,7 +13,6 @@ public class AdministrativeZoneValidator implements DTOValidator<AdministrativeZ
 		Assert.hasLength(dto.privateCode, "privateCode required");
 		Assert.hasLength(dto.codeSpace, "codeSpace required");
 		Assert.hasLength(dto.name, "name required");
-		Assert.notNull(dto.polygon);
 		Assert.notNull(dto.polygon,"polygon required");
 	}
 
