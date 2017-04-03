@@ -10,22 +10,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KeyCloakClientConfiguration {
 
-	@Value("${keycloak.admin.path}")
+	@Value("${iam.keycloak.admin.path}")
 	private String adminPath;
 
-	@Value("${keycloak.admin.realm:master}")
+	@Value("${iam.keycloak.admin.realm:master}")
 	private String masterRealm;
 
-	@Value("${keycloak.user.realm:rutebanken}")
+	@Value("${iam.keycloak.user.realm:rutebanken}")
 	private String userRealm;
 
-	@Value("${keycloak.admin.username:nabu}")
+	@Value("${iam.keycloak.admin.username:nabu}")
 	private String username;
 
-	@Value("${keycloak.admin.password}")
+	@Value("${iam.keycloak.admin.password}")
 	private String password;
 
-	@Value("${keycloak.admin.client:nabu-bot}")
+	@Value("${iam.keycloak.admin.client:nabu-bot}")
 	private String clientId;
 
 	@Bean
