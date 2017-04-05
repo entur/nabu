@@ -11,37 +11,38 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(uniqueConstraints = {
-		                           @UniqueConstraint(name = "entity_classification_unique_id", columnNames = {"code_space_pk","privateCode", "entityVersion"})
+                                   @UniqueConstraint(name = "entity_classification_unique_id",
+                                           columnNames = {"code_space_pk", "privateCode", "entityVersion", "entity_type_pk"})
 })
 public class EntityClassification extends CodeSpaceEntity implements TypeEntity {
 
-	@NotNull
-	@ManyToOne
-	private EntityType entityType;
+    @NotNull
+    @ManyToOne
+    private EntityType entityType;
 
-	@NotNull
-	private String name;
+    @NotNull
+    private String name;
 
-	public EntityType getEntityType() {
-		return entityType;
-	}
+    public EntityType getEntityType() {
+        return entityType;
+    }
 
-	public void setEntityType(EntityType entityType) {
-		this.entityType = entityType;
-	}
+    public void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
+    }
 
-	@Override
-	public String getName() {
-		return name;
-	}
+    @Override
+    public String getName() {
+        return name;
+    }
 
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String getType() {
-		return "TypeOfPoint";
-	}
+    @Override
+    public String getType() {
+        return "TypeOfPoint";
+    }
 }
