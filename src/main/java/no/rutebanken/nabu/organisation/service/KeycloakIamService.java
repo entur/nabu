@@ -32,236 +32,270 @@ import java.util.stream.Collectors;
 @Service
 public class KeycloakIamService implements IamService {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	@Value("${iam.keycloak.integration.enabled:true}")
-	private boolean enabled;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Value("${iam.keycloak.integration.enabled:true}")
+    private boolean enabled;
 
-	@Value("${iam.keycloak.default.password:Password123}")
-	private String defaultPassword;
+    @Value("${iam.keycloak.default.password:Password123}")
+    private String defaultPassword;
 
-	@Value("#{'${iam.keycloak.default.roles:rutebanken}'.split(',')}")
-	private List<String> defaultRoles;
+    @Value("#{'${iam.keycloak.default.roles:rutebanken}'.split(',')}")
+    private List<String> defaultRoles;
 
-	@Autowired
-	private RealmResource iamRealm;
+    @Autowired
+    private RealmResource iamRealm;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Autowired
-	private RoleRepository roleRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
-	@Override
-	public void createRole(Role role) {
-		if (!enabled) {
-			logger.info("Keycloak disabled! Ignored createRole: " + role.getId());
-			return;
-		}
-		iamRealm.roles().create(toKeycloakRole(role));
+    @Override
+    public void createRole(Role role) {
+        if (!enabled) {
+            logger.info("Keycloak disabled! Ignored createRole: " + role.getId());
+            return;
+        }
 
-		logger.info("Role successfully created in Keycloak: " + role.getId());
-	}
+        try {
+            iamRealm.roles().create(toKeycloakRole(role));
+        } catch (Exception e) {
+            String msg = "Keycloak createRole failed: " + e.getMessage();
+            logger.info(msg, e);
+            throw new OrganisationException(msg);
+        }
 
-	@Override
-	public void removeRole(Role role) {
-		if (!enabled) {
-			logger.info("Keycloak disabled! Ignored removeRole: " + role.getId());
-			return;
-		}
+        logger.info("Role successfully created in Keycloak: " + role.getId());
+    }
 
-		iamRealm.roles().get(role.getId()).remove();
+    @Override
+    public void removeRole(Role role) {
+        if (!enabled) {
+            logger.info("Keycloak disabled! Ignored removeRole: " + role.getId());
+            return;
+        }
 
-		logger.info("Role successfully removed from Keycloak: " + role.getId());
-	}
+        try {
+            iamRealm.roles().get(role.getId()).remove();
+        } catch (Exception e) {
+            String msg = "Keycloak removeRole failed: " + e.getMessage();
+            logger.info(msg, e);
+            throw new OrganisationException(msg);
+        }
 
-	public void createUser(User user) {
-		if (!enabled) {
-			logger.info("Keycloak disabled! Ignored createUser: " + user.getUsername());
-			return;
-		}
-		Response rsp = iamRealm.users().create(toKeycloakUser(user));
-		if (rsp.getStatus() >= 300) {
-			String msg = "Failed to create user in Keycloak";
-			if (rsp.getEntity() instanceof String) {
-				msg += ": " + rsp.getEntity();
-			}
-			throw new OrganisationException(msg, rsp.getStatus());
-		}
+        logger.info("Role successfully removed from Keycloak: " + role.getId());
+    }
 
-		try {
-			resetPassword(user.getUsername());
-			updateRoles(user, roleRepository.findAll());
-		} catch (Exception e) {
-			logger.info("Password or role assignment failed for new Keycloak user. Attempting to remove user");
-			removeUser(user);
-			throw e;
-		}
+    public void createUser(User user) {
+        if (!enabled) {
+            logger.info("Keycloak disabled! Ignored createUser: " + user.getUsername());
+            return;
+        }
+        Response rsp = iamRealm.users().create(toKeycloakUser(user));
+        if (rsp.getStatus() >= 300) {
+            String msg = "Failed to create user in Keycloak";
+            if (rsp.getEntity() instanceof String) {
+                msg += ": " + rsp.getEntity();
+            }
+            throw new OrganisationException(msg, rsp.getStatus());
+        }
 
-		logger.info("User successfully created in Keycloak: " + user.getUsername());
-	}
+        try {
+            resetPassword(user.getUsername());
+            updateRoles(user, roleRepository.findAll());
+        } catch (Exception e) {
+            logger.info("Password or role assignment failed for new Keycloak user. Attempting to remove user");
+            removeUser(user);
+            throw e;
+        }
 
-	public void updateUser(User user) {
-		updateUser(user, roleRepository.findAll());
-	}
+        logger.info("User successfully created in Keycloak: " + user.getUsername());
+    }
 
-	private void updateUser(User user, List<Role> systemRoles) {
-		if (!enabled) {
-			logger.info("Keycloak disabled! Ignored updateUser: " + user.getUsername());
-			return;
-		}
+    public void updateUser(User user) {
 
-		UserResource iamUser = getUserResourceByUsername(user.getUsername());
-		iamUser.update(toKeycloakUser(user));
-		updateRoles(user, systemRoles);
+        try {
+            updateUser(user, roleRepository.findAll());
+        } catch (Exception e) {
+            String msg = "Keycloak updateUser failed: " + e.getMessage();
+            logger.info(msg, e);
+            throw new OrganisationException(msg);
+        }
+    }
 
-		logger.info("User successfully updated in Keycloak: " + user.getUsername());
-	}
+    private void updateUser(User user, List<Role> systemRoles) {
+        if (!enabled) {
+            logger.info("Keycloak disabled! Ignored updateUser: " + user.getUsername());
+            return;
+        }
 
-	public void removeUser(User user) {
-		if (!enabled) {
-			logger.info("Keycloak disabled! Ignored removeUser: " + user.getUsername());
-			return;
-		}
+        UserResource iamUser = getUserResourceByUsername(user.getUsername());
+        iamUser.update(toKeycloakUser(user));
+        updateRoles(user, systemRoles);
 
-		UserResource iamUser = getUserResourceByUsername(user.getUsername());
-		iamUser.remove();
+        logger.info("User successfully updated in Keycloak: " + user.getUsername());
+    }
 
-		logger.info("User successfully removed from Keycloak: " + user.getUsername());
-	}
+    public void removeUser(User user) {
+        if (!enabled) {
+            logger.info("Keycloak disabled! Ignored removeUser: " + user.getUsername());
+            return;
+        }
 
-	@Override
-	public void updateResponsibilitySet(ResponsibilitySet responsibilitySet) {
-		if (!enabled) {
-			logger.info("Keycloak disabled! Ignored updateResponsibilitySet: " + responsibilitySet.getName());
-			return;
-		}
+        try {
+            UserResource iamUser = getUserResourceByUsername(user.getUsername());
+            iamUser.remove();
+        } catch (Exception e) {
+            String msg = "Keycloak removeUser failed: " + e.getMessage();
+            logger.info(msg, e);
+            throw new OrganisationException(msg);
+        }
 
-		List<Role> systemRoles = roleRepository.findAll();
-		userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> updateUser(u, systemRoles));
-	}
+        logger.info("User successfully removed from Keycloak: " + user.getUsername());
+    }
 
-	// Credentials may not be set when creating a user
-	private void resetPassword(String username) {
-		CredentialRepresentation credential = new CredentialRepresentation();
-		credential.setType(CredentialRepresentation.PASSWORD);
-		credential.setValue(defaultPassword);
-		credential.setTemporary(Boolean.TRUE);
-		getUserResourceByUsername(username).resetPassword(credential);
-	}
+    @Override
+    public void updateResponsibilitySet(ResponsibilitySet responsibilitySet) {
+        if (!enabled) {
+            logger.info("Keycloak disabled! Ignored updateResponsibilitySet: " + responsibilitySet.getName());
+            return;
+        }
 
-	private Set<String> getRoleNames(User user) {
-		Set<String> roleNames = new HashSet<>(defaultRoles);
-		for (ResponsibilitySet responsibilitySet : user.getResponsibilitySets()) {
-			roleNames.addAll(responsibilitySet.getRoles().stream().map(r -> r.getTypeOfResponsibilityRole().getId()).collect(Collectors.toSet()));
-		}
-		return roleNames;
-	}
+        List<Role> systemRoles = roleRepository.findAll();
 
+        try {
+            userRepository.findUsersWithResponsibilitySet(responsibilitySet).forEach(u -> updateUser(u, systemRoles));
+        } catch (Exception e) {
+            String msg = "Keycloak updateResponsibilitySet failed: " + e.getMessage();
+            logger.info(msg, e);
+            throw new OrganisationException(msg);
+        }
 
-	private void updateRoles(User user, List<Role> systemRoles) {
-		Set<String> customRoleNames = systemRoles.stream().map(r -> r.getId()).collect(Collectors.toSet());
+    }
 
-		List<RoleRepresentation> existingRoles = getUserResourceByUsername(user.getUsername()).roles().realmLevel().listEffective();
+    // Credentials may not be set when creating a user
+    private void resetPassword(String username) {
+        CredentialRepresentation credential = new CredentialRepresentation();
+        credential.setType(CredentialRepresentation.PASSWORD);
+        credential.setValue(defaultPassword);
+        credential.setTemporary(Boolean.TRUE);
+        getUserResourceByUsername(username).resetPassword(credential);
+    }
 
-		Set<String> newRoleNames = getRoleNames(user);
-
-		List<RoleRepresentation> removeRoles = existingRoles.stream().filter(r -> customRoleNames.contains(r.getName()))
-				                                       .filter(r -> !newRoleNames.remove(r)).collect(Collectors.toList());
-
-		if (!removeRoles.isEmpty()) {
-			getUserResourceByUsername(user.getUsername()).roles().realmLevel().remove(removeRoles);
-		}
-		if (!newRoleNames.isEmpty()) {
-			List<RoleRepresentation> newRole = newRoleNames.stream().map(rn -> iamRealm.roles().get(rn).toRepresentation()).collect(Collectors.toList());
-			getUserResourceByUsername(user.getUsername()).roles().realmLevel().add(newRole);
-		}
-
-	}
-
-	private UserResource getUserResourceByUsername(String username) {
-		List<UserRepresentation> userRepresentations = iamRealm.users().search(username, null, null, null, 0, 2);
-
-		if (userRepresentations.size() == 0) {
-			throw new BadRequestException("Username not found in KeyCloak: " + username);
-		} else if (userRepresentations.size() > 1) {
-			throw new BadRequestException("Username not unique in KeyCloak: " + username);
-		}
-		return iamRealm.users().get(userRepresentations.get(0).getId());
-	}
-
-	RoleRepresentation toKeycloakRole(Role role) {
-		RoleRepresentation roleRepresentation = new RoleRepresentation();
-		roleRepresentation.setName(role.getId());
-		return roleRepresentation;
-	}
-
-	UserRepresentation toKeycloakUser(User user) {
-		UserRepresentation kcUser = new UserRepresentation();
-
-		kcUser.setEnabled(true);
-		kcUser.setUsername(user.getUsername());
-
-		if (user.getContactDetails() != null) {
-			kcUser.setFirstName(user.getContactDetails().getFirstName());
-			kcUser.setLastName(user.getContactDetails().getLastName());
-			kcUser.setEmail(user.getContactDetails().getEmail());
-		}
+    private Set<String> getRoleNames(User user) {
+        Set<String> roleNames = new HashSet<>(defaultRoles);
+        for (ResponsibilitySet responsibilitySet : user.getResponsibilitySets()) {
+            roleNames.addAll(responsibilitySet.getRoles().stream().map(r -> r.getTypeOfResponsibilityRole().getId()).collect(Collectors.toSet()));
+        }
+        return roleNames;
+    }
 
 
-		if (user.getResponsibilitySets() != null) {
-			Map<String, List<String>> attributes = new HashMap<>();
-			List<String> roleAssignments = new ArrayList<>();
+    private void updateRoles(User user, List<Role> systemRoles) {
+        Set<String> customRoleNames = systemRoles.stream().map(r -> r.getId()).collect(Collectors.toSet());
 
-			for (ResponsibilitySet responsibilitySet : user.getResponsibilitySets()) {
-				if (responsibilitySet.getRoles() != null) {
-					responsibilitySet.getRoles().forEach(rra -> roleAssignments.add(toAtr(rra)));
-				}
-			}
+        List<RoleRepresentation> existingRoles = getUserResourceByUsername(user.getUsername()).roles().realmLevel().listEffective();
 
-			attributes.put("roles", roleAssignments);
-			kcUser.setAttributes(attributes);
-		}
+        Set<String> newRoleNames = getRoleNames(user);
+
+        List<RoleRepresentation> removeRoles = existingRoles.stream().filter(r -> customRoleNames.contains(r.getName()))
+                                                       .filter(r -> !newRoleNames.remove(r)).collect(Collectors.toList());
+
+        if (!removeRoles.isEmpty()) {
+            getUserResourceByUsername(user.getUsername()).roles().realmLevel().remove(removeRoles);
+        }
+        if (!newRoleNames.isEmpty()) {
+            List<RoleRepresentation> newRole = newRoleNames.stream().map(rn -> iamRealm.roles().get(rn).toRepresentation()).collect(Collectors.toList());
+            getUserResourceByUsername(user.getUsername()).roles().realmLevel().add(newRole);
+        }
+
+    }
+
+    private UserResource getUserResourceByUsername(String username) {
+        List<UserRepresentation> userRepresentations = iamRealm.users().search(username, null, null, null, 0, 2);
+
+        if (userRepresentations.size() == 0) {
+            throw new BadRequestException("Username not found in KeyCloak: " + username);
+        } else if (userRepresentations.size() > 1) {
+            throw new BadRequestException("Username not unique in KeyCloak: " + username);
+        }
+        return iamRealm.users().get(userRepresentations.get(0).getId());
+    }
+
+    RoleRepresentation toKeycloakRole(Role role) {
+        RoleRepresentation roleRepresentation = new RoleRepresentation();
+        roleRepresentation.setName(role.getId());
+        return roleRepresentation;
+    }
+
+    UserRepresentation toKeycloakUser(User user) {
+        UserRepresentation kcUser = new UserRepresentation();
+
+        kcUser.setEnabled(true);
+        kcUser.setUsername(user.getUsername());
+
+        if (user.getContactDetails() != null) {
+            kcUser.setFirstName(user.getContactDetails().getFirstName());
+            kcUser.setLastName(user.getContactDetails().getLastName());
+            kcUser.setEmail(user.getContactDetails().getEmail());
+        }
 
 
-		return kcUser;
-	}
+        if (user.getResponsibilitySets() != null) {
+            Map<String, List<String>> attributes = new HashMap<>();
+            List<String> roleAssignments = new ArrayList<>();
 
-	private String toAtr(ResponsibilityRoleAssignment roleAssignment) {
-		RoleAssignment atr = new RoleAssignment();
-		atr.r = roleAssignment.getTypeOfResponsibilityRole().getPrivateCode();
-		atr.o = roleAssignment.getResponsibleOrganisation().getPrivateCode();
+            for (ResponsibilitySet responsibilitySet : user.getResponsibilitySets()) {
+                if (responsibilitySet.getRoles() != null) {
+                    responsibilitySet.getRoles().forEach(rra -> roleAssignments.add(toAtr(rra)));
+                }
+            }
 
-		if (roleAssignment.getResponsibleArea() != null) {
-			atr.z = roleAssignment.getResponsibleArea().getPrivateCode();
-		}
-
-		if (!CollectionUtils.isEmpty(roleAssignment.getResponsibleEntityClassifications())) {
-			roleAssignment.getResponsibleEntityClassifications().forEach(ec -> addEntityClassification(atr, ec));
-		}
-
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			StringWriter writer = new StringWriter();
-			mapper.writeValue(writer, atr);
-			return writer.toString();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+            attributes.put("roles", roleAssignments);
+            kcUser.setAttributes(attributes);
+        }
 
 
-	private void addEntityClassification(RoleAssignment atr, EntityClassification entityClassification) {
-		if (atr.e == null) {
-			atr.e = new HashMap<>();
-		}
+        return kcUser;
+    }
 
-		String entityTypeRef = entityClassification.getEntityType().getPrivateCode();
-		List<String> entityClassificationsForEntityType = atr.e.get(entityTypeRef);
-		if (entityClassificationsForEntityType == null) {
-			entityClassificationsForEntityType = new ArrayList<>();
-			atr.e.put(entityTypeRef, entityClassificationsForEntityType);
-		}
-		entityClassificationsForEntityType.add(entityClassification.getPrivateCode());
-	}
+    private String toAtr(ResponsibilityRoleAssignment roleAssignment) {
+        RoleAssignment atr = new RoleAssignment();
+        atr.r = roleAssignment.getTypeOfResponsibilityRole().getPrivateCode();
+        atr.o = roleAssignment.getResponsibleOrganisation().getPrivateCode();
+
+        if (roleAssignment.getResponsibleArea() != null) {
+            atr.z = roleAssignment.getResponsibleArea().getPrivateCode();
+        }
+
+        if (!CollectionUtils.isEmpty(roleAssignment.getResponsibleEntityClassifications())) {
+            roleAssignment.getResponsibleEntityClassifications().forEach(ec -> addEntityClassification(atr, ec));
+        }
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            StringWriter writer = new StringWriter();
+            mapper.writeValue(writer, atr);
+            return writer.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private void addEntityClassification(RoleAssignment atr, EntityClassification entityClassification) {
+        if (atr.e == null) {
+            atr.e = new HashMap<>();
+        }
+
+        String entityTypeRef = entityClassification.getEntityType().getPrivateCode();
+        List<String> entityClassificationsForEntityType = atr.e.get(entityTypeRef);
+        if (entityClassificationsForEntityType == null) {
+            entityClassificationsForEntityType = new ArrayList<>();
+            atr.e.put(entityTypeRef, entityClassificationsForEntityType);
+        }
+        entityClassificationsForEntityType.add(entityClassification.getPrivateCode());
+    }
 
 }
