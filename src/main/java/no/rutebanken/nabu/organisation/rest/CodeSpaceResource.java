@@ -9,17 +9,20 @@ import no.rutebanken.nabu.organisation.rest.mapper.DTOMapper;
 import no.rutebanken.nabu.organisation.rest.validation.CodeSpaceValidator;
 import no.rutebanken.nabu.organisation.rest.validation.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.*;
-import java.util.List;
-import java.util.stream.Collectors;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 
 @Component
 @Produces("application/json")
 @Path("/code_spaces")
 @Transactional
+@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 public class CodeSpaceResource extends AnnotatedBaseResource<CodeSpace, CodeSpaceDTO> {
 
 

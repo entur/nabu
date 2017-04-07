@@ -10,6 +10,7 @@ import no.rutebanken.nabu.organisation.rest.mapper.TypeMapper;
 import no.rutebanken.nabu.organisation.rest.validation.TypeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -23,10 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
+
 @Component
 @Path("/entity_types/{entityTypeId}/entity_classifications")
 @Produces("application/json")
 @Transactional
+@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 public class EntityClassificationResource {
 
 	@Autowired

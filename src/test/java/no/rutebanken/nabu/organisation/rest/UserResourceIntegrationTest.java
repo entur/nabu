@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.CollectionUtils;
 
@@ -25,11 +26,15 @@ import static no.rutebanken.nabu.organisation.TestConstantsOrganisation.ORGANISA
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@WithMockUser(username = "ram", roles={"ADMIN"})
 public class UserResourceIntegrationTest {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
 	private static final String PATH = "/jersey/users";
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
 
 	@Test
 	public void userNotFound() throws Exception {

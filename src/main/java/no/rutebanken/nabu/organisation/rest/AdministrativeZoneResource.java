@@ -10,6 +10,7 @@ import no.rutebanken.nabu.organisation.rest.validation.AdministrativeZoneValidat
 import no.rutebanken.nabu.organisation.rest.validation.DTOValidator;
 import no.rutebanken.nabu.organisation.service.AdministrativeUnitsImporter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,59 +20,62 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.io.InputStream;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
+
 @Component
 @Path("/administrative_zones")
 @Produces("application/json")
 @Transactional
+@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 public class AdministrativeZoneResource extends AnnotatedBaseResource<AdministrativeZone, AdministrativeZoneDTO> {
 
 
-	@Autowired
-	private AdministrativeZoneRepository repository;
+    @Autowired
+    private AdministrativeZoneRepository repository;
 
-	@Autowired
-	private AdministrativeUnitsImporter importer;
-	@Autowired
-	private AdministrativeZoneMapper mapper;
-	@Autowired
-	private AdministrativeZoneValidator validator;
+    @Autowired
+    private AdministrativeUnitsImporter importer;
+    @Autowired
+    private AdministrativeZoneMapper mapper;
+    @Autowired
+    private AdministrativeZoneValidator validator;
 
-	@POST
-	@Path("/import/{codeSpaceId}")
-	public void importFromFile(@PathParam("codeSpaceId") String codeSpaceId) {
-		importer.importAdministrativeUnits(codeSpaceId);
-	}
+    @POST
+    @Path("/import/{codeSpaceId}")
+    public void importFromFile(@PathParam("codeSpaceId") String codeSpaceId) {
+        importer.importAdministrativeUnits(codeSpaceId);
+    }
 
-	@POST
-	@Path("/import/{codeSpaceId}/kommuner")
-	public void importKommuner(@PathParam("codeSpaceId") String codeSpaceId, InputStream inputStream) {
-		importer.importKommuner(inputStream, codeSpaceId);
-	}
+    @POST
+    @Path("/import/{codeSpaceId}/kommuner")
+    public void importKommuner(@PathParam("codeSpaceId") String codeSpaceId, InputStream inputStream) {
+        importer.importKommuner(inputStream, codeSpaceId);
+    }
 
-	@POST
-	@Path("/import/{codeSpaceId}/fylker")
-	public void importFylker(@PathParam("codeSpaceId") String codeSpaceId, InputStream inputStream) {
-		importer.importFylker(inputStream, codeSpaceId);
-	}
+    @POST
+    @Path("/import/{codeSpaceId}/fylker")
+    public void importFylker(@PathParam("codeSpaceId") String codeSpaceId, InputStream inputStream) {
+        importer.importFylker(inputStream, codeSpaceId);
+    }
 
 
-	@Override
-	protected VersionedEntityRepository<AdministrativeZone> getRepository() {
-		return repository;
-	}
+    @Override
+    protected VersionedEntityRepository<AdministrativeZone> getRepository() {
+        return repository;
+    }
 
-	@Override
-	protected DTOMapper<AdministrativeZone, AdministrativeZoneDTO> getMapper() {
-		return mapper;
-	}
+    @Override
+    protected DTOMapper<AdministrativeZone, AdministrativeZoneDTO> getMapper() {
+        return mapper;
+    }
 
-	@Override
-	protected Class<AdministrativeZone> getEntityClass() {
-		return AdministrativeZone.class;
-	}
+    @Override
+    protected Class<AdministrativeZone> getEntityClass() {
+        return AdministrativeZone.class;
+    }
 
-	@Override
-	protected DTOValidator<AdministrativeZone, AdministrativeZoneDTO> getValidator() {
-		return validator;
-	}
+    @Override
+    protected DTOValidator<AdministrativeZone, AdministrativeZoneDTO> getValidator() {
+        return validator;
+    }
 }

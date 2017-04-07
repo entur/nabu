@@ -30,14 +30,13 @@
         <spring-boot-plugin.version>1.5.2.RELEASE</spring-boot-plugin.version>
         <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
         <spring.security.version>4.0.3.RELEASE</spring.security.version>
-        <keycloak.version>1.6.1.Final</keycloak.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
-
+        <keycloak.version>3.0.0.Final</keycloak.version>
         <!-- Docker & Fabric8 Configs -->
         <docker.from>eu.gcr.io/carbon-1287/java-base-image</docker.from>
         <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
         <docker.image>eu.gcr.io/${fabric8.dockerUser}${project.artifactId}:${project.version}</docker.image>
-
+        <hazelcast-hibernate5.version>1.2</hazelcast-hibernate5.version>
         <fabric8.service.name>springboot-webmvc</fabric8.service.name>
         <fabric8.service.port>80</fabric8.service.port>
         <fabric8.service.containerPort>9004</fabric8.service.containerPort>
@@ -205,6 +204,11 @@
             <version>${hibernate.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-hibernate5</artifactId>
+            <version>${hazelcast-hibernate5.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.opengeo</groupId>
             <artifactId>geodb</artifactId>
             <version>${geodb.version}</version>
@@ -215,7 +219,23 @@
             <artifactId>gt-geojson</artifactId>
             <version>${geotools.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-tomcat8-adapter</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-spring-boot-adapter</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-spring-security-adapter</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -229,6 +249,15 @@
             <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>${spring-boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>com.jayway.restassured</groupId>
@@ -257,10 +286,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Security & Keycloak -->
-        <!-- <dependency> <groupId>org.keycloak</groupId> <artifactId>keycloak-tomcat8-adapter</artifactId> <version>${keycloak.version}</version>
-            </dependency> <dependency> <groupId>org.keycloak</groupId> <artifactId>keycloak-spring-security-adapter</artifactId> <version>${keycloak.version}</version>
-            </dependency> -->
 
     </dependencies>
 

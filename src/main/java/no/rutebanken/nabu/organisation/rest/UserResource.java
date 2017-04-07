@@ -10,6 +10,7 @@ import no.rutebanken.nabu.organisation.rest.validation.DTOValidator;
 import no.rutebanken.nabu.organisation.rest.validation.UserValidator;
 import no.rutebanken.nabu.organisation.service.IamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +20,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
+
 @Component
 @Path("/users")
 @Produces("application/json")
 @Transactional
+@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 public class UserResource extends BaseResource<User, UserDTO> {
 
 	@Autowired
