@@ -12,9 +12,9 @@ public class TestConstantsOrganisation {
 
 	public static final String ENTITY_TYPE_ID = "TST:TypeOfEntity:StopPlace";
 
-	public static final String ENTITY_CLASSIFICATION_ID = "TST:TypeOfPoint:busStop";
+	public static final String ENTITY_CLASSIFICATION_ID = "TST:TypeOfStopPlace:busStop";
 
-	public static final String ENTITY_CLASSIFICATION_ID_2 = "TST:TypeOfPoint:tramStop";
+	public static final String ENTITY_CLASSIFICATION_ID_2 = "TST:TypeOfStopPlace:tramStop";
 
 	public static final String ROLE_ID = "testRole1";
 

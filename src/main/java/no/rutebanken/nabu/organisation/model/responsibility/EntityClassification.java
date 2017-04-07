@@ -43,6 +43,6 @@ public class EntityClassification extends CodeSpaceEntity implements TypeEntity 
 
     @Override
     public String getType() {
-        return "TypeOfPoint";
+        return "TypeOf" + entityType.getPrivateCode();
     }
 }
