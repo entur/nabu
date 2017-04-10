@@ -45,7 +45,7 @@ public class ProviderResource {
     @Path("/update")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public void updateProvider(Provider provider) {
-        logger.info("Updating provider "+provider);
+        logger.info("Updating provider " + provider);
         providerRepository.updateProvider(provider);
     }
 
@@ -53,12 +53,18 @@ public class ProviderResource {
     @Path("/create")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#provider.id)")
     public Provider createProvider(Provider provider) {
-        logger.info("Creating provider "+provider);
+        logger.info("Creating provider " + provider);
         return providerRepository.createProvider(provider);
     }
 
     @GET
     @Path("/all")
+    @Deprecated
+    public Collection<Provider> getAllProviders() {
+        return getProviders();
+    }
+
+    @GET
     public Collection<Provider> getProviders() {
         logger.debug("Returning all providers.");
         return providerRepository.getProviders();
