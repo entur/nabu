@@ -1,6 +1,6 @@
 package no.rutebanken.nabu.organisation.repository;
 
-import no.rutebanken.nabu.App;
+import no.rutebanken.nabu.NabuTestApp;
 import no.rutebanken.nabu.organisation.model.CodeSpace;
 import no.rutebanken.nabu.organisation.model.organisation.Authority;
 import no.rutebanken.nabu.organisation.model.organisation.Organisation;
@@ -12,9 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = App.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = NabuTestApp.class)
 @Transactional
-public abstract class CommonRepositoryTest {
+public abstract class BaseIntegrationTest {
 
 	@Autowired
 	protected CodeSpaceRepository codeSpaceRepository;

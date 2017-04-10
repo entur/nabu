@@ -29,7 +29,7 @@
         <docker.maven.plugin.version>0.13.9</docker.maven.plugin.version>
         <spring-boot-plugin.version>1.5.2.RELEASE</spring-boot-plugin.version>
         <spring-boot.version>1.5.2.RELEASE</spring-boot.version>
-        <spring.security.version>4.0.3.RELEASE</spring.security.version>
+        <spring.security.version>4.2.2.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
         <keycloak.version>3.0.0.Final</keycloak.version>
         <!-- Docker & Fabric8 Configs -->
@@ -116,7 +116,6 @@
             <version>${rutebanken.helpers.version}</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-xml-provider</artifactId>
@@ -158,7 +157,7 @@
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
-            <version>3.0.0.Final</version>
+            <version>${keycloak.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>

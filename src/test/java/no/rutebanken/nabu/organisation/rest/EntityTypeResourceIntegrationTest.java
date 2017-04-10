@@ -1,30 +1,23 @@
 package no.rutebanken.nabu.organisation.rest;
 
 import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
-
-import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
-import no.rutebanken.nabu.organisation.model.responsibility.EntityType;
+import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.organisation.rest.dto.TypeDTO;
-import no.rutebanken.nabu.organisation.rest.dto.organisation.OrganisationPartDTO;
 import no.rutebanken.nabu.organisation.rest.dto.responsibility.EntityTypeDTO;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class EntityTypeResourceIntegrationTest {
+
+public class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 
 	@Autowired
 	private TestRestTemplate restTemplate;

@@ -3,7 +3,7 @@ package no.rutebanken.nabu.organisation.repository;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class CodeSpaceRepositoryTest extends CommonRepositoryTest {
+public class CodeSpaceRepositoryTest extends BaseIntegrationTest {
 
 
 	@Test

@@ -2,13 +2,11 @@ package no.rutebanken.nabu.repository;
 
 
 import no.rutebanken.nabu.domain.SystemStatus;
+import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,9 +15,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class JpaSystemStatusRepositoryTest {
+
+public class JpaSystemStatusRepositoryTest extends BaseIntegrationTest {
 
 	@Autowired
 	SystemStatusRepository repository;

@@ -1,6 +1,7 @@
 package no.rutebanken.nabu.organisation.rest;
 
 import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
+import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.organisation.rest.dto.responsibility.ResponsibilityRoleAssignmentDTO;
 import no.rutebanken.nabu.organisation.rest.dto.responsibility.ResponsibilitySetDTO;
 import org.junit.Assert;
@@ -19,9 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ResponsibilitySetResourceIntegrationTest {
+
+public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTest {
 
 	@Autowired
 	private TestRestTemplate restTemplate;

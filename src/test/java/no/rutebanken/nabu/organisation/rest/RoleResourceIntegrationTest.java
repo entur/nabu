@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.organisation.rest;
 
+import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.organisation.rest.dto.TypeDTO;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,9 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.net.URI;
 import java.util.Arrays;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RoleResourceIntegrationTest {
+public class RoleResourceIntegrationTest extends BaseIntegrationTest {
 
 	@Autowired
 	private TestRestTemplate restTemplate;

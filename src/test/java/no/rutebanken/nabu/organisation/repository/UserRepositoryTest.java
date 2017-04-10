@@ -13,7 +13,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 
-public class UserRepositoryTest extends CommonRepositoryTest {
+public class UserRepositoryTest extends BaseIntegrationTest {
 
 	@Autowired
 	private UserRepository userRepository;

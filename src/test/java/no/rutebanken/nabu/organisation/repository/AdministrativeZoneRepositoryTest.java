@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-public class AdministrativeZoneRepositoryTest extends CommonRepositoryTest {
+public class AdministrativeZoneRepositoryTest extends BaseIntegrationTest {
 
 	@Autowired
 	private AdministrativeZoneRepository administrativeZoneRepository;
