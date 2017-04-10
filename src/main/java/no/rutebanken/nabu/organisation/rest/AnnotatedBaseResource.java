@@ -2,6 +2,7 @@ package no.rutebanken.nabu.organisation.rest;
 
 import no.rutebanken.nabu.organisation.model.VersionedEntity;
 import no.rutebanken.nabu.organisation.rest.dto.BaseDTO;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -9,6 +10,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
+
+@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 public abstract class AnnotatedBaseResource<E extends VersionedEntity, D extends BaseDTO> extends BaseResource<E, D> {
 
 	@POST
