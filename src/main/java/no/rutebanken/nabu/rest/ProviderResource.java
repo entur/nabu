@@ -59,7 +59,6 @@ public class ProviderResource {
 
     @GET
     @Path("/all")
-    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
     public Collection<Provider> getProviders() {
         logger.debug("Returning all providers.");
         return providerRepository.getProviders();
