@@ -9,7 +9,6 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
 
 import javax.ws.rs.ApplicationPath;
-import java.nio.file.AccessDeniedException;
 
 @Configuration
 @ApplicationPath("/jersey")
@@ -20,6 +19,7 @@ public class JerseyConfig extends ResourceConfig {
         register(FileUploadResource.class);
         register(StatusResource.class);
         register(SystemJobResource.class);
+        register(DataDeliveryStatusResource.class);
         register(ProviderResource.class);
         register(ApplicationStatusResource.class);
         register(CorsResponseFilter.class);

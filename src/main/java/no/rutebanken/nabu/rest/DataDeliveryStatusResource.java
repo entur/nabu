@@ -32,7 +32,7 @@ public class DataDeliveryStatusResource {
     StatusRepository statusRepository;
 
     @GET
-    @Path("/{providerId}")
+    @Path("/{providerId}/latest")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public DataDeliveryStatus getLatestDataDeliveryStatus(@PathParam("providerId") Long providerId) {
 
