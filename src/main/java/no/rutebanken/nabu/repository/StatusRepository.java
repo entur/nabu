@@ -12,4 +12,7 @@ public interface StatusRepository {
 	List<Status> getStatusForProvider(Long providerId, Date from, Date to, List<Status.Action> actions,
 			                                 List<Status.State> states, List<Long> jobIds, List<String> fileNames);
 
+
+	List<Status> getLatestDeliveryStatusForProvider(Long providerId);
+
 }
