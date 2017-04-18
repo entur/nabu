@@ -261,6 +261,19 @@ public class KeycloakIamService implements IamService {
     }
 
     private String toAtr(ResponsibilityRoleAssignment roleAssignment) {
+        RoleAssignment atr = toRoleAssignment(roleAssignment);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            StringWriter writer = new StringWriter();
+            mapper.writeValue(writer, atr);
+            return writer.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected RoleAssignment toRoleAssignment(ResponsibilityRoleAssignment roleAssignment) {
         RoleAssignment atr = new RoleAssignment();
         atr.r = roleAssignment.getTypeOfResponsibilityRole().getPrivateCode();
         atr.o = roleAssignment.getResponsibleOrganisation().getPrivateCode();
@@ -272,15 +285,7 @@ public class KeycloakIamService implements IamService {
         if (!CollectionUtils.isEmpty(roleAssignment.getResponsibleEntityClassifications())) {
             roleAssignment.getResponsibleEntityClassifications().forEach(ec -> addEntityClassification(atr, ec));
         }
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            StringWriter writer = new StringWriter();
-            mapper.writeValue(writer, atr);
-            return writer.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return atr;
     }
 
 
