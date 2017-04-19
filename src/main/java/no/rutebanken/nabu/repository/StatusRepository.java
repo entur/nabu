@@ -15,4 +15,6 @@ public interface StatusRepository {
 
 	List<Status> getLatestDeliveryStatusForProvider(Long providerId);
 
+	void clear();
+
 }

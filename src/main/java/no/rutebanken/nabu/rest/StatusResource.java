@@ -52,6 +52,12 @@ public class StatusResource {
         }
     }
 
+    @DELETE
+    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
+    public void clearAllStatus(){
+        statusRepository.clear();
+    }
+
     public List<JobStatus> convert(List<Status> statusForProvider) {
         List<JobStatus> list = new ArrayList<>();
         // Map from internal Status object to Rest service JobStatusEvent object

@@ -70,4 +70,19 @@ public class JpaStatusRepositoryTest extends BaseIntegrationTest {
         Assert.assertTrue(statusList.containsAll(Arrays.asList(s1, s2)));
     }
 
+
+    @Test
+    public void testClear() {
+        Status s1 = new Status("file1.zip", 3L, 1L, Status.Action.IMPORT, Status.State.OK, "corr-id-1", now, "ost");
+        repository.add(s1);
+        Status s2 = new Status("file1.zip", 3L, 2L, Status.Action.EXPORT, Status.State.FAILED, "corr-id-1", DateUtils.addMinutes(now, 1), "ost");
+        repository.add(s2);
+        Status s3 = new Status("file2.zip", 3L, 1L, Status.Action.IMPORT, Status.State.TIMEOUT, "corr-id-2", now, "ost");
+        repository.add(s3);
+
+        repository.clear();
+
+        Assert.assertTrue(repository.getLatestDeliveryStatusForProvider(3L).isEmpty());
+    }
+
 }
