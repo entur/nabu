@@ -37,7 +37,7 @@ public class JobStatus {
     private State endStatus;
 
     @JsonProperty("fileName")
-    public String fileName;
+    private String fileName;
 
     public List<JobStatusEvent> getEvents() {
         return events;

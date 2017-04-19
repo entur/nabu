@@ -3,6 +3,7 @@ package no.rutebanken.nabu.rest.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
+import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +13,7 @@ public class SystemJobStatus {
 
 	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD}
 
+	@XmlType(name = "SystemState")
 	public enum State {PENDING, STARTED, TIMEOUT, FAILED, OK}
 
 	@JsonProperty("events")
@@ -36,16 +38,16 @@ public class SystemJobStatus {
 	private SystemJobStatus.State endStatus;
 
 	@JsonProperty("entity")
-	public String entity;
+	private String entity;
 
 	@JsonProperty("source")
-	public String source;
+	private String source;
 
 	@JsonProperty("target")
-	public String target;
+	private String target;
 
 	@JsonProperty("jobType")
-	public String jobType;
+	private String jobType;
 
 
 	public List<SystemJobStatusEvent> getEvents() {
