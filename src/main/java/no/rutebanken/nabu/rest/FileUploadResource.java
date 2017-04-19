@@ -32,7 +32,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 
 
 @Component
-@Produces("application/json")
+
 @Path("/files")
 public class FileUploadResource {
 
@@ -58,10 +58,10 @@ public class FileUploadResource {
     JmsSender jmsSender;
 
     private static final Logger logger = LoggerFactory.getLogger(FileUploadResource.class);
+
     @POST
     @Path("/{providerId}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.TEXT_PLAIN)
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public Response uploadFile(@PathParam("providerId") final Long providerId, final FormDataMultiPart multiPart) {
         List<FormDataBodyPart> bodyParts = multiPart.getFields("files");
@@ -78,7 +78,7 @@ public class FileUploadResource {
         }
     }
 
-    void saveInBlobStore(InputStream inputStream, String fileName, Long providerId, String correlationId){
+    void saveInBlobStore(InputStream inputStream, String fileName, Long providerId, String correlationId) {
         try {
             logger.info("Placing file '" + fileName + "' from provider with id '" + providerId + "' and correlation id '" + correlationId + "' in blob store.");
             Provider provider = providerRepository.getProvider(providerId);
@@ -90,11 +90,11 @@ public class FileUploadResource {
             logger.info("Notifying queue '" + destinationName + "' about the uploaded file.");
             jmsSender.sendBlobNotificationMessage(destinationName, blobName, fileName, providerId, correlationId);
             logger.info("Done sending.");
-            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone())),referential));
+            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone())), referential));
         } catch (RuntimeException e) {
             String errorMessage = "Failed to put file '" + fileName + "' in blobstore or notification on queue.";
             logger.warn(errorMessage, e);
-            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.FAILED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone())),null));
+            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.FAILED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone())), null));
         }
     }
 
