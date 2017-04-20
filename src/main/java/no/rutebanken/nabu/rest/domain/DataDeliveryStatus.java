@@ -19,5 +19,6 @@ public class DataDeliveryStatus {
         this.date = date;
     }
 
-
+    public DataDeliveryStatus() {
+    }
 }
