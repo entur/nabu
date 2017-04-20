@@ -99,16 +99,12 @@ insert into public.provider(id, name, sftp_account, chouette_info_id) values (10
 insert into public.provider(id, name, sftp_account, chouette_info_id) values (1024, 'RB/Test org 2', null, 1024);
 
 
-
 insert into code_space (pk, entity_version,lock_version,private_code, xmlns,xmlns_url) VALUES (1,1,1,'nsr','NSR','http://www.rutebanken.org/ns/nsr');
 insert into code_space (pk, entity_version,lock_version,private_code, xmlns,xmlns_url) VALUES (2,1,1,'rut','RUT','http://www.rutebanken.org/ns/rut');
 insert into code_space (pk, entity_version,lock_version,private_code, xmlns,xmlns_url) VALUES (3,1,1,'rb','RB','http://www.rutebanken.org/ns/rb');
 
 
-
-insert into role (pk, entity_version,lock_version,private_code,name) VALUES (1,1,1,'editStops','Opplasting og redigering av stopp');
-insert into role (pk, entity_version,lock_version,private_code,name) VALUES (2,1,1,'editPlaceOfInterest','Opplasting og redigering av POI');
-
+insert into role (pk, entity_version,lock_version,private_code,name) VALUES (1,1,1,'editOrganisation','Create and edit users, roles, responsibility sets and organisations');
 
 insert into entity_type (pk, entity_version,lock_version,code_space_pk,private_code,name) VALUES (1,1,1,1,'StopPlace','Stoppesteder');
 insert into entity_type (pk, entity_version,lock_version,code_space_pk,private_code,name) VALUES (2,1,1,1,'PlaceOfInterest','Place of interest');
