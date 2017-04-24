@@ -51,11 +51,17 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
                 restTemplate.getForObject(PATH, UserDTO[].class);
         assertUserInArray(updateUser, allUsers);
 
+        UserDTO[] allUsersWithFullDetails =
+                restTemplate.getForObject(PATH + "?full=true", UserDTO[].class);
+        assertUserInArray(updateUser, allUsersWithFullDetails);
+        Assert.assertNotNull(allUsersWithFullDetails[0].organisation.name);
+
         restTemplate.delete(uri);
 
         ResponseEntity<UserDTO> entity = restTemplate.getForEntity(uri,
                 UserDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+
     }
 
     @Test
@@ -103,6 +109,22 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
         Assert.assertNotNull(uri);
         ResponseEntity<UserDTO> rsp = restTemplate.getForEntity(uri, UserDTO.class);
         UserDTO outUser = rsp.getBody();
+
+        assertUserBasics(inUser, outUser);
+        Assert.assertNull(outUser.organisation);
+        Assert.assertNull(outUser.responsibilitySets);
+
+
+        ResponseEntity<UserDTO> fullRsp = restTemplate.getForEntity(uri.toString() + "?full=true", UserDTO.class);
+        UserDTO fullOutUser = fullRsp.getBody();
+        assertUserBasics(inUser, fullOutUser);
+        Assert.assertNotNull(fullOutUser.organisation.name);
+        Assert.assertEquals(inUser.responsibilitySetRefs == null ? 0 : inUser.responsibilitySetRefs.size(), fullOutUser.responsibilitySets.size());
+        Assert.assertTrue(fullOutUser.responsibilitySets.stream().allMatch(rs -> rs.name != null));
+    }
+
+    private void assertUserBasics(UserDTO inUser, UserDTO outUser) {
+
         Assert.assertEquals(inUser.username.toLowerCase(), outUser.username);
         Assert.assertEquals(inUser.privateCode, outUser.privateCode);
 
@@ -112,7 +134,6 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
             Assert.assertEquals(inUser.responsibilitySetRefs.size(), outUser.responsibilitySetRefs.size());
             Assert.assertTrue(inUser.responsibilitySetRefs.containsAll(outUser.responsibilitySetRefs));
         }
-
 
         if (inUser.contactDetails == null) {
             Assert.assertNull(outUser.contactDetails);
@@ -131,7 +152,6 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
                 Assert.assertTrue(outUser.notifications.stream().anyMatch(out -> isEqual(in, out)));
             }
         }
-
     }
 
     private boolean isEqual(NotificationDTO in, NotificationDTO out) {

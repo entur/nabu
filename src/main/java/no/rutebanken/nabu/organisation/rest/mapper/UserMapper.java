@@ -23,102 +23,116 @@ import java.util.stream.Collectors;
 @Service
 public class UserMapper implements DTOMapper<User, UserDTO> {
 
-	@Autowired
-	private OrganisationRepository organisationRepository;
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
-	@Autowired
-	private ResponsibilitySetRepository responsibilitySetRepository;
-
-	public UserDTO toDTO(User org, boolean fullDetails) {
-		UserDTO dto = new UserDTO();
-		dto.id = org.getId();
-		dto.username = org.getUsername();
-
-		dto.contactDetails = toDTO(org.getContactDetails());
-		dto.notifications = toDTO(org.getNotifications());
-		dto.responsibilitySetRefs = toRefList(org.getResponsibilitySets());
-		dto.organisationRef = org.getOrganisation().getId();
-		return dto;
-	}
-
-	public User createFromDTO(UserDTO dto, Class<User> clazz) {
-		User entity = new User();
-		entity.setPrivateCode(UUID.randomUUID().toString());
-		return updateFromDTO(dto, entity);
-	}
-
-	public User updateFromDTO(UserDTO dto, User entity) {
-		entity.setUsername(dto.username.toLowerCase());
-
-		entity.setContactDetails(fromDTO(dto.contactDetails));
-
-		if (dto.organisationRef != null) {
-			entity.setOrganisation(organisationRepository.getOneByPublicId(dto.organisationRef));
-		}
-		if (CollectionUtils.isEmpty(dto.responsibilitySetRefs)) {
-			entity.setResponsibilitySets(new HashSet<>());
-		} else {
-			entity.setResponsibilitySets(dto.responsibilitySetRefs.stream().map(ref -> responsibilitySetRepository.getOneByPublicId(ref)).collect(Collectors.toSet()));
-		}
+    @Autowired
+    private ResponsibilitySetRepository responsibilitySetRepository;
 
 
-		if (CollectionUtils.isEmpty(dto.notifications)) {
-			entity.setNotifications(new HashSet<>());
-		} else {
-			entity.setNotifications(dto.notifications.stream().map(n -> fromDTO(n)).collect(Collectors.toSet()));
-		}
+    @Autowired
+    private OrganisationMapper organisationMapper;
 
-		return entity;
-	}
-
-	private Notification fromDTO(NotificationDTO dto) {
-		Notification notification = new Notification();
-		notification.setTrigger(dto.trigger);
-		notification.setNotificationType(NotificationType.valueOf(dto.notificationType.name()));
-		return notification;
-	}
+    @Autowired
+    private ResponsibilitySetMapper responsibilitySetMapper;
 
 
-	private ContactDetailsDTO toDTO(ContactDetails entity) {
-		if (entity == null) {
-			return null;
-		}
-		ContactDetailsDTO dto = new ContactDetailsDTO();
-		dto.email = entity.getEmail();
-		dto.firstName = entity.getFirstName();
-		dto.lastName = entity.getLastName();
-		dto.phone = entity.getPhone();
-		return dto;
-	}
+    public UserDTO toDTO(User org, boolean fullDetails) {
+        UserDTO dto = new UserDTO();
+        dto.id = org.getId();
+        dto.username = org.getUsername();
 
-	private ContactDetails fromDTO(ContactDetailsDTO dto) {
-		if (dto == null) {
-			return null;
-		}
-		ContactDetails entity = new ContactDetails();
-		entity.setFirstName(dto.firstName);
-		entity.setLastName(dto.lastName);
-		entity.setEmail(dto.email);
-		entity.setPhone(dto.phone);
-		return entity;
-	}
+        dto.contactDetails = toDTO(org.getContactDetails());
+        dto.notifications = toDTO(org.getNotifications());
+        dto.responsibilitySetRefs = toRefList(org.getResponsibilitySets());
+        dto.organisationRef = org.getOrganisation().getId();
 
-	private List<String> toRefList(Set<ResponsibilitySet> responsibilitySetSet) {
-		if (responsibilitySetSet == null) {
-			return null;
-		}
-		return responsibilitySetSet.stream().map(rs -> rs.getId()).collect(Collectors.toList());
-	}
+        if (fullDetails) {
+            dto.organisation = organisationMapper.toDTO(org.getOrganisation(), false);
+            dto.responsibilitySets = org.getResponsibilitySets().stream().map(rs -> responsibilitySetMapper.toDTO(rs, false)).collect(Collectors.toList());
+        }
 
-	private List<NotificationDTO> toDTO(Set<Notification> entity) {
-		if (CollectionUtils.isEmpty(entity)) {
-			return null;
-		}
+        return dto;
+    }
 
-		return entity.stream().map(n -> new NotificationDTO(
-				                                                   NotificationDTO.NotificationType.valueOf(n.getNotificationType().name()),
-				                                                   n.getTrigger())).collect(Collectors.toList());
-	}
+    public User createFromDTO(UserDTO dto, Class<User> clazz) {
+        User entity = new User();
+        entity.setPrivateCode(UUID.randomUUID().toString());
+        return updateFromDTO(dto, entity);
+    }
+
+    public User updateFromDTO(UserDTO dto, User entity) {
+        entity.setUsername(dto.username.toLowerCase());
+
+        entity.setContactDetails(fromDTO(dto.contactDetails));
+
+        if (dto.organisationRef != null) {
+            entity.setOrganisation(organisationRepository.getOneByPublicId(dto.organisationRef));
+        }
+        if (CollectionUtils.isEmpty(dto.responsibilitySetRefs)) {
+            entity.setResponsibilitySets(new HashSet<>());
+        } else {
+            entity.setResponsibilitySets(dto.responsibilitySetRefs.stream().map(ref -> responsibilitySetRepository.getOneByPublicId(ref)).collect(Collectors.toSet()));
+        }
+
+
+        if (CollectionUtils.isEmpty(dto.notifications)) {
+            entity.setNotifications(new HashSet<>());
+        } else {
+            entity.setNotifications(dto.notifications.stream().map(n -> fromDTO(n)).collect(Collectors.toSet()));
+        }
+
+        return entity;
+    }
+
+    private Notification fromDTO(NotificationDTO dto) {
+        Notification notification = new Notification();
+        notification.setTrigger(dto.trigger);
+        notification.setNotificationType(NotificationType.valueOf(dto.notificationType.name()));
+        return notification;
+    }
+
+
+    private ContactDetailsDTO toDTO(ContactDetails entity) {
+        if (entity == null) {
+            return null;
+        }
+        ContactDetailsDTO dto = new ContactDetailsDTO();
+        dto.email = entity.getEmail();
+        dto.firstName = entity.getFirstName();
+        dto.lastName = entity.getLastName();
+        dto.phone = entity.getPhone();
+        return dto;
+    }
+
+    private ContactDetails fromDTO(ContactDetailsDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        ContactDetails entity = new ContactDetails();
+        entity.setFirstName(dto.firstName);
+        entity.setLastName(dto.lastName);
+        entity.setEmail(dto.email);
+        entity.setPhone(dto.phone);
+        return entity;
+    }
+
+    private List<String> toRefList(Set<ResponsibilitySet> responsibilitySetSet) {
+        if (responsibilitySetSet == null) {
+            return null;
+        }
+        return responsibilitySetSet.stream().map(rs -> rs.getId()).collect(Collectors.toList());
+    }
+
+    private List<NotificationDTO> toDTO(Set<Notification> entity) {
+        if (CollectionUtils.isEmpty(entity)) {
+            return null;
+        }
+
+        return entity.stream().map(n -> new NotificationDTO(
+                                                                   NotificationDTO.NotificationType.valueOf(n.getNotificationType().name()),
+                                                                   n.getTrigger())).collect(Collectors.toList());
+    }
 
 
 }

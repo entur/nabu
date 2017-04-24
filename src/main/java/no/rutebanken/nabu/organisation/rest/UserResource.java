@@ -29,66 +29,67 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 public class UserResource extends BaseResource<User, UserDTO> {
 
-	@Autowired
-	private UserRepository repository;
-	@Autowired
-	private UserMapper mapper;
-	@Autowired
-	private UserValidator validator;
-	@Autowired
-	private IamService iamService;
+    @Autowired
+    private UserRepository repository;
+    @Autowired
+    private UserMapper mapper;
+    @Autowired
+    private UserValidator validator;
+    @Autowired
+    private IamService iamService;
 
-	@GET
-	@Path("{id}")
-	public UserDTO get(@PathParam("id") String id) {
-		return super.getEntity(id);
-	}
+    @GET
+    @Path("{id}")
+    public UserDTO get(@PathParam("id") String id, @QueryParam("full") boolean fullObject) {
+        User entity = getExisting(id);
+        return getMapper().toDTO(entity, fullObject);
+    }
 
-	@POST
-	public Response create(UserDTO dto, @Context UriInfo uriInfo) {
-		User user = createEntity(dto);
-		iamService.createUser(user);
-		return buildCreatedResponse(uriInfo, user);
-	}
+    @POST
+    public Response create(UserDTO dto, @Context UriInfo uriInfo) {
+        User user = createEntity(dto);
+        iamService.createUser(user);
+        return buildCreatedResponse(uriInfo, user);
+    }
 
-	@PUT
-	@Path("{id}")
-	public void update(@PathParam("id") String id, UserDTO dto) {
-		User user = updateEntity(id, dto);
-		iamService.updateUser(user);
-	}
+    @PUT
+    @Path("{id}")
+    public void update(@PathParam("id") String id, UserDTO dto) {
+        User user = updateEntity(id, dto);
+        iamService.updateUser(user);
+    }
 
 
-	@DELETE
-	@Path("{id}")
-	public void delete(@PathParam("id") String id) {
-		User user = deleteEntity(id);
-		iamService.removeUser(user);
-	}
+    @DELETE
+    @Path("{id}")
+    public void delete(@PathParam("id") String id) {
+        User user = deleteEntity(id);
+        iamService.removeUser(user);
+    }
 
-	@GET
-	public List<UserDTO> listAll() {
-		return super.listAllEntities();
-	}
+    @GET
+    public List<UserDTO> listAll(@QueryParam("full") boolean fullObject) {
+        return super.listAllEntities(fullObject);
+    }
 
-	@Override
-	protected VersionedEntityRepository<User> getRepository() {
-		return repository;
-	}
+    @Override
+    protected VersionedEntityRepository<User> getRepository() {
+        return repository;
+    }
 
-	@Override
-	protected DTOMapper<User, UserDTO> getMapper() {
-		return mapper;
-	}
+    @Override
+    protected DTOMapper<User, UserDTO> getMapper() {
+        return mapper;
+    }
 
-	@Override
-	protected Class<User> getEntityClass() {
-		return User.class;
-	}
+    @Override
+    protected Class<User> getEntityClass() {
+        return User.class;
+    }
 
-	@Override
-	protected DTOValidator<User, UserDTO> getValidator() {
-		return validator;
-	}
+    @Override
+    protected DTOValidator<User, UserDTO> getValidator() {
+        return validator;
+    }
 
 }
