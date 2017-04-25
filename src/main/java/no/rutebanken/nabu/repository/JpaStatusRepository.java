@@ -88,8 +88,14 @@ public class JpaStatusRepository implements StatusRepository, DbStatus {
     }
 
     @Override
-    public void clear() {
+    public void clearAll() {
         this.entityManager.createQuery("delete from Status").executeUpdate();
+    }
+
+
+    @Override
+    public void clear(Long providerId) {
+        this.entityManager.createQuery("delete from Status s where s.providerId=:providerId").setParameter("providerId", providerId).executeUpdate();
     }
 
     private List<Status> getAllStatusForProvider(Long providerId) {

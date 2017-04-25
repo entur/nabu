@@ -72,17 +72,33 @@ public class JpaStatusRepositoryTest extends BaseIntegrationTest {
 
 
     @Test
-    public void testClear() {
+    public void testClearAll() {
         Status s1 = new Status("file1.zip", 3L, 1L, Status.Action.IMPORT, Status.State.OK, "corr-id-1", now, "ost");
         repository.add(s1);
-        Status s2 = new Status("file1.zip", 3L, 2L, Status.Action.EXPORT, Status.State.FAILED, "corr-id-1", DateUtils.addMinutes(now, 1), "ost");
+        Status s2 = new Status("file1.zip", 4L, 2L, Status.Action.EXPORT, Status.State.FAILED, "corr-id-1", DateUtils.addMinutes(now, 1), "ost");
         repository.add(s2);
         Status s3 = new Status("file2.zip", 3L, 1L, Status.Action.IMPORT, Status.State.TIMEOUT, "corr-id-2", now, "ost");
         repository.add(s3);
 
-        repository.clear();
+        repository.clearAll();
 
-        Assert.assertTrue(repository.getLatestDeliveryStatusForProvider(3L).isEmpty());
+        Assert.assertTrue(repository.getStatusForProvider(3L, null, null, null, null, null, null).isEmpty());
+        Assert.assertTrue(repository.getStatusForProvider(4L, null, null, null, null, null, null).isEmpty());
+    }
+
+    @Test
+    public void testClearForProvider() {
+        Status s1 = new Status("file1.zip", 3L, 1L, Status.Action.IMPORT, Status.State.OK, "corr-id-1", now, "ost");
+        repository.add(s1);
+        Status s2 = new Status("file1.zip", 4L, 2L, Status.Action.EXPORT, Status.State.FAILED, "corr-id-1", DateUtils.addMinutes(now, 1), "ost");
+        repository.add(s2);
+        Status s3 = new Status("file2.zip", 3L, 1L, Status.Action.IMPORT, Status.State.TIMEOUT, "corr-id-2", now, "ost");
+        repository.add(s3);
+
+        repository.clear(3L);
+
+        Assert.assertTrue(repository.getStatusForProvider(3L, null, null, null, null, null, null).isEmpty());
+        Assert.assertEquals(1, repository.getStatusForProvider(4L, null, null, null, null, null, null).size());
     }
 
 }

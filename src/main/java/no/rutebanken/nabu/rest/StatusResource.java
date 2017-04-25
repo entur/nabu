@@ -54,8 +54,15 @@ public class StatusResource {
 
     @DELETE
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
-    public void clearAllStatus(){
-        statusRepository.clear();
+    public void clearAllStatus() {
+        statusRepository.clearAll();
+    }
+
+    @DELETE
+    @Path("/{providerId}")
+    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
+    public void clearStatusForProvider(@PathParam("providerId") Long providerId) {
+        statusRepository.clear(providerId);
     }
 
     public List<JobStatus> convert(List<Status> statusForProvider) {
