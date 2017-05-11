@@ -1,9 +1,11 @@
 package no.rutebanken.nabu.rest;
 
-import no.rutebanken.nabu.domain.Status;
-import no.rutebanken.nabu.repository.StatusRepository;
+import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.JobStatus;
 import no.rutebanken.nabu.rest.domain.JobStatusEvent;
+import no.rutebanken.nabu.rest.mapper.EnumMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static no.rutebanken.nabu.rest.mapper.EnumMapper.convertEnums;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
@@ -30,7 +34,9 @@ public class StatusResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    StatusRepository statusRepository;
+    private EventRepository eventRepository;
+
+    private static final String STATUS_JOB_TYPE = JobEvent.JobDomain.TIMETABLE.name();
 
     @GET
     @Path("/{providerId}")
@@ -42,10 +48,16 @@ public class StatusResource {
 
         SecurityContextHolder.getContext().getAuthentication();
         logger.info("Returning status for provider with id '" + providerId + "'");
+
+        Instant instantFrom = from == null ? null : from.toInstant();
+        Instant instantTo = to == null ? null : to.toInstant();
+
+        List<String> externalIds = jobIds == null ? null : jobIds.stream().map(jobId -> jobId.toString()).collect(Collectors.toList());
+
         try {
-            List<Status> statusForProvider = statusRepository.getStatusForProvider(providerId, from, to,
-                    convertEnums(actions, Status.Action.class), convertEnums(states, Status.State.class), jobIds, fileNames);
-            return convert(statusForProvider);
+            List<JobEvent> eventsForProvider = eventRepository.findJobEvents(STATUS_JOB_TYPE, providerId, instantFrom, instantTo, null,
+                    EnumMapper.toString(actions), convertEnums(states, JobState.class), externalIds, fileNames);
+            return convert(eventsForProvider);
         } catch (Exception e) {
             logger.error("Erring fetching status for provider with id " + providerId + ": " + e.getMessage(), e);
             throw e;
@@ -55,38 +67,38 @@ public class StatusResource {
     @DELETE
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
     public void clearAllStatus() {
-        statusRepository.clearAll();
+        eventRepository.clearAll(STATUS_JOB_TYPE);
     }
 
     @DELETE
     @Path("/{providerId}")
-    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
+    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
     public void clearStatusForProvider(@PathParam("providerId") Long providerId) {
-        statusRepository.clear(providerId);
+        eventRepository.clear(STATUS_JOB_TYPE, providerId);
     }
 
-    public List<JobStatus> convert(List<Status> statusForProvider) {
+    public List<JobStatus> convert(List<JobEvent> statusForProvider) {
         List<JobStatus> list = new ArrayList<>();
         // Map from internal Status object to Rest service JobStatusEvent object
         String correlationId = null;
         JobStatus currentAggregation = null;
-        for (Status in : statusForProvider) {
+        for (JobEvent in : statusForProvider) {
 
-            if (!in.correlationId.equals(correlationId)) {
+            if (!in.getCorrelationId().equals(correlationId)) {
 
-                correlationId = in.correlationId;
+                correlationId = in.getCorrelationId();
 
                 // Create new Aggregation
                 currentAggregation = new JobStatus();
-                currentAggregation.setFirstEvent(in.date);
-                currentAggregation.setFileName(in.fileName);
-                currentAggregation.setCorrelationId(in.correlationId);
+                currentAggregation.setFirstEvent(Date.from(in.getEventTime()));
+                currentAggregation.setFileName(in.getName());
+                currentAggregation.setCorrelationId(in.getCorrelationId());
 
                 list.add(currentAggregation);
             }
 
 
-            currentAggregation.addEvent(JobStatusEvent.createFromStatus(in));
+            currentAggregation.addEvent(JobStatusEvent.createFromJobEvent(in));
         }
 
         for (JobStatus agg : list) {

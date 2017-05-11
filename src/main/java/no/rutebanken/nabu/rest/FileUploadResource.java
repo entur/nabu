@@ -2,10 +2,12 @@ package no.rutebanken.nabu.rest;
 
 import com.google.cloud.storage.Storage;
 import no.rutebanken.nabu.domain.Provider;
-import no.rutebanken.nabu.domain.Status;
+import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.domain.event.TimeTableActionSubType;
 import no.rutebanken.nabu.jms.JmsSender;
 import no.rutebanken.nabu.repository.ProviderRepository;
-import no.rutebanken.nabu.repository.StatusRepository;
+import no.rutebanken.nabu.service.EventService;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -17,13 +19,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
-import java.time.Clock;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,7 +52,7 @@ public class FileUploadResource {
     private String projectId;
 
     @Autowired
-    StatusRepository statusRepository;
+    EventService eventService;
 
     @Autowired
     ProviderRepository providerRepository;
@@ -90,11 +93,11 @@ public class FileUploadResource {
             logger.info("Notifying queue '" + destinationName + "' about the uploaded file.");
             jmsSender.sendBlobNotificationMessage(destinationName, blobName, fileName, providerId, correlationId);
             logger.info("Done sending.");
-            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.STARTED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone())), referential));
+            eventService.addEvent(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), fileName, providerId, null, TimeTableActionSubType.FILE_TRANSFER.toString(), JobState.STARTED, correlationId, Instant.now(), referential));
         } catch (RuntimeException e) {
             String errorMessage = "Failed to put file '" + fileName + "' in blobstore or notification on queue.";
             logger.warn(errorMessage, e);
-            statusRepository.add(new Status(fileName, providerId, null, Status.Action.FILE_TRANSFER, Status.State.FAILED, correlationId, Date.from(Instant.now(Clock.systemDefaultZone())), null));
+            eventService.addEvent(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), fileName, providerId, null, TimeTableActionSubType.FILE_TRANSFER.toString(), JobState.FAILED, correlationId, Instant.now(), null));
         }
     }
 

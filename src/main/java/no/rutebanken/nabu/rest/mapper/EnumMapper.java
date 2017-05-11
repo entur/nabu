@@ -17,4 +17,13 @@ public class EnumMapper {
 
 	}
 
+	public static <O extends Enum<O>> List<String> toString(List<O> org) {
+		List<String> converted = new ArrayList<>();
+		if (!CollectionUtils.isEmpty(org)) {
+			org.forEach(orgVal -> converted.add(orgVal.name()));
+		}
+		return converted;
+
+	}
+
 }

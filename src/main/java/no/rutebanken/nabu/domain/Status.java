@@ -3,6 +3,7 @@ package no.rutebanken.nabu.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.rutebanken.nabu.domain.event.TimeTableActionSubType;
 import org.apache.commons.lang.ObjectUtils;
 
 import javax.persistence.*;
@@ -13,10 +14,6 @@ import java.util.Date;
 @Entity
 @Table(name = "status", indexes = {@Index(name = "i_status", columnList = "providerId,correlationId,date")})
 public class Status implements Comparable<Status> {
-
-    public enum Action {
-        FILE_TRANSFER, FILE_CLASSIFICATION, IMPORT, EXPORT, VALIDATION_LEVEL_1, VALIDATION_LEVEL_2, CLEAN, DATASPACE_TRANSFER, BUILD_GRAPH, EXPORT_NETEX
-    }
 
     public enum State {
         PENDING, STARTED, TIMEOUT, FAILED, OK, DUPLICATE
@@ -39,7 +36,7 @@ public class Status implements Comparable<Status> {
     public Long jobId;
 
     @JsonProperty("action")
-    public Action action;
+    public TimeTableActionSubType action;
 
     @JsonProperty("state")
     public State state;
@@ -52,7 +49,7 @@ public class Status implements Comparable<Status> {
     @Temporal(TemporalType.TIMESTAMP)
     public Date date;
 
-    public Status(String fileName, Long providerId, Long jobId, Action action, State state, String correlationId,
+    public Status(String fileName, Long providerId, Long jobId, TimeTableActionSubType action, State state, String correlationId,
                          Date date, String referential) {
         this.fileName = fileName;
         this.providerId = providerId;

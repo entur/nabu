@@ -1,49 +1,54 @@
 package no.rutebanken.nabu.rest;
 
-import no.rutebanken.nabu.domain.Status;
+
+import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.domain.event.TimeTableActionSubType;
 import no.rutebanken.nabu.rest.domain.DataDeliveryStatus;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 public class DataDeliveryStatusResourceTest {
 
+    private static final String JOB_DOMAIN = JobEvent.JobDomain.TIMETABLE.toString();
+
     @Test
-    public void testMapToDataDeliveryStatusEmptyList() throws Exception {
-        DataDeliveryStatus dataDeliveryStatus = new DataDeliveryStatusResource().toDataDeliveryStatus(new ArrayList<>());
-        Assert.assertNull(dataDeliveryStatus.date);
-        Assert.assertNull(dataDeliveryStatus.state);
+    public void testMapToDataDeliveryJobEventEmptyList() throws Exception {
+        DataDeliveryStatus dataDeliveryJobEvent = new DataDeliveryStatusResource().toDataDeliveryStatus(new ArrayList<>());
+        Assert.assertNull(dataDeliveryJobEvent.date);
+        Assert.assertNull(dataDeliveryJobEvent.state);
     }
 
     @Test
-    public void testMapToDataDeliveryStatusSuccess() throws Exception {
-        Status s1 = new Status("file1.zip", 3L, 1L, Status.Action.FILE_TRANSFER, Status.State.OK, "corr-id-1", new Date(0), "ost");
-        Status s2 = new Status("file1.zip", 3L, 1L, Status.Action.BUILD_GRAPH, Status.State.OK, "corr-id-1", new Date(1000), "ost");
-        Status s3 = new Status("file1.zip", 3L, 1L, Status.Action.EXPORT_NETEX, Status.State.PENDING, "corr-id-1", new Date(2000), "ost");
-        DataDeliveryStatus dataDeliveryStatus = new DataDeliveryStatusResource().toDataDeliveryStatus(Arrays.asList(s1, s2, s3));
-        Assert.assertEquals(s1.date, dataDeliveryStatus.date);
-        Assert.assertEquals(DataDeliveryStatus.State.OK, dataDeliveryStatus.state);
+    public void testMapToDataDeliveryJobEventSuccess() throws Exception {
+        JobEvent s1 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableActionSubType.FILE_TRANSFER.toString(), JobState.OK, "corr-id-1", Instant.now(), "ost");
+        JobEvent s2 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableActionSubType.BUILD_GRAPH.toString(), JobState.OK, "corr-id-1", Instant.now().plusMillis(1000), "ost");
+        JobEvent s3 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableActionSubType.EXPORT_NETEX.toString(), JobState.PENDING, "corr-id-1", Instant.now().plusMillis(2000), "ost");
+        DataDeliveryStatus dataDeliveryJobEvent = new DataDeliveryStatusResource().toDataDeliveryStatus(Arrays.asList(s1, s2, s3));
+        Assert.assertEquals(s1.getEventTime(), dataDeliveryJobEvent.date.toInstant());
+        Assert.assertEquals(DataDeliveryStatus.State.OK, dataDeliveryJobEvent.state);
     }
 
     @Test
-    public void testMapToDataDeliveryStatusInProgress() throws Exception {
-        Status s1 = new Status("file1.zip", 3L, 1L, Status.Action.FILE_TRANSFER, Status.State.OK, "corr-id-1", new Date(0), "ost");
-        Status s2 = new Status("file1.zip", 3L, 1L, Status.Action.BUILD_GRAPH, Status.State.STARTED, "corr-id-1", new Date(1000), "ost");
-        Status s3 = new Status("file1.zip", 3L, 1L, Status.Action.EXPORT_NETEX, Status.State.OK, "corr-id-1", new Date(2000), "ost");
-        DataDeliveryStatus dataDeliveryStatus = new DataDeliveryStatusResource().toDataDeliveryStatus(Arrays.asList(s1, s2, s3));
-        Assert.assertEquals(s1.date, dataDeliveryStatus.date);
-        Assert.assertEquals(DataDeliveryStatus.State.IN_PROGRESS, dataDeliveryStatus.state);
+    public void testMapToDataDeliveryJobEventInProgress() throws Exception {
+        JobEvent s1 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableActionSubType.FILE_TRANSFER.toString(), JobState.OK, "corr-id-1", Instant.now(), "ost");
+        JobEvent s2 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableActionSubType.BUILD_GRAPH.toString(), JobState.STARTED, "corr-id-1", Instant.now().plusMillis(1000), "ost");
+        JobEvent s3 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableActionSubType.EXPORT_NETEX.toString(), JobState.OK, "corr-id-1", Instant.now().plusMillis(2000), "ost");
+        DataDeliveryStatus dataDeliveryJobEvent = new DataDeliveryStatusResource().toDataDeliveryStatus(Arrays.asList(s1, s2, s3));
+        Assert.assertEquals(s1.getEventTime(), dataDeliveryJobEvent.date.toInstant());
+        Assert.assertEquals(DataDeliveryStatus.State.IN_PROGRESS, dataDeliveryJobEvent.state);
     }
 
     @Test
-    public void testMapToDataDeliveryStatusFailed() throws Exception {
-        Status s1 = new Status("file1.zip", 3L, 1L, Status.Action.FILE_TRANSFER, Status.State.OK, "corr-id-1", new Date(0), "ost");
-        Status s2 = new Status("file1.zip", 3L, 1L, Status.Action.FILE_CLASSIFICATION, Status.State.FAILED, "corr-id-1", new Date(1000), "ost");
-        DataDeliveryStatus dataDeliveryStatus = new DataDeliveryStatusResource().toDataDeliveryStatus(Arrays.asList(s1, s2));
-        Assert.assertEquals(s1.date, dataDeliveryStatus.date);
-        Assert.assertEquals(DataDeliveryStatus.State.FAILED, dataDeliveryStatus.state);
+    public void testMapToDataDeliveryJobEventFailed() throws Exception {
+        JobEvent s1 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableActionSubType.FILE_TRANSFER.toString(), JobState.OK, "corr-id-1", Instant.now(), "ost");
+        JobEvent s2 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableActionSubType.FILE_CLASSIFICATION.toString(), JobState.FAILED, "corr-id-1", Instant.now().plusMillis(1000), "ost");
+        DataDeliveryStatus dataDeliveryJobEvent = new DataDeliveryStatusResource().toDataDeliveryStatus(Arrays.asList(s1, s2));
+        Assert.assertEquals(s1.getEventTime(), dataDeliveryJobEvent.date.toInstant());
+        Assert.assertEquals(DataDeliveryStatus.State.FAILED, dataDeliveryJobEvent.state);
     }
 }

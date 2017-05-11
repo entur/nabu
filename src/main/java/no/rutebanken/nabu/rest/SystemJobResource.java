@@ -1,25 +1,23 @@
 package no.rutebanken.nabu.rest;
 
-import no.rutebanken.nabu.domain.SystemStatus;
-import no.rutebanken.nabu.repository.SystemStatusRepository;
-import no.rutebanken.nabu.rest.domain.SystemJobStatus;
-import no.rutebanken.nabu.rest.domain.SystemJobStatusEvent;
+import no.rutebanken.nabu.domain.SystemJobStatus;
+import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import no.rutebanken.nabu.rest.domain.SystemStatusAggregation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import java.util.*;
-
-import static no.rutebanken.nabu.rest.mapper.EnumMapper.convertEnums;
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_EDIT;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Produces("application/json")
@@ -28,56 +26,36 @@ public class SystemJobResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    SystemStatusRepository systemStatusRepository;
+    private SystemJobStatusRepository systemJobStatusRepository;
 
-    @GET
-    @Path("/status")
-    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
-    public List<SystemJobStatus> listSystemStatus(@QueryParam("from") Date from,
-                                                         @QueryParam("to") Date to, @QueryParam("jobType") List<String> jobTypes,
-                                                         @QueryParam("action") List<SystemJobStatus.Action> actions,
-                                                         @QueryParam("state") List<SystemJobStatus.State> states, @QueryParam("entity") List<String> entities,
-                                                         @QueryParam("source") List<String> sources, @QueryParam("target") List<String> targets
-    ) {
-        logger.debug("Returning system status");
-        try {
-            List<SystemStatus> internalStatuses = systemStatusRepository.getSystemStatus(from, to, jobTypes,
-                    convertEnums(actions, SystemStatus.Action.class), convertEnums(states, SystemStatus.State.class), entities, sources, targets);
-            return convertToJobStatus(internalStatuses);
-        } catch (Exception e) {
-            logger.error("Erring fetching system status: " + e.getMessage(), e);
-            throw e;
-        }
-    }
 
     @GET
     @Path("/status/aggregation")
     public Collection<SystemStatusAggregation> getLatestSystemStatus(@QueryParam("jobType") List<String> jobTypes,
-                                                                            @QueryParam("action") List<SystemJobStatus.Action> actions,
-                                                                            @QueryParam("state") List<SystemJobStatus.State> states, @QueryParam("entity") List<String> entities,
+                                                                            @QueryParam("action") List<String> actions,
+                                                                            @QueryParam("state") List<JobState> states, @QueryParam("entity") List<String> entities,
                                                                             @QueryParam("source") List<String> sources, @QueryParam("target") List<String> targets
     ) {
         logger.debug("Returning aggregated system status");
         try {
-            List<SystemStatus> internalStatuses = systemStatusRepository.getLatestSystemStatus(jobTypes,
-                    convertEnums(actions, SystemStatus.Action.class), convertEnums(states, SystemStatus.State.class), entities, sources, targets);
-            return convertToSystemStatusAggregation(internalStatuses);
+            return convertToSystemStatusAggregation( systemJobStatusRepository.findAll());
         } catch (Exception e) {
             logger.error("Erring fetching system status: " + e.getMessage(), e);
             throw e;
         }
     }
 
-    Collection<SystemStatusAggregation> convertToSystemStatusAggregation(List<SystemStatus> systemStatuses) {
-        Map<String, SystemStatusAggregation> aggregationPerJobType = new HashMap<>();
+    Collection<SystemStatusAggregation> convertToSystemStatusAggregation(List<SystemJobStatus> systemStatuses) {
+        Map<Pair<String,String>, SystemStatusAggregation> aggregationPerJobType = new HashMap<>();
 
-        for (SystemStatus in : systemStatuses) {
+        for (SystemJobStatus in : systemStatuses) {
 
-            SystemStatusAggregation currentAggregation = aggregationPerJobType.get(in.jobType);
+            Pair<String,String> key=Pair.of(in.getJobDomain(),in.getJobType());
+            SystemStatusAggregation currentAggregation = aggregationPerJobType.get(key);
 
             if (currentAggregation == null) {
                 currentAggregation = new SystemStatusAggregation(in);
-                aggregationPerJobType.put(currentAggregation.jobType, currentAggregation);
+                aggregationPerJobType.put(key, currentAggregation);
             }
             currentAggregation.addSystemStatus(in);
         }
@@ -85,48 +63,5 @@ public class SystemJobResource {
 
         return aggregationPerJobType.values();
     }
-
-    List<SystemJobStatus> convertToJobStatus(List<SystemStatus> systemStatuses) {
-
-        List<SystemJobStatus> list = new ArrayList<>();
-        // Map from internal Status object to Rest service SystemJobStatus object
-        String correlationId = null;
-        SystemJobStatus currentAggregation = null;
-        for (SystemStatus in : systemStatuses) {
-
-            if (!in.correlationId.equals(correlationId)) {
-
-                correlationId = in.correlationId;
-
-                // Create new Aggregation
-                currentAggregation = new SystemJobStatus();
-                currentAggregation.setFirstEvent(in.date);
-                currentAggregation.setEntity(in.entity);
-                currentAggregation.setSource(in.source);
-                currentAggregation.setTarget(in.target);
-                currentAggregation.setJobType(in.jobType);
-                currentAggregation.setAction(SystemJobStatus.Action.valueOf(in.action.name()));
-                currentAggregation.setCorrelationId(in.correlationId);
-
-                list.add(currentAggregation);
-            }
-
-
-            currentAggregation.addEvent(SystemJobStatusEvent.createFromSystemStatus(in));
-        }
-
-        for (SystemJobStatus agg : list) {
-            SystemJobStatusEvent event = agg.getEvents().get(agg.getEvents().size() - 1);
-            agg.setLastEvent(event.date);
-            agg.setEndStatus(event.state);
-            long durationMillis = agg.getLastEvent().getTime() - agg.getFirstEvent().getTime();
-            agg.setDurationMillis(durationMillis);
-        }
-
-        Collections.sort(list, (o1, o2) -> o1.getFirstEvent().compareTo(o2.getFirstEvent()));
-
-        return list;
-    }
-
 
 }

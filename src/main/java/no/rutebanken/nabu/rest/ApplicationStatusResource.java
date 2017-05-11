@@ -1,8 +1,8 @@
 package no.rutebanken.nabu.rest;
 
 import no.rutebanken.nabu.repository.DbStatus;
+import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.repository.ProviderRepository;
-import no.rutebanken.nabu.repository.StatusRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,13 @@ public class ApplicationStatusResource {
     ProviderRepository providerRepository;
 
     @Autowired
-    StatusRepository statusRepository;
+    EventRepository eventRepository;
 
     @GET
     @Path("/ready")
     public Response isReady() {
         logger.debug("Checking readiness...");
-        if ( ((DbStatus) providerRepository).isDbUp() && ((DbStatus) statusRepository).isDbUp()){
+        if ( ((DbStatus) providerRepository).isDbUp() && ((DbStatus) eventRepository).isDbUp()){
            return Response.ok().build();
         } else {
             return Response.serverError().build();
