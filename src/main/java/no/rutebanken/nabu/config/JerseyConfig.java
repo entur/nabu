@@ -22,6 +22,7 @@ public class JerseyConfig extends ResourceConfig {
         register(DataDeliveryStatusResource.class);
         register(ProviderResource.class);
         register(ApplicationStatusResource.class);
+        register(NotificationResource.class);
         register(CorsResponseFilter.class);
 
         register(CodeSpaceResource.class);

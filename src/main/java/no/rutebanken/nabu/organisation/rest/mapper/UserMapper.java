@@ -1,14 +1,19 @@
 package no.rutebanken.nabu.organisation.rest.mapper;
 
+import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.nabu.organisation.model.user.ContactDetails;
-import no.rutebanken.nabu.organisation.model.user.Notification;
+import no.rutebanken.nabu.organisation.model.user.NotificationConfiguration;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import no.rutebanken.nabu.organisation.model.user.User;
+import no.rutebanken.nabu.organisation.model.user.eventfilter.CrudEventFilter;
+import no.rutebanken.nabu.organisation.model.user.eventfilter.EventFilter;
+import no.rutebanken.nabu.organisation.model.user.eventfilter.JobEventFilter;
 import no.rutebanken.nabu.organisation.repository.OrganisationRepository;
 import no.rutebanken.nabu.organisation.repository.ResponsibilitySetRepository;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
-import no.rutebanken.nabu.organisation.rest.dto.user.NotificationDTO;
+import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
+import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +48,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         dto.username = org.getUsername();
 
         dto.contactDetails = toDTO(org.getContactDetails());
-        dto.notifications = toDTO(org.getNotifications());
+        dto.notifications = toDTO(org.getNotificationConfigurations());
         dto.responsibilitySetRefs = toRefList(org.getResponsibilitySets());
         dto.organisationRef = org.getOrganisation().getId();
 
@@ -77,19 +82,30 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
 
 
         if (CollectionUtils.isEmpty(dto.notifications)) {
-            entity.setNotifications(new HashSet<>());
+            entity.setNotificationConfigurations(new HashSet<>());
         } else {
-            entity.setNotifications(dto.notifications.stream().map(n -> fromDTO(n)).collect(Collectors.toSet()));
+            entity.setNotificationConfigurations(dto.notifications.stream().map(n -> fromDTO(n)).collect(Collectors.toSet()));
         }
 
         return entity;
     }
 
-    private Notification fromDTO(NotificationDTO dto) {
-        Notification notification = new Notification();
-        notification.setTrigger(dto.trigger);
-        notification.setNotificationType(NotificationType.valueOf(dto.notificationType.name()));
-        return notification;
+    private NotificationConfiguration fromDTO(NotificationConfigDTO dto) {
+        NotificationConfiguration notificationConfiguration = new NotificationConfiguration();
+
+
+        // TODO   notificationConfiguration.setTrigger(dto.trigger.);
+        notificationConfiguration.setNotificationType(NotificationType.valueOf(dto.notificationType.name()));
+        return notificationConfiguration;
+    }
+
+    private EventFilter fromDTO(EventFilterDTO dto) {
+        if (EventFilterDTO.EventFilterType.CRUD.equals(dto.type)) {
+
+        } else if (EventFilterDTO.EventFilterType.JOB.equals(dto.type)) {
+            throw new IllegalArgumentException("");
+        }
+        return null;
     }
 
 
@@ -124,15 +140,27 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         return responsibilitySetSet.stream().map(rs -> rs.getId()).collect(Collectors.toList());
     }
 
-    private List<NotificationDTO> toDTO(Set<Notification> entity) {
+    private List<NotificationConfigDTO> toDTO(Set<NotificationConfiguration> entity) {
         if (CollectionUtils.isEmpty(entity)) {
             return null;
         }
 
-        return entity.stream().map(n -> new NotificationDTO(
-                                                                   NotificationDTO.NotificationType.valueOf(n.getNotificationType().name()),
-                                                                   n.getTrigger())).collect(Collectors.toList());
+        return entity.stream().map(n -> new NotificationConfigDTO(NotificationConfigDTO.NotificationType.valueOf(n.getNotificationType().name()),
+                                                                         toDTO(n.getEventFilter()))).collect(Collectors.toList());
     }
+
+    private EventFilterDTO toDTO(EventFilter eventFilter) {
+        EventFilterDTO dto = new EventFilterDTO();
+        // TODO add mapping
+        if (eventFilter instanceof JobEventFilter) {
+            dto.type = EventFilterDTO.EventFilterType.JOB;
+        } else if (eventFilter instanceof CrudEventFilter) {
+            dto.type = EventFilterDTO.EventFilterType.CRUD;
+        }
+
+        return dto;
+    }
+    // TODO respect full vs 
 
 
 }

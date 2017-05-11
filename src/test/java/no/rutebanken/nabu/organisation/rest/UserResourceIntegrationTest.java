@@ -1,9 +1,11 @@
 package no.rutebanken.nabu.organisation.rest;
 
 import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
+import no.rutebanken.nabu.organisation.model.user.eventfilter.EventFilter;
 import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
-import no.rutebanken.nabu.organisation.rest.dto.user.NotificationDTO;
+import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
+import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.UserDTO;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,8 +39,8 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
     public void crudUser() throws Exception {
         ContactDetailsDTO createContactDetails = new ContactDetailsDTO("first", "last", "email", "phone");
         UserDTO createUser = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, createContactDetails);
-        createUser.notifications = Arrays.asList(new NotificationDTO(NotificationDTO.NotificationType.EMAIL, "change1"),
-                new NotificationDTO(NotificationDTO.NotificationType.EMAIL, "change2"));
+        createUser.notifications = Arrays.asList(new NotificationConfigDTO(NotificationConfigDTO.NotificationType.EMAIL, new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD)),
+                new NotificationConfigDTO(NotificationConfigDTO.NotificationType.EMAIL, new EventFilterDTO(EventFilterDTO.EventFilterType.JOB)));
         URI uri = restTemplate.postForLocation(PATH, createUser);
         assertUser(createUser, uri);
 
@@ -148,14 +150,19 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
             Assert.assertTrue(CollectionUtils.isEmpty(outUser.notifications));
         } else {
             Assert.assertEquals(inUser.notifications.size(), outUser.notifications.size());
-            for (NotificationDTO in : inUser.notifications) {
+            for (NotificationConfigDTO in : inUser.notifications) {
                 Assert.assertTrue(outUser.notifications.stream().anyMatch(out -> isEqual(in, out)));
             }
         }
     }
 
-    private boolean isEqual(NotificationDTO in, NotificationDTO out) {
-        return in.notificationType == out.notificationType && in.trigger.equals(out.trigger);
+    private boolean isEqual(NotificationConfigDTO in, NotificationConfigDTO out) {
+        return in.notificationType == out.notificationType && isEqual(in.eventFilter, out.eventFilter);
+    }
+
+    private boolean isEqual(EventFilterDTO in, EventFilterDTO out) {
+        // TODO verify
+        return true;
     }
 
     @Test

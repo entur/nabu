@@ -18,7 +18,7 @@ public class UserDTO extends BaseDTO {
 
     public ContactDetailsDTO contactDetails;
 
-    public List<NotificationDTO> notifications = new ArrayList<>();
+    public List<NotificationConfigDTO> notifications = new ArrayList<>();
 
 
     // Full objects included for ease of use, disregarded in CRUD

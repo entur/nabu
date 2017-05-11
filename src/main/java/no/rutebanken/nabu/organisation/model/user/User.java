@@ -27,7 +27,7 @@ public class User extends VersionedEntity {
 	private Organisation organisation;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	private Set<Notification> notifications;
+	private Set<NotificationConfiguration> notificationConfigurations;
 
 	@ManyToMany
 	private Set<ResponsibilitySet> responsibilitySets;
@@ -48,16 +48,16 @@ public class User extends VersionedEntity {
 		this.contactDetails = contactDetails;
 	}
 
-	public Set<Notification> getNotifications() {
-		if (notifications == null) {
-			notifications = new HashSet<>();
+	public Set<NotificationConfiguration> getNotificationConfigurations() {
+		if (notificationConfigurations == null) {
+			notificationConfigurations = new HashSet<>();
 		}
-		return notifications;
+		return notificationConfigurations;
 	}
 
-	public void setNotifications(Set<Notification> notifications) {
-		getNotifications().clear();
-		getNotifications().addAll(notifications);
+	public void setNotificationConfigurations(Set<NotificationConfiguration> notificationConfigurations) {
+		getNotificationConfigurations().clear();
+		getNotificationConfigurations().addAll(notificationConfigurations);
 	}
 
 	public Organisation getOrganisation() {
@@ -117,8 +117,8 @@ public class User extends VersionedEntity {
 			return this;
 		}
 
-		public Builder withNotifications(Set<Notification> notifications) {
-			user.setNotifications(notifications);
+		public Builder withNotifications(Set<NotificationConfiguration> notificationConfigurations) {
+			user.setNotificationConfigurations(notificationConfigurations);
 			return this;
 		}
 
