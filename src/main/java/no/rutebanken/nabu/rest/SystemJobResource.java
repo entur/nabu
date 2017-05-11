@@ -1,7 +1,6 @@
 package no.rutebanken.nabu.rest;
 
 import no.rutebanken.nabu.domain.SystemJobStatus;
-import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import no.rutebanken.nabu.rest.domain.SystemStatusAggregation;
 import org.slf4j.Logger;
@@ -31,14 +30,12 @@ public class SystemJobResource {
 
     @GET
     @Path("/status/aggregation")
-    public Collection<SystemStatusAggregation> getLatestSystemStatus(@QueryParam("jobType") List<String> jobTypes,
-                                                                            @QueryParam("action") List<String> actions,
-                                                                            @QueryParam("state") List<JobState> states, @QueryParam("entity") List<String> entities,
-                                                                            @QueryParam("source") List<String> sources, @QueryParam("target") List<String> targets
+    public Collection<SystemStatusAggregation> getLatestSystemStatus(@QueryParam("jobDomain") List<String> jobDomains,
+                                                                            @QueryParam("jobType") List<String> jobTypes
     ) {
         logger.debug("Returning aggregated system status");
         try {
-            return convertToSystemStatusAggregation( systemJobStatusRepository.findAll());
+            return convertToSystemStatusAggregation(systemJobStatusRepository.find(jobDomains, jobTypes));
         } catch (Exception e) {
             logger.error("Erring fetching system status: " + e.getMessage(), e);
             throw e;
@@ -46,11 +43,11 @@ public class SystemJobResource {
     }
 
     Collection<SystemStatusAggregation> convertToSystemStatusAggregation(List<SystemJobStatus> systemStatuses) {
-        Map<Pair<String,String>, SystemStatusAggregation> aggregationPerJobType = new HashMap<>();
+        Map<Pair<String, String>, SystemStatusAggregation> aggregationPerJobType = new HashMap<>();
 
         for (SystemJobStatus in : systemStatuses) {
 
-            Pair<String,String> key=Pair.of(in.getJobDomain(),in.getJobType());
+            Pair<String, String> key = Pair.of(in.getJobDomain(), in.getJobType());
             SystemStatusAggregation currentAggregation = aggregationPerJobType.get(key);
 
             if (currentAggregation == null) {

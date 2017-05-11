@@ -2,7 +2,6 @@ package no.rutebanken.nabu.rest;
 
 
 import no.rutebanken.nabu.domain.SystemJobStatus;
-import no.rutebanken.nabu.domain.SystemStatus;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.rest.domain.SystemStatusAggregation;
 import org.junit.Assert;
@@ -54,7 +53,7 @@ public class SystemJobResourceTest {
 
 	private SystemStatusAggregation findAgg(Collection<SystemStatusAggregation> aggregations, String entity) {
 		for (SystemStatusAggregation agg : aggregations) {
-			if (entity.equals(agg.entity)) {
+			if (entity.equals(agg.jobDomain)) {
 				return agg;
 			}
 		}

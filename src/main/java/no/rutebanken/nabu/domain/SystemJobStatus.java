@@ -13,7 +13,7 @@ public class SystemJobStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long pk;
 
     private String jobDomain;
 
@@ -64,5 +64,27 @@ public class SystemJobStatus {
 
     public void setLastStatusTime(Instant lastStatusTime) {
         this.lastStatusTime = lastStatusTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SystemJobStatus that = (SystemJobStatus) o;
+
+        if (jobDomain != null ? !jobDomain.equals(that.jobDomain) : that.jobDomain != null) return false;
+        if (jobType != null ? !jobType.equals(that.jobType) : that.jobType != null) return false;
+        if (state != that.state) return false;
+        return lastStatusTime != null ? lastStatusTime.equals(that.lastStatusTime) : that.lastStatusTime == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = jobDomain != null ? jobDomain.hashCode() : 0;
+        result = 31 * result + (jobType != null ? jobType.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (lastStatusTime != null ? lastStatusTime.hashCode() : 0);
+        return result;
     }
 }

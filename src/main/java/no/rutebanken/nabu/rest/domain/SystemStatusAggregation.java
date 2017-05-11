@@ -12,11 +12,11 @@ import java.util.Map;
 @JsonRootName("systemStatusAggregation")
 public class SystemStatusAggregation {
 
+    @JsonProperty("jobDomain")
+    public String jobDomain;
+
     @JsonProperty("jobType")
     public String jobType;
-
-    @JsonProperty("entity")
-    public String entity;
 
     @JsonProperty("currentState")
     public JobState currentState;
@@ -30,7 +30,7 @@ public class SystemStatusAggregation {
 
     public SystemStatusAggregation(SystemJobStatus in) {
         this.jobType = in.getJobType();
-        this.entity = in.getJobDomain();
+        this.jobDomain = in.getJobDomain();
     }
 
 
