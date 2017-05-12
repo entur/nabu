@@ -2,8 +2,7 @@ package no.rutebanken.nabu.jms;
 
 import no.rutebanken.nabu.domain.SystemStatus;
 import no.rutebanken.nabu.jms.mapper.EventMapper;
-import no.rutebanken.nabu.repository.EventRepository;
-import no.rutebanken.nabu.service.EventService;
+import no.rutebanken.nabu.event.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

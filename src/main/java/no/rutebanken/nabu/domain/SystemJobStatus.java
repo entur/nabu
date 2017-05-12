@@ -87,4 +87,14 @@ public class SystemJobStatus {
         result = 31 * result + (lastStatusTime != null ? lastStatusTime.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "SystemJobStatus{" +
+                       "jobDomain='" + jobDomain + '\'' +
+                       ", jobType='" + jobType + '\'' +
+                       ", state=" + state +
+                       ", lastStatusTime=" + lastStatusTime +
+                       '}';
+    }
 }

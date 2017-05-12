@@ -4,10 +4,10 @@ import com.google.cloud.storage.Storage;
 import no.rutebanken.nabu.domain.Provider;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
-import no.rutebanken.nabu.domain.event.TimeTableActionSubType;
+import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.jms.JmsSender;
 import no.rutebanken.nabu.repository.ProviderRepository;
-import no.rutebanken.nabu.service.EventService;
+import no.rutebanken.nabu.event.EventService;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
@@ -93,11 +93,11 @@ public class FileUploadResource {
             logger.info("Notifying queue '" + destinationName + "' about the uploaded file.");
             jmsSender.sendBlobNotificationMessage(destinationName, blobName, fileName, providerId, correlationId);
             logger.info("Done sending.");
-            eventService.addEvent(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), fileName, providerId, null, TimeTableActionSubType.FILE_TRANSFER.toString(), JobState.STARTED, correlationId, Instant.now(), referential));
+            eventService.addEvent(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), fileName, providerId, null, TimeTableAction.FILE_TRANSFER.toString(), JobState.STARTED, correlationId, Instant.now(), referential));
         } catch (RuntimeException e) {
-            String errorMessage = "Failed to put file '" + fileName + "' in blobstore or notification on queue.";
+            String errorMessage = "Failed to put file '" + fileName + "' in blobstore or event on queue.";
             logger.warn(errorMessage, e);
-            eventService.addEvent(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), fileName, providerId, null, TimeTableActionSubType.FILE_TRANSFER.toString(), JobState.FAILED, correlationId, Instant.now(), null));
+            eventService.addEvent(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), fileName, providerId, null, TimeTableAction.FILE_TRANSFER.toString(), JobState.FAILED, correlationId, Instant.now(), null));
         }
     }
 

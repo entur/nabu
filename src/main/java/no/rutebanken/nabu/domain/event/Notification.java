@@ -22,6 +22,15 @@ public class Notification {
 
     private NotificationType type;
 
+    public Notification() {
+    }
+
+    public Notification(String userName, NotificationType type, Event event) {
+        this.event = event;
+        this.userName = userName;
+        this.type = type;
+        this.status = NotificationStatus.READY;
+    }
 
     public Event getEvent() {
         return event;
@@ -53,5 +62,15 @@ public class Notification {
 
     public void setType(NotificationType type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "Notification{" +
+                       "userName='" + userName + '\'' +
+                       ", type=" + type +
+                       ", status=" + status +
+                       ", event=" + event +
+                       '}';
     }
 }

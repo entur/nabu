@@ -2,10 +2,10 @@ package no.rutebanken.nabu.organisation.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.rutebanken.nabu.organisation.model.user.eventfilter.EventFilter;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
 
 @Entity
 public class NotificationConfiguration {
@@ -19,15 +19,10 @@ public class NotificationConfiguration {
     private NotificationType notificationType;
 
 
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @NotNull
     private EventFilter eventFilter;
 
-    @NotNull
-    private Instant notifyFrom;
-
-    public NotificationConfiguration() {
-        notifyFrom = Instant.now();
-    }
 
     public NotificationType getNotificationType() {
         return notificationType;
@@ -45,11 +40,4 @@ public class NotificationConfiguration {
         this.eventFilter = eventFilter;
     }
 
-    public Instant getNotifyFrom() {
-        return notifyFrom;
-    }
-
-    public void setNotifyFrom(Instant notifyFrom) {
-        this.notifyFrom = notifyFrom;
-    }
 }

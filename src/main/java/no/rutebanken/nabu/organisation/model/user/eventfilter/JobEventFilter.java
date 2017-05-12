@@ -1,22 +1,40 @@
 package no.rutebanken.nabu.organisation.model.user.eventfilter;
 
-import no.rutebanken.nabu.domain.event.EventAction;
 import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.event.filter.EventFilterMatcher;
+import no.rutebanken.nabu.event.filter.JobEventFilterMatcher;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
+/**
+ * User defined event filter for job related events.
+ */
 @Entity
-public class JobEventFilter extends EventFilter{
+public class JobEventFilter extends EventFilter {
 
-    private EventAction action;
+    @NotNull
+    private String jobDomain;
 
+    @NotNull
+    private String action;
+
+    @NotNull
     private JobState state;
 
-    public EventAction getAction() {
+    public String getJobDomain() {
+        return jobDomain;
+    }
+
+    public void setJobDomain(String jobDomain) {
+        this.jobDomain = jobDomain;
+    }
+
+    public String getAction() {
         return action;
     }
 
-    public void setAction(EventAction action) {
+    public void setAction(String action) {
         this.action = action;
     }
 
@@ -26,5 +44,10 @@ public class JobEventFilter extends EventFilter{
 
     public void setState(JobState state) {
         this.state = state;
+    }
+
+    @Override
+    public EventFilterMatcher getMatcher() {
+        return new JobEventFilterMatcher(this);
     }
 }

@@ -2,32 +2,39 @@ package no.rutebanken.nabu.domain.event;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
+/**
+ * Events resulting from asynchronous jobs, either on behalf of a user or autonomous system jobs.
+ */
 @Entity
 @DiscriminatorValue("job")
 public class JobEvent extends Event {
 
     public enum JobDomain {TIMETABLE, GEOCODER, GRAPH}
 
+    @NotNull
     private JobState state;
+
+    @NotNull
+    private String domain;
 
     private Long providerId;
 
     private String referential;
 
-    private String domain;
 
     public JobEvent() {
     }
 
-    public JobEvent(String jobDomain, String name, Long providerId, String externalId, String actionSubType, JobState state, String correlationId, Instant eventTime, String referential) {
+    public JobEvent(String jobDomain, String name, Long providerId, String externalId, String action, JobState state, String correlationId, Instant eventTime, String referential) {
         this.setJobType(jobDomain);
         this.setReferential(referential);
         this.setEventTime(eventTime);
         this.setCorrelationId(correlationId);
         this.setState(state);
-        this.setActionSubType(actionSubType);
+        this.setAction(action);
         this.setProviderId(providerId);
         this.setName(name);
         this.setExternalId(externalId);
@@ -69,5 +76,43 @@ public class JobEvent extends Event {
         this.referential = referential;
     }
 
+
+    public static JobEventBuilder builder() {
+        return new JobEventBuilder();
+    }
+
+
+    public static class JobEventBuilder extends EventBuilder<JobEvent> {
+
+        public JobEventBuilder() {
+            super(new JobEvent());
+        }
+
+        public JobEventBuilder domain(JobDomain domain) {
+            event.domain = domain.name();
+            return this;
+        }
+
+        public JobEventBuilder domain(String domain) {
+            event.domain = domain;
+            return this;
+        }
+
+        public JobEventBuilder referential(String referential) {
+            event.referential = referential;
+            return this;
+        }
+
+        public JobEventBuilder providerId(Long providerId) {
+            event.providerId = providerId;
+            return this;
+        }
+
+        public JobEventBuilder state(JobState state) {
+            event.state = state;
+            return this;
+        }
+
+    }
 
 }

@@ -1,4 +1,4 @@
-package no.rutebanken.nabu.notification;
+package no.rutebanken.nabu.event;
 
 import no.rutebanken.nabu.organisation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +11,17 @@ public class NotificationService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UserNotificationService userNotificationService;
+//
+//    @Autowired
+//    private UserNotificationService userNotificationService;
 
     @Transactional(readOnly = true)
     public void sendNotificationsForAllUsers() {
-        userRepository.findAll().forEach(u -> sendNotificationsForUser(u.getId()));
+//        userRepository.findAll().forEach(u -> sendNotificationsForUser(u.getId()));
     }
 
 
-    public void sendNotificationsForUser(String userId) {
-        userNotificationService.sendNotificationsForUser(userId);
-    }
+//    public void sendNotificationsForUser(String userId) {
+//        userNotificationService.sendNotificationsForUser(userId);
+//    }
 }

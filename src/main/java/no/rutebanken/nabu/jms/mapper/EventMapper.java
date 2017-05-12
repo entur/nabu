@@ -6,8 +6,6 @@ import no.rutebanken.nabu.domain.event.*;
 import no.rutebanken.nabu.jms.dto.EventDTO;
 import org.wololo.jts2geojson.GeoJSONReader;
 
-import java.util.Arrays;
-
 import static no.rutebanken.nabu.jms.dto.EventDTO.EventType.CRUD;
 
 public class EventMapper {
@@ -21,7 +19,7 @@ public class EventMapper {
         }
 
         event.setAction(dto.action);
-        event.setActionSubType(dto.actionSubType);
+        event.setAction(dto.action);
         event.setCorrelationId(dto.correlationId);
         event.setEventTime(dto.eventTime);
         event.setExternalId(dto.externalId);
@@ -34,9 +32,9 @@ public class EventMapper {
     public JobEvent toJobEvent(Status status) {
         JobEvent event = new JobEvent();
 
-        event.setAction(status.action.getEventAction());
+        event.setAction(status.action.toString());
 
-        event.setActionSubType(status.action.name());
+        event.setAction(status.action.name());
         event.setCorrelationId(status.correlationId);
         event.setEventTime(status.date.toInstant());
         event.setExternalId(status.jobId == null ? null : "" + status.jobId);
@@ -53,7 +51,7 @@ public class EventMapper {
     // Tmp conversion until marduk is updated to send Events
     public JobEvent toJobEvent(SystemStatus status) {
         JobEvent event = new JobEvent();
-        event.setAction(EventAction.valueOf(status.action.name()));
+        event.setAction(status.action.name());
         event.setCorrelationId(status.correlationId);
         event.setEventTime(status.date.toInstant());
         if (JobEvent.JobDomain.GRAPH.equals(status.entity)) {
@@ -63,7 +61,7 @@ public class EventMapper {
         }
 
         event.setState(JobState.valueOf(status.state.name()));
-        event.setActionSubType(status.jobType);
+        event.setAction(status.jobType);
         return event;
     }
 

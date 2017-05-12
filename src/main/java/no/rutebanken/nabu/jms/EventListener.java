@@ -18,19 +18,16 @@ public class EventListener {
     @Autowired
     private EventRepository eventRepository;
 
-    private EventMapper eventMapper=new EventMapper();
+    private EventMapper eventMapper = new EventMapper();
 
     @JmsListener(destination = "NabuEvent")
     public void processMessage(String content) {
         EventDTO dto = EventDTO.fromString(content);
 
-        logger.info("Received event: " + dto.toString());
-
         Event event = eventMapper.toEvent(dto);
+        logger.info("Received event: " + event);
         eventRepository.save(event);
     }
-
-
 
 
 }

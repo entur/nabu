@@ -1,9 +1,10 @@
 package no.rutebanken.nabu.domain.event;
 
-import no.rutebanken.nabu.domain.Status;
 import org.apache.commons.lang.ObjectUtils;
+import org.wololo.geojson.Geometry;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Entity
@@ -14,13 +15,12 @@ public abstract class Event implements Comparable<Event> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long pk;
 
+    @NotNull
     private Instant registeredTime;
-
+    @NotNull
     private Instant eventTime;
-
-    private EventAction action;
-
-    private String actionSubType;
+    @NotNull
+    private String action;
 
     private String correlationId;
 
@@ -48,20 +48,12 @@ public abstract class Event implements Comparable<Event> {
         this.eventTime = eventTime;
     }
 
-    public EventAction getAction() {
+    public String getAction() {
         return action;
     }
 
-    public void setAction(EventAction action) {
+    public void setAction(String action) {
         this.action = action;
-    }
-
-    public String getActionSubType() {
-        return actionSubType;
-    }
-
-    public void setActionSubType(String actionSubType) {
-        this.actionSubType = actionSubType;
     }
 
     public String getCorrelationId() {
@@ -106,4 +98,51 @@ public abstract class Event implements Comparable<Event> {
 
         return ObjectUtils.compare(pk, o.pk);
     }
+
+
+    public abstract static class EventBuilder<T extends Event> {
+
+        protected T event;
+
+        protected EventBuilder(T event) {
+            this.event = event;
+        }
+
+
+        public EventBuilder<T>  action(Enum action) {
+            return action(action.name());
+        }
+
+        public EventBuilder<T> action(String action) {
+            event.setAction(action);
+            return this;
+        }
+
+        public EventBuilder<T> eventTime(Instant time) {
+            event.setEventTime(time);
+            return this;
+        }
+
+        public EventBuilder<T> name(String name) {
+            event.setName(name);
+            return this;
+        }
+
+        public EventBuilder<T> externalId(String externalId) {
+            event.setExternalId(externalId);
+            return this;
+        }
+
+
+        public EventBuilder<T> correlationId(String correlationId) {
+            event.setCorrelationId(correlationId);
+            return this;
+        }
+
+        public T build() {
+            return event;
+        }
+    }
+
+
 }

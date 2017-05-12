@@ -10,10 +10,6 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 @JsonRootName("jobs")
 public class JobStatus {
 
-    public enum Action {
-        FILE_TRANSFER, FILE_CLASSIFICATION, IMPORT, EXPORT, VALIDATION_LEVEL_1, VALIDATION_LEVEL_2, CLEAN, DATASPACE_TRANSFER, BUILD_GRAPH, EXPORT_NETEX
-    }
-
     public enum State {
         PENDING, STARTED, TIMEOUT, FAILED, OK, DUPLICATE
     }

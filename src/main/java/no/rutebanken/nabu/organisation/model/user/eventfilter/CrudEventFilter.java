@@ -1,5 +1,7 @@
 package no.rutebanken.nabu.organisation.model.user.eventfilter;
 
+import no.rutebanken.nabu.event.filter.CrudEventFilterMatcher;
+import no.rutebanken.nabu.event.filter.EventFilterMatcher;
 import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
 
@@ -7,14 +9,19 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PreRemove;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * User defined filter for Crud/changelog events.
+ */
 @Entity
 public class CrudEventFilter extends EventFilter {
 
-    @ManyToOne
-    private EntityClassification entityClassification;
+    @ManyToMany
+    @NotNull
+    private Set<EntityClassification> entityClassifications;
 
     @ManyToMany
     private Set<AdministrativeZone> administrativeZones;
@@ -32,17 +39,28 @@ public class CrudEventFilter extends EventFilter {
 
     }
 
-    public EntityClassification getEntityClassification() {
-        return entityClassification;
+    public Set<EntityClassification> getEntityClassifications() {
+        if (entityClassifications == null) {
+            entityClassifications = new HashSet<>();
+        }
+        return entityClassifications;
     }
 
-    public void setEntityClassification(EntityClassification entityClassification) {
-        this.entityClassification = entityClassification;
+    public void setEntityClassifications(Set<EntityClassification> entityClassifications) {
+        this.entityClassifications = entityClassifications;
+    }
+
+    @Override
+    public EventFilterMatcher getMatcher() {
+        return new CrudEventFilterMatcher(this);
     }
 
     @PreRemove
-    private void removeAdministrativeZoneConnections() {
+    private void removeConnections() {
+        getEntityClassifications().clear();
         getAdministrativeZones().clear();
     }
+
+
 
 }

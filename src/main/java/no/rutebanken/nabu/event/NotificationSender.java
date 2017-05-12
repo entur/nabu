@@ -1,4 +1,4 @@
-package no.rutebanken.nabu.notification;
+package no.rutebanken.nabu.event;
 
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;

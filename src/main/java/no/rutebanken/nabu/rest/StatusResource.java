@@ -1,11 +1,10 @@
 package no.rutebanken.nabu.rest;
 
-import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.JobStatus;
 import no.rutebanken.nabu.rest.domain.JobStatusEvent;
-import no.rutebanken.nabu.rest.mapper.EnumMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ public class StatusResource {
     @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public List<JobStatus> listStatus(@PathParam("providerId") Long providerId, @QueryParam("from") Date from,
-                                             @QueryParam("to") Date to, @QueryParam("action") List<JobStatus.Action> actions,
+                                             @QueryParam("to") Date to, @QueryParam("action") List<String> actions,
                                              @QueryParam("state") List<JobStatus.State> states, @QueryParam("chouetteJobId") List<Long> jobIds,
                                              @QueryParam("fileName") List<String> fileNames) {
 
@@ -55,8 +54,8 @@ public class StatusResource {
         List<String> externalIds = jobIds == null ? null : jobIds.stream().map(jobId -> jobId.toString()).collect(Collectors.toList());
 
         try {
-            List<JobEvent> eventsForProvider = eventRepository.findJobEvents(STATUS_JOB_TYPE, providerId, instantFrom, instantTo, null,
-                    EnumMapper.toString(actions), convertEnums(states, JobState.class), externalIds, fileNames);
+            List<JobEvent> eventsForProvider = eventRepository.findJobEvents(STATUS_JOB_TYPE, providerId, instantFrom, instantTo,
+                    actions, convertEnums(states, JobState.class), externalIds, fileNames);
             return convert(eventsForProvider);
         } catch (Exception e) {
             logger.error("Erring fetching status for provider with id " + providerId + ": " + e.getMessage(), e);

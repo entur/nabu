@@ -2,7 +2,7 @@ package no.rutebanken.nabu.rest;
 
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
-import no.rutebanken.nabu.domain.event.TimeTableActionSubType;
+import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.rest.domain.JobStatus;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,6 +14,9 @@ import java.util.List;
 
 public class StatusResourceTest {
 
+    private static final String ACTION1="IMPORT";
+    private static final String ACTION2="EXPORT";
+    
     @Test
     public void testGetStatusForProvider() throws Exception {
 
@@ -22,14 +25,14 @@ public class StatusResourceTest {
         Instant t0 = Instant.now().minusMillis(2000);
 
         // Job "b" -> OK
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2l, null, TimeTableActionSubType.VALIDATION_LEVEL_1.toString(), JobState.PENDING, "b", t0.plusMillis(4), "ost"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2l, "1", TimeTableActionSubType.VALIDATION_LEVEL_1.toString(), JobState.STARTED, "b", t0.plusMillis(5), "pb"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2l, "1", TimeTableActionSubType.VALIDATION_LEVEL_1.toString(), JobState.OK, "b", t0.plusMillis(6), "pb"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2l, null, ACTION2, JobState.PENDING, "b", t0.plusMillis(4), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2l, "1", ACTION2, JobState.STARTED, "b", t0.plusMillis(5), "pb"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2l, "1", ACTION2, JobState.OK, "b", t0.plusMillis(6), "pb"));
 
         // Job "a" -> FAILED
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, null, TimeTableActionSubType.IMPORT.toString(), JobState.PENDING, "a", t0.plusMillis(1), "ost"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, "2", TimeTableActionSubType.IMPORT.toString(), JobState.STARTED, "a", t0.plusMillis(2), "ost"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, "2", TimeTableActionSubType.IMPORT.toString(), JobState.FAILED, "a", t0.plusMillis(3), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, null, ACTION1, JobState.PENDING, "a", t0.plusMillis(1), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, "2", ACTION1, JobState.STARTED, "a", t0.plusMillis(2), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, "2", ACTION1, JobState.FAILED, "a", t0.plusMillis(3), "ost"));
 
 
         List<JobStatus> listStatus = new StatusResource().convert(rawEvents);
@@ -40,7 +43,7 @@ public class StatusResourceTest {
         JobStatus a = listStatus.get(0);
 
         Assert.assertEquals("a", a.getCorrelationId());
-        Assert.assertEquals(JobStatus.Action.IMPORT, a.getEvents().get(0).action);
+        Assert.assertEquals(ACTION1, a.getEvents().get(0).action);
         Assert.assertEquals(JobStatus.State.FAILED, a.getEndStatus());
         Assert.assertEquals(3, a.getEvents().size());
         Assert.assertEquals(Date.from(t0.plusMillis(1)), a.getFirstEvent());
@@ -51,7 +54,7 @@ public class StatusResourceTest {
         JobStatus b = listStatus.get(1);
 
         Assert.assertEquals("b", b.getCorrelationId());
-        Assert.assertEquals(JobStatus.Action.VALIDATION_LEVEL_1, b.getEvents().get(0).action);
+        Assert.assertEquals(ACTION2, b.getEvents().get(0).action);
         Assert.assertEquals(JobStatus.State.OK, b.getEndStatus());
         Assert.assertEquals(3, b.getEvents().size());
         Assert.assertEquals(Date.from(t0.plusMillis(4)), b.getFirstEvent());

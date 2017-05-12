@@ -2,7 +2,6 @@ package no.rutebanken.nabu.jms.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import no.rutebanken.nabu.domain.event.EventAction;
 import no.rutebanken.nabu.domain.event.JobState;
 import org.wololo.geojson.Geometry;
 
@@ -17,8 +16,6 @@ public class EventDTO {
 
     public EventType eventType;
 
-    public EventAction action;
-
     public String correlationId;
 
     public String entityType;
@@ -27,7 +24,7 @@ public class EventDTO {
 
     public JobState state;
 
-    public String actionSubType;
+    public String action;
 
     public Long providerId;
 
@@ -38,6 +35,8 @@ public class EventDTO {
     public String name;
 
     public String referential;
+
+    public String changeType;
 
     public String oldValue;
 
@@ -56,16 +55,4 @@ public class EventDTO {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Event{" +
-                       "eventType=" + eventType +
-                       ", eventTime=" + eventTime +
-                       ", action=" + action +
-                       ", actionSubType='" + actionSubType + '\'' +
-                       ", state=" + state +
-                       ", externalId='" + externalId + '\'' +
-                       ", name='" + name + '\'' +
-                       '}';
-    }
 }

@@ -1,6 +1,6 @@
 package no.rutebanken.nabu.rest.mapper;
 
-import no.rutebanken.nabu.domain.event.TimeTableActionSubType;
+import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.rest.domain.JobStatus;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,10 +12,10 @@ public class EnumMapperTest {
 
     @Test
     public void testEnumConversion() {
-        List<TimeTableActionSubType> converted = EnumMapper.convertEnums(Arrays.asList(JobStatus.Action.CLEAN, JobStatus.Action.BUILD_GRAPH), TimeTableActionSubType.class);
+        List<TimeTableAction> converted = EnumMapper.convertEnums(Arrays.asList(TimeTableAction.CLEAN, TimeTableAction.BUILD_GRAPH), TimeTableAction.class);
         Assert.assertEquals(2, converted.size());
-        Assert.assertTrue(converted.contains(TimeTableActionSubType.BUILD_GRAPH));
-        Assert.assertTrue(converted.contains(TimeTableActionSubType.CLEAN));
+        Assert.assertTrue(converted.contains(TimeTableAction.BUILD_GRAPH));
+        Assert.assertTrue(converted.contains(TimeTableAction.CLEAN));
     }
 
 }

@@ -1,6 +1,10 @@
 package no.rutebanken.nabu.organisation.rest;
 
+import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
+import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import no.rutebanken.nabu.organisation.model.user.eventfilter.EventFilter;
 import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
@@ -39,8 +43,8 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
     public void crudUser() throws Exception {
         ContactDetailsDTO createContactDetails = new ContactDetailsDTO("first", "last", "email", "phone");
         UserDTO createUser = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, createContactDetails);
-        createUser.notifications = Arrays.asList(new NotificationConfigDTO(NotificationConfigDTO.NotificationType.EMAIL, new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD)),
-                new NotificationConfigDTO(NotificationConfigDTO.NotificationType.EMAIL, new EventFilterDTO(EventFilterDTO.EventFilterType.JOB)));
+        createUser.notifications = Arrays.asList(new NotificationConfigDTO(NotificationType.EMAIL, crudEventFilter()),
+                new NotificationConfigDTO(NotificationType.WEB, jobEventFilter()));
         URI uri = restTemplate.postForLocation(PATH, createUser);
         assertUser(createUser, uri);
 
@@ -65,6 +69,22 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 
     }
+
+    private EventFilterDTO crudEventFilter() {
+        EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD);
+        eventFilterDTO.entityClassificationRefs.add(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID);
+        return eventFilterDTO;
+    }
+
+    private EventFilterDTO jobEventFilter() {
+        EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
+        eventFilterDTO.organisationRef = TestConstantsOrganisation.ORGANISATION_ID;
+        eventFilterDTO.action = TimeTableAction.VALIDATION_LEVEL_1.toString();
+        eventFilterDTO.jobDomain = JobEvent.JobDomain.TIMETABLE;
+        eventFilterDTO.state = JobState.FAILED;
+        return eventFilterDTO;
+    }
+
 
     @Test
     public void updateUsersResponsibilitySets() throws Exception {

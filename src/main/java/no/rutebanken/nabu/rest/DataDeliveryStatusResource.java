@@ -3,7 +3,7 @@ package no.rutebanken.nabu.rest;
 import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
-import no.rutebanken.nabu.domain.event.TimeTableActionSubType;
+import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.DataDeliveryStatus;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class DataDeliveryStatusResource {
         if (!sortedEvents.isEmpty()) {
 
             latestDeliveryDate = Date.from(sortedEvents.first().getEventTime());
-            if (sortedEvents.stream().anyMatch(e -> TimeTableActionSubType.BUILD_GRAPH.toString().equals(e.getActionSubType()) && JobState.OK.equals(e.getState()))) {
+            if (sortedEvents.stream().anyMatch(e -> TimeTableAction.BUILD_GRAPH.toString().equals(e.getAction()) && JobState.OK.equals(e.getState()))) {
                 state = DataDeliveryStatus.State.OK;
             } else if (sortedEvents.stream().anyMatch(e -> Sets.newHashSet(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT).contains(e.getState()))) {
                 state = DataDeliveryStatus.State.FAILED;

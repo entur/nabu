@@ -1,8 +1,8 @@
 package no.rutebanken.nabu.organisation.rest.dto.user;
 
-public class NotificationConfigDTO {
+import no.rutebanken.nabu.organisation.model.user.NotificationType;
 
-    public enum NotificationType {EMAIL}
+public class NotificationConfigDTO {
 
     public NotificationType notificationType;
 

@@ -1,6 +1,7 @@
 package no.rutebanken.nabu.organisation.rest.mapper;
 
-import no.rutebanken.nabu.domain.event.Event;
+import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.nabu.organisation.model.user.ContactDetails;
 import no.rutebanken.nabu.organisation.model.user.NotificationConfiguration;
@@ -9,6 +10,8 @@ import no.rutebanken.nabu.organisation.model.user.User;
 import no.rutebanken.nabu.organisation.model.user.eventfilter.CrudEventFilter;
 import no.rutebanken.nabu.organisation.model.user.eventfilter.EventFilter;
 import no.rutebanken.nabu.organisation.model.user.eventfilter.JobEventFilter;
+import no.rutebanken.nabu.organisation.repository.AdministrativeZoneRepository;
+import no.rutebanken.nabu.organisation.repository.EntityClassificationRepository;
 import no.rutebanken.nabu.organisation.repository.OrganisationRepository;
 import no.rutebanken.nabu.organisation.repository.ResponsibilitySetRepository;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
@@ -41,6 +44,11 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
     @Autowired
     private ResponsibilitySetMapper responsibilitySetMapper;
 
+    @Autowired
+    private EntityClassificationRepository entityClassificationRepository;
+
+    @Autowired
+    private AdministrativeZoneRepository administrativeZoneRepository;
 
     public UserDTO toDTO(User org, boolean fullDetails) {
         UserDTO dto = new UserDTO();
@@ -90,22 +98,38 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         return entity;
     }
 
+    // TODO recreate at every change? or match existing
     private NotificationConfiguration fromDTO(NotificationConfigDTO dto) {
         NotificationConfiguration notificationConfiguration = new NotificationConfiguration();
 
-
-        // TODO   notificationConfiguration.setTrigger(dto.trigger.);
+        notificationConfiguration.setEventFilter(fromDTO(dto.eventFilter));
         notificationConfiguration.setNotificationType(NotificationType.valueOf(dto.notificationType.name()));
         return notificationConfiguration;
     }
 
     private EventFilter fromDTO(EventFilterDTO dto) {
+        EventFilter eventFilter;
         if (EventFilterDTO.EventFilterType.CRUD.equals(dto.type)) {
-
+            CrudEventFilter crudEventFilter = new CrudEventFilter();
+            crudEventFilter.setEntityClassifications(dto.entityClassificationRefs.stream().map(ecr -> entityClassificationRepository.getOneByPublicId(ecr)).collect(Collectors.toSet()));
+            if (CollectionUtils.isEmpty(dto.administrativeZoneRefs)) {
+                crudEventFilter.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(adz -> administrativeZoneRepository.getOneByPublicId(adz)).collect(Collectors.toSet()));
+            }
+            eventFilter = crudEventFilter;
         } else if (EventFilterDTO.EventFilterType.JOB.equals(dto.type)) {
-            throw new IllegalArgumentException("");
+            JobEventFilter jobEventFilter = new JobEventFilter();
+            jobEventFilter.setAction(dto.action);
+            jobEventFilter.setState(dto.state);
+            jobEventFilter.setJobDomain(dto.jobDomain.toString());
+            eventFilter = jobEventFilter;
+        } else {
+            throw new IllegalArgumentException("Unknown event filter type: " + dto.type);
         }
-        return null;
+
+        if (dto.organisationRef != null) {
+            eventFilter.setOrganisation(organisationRepository.getOneByPublicId(dto.organisationRef));
+        }
+        return eventFilter;
     }
 
 
@@ -145,19 +169,29 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
             return null;
         }
 
-        return entity.stream().map(n -> new NotificationConfigDTO(NotificationConfigDTO.NotificationType.valueOf(n.getNotificationType().name()),
+        return entity.stream().map(n -> new NotificationConfigDTO(n.getNotificationType(),
                                                                          toDTO(n.getEventFilter()))).collect(Collectors.toList());
     }
 
     private EventFilterDTO toDTO(EventFilter eventFilter) {
         EventFilterDTO dto = new EventFilterDTO();
-        // TODO add mapping
+
         if (eventFilter instanceof JobEventFilter) {
+            JobEventFilter jobEventFilter = (JobEventFilter) eventFilter;
             dto.type = EventFilterDTO.EventFilterType.JOB;
+            dto.state = jobEventFilter.getState();
+            dto.action = jobEventFilter.getAction();
+            dto.jobDomain = JobEvent.JobDomain.valueOf(jobEventFilter.getJobDomain());
         } else if (eventFilter instanceof CrudEventFilter) {
+            CrudEventFilter crudEventFilter = (CrudEventFilter) eventFilter;
             dto.type = EventFilterDTO.EventFilterType.CRUD;
+            dto.entityClassificationRefs = crudEventFilter.getEntityClassifications().stream().map(ec -> ec.getId()).collect(Collectors.toList());
+            dto.administrativeZoneRefs = crudEventFilter.getAdministrativeZones().stream().map(az -> az.getId()).collect(Collectors.toList());
         }
 
+        if (eventFilter.getOrganisation() != null) {
+            dto.organisationRef = eventFilter.getOrganisation().getId();
+        }
         return dto;
     }
     // TODO respect full vs 

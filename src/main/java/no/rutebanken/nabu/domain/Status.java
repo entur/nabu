@@ -3,7 +3,7 @@ package no.rutebanken.nabu.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.rutebanken.nabu.domain.event.TimeTableActionSubType;
+import no.rutebanken.nabu.domain.event.TimeTableAction;
 import org.apache.commons.lang.ObjectUtils;
 
 import javax.persistence.*;
@@ -36,7 +36,7 @@ public class Status implements Comparable<Status> {
     public Long jobId;
 
     @JsonProperty("action")
-    public TimeTableActionSubType action;
+    public TimeTableAction action;
 
     @JsonProperty("state")
     public State state;
@@ -49,7 +49,7 @@ public class Status implements Comparable<Status> {
     @Temporal(TemporalType.TIMESTAMP)
     public Date date;
 
-    public Status(String fileName, Long providerId, Long jobId, TimeTableActionSubType action, State state, String correlationId,
+    public Status(String fileName, Long providerId, Long jobId, TimeTableAction action, State state, String correlationId,
                          Date date, String referential) {
         this.fileName = fileName;
         this.providerId = providerId;
