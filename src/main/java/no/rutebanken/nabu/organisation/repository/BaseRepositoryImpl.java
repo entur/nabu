@@ -39,7 +39,7 @@ public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepo
         if (CodeSpaceEntity.class.isAssignableFrom(getDomainClass())) {
             query.setParameter("codeSpace", id.getCodeSpace());
         }
-
+        query.setHint("org.hibernate.cacheable", Boolean.TRUE);
         List<T> results = query.getResultList().stream().filter(r -> id.getType() == null || r.getType().equals(id.getType())).collect(Collectors.toList());
 
         if (results.size() == 1) {

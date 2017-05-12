@@ -1,14 +1,18 @@
 package no.rutebanken.nabu.organisation.model.organisation;
 
 import no.rutebanken.nabu.organisation.model.CodeSpaceEntity;
+import org.hibernate.annotations.*;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
-
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Table(uniqueConstraints = {
 		                           @UniqueConstraint(name = "org_unique_id", columnNames = {"code_space_pk", "privateCode", "entityVersion"})

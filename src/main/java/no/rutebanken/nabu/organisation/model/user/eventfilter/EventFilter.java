@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import no.rutebanken.nabu.event.filter.EventFilterMatcher;
 import no.rutebanken.nabu.organisation.model.VersionedEntity;
 import no.rutebanken.nabu.organisation.model.organisation.Organisation;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 
 /**
  * User defined filter for events.
  */
 @Entity
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public abstract class EventFilter {
 
     @Id

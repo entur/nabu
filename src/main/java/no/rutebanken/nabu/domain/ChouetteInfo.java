@@ -1,7 +1,11 @@
 package no.rutebanken.nabu.domain;
 
-import javax.persistence.*;
+import org.hibernate.annotations.*;
 
+import javax.persistence.*;
+import javax.persistence.Entity;
+
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 public class ChouetteInfo {
 

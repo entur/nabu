@@ -1,13 +1,15 @@
 package no.rutebanken.nabu.organisation.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.jdo.annotations.Unique;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 public class ContactDetails {
 	@Id
