@@ -4,12 +4,16 @@ import com.google.api.client.repackaged.com.google.common.base.Joiner;
 import no.rutebanken.nabu.organisation.model.VersionedEntity;
 import no.rutebanken.nabu.organisation.model.organisation.Organisation;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
-
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 @Table(name = "user_account", uniqueConstraints = {
 		                                                  @UniqueConstraint(name = "user_unique_username", columnNames = {"privateCode", "entityVersion"})
