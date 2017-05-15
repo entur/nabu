@@ -152,5 +152,14 @@ public abstract class Event implements Comparable<Event> {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "Event{" +
+                       "eventTime=" + eventTime +
+                       ", action='" + action + '\'' +
+                       ", correlationId='" + correlationId + '\'' +
+                       ", name='" + name + '\'' +
+                       ", externalId='" + externalId + '\'' +
+                       '}';
+    }
 }

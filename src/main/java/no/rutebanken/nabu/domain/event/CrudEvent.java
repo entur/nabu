@@ -143,4 +143,20 @@ public class CrudEvent extends Event {
         }
     }
 
+    @Override
+    public String toString() {
+        return "CrudEvent{" +
+                       "entityType='" + entityType + '\'' +
+                       ", entityClassifier='" + entityClassifier + '\'' +
+                       ", action='" + getAction() + '\'' +
+                       ", changeType='" + changeType + '\'' +
+                       ", version=" + version +
+                       ", oldValue='" + oldValue + '\'' +
+                       ", newValue='" + newValue + '\'' +
+                       ", eventTime=" + getEventTime() +
+                       ", correlationId='" + getCorrelationId() + '\'' +
+                       ", name='" + getName() + '\'' +
+                       ", externalId='" + getExternalId() + '\'' +
+                       '}';
+    }
 }

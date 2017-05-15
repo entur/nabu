@@ -115,4 +115,18 @@ public class JobEvent extends Event {
 
     }
 
+    @Override
+    public String toString() {
+        return "JobEvent{" +
+                       "domain='" + domain + '\'' +
+                       ", action='" + getAction() + '\'' +
+                       ", state=" + state +'\'' +
+                       ", providerId=" + providerId +'\'' +
+                       ", referential='" + referential + '\'' +
+                       ", eventTime=" + getEventTime() +
+                       ", correlationId='" + getCorrelationId() + '\'' +
+                       ", name='" + getName() + '\'' +
+                       ", externalId='" + getExternalId() + '\'' +
+                       '}';
+    }
 }
