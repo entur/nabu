@@ -70,12 +70,12 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
     public User createFromDTO(UserDTO dto, Class<User> clazz) {
         User entity = new User();
         entity.setPrivateCode(UUID.randomUUID().toString());
+        entity.setUsername(dto.username.toLowerCase());
+
         return updateFromDTO(dto, entity);
     }
 
     public User updateFromDTO(UserDTO dto, User entity) {
-        entity.setUsername(dto.username.toLowerCase());
-
         entity.setContactDetails(fromDTO(dto.contactDetails));
 
         if (dto.organisationRef != null) {
