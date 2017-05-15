@@ -5,7 +5,6 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
-import no.rutebanken.nabu.organisation.model.user.eventfilter.EventFilter;
 import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
@@ -73,6 +72,8 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
     private EventFilterDTO crudEventFilter() {
         EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD);
         eventFilterDTO.entityClassificationRefs.add(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID);
+
+        eventFilterDTO.administrativeZoneRefs.addAll(ResourceTestUtils.addAdminZones(restTemplate, "z1", "z2"));
         return eventFilterDTO;
     }
 
@@ -181,8 +182,7 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
     }
 
     private boolean isEqual(EventFilterDTO in, EventFilterDTO out) {
-        // TODO verify
-        return true;
+        return in.equals(out);
     }
 
     @Test

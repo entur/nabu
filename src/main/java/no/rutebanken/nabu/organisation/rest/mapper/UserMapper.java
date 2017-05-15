@@ -1,7 +1,6 @@
 package no.rutebanken.nabu.organisation.rest.mapper;
 
 import no.rutebanken.nabu.domain.event.JobEvent;
-import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.nabu.organisation.model.user.ContactDetails;
 import no.rutebanken.nabu.organisation.model.user.NotificationConfiguration;
@@ -112,7 +111,7 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         if (EventFilterDTO.EventFilterType.CRUD.equals(dto.type)) {
             CrudEventFilter crudEventFilter = new CrudEventFilter();
             crudEventFilter.setEntityClassifications(dto.entityClassificationRefs.stream().map(ecr -> entityClassificationRepository.getOneByPublicId(ecr)).collect(Collectors.toSet()));
-            if (CollectionUtils.isEmpty(dto.administrativeZoneRefs)) {
+            if (!CollectionUtils.isEmpty(dto.administrativeZoneRefs)) {
                 crudEventFilter.setAdministrativeZones(dto.administrativeZoneRefs.stream().map(adz -> administrativeZoneRepository.getOneByPublicId(adz)).collect(Collectors.toSet()));
             }
             eventFilter = crudEventFilter;
@@ -185,8 +184,8 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         } else if (eventFilter instanceof CrudEventFilter) {
             CrudEventFilter crudEventFilter = (CrudEventFilter) eventFilter;
             dto.type = EventFilterDTO.EventFilterType.CRUD;
-            dto.entityClassificationRefs = crudEventFilter.getEntityClassifications().stream().map(ec -> ec.getId()).collect(Collectors.toList());
-            dto.administrativeZoneRefs = crudEventFilter.getAdministrativeZones().stream().map(az -> az.getId()).collect(Collectors.toList());
+            dto.entityClassificationRefs = crudEventFilter.getEntityClassifications().stream().map(ec -> ec.getId()).collect(Collectors.toSet());
+            dto.administrativeZoneRefs = crudEventFilter.getAdministrativeZones().stream().map(az -> az.getId()).collect(Collectors.toSet());
         }
 
         if (eventFilter.getOrganisation() != null) {
@@ -194,7 +193,5 @@ public class UserMapper implements DTOMapper<User, UserDTO> {
         }
         return dto;
     }
-    // TODO respect full vs 
-
 
 }

@@ -5,9 +5,7 @@ import no.rutebanken.nabu.event.filter.EventMatcher;
 import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.PreRemove;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,11 +16,11 @@ import java.util.Set;
 @Entity
 public class CrudEventFilter extends EventFilter {
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @NotNull
     private Set<EntityClassification> entityClassifications;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<AdministrativeZone> administrativeZones;
 
     public Set<AdministrativeZone> getAdministrativeZones() {
@@ -46,7 +44,8 @@ public class CrudEventFilter extends EventFilter {
     }
 
     public void setEntityClassifications(Set<EntityClassification> entityClassifications) {
-        this.entityClassifications = entityClassifications;
+        getEntityClassifications().clear();
+        getEntityClassifications().addAll(entityClassifications);
     }
 
     @Override
