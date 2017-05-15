@@ -7,14 +7,26 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
 @Repository
 @Transactional
-public class JpaNotificationRepository extends SimpleJpaRepository<Notification, Long>  implements NotificationRepository  {
+public class JpaNotificationRepository extends SimpleJpaRepository<Notification, Long> implements NotificationRepository {
 
     private EntityManager entityManager;
 
     public JpaNotificationRepository(@Autowired EntityManager em) {
         super(Notification.class, em);
         entityManager = em;
+    }
+
+    @Override
+    public void clearAll(String domain) {
+        this.entityManager.createQuery("delete from Notification n where n.event in (select je from JobEvent je where je.domain=:domain)").setParameter("domain", domain).executeUpdate();
+    }
+
+
+    @Override
+    public void clear(String domain, Long providerId) {
+        this.entityManager.createQuery("delete from Notification n where  n.event in (select je from JobEvent je where je.domain=:domain and je.providerId=:providerId)").setParameter("domain", domain).setParameter("providerId", providerId).executeUpdate();
     }
 }

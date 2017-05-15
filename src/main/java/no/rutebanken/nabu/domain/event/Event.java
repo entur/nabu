@@ -80,6 +80,14 @@ public abstract class Event implements Comparable<Event> {
         this.externalId = externalId;
     }
 
+    public Long getPk() {
+        return pk;
+    }
+
+    public void setPk(Long pk) {
+        this.pk = pk;
+    }
+
     @Override
     public int compareTo(Event o) {
         int corrCmp = ObjectUtils.compare(correlationId, o.correlationId);

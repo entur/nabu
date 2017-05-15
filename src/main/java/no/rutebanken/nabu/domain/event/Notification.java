@@ -32,6 +32,14 @@ public class Notification {
         this.status = NotificationStatus.READY;
     }
 
+    public Long getPk() {
+        return pk;
+    }
+
+    public void setPk(Long pk) {
+        this.pk = pk;
+    }
+
     public Event getEvent() {
         return event;
     }

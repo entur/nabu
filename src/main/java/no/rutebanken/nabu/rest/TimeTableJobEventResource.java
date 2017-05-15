@@ -2,6 +2,7 @@ package no.rutebanken.nabu.rest;
 
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.event.EventService;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.JobStatus;
 import no.rutebanken.nabu.rest.domain.JobStatusEvent;
@@ -33,7 +34,7 @@ public class TimeTableJobEventResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private EventRepository eventRepository;
+    private EventService eventService;
 
     private static final String STATUS_JOB_TYPE = JobEvent.JobDomain.TIMETABLE.name();
 
@@ -54,7 +55,7 @@ public class TimeTableJobEventResource {
         List<String> externalIds = jobIds == null ? null : jobIds.stream().map(jobId -> jobId.toString()).collect(Collectors.toList());
 
         try {
-            List<JobEvent> eventsForProvider = eventRepository.findTimetableJobEvents(providerId, instantFrom, instantTo,
+            List<JobEvent> eventsForProvider = eventService.findTimetableJobEvents(providerId, instantFrom, instantTo,
                     actions, convertEnums(states, JobState.class), externalIds, fileNames);
             return convert(eventsForProvider);
         } catch (Exception e) {
@@ -66,14 +67,14 @@ public class TimeTableJobEventResource {
     @DELETE
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
     public void clearAllStatus() {
-        eventRepository.clearAll(STATUS_JOB_TYPE);
+        eventService.clearAll(STATUS_JOB_TYPE);
     }
 
     @DELETE
     @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
     public void clearStatusForProvider(@PathParam("providerId") Long providerId) {
-        eventRepository.clear(STATUS_JOB_TYPE, providerId);
+        eventService.clear(STATUS_JOB_TYPE, providerId);
     }
 
     public List<JobStatus> convert(List<JobEvent> statusForProvider) {

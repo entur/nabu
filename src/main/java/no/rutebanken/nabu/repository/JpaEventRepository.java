@@ -93,8 +93,6 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
                        .getResultList();
     }
 
-    // TODO notifications
-
     @Override
     public void clearAll(String domain) {
         this.entityManager.createQuery("delete from JobEvent je where je.domain=:domain").setParameter("domain", domain).executeUpdate();
