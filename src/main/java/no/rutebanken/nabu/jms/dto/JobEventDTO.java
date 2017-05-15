@@ -25,8 +25,6 @@ public class JobEventDTO {
 
     public String referential;
 
-    public Long version;
-
     public String name;
 
     public static JobEventDTO fromString(String string) {
