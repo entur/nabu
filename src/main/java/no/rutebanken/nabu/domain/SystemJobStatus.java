@@ -7,7 +7,7 @@ import java.time.Instant;
 
 @Entity
 @Table(uniqueConstraints = {
-                                   @UniqueConstraint(name = "system_job_status_unique", columnNames = {"jobDomain", "jobType", "state"})
+                                   @UniqueConstraint(name = "system_job_status_unique", columnNames = {"jobDomain", "action", "state"})
 })
 public class SystemJobStatus {
 
@@ -17,15 +17,15 @@ public class SystemJobStatus {
 
     private String jobDomain;
 
-    private String jobType;
+    private String action;
 
     private JobState state;
 
     private Instant lastStatusTime;
 
-    public SystemJobStatus(String jobDomain, String jobType, JobState state, Instant lastStatusTime) {
+    public SystemJobStatus(String jobDomain, String action, JobState state, Instant lastStatusTime) {
         this.jobDomain = jobDomain;
-        this.jobType = jobType;
+        this.action = action;
         this.state = state;
         this.lastStatusTime = lastStatusTime;
     }
@@ -42,12 +42,12 @@ public class SystemJobStatus {
         this.jobDomain = jobDomain;
     }
 
-    public String getJobType() {
-        return jobType;
+    public String getAction() {
+        return action;
     }
 
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public JobState getState() {
@@ -74,7 +74,7 @@ public class SystemJobStatus {
         SystemJobStatus that = (SystemJobStatus) o;
 
         if (jobDomain != null ? !jobDomain.equals(that.jobDomain) : that.jobDomain != null) return false;
-        if (jobType != null ? !jobType.equals(that.jobType) : that.jobType != null) return false;
+        if (action != null ? !action.equals(that.action) : that.action != null) return false;
         if (state != that.state) return false;
         return lastStatusTime != null ? lastStatusTime.equals(that.lastStatusTime) : that.lastStatusTime == null;
     }
@@ -82,7 +82,7 @@ public class SystemJobStatus {
     @Override
     public int hashCode() {
         int result = jobDomain != null ? jobDomain.hashCode() : 0;
-        result = 31 * result + (jobType != null ? jobType.hashCode() : 0);
+        result = 31 * result + (action != null ? action.hashCode() : 0);
         result = 31 * result + (state != null ? state.hashCode() : 0);
         result = 31 * result + (lastStatusTime != null ? lastStatusTime.hashCode() : 0);
         return result;
@@ -92,7 +92,7 @@ public class SystemJobStatus {
     public String toString() {
         return "SystemJobStatus{" +
                        "jobDomain='" + jobDomain + '\'' +
-                       ", jobType='" + jobType + '\'' +
+                       ", action='" + action + '\'' +
                        ", state=" + state +
                        ", lastStatusTime=" + lastStatusTime +
                        '}';

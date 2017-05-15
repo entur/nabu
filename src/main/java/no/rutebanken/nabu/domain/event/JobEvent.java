@@ -29,7 +29,7 @@ public class JobEvent extends Event {
     }
 
     public JobEvent(String jobDomain, String name, Long providerId, String externalId, String action, JobState state, String correlationId, Instant eventTime, String referential) {
-        this.setJobType(jobDomain);
+        this.setDomain(jobDomain);
         this.setReferential(referential);
         this.setEventTime(eventTime);
         this.setCorrelationId(correlationId);
@@ -44,12 +44,12 @@ public class JobEvent extends Event {
         return domain;
     }
 
-    public void setDomain(JobDomain jobDomain) {
-        this.domain = jobDomain == null ? null : jobDomain.name();
+    public void setDomain(JobDomain domain) {
+        this.domain = domain == null ? null : domain.name();
     }
 
-    public void setJobType(String jobType) {
-        this.domain = jobType;
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 
     public JobState getState() {

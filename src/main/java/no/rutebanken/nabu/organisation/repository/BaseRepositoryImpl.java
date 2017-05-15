@@ -3,11 +3,13 @@ package no.rutebanken.nabu.organisation.repository;
 import no.rutebanken.nabu.organisation.model.CodeSpaceEntity;
 import no.rutebanken.nabu.organisation.model.Id;
 import no.rutebanken.nabu.organisation.model.VersionedEntity;
+import org.hibernate.annotations.QueryHints;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.QueryHint;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,7 +41,7 @@ public class BaseRepositoryImpl<T extends VersionedEntity> extends SimpleJpaRepo
         if (CodeSpaceEntity.class.isAssignableFrom(getDomainClass())) {
             query.setParameter("codeSpace", id.getCodeSpace());
         }
-        query.setHint("org.hibernate.cacheable", Boolean.TRUE);
+        query.setHint(QueryHints.CACHEABLE, Boolean.TRUE);
         List<T> results = query.getResultList().stream().filter(r -> id.getType() == null || r.getType().equals(id.getType())).collect(Collectors.toList());
 
         if (results.size() == 1) {

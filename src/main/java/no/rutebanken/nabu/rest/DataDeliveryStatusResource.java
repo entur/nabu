@@ -36,7 +36,7 @@ public class DataDeliveryStatusResource {
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public DataDeliveryStatus getLatestDataDeliveryStatus(@PathParam("providerId") Long providerId) {
 
-        List<JobEvent> statusList = eventRepository.getLatestDeliveryStatusForProvider(JobEvent.JobDomain.TIMETABLE.toString(), providerId);
+        List<JobEvent> statusList = eventRepository.getLatestTimetableFileTransfer(providerId);
 
 
         return toDataDeliveryStatus(statusList);
@@ -58,7 +58,7 @@ public class DataDeliveryStatusResource {
             }
 
         }
-        
+
         return new DataDeliveryStatus(state, latestDeliveryDate);
     }
 }

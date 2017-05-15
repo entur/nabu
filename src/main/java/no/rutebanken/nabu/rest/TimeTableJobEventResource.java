@@ -28,7 +28,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 @Produces("application/json")
 @Path("/jobs")
-public class StatusResource {
+public class TimeTableJobEventResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -54,7 +54,7 @@ public class StatusResource {
         List<String> externalIds = jobIds == null ? null : jobIds.stream().map(jobId -> jobId.toString()).collect(Collectors.toList());
 
         try {
-            List<JobEvent> eventsForProvider = eventRepository.findJobEvents(STATUS_JOB_TYPE, providerId, instantFrom, instantTo,
+            List<JobEvent> eventsForProvider = eventRepository.findTimetableJobEvents(providerId, instantFrom, instantTo,
                     actions, convertEnums(states, JobState.class), externalIds, fileNames);
             return convert(eventsForProvider);
         } catch (Exception e) {

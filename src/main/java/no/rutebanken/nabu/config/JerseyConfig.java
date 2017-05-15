@@ -17,7 +17,7 @@ public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
         register(MultiPartFeature.class);
         register(FileUploadResource.class);
-        register(StatusResource.class);
+        register(TimeTableJobEventResource.class);
         register(SystemJobResource.class);
         register(DataDeliveryStatusResource.class);
         register(ProviderResource.class);

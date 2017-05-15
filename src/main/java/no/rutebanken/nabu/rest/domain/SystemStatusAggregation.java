@@ -29,7 +29,7 @@ public class SystemStatusAggregation {
 
 
     public SystemStatusAggregation(SystemJobStatus in) {
-        this.jobType = in.getJobType();
+        this.jobType = in.getAction();
         this.jobDomain = in.getJobDomain();
     }
 

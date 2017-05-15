@@ -4,23 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.persistence.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Date;
-
-@Entity
-@Table(name = "system_status", indexes = {@Index(name = "ss_status", columnList = "action,correlationId,date"),
-		                                         @Index(name = "agg_status", columnList = "jobType,state,date")})
+// TODO remove when Marduk switches to JobEvent
 public class SystemStatus {
 
 	public enum Action {FILE_TRANSFER, EXPORT, UPDATE, BUILD}
 
 	public enum State {PENDING, STARTED, TIMEOUT, FAILED, OK}
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	public Long id;
 
 	@JsonProperty("correlation_id")
 	public String correlationId;
@@ -59,14 +51,6 @@ public class SystemStatus {
 	}
 
 
-	public SystemStatus(String jobType, String correlationId, Action action, State state, String entity, String source, String target, Date date) {
-		this(jobType, correlationId, state, date);
-		this.entity = entity;
-		this.source = source;
-		this.target = target;
-		this.action = action;
-	}
-
 	public static SystemStatus fromString(String string) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -85,20 +69,5 @@ public class SystemStatus {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		SystemStatus that = (SystemStatus) o;
-
-		return id != null ? id.equals(that.id) : that.id == null;
-	}
-
-	@Override
-	public int hashCode() {
-		return id != null ? id.hashCode() : 0;
 	}
 }

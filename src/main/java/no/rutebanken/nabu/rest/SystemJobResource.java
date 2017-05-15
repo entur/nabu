@@ -47,7 +47,7 @@ public class SystemJobResource {
 
         for (SystemJobStatus in : systemStatuses) {
 
-            Pair<String, String> key = Pair.of(in.getJobDomain(), in.getJobType());
+            Pair<String, String> key = Pair.of(in.getJobDomain(), in.getAction());
             SystemStatusAggregation currentAggregation = aggregationPerJobType.get(key);
 
             if (currentAggregation == null) {

@@ -2,7 +2,6 @@ package no.rutebanken.nabu.rest;
 
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
-import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.rest.domain.JobStatus;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class StatusResourceTest {
+public class TimeTableJobEventResourceTest {
 
     private static final String ACTION1="IMPORT";
     private static final String ACTION2="EXPORT";
@@ -35,7 +34,7 @@ public class StatusResourceTest {
         rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, "2", ACTION1, JobState.FAILED, "a", t0.plusMillis(3), "ost"));
 
 
-        List<JobStatus> listStatus = new StatusResource().convert(rawEvents);
+        List<JobStatus> listStatus = new TimeTableJobEventResource().convert(rawEvents);
 
         Assert.assertNotNull(listStatus);
         Assert.assertEquals(2, listStatus.size());

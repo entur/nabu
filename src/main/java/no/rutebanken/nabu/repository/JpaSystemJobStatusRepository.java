@@ -1,6 +1,8 @@
 package no.rutebanken.nabu.repository;
 
 import no.rutebanken.nabu.domain.SystemJobStatus;
+import no.rutebanken.nabu.domain.event.JobState;
+import org.hibernate.annotations.QueryHints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -26,7 +28,7 @@ public class JpaSystemJobStatusRepository extends SimpleJpaRepository<SystemJobS
     }
 
     @Override
-    public List<SystemJobStatus> find(List<String> jobDomains, List<String> jobTypes) {
+    public List<SystemJobStatus> find(List<String> jobDomains, List<String> actions) {
 
         StringBuilder jpql = new StringBuilder("select s from SystemJobStatus s ");
 
@@ -40,14 +42,31 @@ public class JpaSystemJobStatusRepository extends SimpleJpaRepository<SystemJobS
             firstCrit = false;
         }
 
-        if (!CollectionUtils.isEmpty(jobTypes)) {
-            jpql.append(firstCrit ? " where " : " and ").append(" s.jobType in (:jobTypes) ");
-            parameters.put("jobTypes", jobTypes);
+        if (!CollectionUtils.isEmpty(actions)) {
+            jpql.append(firstCrit ? " where " : " and ").append(" s.action in (:actions) ");
+            parameters.put("actions", actions);
             firstCrit = false;
         }
 
         TypedQuery query = entityManager.createQuery(jpql.toString(), SystemJobStatus.class);
+        query.setHint(QueryHints.CACHEABLE, Boolean.TRUE);
         parameters.forEach((key, value) -> query.setParameter(key, value));
         return query.getResultList();
+    }
+
+    @Override
+    public SystemJobStatus findByJobDomainAndActionAndState(String jobDomain, String action, JobState state) {
+        return entityManager.createQuery("select s from SystemJobStatus s where s.jobDomain=:jobDomain " +
+                                                 "and s.action=:action and s.state=:state", SystemJobStatus.class)
+                       .setParameter("jobDomain", jobDomain).setParameter("action", action)
+                       .setParameter("state", state).setHint(QueryHints.CACHEABLE, Boolean.TRUE).getSingleResult();
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 }

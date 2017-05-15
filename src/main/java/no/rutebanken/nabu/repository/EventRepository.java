@@ -10,14 +10,13 @@ import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    List<JobEvent> findJobEvents(String jobType, Long providerId, Instant from, Instant to, List<String> actions,
+    List<JobEvent> findTimetableJobEvents(Long providerId, Instant from, Instant to, List<String> actions,
                                         List<JobState> states, List<String> externalIds, List<String> fileNames);
 
-    List<JobEvent> getLatestDeliveryStatusForProvider(String jobType, Long providerId);
+    List<JobEvent> getLatestTimetableFileTransfer(Long providerId);
 
-    void clearAll(String jobType);
+    void clearAll(String domain);
 
-    void clear(String jobType, Long providerId);
-
+    void clear(String domain, Long providerId);
 
 }

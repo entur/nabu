@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DataDeliveryStatusResourceTest {
+public class DataDeliveryTimeTableJobEventResourceTest {
 
     private static final String JOB_DOMAIN = JobEvent.JobDomain.TIMETABLE.toString();
 

@@ -27,8 +27,10 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
 
 
     @Override
-    public List<JobEvent> findJobEvents(String domain, Long providerId, Instant from, Instant to, List<String> actions,  List<JobState> states, List<String> externalIds, List<String> fileNames) {
-        StringBuilder sb = new StringBuilder("SELECT sf FROM JobEvent sf WHERE sf.correlationId in (select s.correlationId from JobEvent s where s.providerId = :providerId");
+    public List<JobEvent> findTimetableJobEvents(Long providerId, Instant from, Instant to, List<String> actions, List<JobState> states, List<String> externalIds, List<String> fileNames) {
+        StringBuilder sb = new StringBuilder("SELECT sf FROM JobEvent sf WHERE sf.correlationId in " +
+                                                     "(select s.correlationId from JobEvent s where  s.domain=:domain  " +
+                                                     "and s.providerId = :providerId");
 
         Map<String, Object> params = new HashMap<>();
         if (from != null) {
@@ -58,12 +60,13 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
 
         if (params.isEmpty()) {
             // Use simpler and faster query if only providerId is set
-            return getAllJobEventsForProvider(domain, providerId);
+            return getAllJobEventsForProvider(JobEvent.JobDomain.TIMETABLE.toString(), providerId);
         }
 
         sb.append(") ORDER by sf.correlationId, sf.eventTime");
         TypedQuery<JobEvent> query = entityManager.createQuery(sb.toString(), JobEvent.class);
         params.put("providerId", providerId);
+        params.put("domain", JobEvent.JobDomain.TIMETABLE.toString());
         params.forEach((param, value) -> query.setParameter(param, value));
 
         return query.getResultList();
@@ -79,14 +82,14 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
 
 
     @Override
-    public List<JobEvent> getLatestDeliveryStatusForProvider(String domain, Long providerId) {
+    public List<JobEvent> getLatestTimetableFileTransfer(Long providerId) {
         return this.entityManager.createQuery("select s1 from JobEvent s1 where s1.domain=:domain and s1.correlationId= " +
                                                       "(select s2.correlationId from JobEvent s2 where  s2.domain=:domain and s2.action=:action and s2.eventTime=" +
                                                       "(select max(s3.eventTime) from JobEvent s3 where  s3.domain=:domain and s3.providerId=:providerId and s3.action=:action and s3.name not like :fileNameExcludePattern))")
                        .setParameter("action", TimeTableAction.FILE_TRANSFER.toString())
                        .setParameter("providerId", providerId)
                        .setParameter("fileNameExcludePattern", "reimport-%")
-                       .setParameter("domain",domain)
+                       .setParameter("domain", JobEvent.JobDomain.TIMETABLE.toString())
                        .getResultList();
     }
 

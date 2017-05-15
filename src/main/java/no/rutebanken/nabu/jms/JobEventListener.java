@@ -1,9 +1,9 @@
 package no.rutebanken.nabu.jms;
 
 import no.rutebanken.nabu.domain.event.Event;
-import no.rutebanken.nabu.jms.dto.EventDTO;
+import no.rutebanken.nabu.event.EventService;
+import no.rutebanken.nabu.jms.dto.JobEventDTO;
 import no.rutebanken.nabu.jms.mapper.EventMapper;
-import no.rutebanken.nabu.repository.EventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,23 +11,22 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EventListener {
+public class JobEventListener {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private EventRepository eventRepository;
+    private EventService eventService;
 
     private EventMapper eventMapper = new EventMapper();
 
-    @JmsListener(destination = "NabuEvent")
+    @JmsListener(destination = "JobEventQueue")
     public void processMessage(String content) {
-        EventDTO dto = EventDTO.fromString(content);
+        JobEventDTO dto = JobEventDTO.fromString(content);
 
-        Event event = eventMapper.toEvent(dto);
-        logger.info("Received event: " + event);
-        eventRepository.save(event);
+        Event event = eventMapper.toJobEvent(dto);
+        logger.info("Received job event: " + event);
+        eventService.addEvent(event);
     }
-
 
 }

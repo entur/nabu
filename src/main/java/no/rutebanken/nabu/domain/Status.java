@@ -4,24 +4,19 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
-import org.apache.commons.lang.ObjectUtils;
 
-import javax.persistence.*;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Date;
 
-@Entity
-@Table(name = "status", indexes = {@Index(name = "i_status", columnList = "providerId,correlationId,date")})
-public class Status implements Comparable<Status> {
+// TODO remove when Marduk switches to JobEvent
+public class Status  {
 
     public enum State {
         PENDING, STARTED, TIMEOUT, FAILED, OK, DUPLICATE
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
 
     @JsonProperty("correlation_id")
     public String correlationId;
@@ -46,7 +41,6 @@ public class Status implements Comparable<Status> {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "CET")
     @JsonProperty("date")
-    @Temporal(TemporalType.TIMESTAMP)
     public Date date;
 
     public Status(String fileName, Long providerId, Long jobId, TimeTableAction action, State state, String correlationId,
@@ -85,41 +79,4 @@ public class Status implements Comparable<Status> {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Status status = (Status) o;
-
-        return id != null ? id.equals(status.id) : status.id == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
-    @Override
-    public int compareTo(Status o) {
-        int corrCmp = ObjectUtils.compare(correlationId, o.correlationId);
-        if (corrCmp != 0) {
-            return corrCmp;
-        }
-
-        int dateCmp = ObjectUtils.compare(date, o.date);
-        if (dateCmp != 0) {
-            return dateCmp;
-        }
-        int actionCmp = ObjectUtils.compare(action, o.action);
-        if (actionCmp != 0) {
-            return actionCmp;
-        }
-        int stateCmp = ObjectUtils.compare(state, o.state);
-        if (stateCmp != 0) {
-            return stateCmp;
-        }
-
-        return ObjectUtils.compare(id, o.id);
-    }
 }

@@ -1,5 +1,7 @@
 package no.rutebanken.nabu.organisation.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import no.rutebanken.nabu.NabuTestApp;
 import no.rutebanken.nabu.organisation.model.CodeSpace;
 import no.rutebanken.nabu.organisation.model.organisation.Authority;
@@ -10,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.io.StringWriter;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,classes = NabuTestApp.class)
@@ -39,4 +44,16 @@ public abstract class BaseIntegrationTest {
 		defaultOrganisation = organisationRepository.saveAndFlush(authority);
 	}
 
+
+	protected String toJson(Object o){
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
+			StringWriter writer = new StringWriter();
+			mapper.writeValue(writer, o);
+			return writer.toString();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

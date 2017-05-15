@@ -1,7 +1,8 @@
 package no.rutebanken.nabu.jms;
 
-import no.rutebanken.nabu.domain.Status;
+import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.event.EventService;
+import no.rutebanken.nabu.jms.dto.CrudEventDTO;
 import no.rutebanken.nabu.jms.mapper.EventMapper;
 import no.rutebanken.nabu.repository.EventRepository;
 import org.slf4j.Logger;
@@ -9,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
-// Remove when marduk is updated to send on Event format
+
 @Component
-public class StatusListener {
+public class CrudEventListener {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -20,12 +21,14 @@ public class StatusListener {
 
     private EventMapper eventMapper = new EventMapper();
 
-    @JmsListener(destination = "ExternalProviderStatus")
+    @JmsListener(destination = "CrudEventQueue")
     public void processMessage(String content) {
-        Status status = Status.fromString(content);
-        logger.info("Received job status update: " + status.toString());
+        CrudEventDTO dto = CrudEventDTO.fromString(content);
 
-        eventService.addEvent(eventMapper.toJobEvent(status));
+        Event event = eventMapper.toCrudEvent(dto);
+        logger.info("Received crud event: " + event);
+        eventService.addEvent(event);
     }
+
 
 }

@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.organisation.rest.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.organisation.rest.dto.organisation.OrganisationDTO;
@@ -7,6 +8,7 @@ import no.rutebanken.nabu.organisation.rest.dto.organisation.OrganisationDTO;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventFilterDTO {
 
     public enum EventFilterType {JOB, CRUD}
