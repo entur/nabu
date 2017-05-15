@@ -47,7 +47,7 @@ public class TimeTableJobEventResource {
                                              @QueryParam("fileName") List<String> fileNames) {
 
         SecurityContextHolder.getContext().getAuthentication();
-        logger.info("Returning status for provider with id '" + providerId + "'");
+        logger.debug("Returning status for provider with id '" + providerId + "'");
 
         Instant instantFrom = from == null ? null : from.toInstant();
         Instant instantTo = to == null ? null : to.toInstant();
