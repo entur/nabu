@@ -1,6 +1,8 @@
 package no.rutebanken.nabu.repository;
 
 import no.rutebanken.nabu.domain.event.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,9 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static no.rutebanken.nabu.repository.DbStatusChecker.isPostgresUp;
+
 @Repository
 @Transactional
-public class JpaEventRepository extends SimpleJpaRepository<Event, Long> implements EventRepository {
+public class JpaEventRepository extends SimpleJpaRepository<Event, Long> implements EventRepository, DbStatus {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private EntityManager entityManager;
 
@@ -102,6 +108,12 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
     @Override
     public void clear(String domain, Long providerId) {
         this.entityManager.createQuery("delete from JobEvent je where je.domain=:domain and je.providerId=:providerId").setParameter("domain", domain).setParameter("providerId", providerId).executeUpdate();
+    }
+
+
+    @Override
+    public boolean isDbUp() {
+        return isPostgresUp(entityManager, logger);
     }
 
 }
