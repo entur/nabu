@@ -59,6 +59,7 @@ public class EventMapper {
         event.setEventTime(dto.eventTime);
         event.setExternalId(dto.externalId);
         event.setName(dto.name);
+        event.setChangeType(dto.changeType);
 
         event.setEntityType(dto.entityType);
         event.setVersion(dto.version);

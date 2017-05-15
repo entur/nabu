@@ -1,8 +1,7 @@
 package no.rutebanken.nabu.organisation.model.user.eventfilter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import no.rutebanken.nabu.event.filter.EventFilterMatcher;
-import no.rutebanken.nabu.organisation.model.VersionedEntity;
+import no.rutebanken.nabu.event.filter.EventMatcher;
 import no.rutebanken.nabu.organisation.model.organisation.Organisation;
 import org.hibernate.annotations.*;
 
@@ -38,5 +37,5 @@ public abstract class EventFilter {
      * <p>
      * (NB! This couples Organisation model with event model needs to be revised if applications are separated)
      */
-    public abstract EventFilterMatcher getMatcher();
+    public abstract EventMatcher getMatcher();
 }

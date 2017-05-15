@@ -1,8 +1,8 @@
 package no.rutebanken.nabu.organisation.model.user.eventfilter;
 
 import no.rutebanken.nabu.domain.event.JobState;
-import no.rutebanken.nabu.event.filter.EventFilterMatcher;
-import no.rutebanken.nabu.event.filter.JobEventFilterMatcher;
+import no.rutebanken.nabu.event.filter.EventMatcher;
+import no.rutebanken.nabu.event.filter.JobEventMatcher;
 
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -47,7 +47,7 @@ public class JobEventFilter extends EventFilter {
     }
 
     @Override
-    public EventFilterMatcher getMatcher() {
-        return new JobEventFilterMatcher(this);
+    public EventMatcher getMatcher() {
+        return new JobEventMatcher(this);
     }
 }

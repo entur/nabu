@@ -1,13 +1,12 @@
 package no.rutebanken.nabu.organisation.model.user.eventfilter;
 
-import no.rutebanken.nabu.event.filter.CrudEventFilterMatcher;
-import no.rutebanken.nabu.event.filter.EventFilterMatcher;
+import no.rutebanken.nabu.event.filter.CrudEventMatcher;
+import no.rutebanken.nabu.event.filter.EventMatcher;
 import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.PreRemove;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -51,8 +50,8 @@ public class CrudEventFilter extends EventFilter {
     }
 
     @Override
-    public EventFilterMatcher getMatcher() {
-        return new CrudEventFilterMatcher(this);
+    public EventMatcher getMatcher() {
+        return new CrudEventMatcher(this);
     }
 
     @PreRemove

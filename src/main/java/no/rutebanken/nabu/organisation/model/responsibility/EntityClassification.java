@@ -16,6 +16,8 @@ import javax.validation.constraints.NotNull;
 })
 public class EntityClassification extends CodeSpaceEntity implements TypeEntity {
 
+    public static final String ALL_TYPES = "*";
+
     @NotNull
     @ManyToOne
     private EntityType entityType;
@@ -44,5 +46,11 @@ public class EntityClassification extends CodeSpaceEntity implements TypeEntity 
     @Override
     public String getType() {
         return "TypeOf" + entityType.getPrivateCode();
+    }
+
+    public boolean isMatch(String entityClassificationCode) {
+        if (ALL_TYPES.equals(getPrivateCode())) {
+            return true;
+        } else return getPrivateCode().equals(entityClassificationCode);
     }
 }
