@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 /**
- *
+ * Create notifications for user with configured events filter matching a events.
  */
 @Service
 public class UserNotificationEventHandler implements EventHandler {
