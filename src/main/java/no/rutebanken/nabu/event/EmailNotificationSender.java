@@ -32,17 +32,21 @@ public class EmailNotificationSender implements NotificationProcessor {
 
     private static final String EMAIL_SUBJECT = "Entur notifications";
 
-    @Value("${email.account.username}")
-    private String emailAccountUsername;
-
-    @Value("${email.account.password}")
-    private String emailAccountPassword;
-
-    @Value("${email.host.name}")
-    private String emailHostName;
-
-    @Value("${email.smtp.port:465}")
-    private int emailSmtpPort;
+    //    @Value("${email.account.username}")
+//    private String emailAccountUsername;
+//
+//    @Value("${email.account.password}")
+//    private String emailAccountPassword;
+//
+//    @Value("${email.host.name}")
+//    private String emailHostName;
+//
+//    @Value("${email.smtp.port:465}")
+//    private int emailSmtpPort;
+//
+//
+    @Value("${email.max.length:8000}")
+    private int emailMaxLength;
 
     @Override
     public void processNotificationsForUser(User user, Set<Notification> notifications) {
@@ -64,27 +68,26 @@ public class EmailNotificationSender implements NotificationProcessor {
     }
 
     protected boolean sendEmail(String to, String msg) {
-        try {
-            Email email = new SimpleEmail();
-            email.setHostName(emailHostName);
-            email.setSmtpPort(emailSmtpPort);
-            email.setAuthenticator(new DefaultAuthenticator(emailAccountUsername, emailAccountPassword));
-            email.setSSLOnConnect(true);
-            email.setFrom(emailAccountUsername);
-            email.setSubject(EMAIL_SUBJECT);
-            email.setMsg(msg);
-            email.addTo(to);
-
-            email.send();
-        } catch (EmailException emailException) {
-            logger.warn("Could not send notification email to: " + to + " because of : " + emailException.getMessage(), emailException);
-            return false;
-        }
+//        try {
+//            Email email = new SimpleEmail();
+//            email.setHostName(emailHostName);
+//            email.setSmtpPort(emailSmtpPort);
+//            email.setAuthenticator(new DefaultAuthenticator(emailAccountUsername, emailAccountPassword));
+//            email.setSSLOnConnect(true);
+//            email.setFrom(emailAccountUsername);
+//            email.setSubject(EMAIL_SUBJECT);
+//            email.setMsg(msg);
+//            email.addTo(to);
+//
+//            email.send();
+//        } catch (EmailException emailException) {
+//            logger.warn("Could not send notification email to: " + to + " because of : " + emailException.getMessage(), emailException);
+//            return false;
+//        }
+        logger.info("Missing email setup. Msg not sent: " + msg);
         return true;
     }
 
-
-    private static final int EMAIL_MAX_LENGHT = 8000;
 
     private String formatMessage(Set<Notification> notifications) {
         SortedSet<Event> sortedEvents = notifications.stream().map(n -> n.getEvent()).collect(Collectors.toCollection(() -> new TreeSet<>()));
@@ -97,8 +100,8 @@ public class EmailNotificationSender implements NotificationProcessor {
         // TODO formatting
         sortedEvents.forEach(e -> contentBuilder.append(e.toString()).append("\n"));
 
-        if (contentBuilder.length() > EMAIL_MAX_LENGHT) {
-            return contentBuilder.substring(0, EMAIL_MAX_LENGHT) + "\n... (Content has been truncated)";
+        if (contentBuilder.length() > emailMaxLength) {
+            return contentBuilder.substring(0, emailMaxLength) + "\n... (Content has been truncated)";
         }
 
         return contentBuilder.toString();
