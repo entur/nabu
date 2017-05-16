@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
 
 public class JpaNotificationRepositoryTest extends BaseIntegrationTest {
 
@@ -68,4 +70,36 @@ public class JpaNotificationRepositoryTest extends BaseIntegrationTest {
         Assert.assertNotNull(notificationRepository.findOne(crudEventNotification.getPk()));
     }
 
+    @Test
+    public void findByUserNameAndTypeAndStatus() {
+        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
+        eventRepository.save(Sets.newHashSet(event));
+
+        Notification matchingEventNotification = new Notification("user1", NotificationType.WEB, event);
+        Notification otherUserName = new Notification("otherUser", NotificationType.WEB, event);
+        Notification otherType = new Notification("user1", NotificationType.EMAIL, event);
+        Notification otherStatus = new Notification("user1", NotificationType.WEB, event);
+        otherStatus.setStatus(Notification.NotificationStatus.COMPLETE);
+        notificationRepository.save(Sets.newHashSet(matchingEventNotification, otherUserName, otherType, otherStatus));
+
+
+        List<Notification> matchingNotifications = notificationRepository.findByUserNameAndTypeAndStatus("user1", NotificationType.WEB, Notification.NotificationStatus.READY);
+        Assert.assertEquals(Arrays.asList(matchingEventNotification), matchingNotifications);
+    }
+
+    @Test
+    public void findByTypeAndStatus() {
+        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
+        eventRepository.save(Sets.newHashSet(event));
+
+        Notification matchingEventNotification = new Notification("user1", NotificationType.WEB, event);
+        Notification otherType = new Notification("user1", NotificationType.EMAIL, event);
+        Notification otherStatus = new Notification("user1", NotificationType.WEB, event);
+        otherStatus.setStatus(Notification.NotificationStatus.COMPLETE);
+        notificationRepository.save(Sets.newHashSet(matchingEventNotification, otherType, otherStatus));
+
+
+        List<Notification> matchingNotifications = notificationRepository.findByTypeAndStatus(NotificationType.WEB, Notification.NotificationStatus.READY);
+        Assert.assertEquals(Arrays.asList(matchingEventNotification), matchingNotifications);
+    }
 }

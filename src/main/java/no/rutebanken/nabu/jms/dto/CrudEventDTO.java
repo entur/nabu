@@ -19,8 +19,6 @@ public class CrudEventDTO {
 
     public String entityClassifier;
 
-    public JobState state;
-
     public String action;
 
     public String externalId;
