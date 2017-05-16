@@ -3,6 +3,7 @@ package no.rutebanken.nabu.organisation.rest.validation;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
+import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.UserDTO;
@@ -80,6 +81,19 @@ public class UserValidatorTest {
         userValidator.validateCreate(user);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void validateInvalidEmailFails() {
+        UserDTO user = minimalUser();
+        user.contactDetails=new ContactDetailsDTO("first","last","34234","illegalEmail");
+        userValidator.validateCreate(user);
+    }
+
+    @Test
+    public void validateValidEmailOK() {
+        UserDTO user = minimalUser();
+        user.contactDetails=new ContactDetailsDTO("first","last","34234","legal@email.com");
+        userValidator.validateCreate(user);
+    }
 
     protected UserDTO minimalUser() {
         UserDTO userDTO = new UserDTO();

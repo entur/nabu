@@ -40,14 +40,14 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void crudUser() throws Exception {
-        ContactDetailsDTO createContactDetails = new ContactDetailsDTO("first", "last", "email", "phone");
+        ContactDetailsDTO createContactDetails = new ContactDetailsDTO("first", "last", "phone", "email@email.com");
         UserDTO createUser = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, createContactDetails);
         createUser.notifications = Arrays.asList(new NotificationConfigDTO(NotificationType.EMAIL, crudEventFilter()),
                 new NotificationConfigDTO(NotificationType.WEB, jobEventFilter()));
         URI uri = restTemplate.postForLocation(PATH, createUser);
         assertUser(createUser, uri);
 
-        ContactDetailsDTO updateContactDetails = new ContactDetailsDTO("otherFirst", "otherLast", "otherEmail", null);
+        ContactDetailsDTO updateContactDetails = new ContactDetailsDTO("otherFirst", "otherLast", null, null);
         UserDTO updateUser = createUser(createUser.username, createUser.organisationRef, updateContactDetails);
         restTemplate.put(uri, updateUser);
         assertUser(updateUser, uri);
