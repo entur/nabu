@@ -51,19 +51,20 @@ public class EmailNotificationSender implements NotificationProcessor {
     @Override
     public void processNotificationsForUser(User user, Set<Notification> notifications) {
 
-        if (user.getContactDetails() == null && user.getContactDetails().getEmail() == null) {
-            logger.warn("Unable to notify user without contact details");
+        if (user.getContactDetails() == null || user.getContactDetails().getEmail() == null) {
+            logger.warn("Unable to notify user without registered email address: " + user.getUsername() + ". Discarding notifications: " + notifications);
+            notificationRepository.delete(notifications);
             return;
         }
 
-        logger.info("Notifying user: " + user.getUsername() + " of notifications: " + notifications);
+        logger.info("Sending email to user: " + user.getUsername() + " for notifications: " + notifications);
 
         String msg = formatMessage(notifications);
 
         boolean sent = sendEmail(user.getContactDetails().getEmail(), msg);
 
         if (sent) {
-            notifications.forEach(notification -> notificationRepository.delete(notification));
+            notificationRepository.delete(notifications);
         }
     }
 
