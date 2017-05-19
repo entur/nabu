@@ -40,6 +40,7 @@ public class SystemJobStatusUpdater implements EventHandler {
                 systemJobStatusRepository.save(systemJobStatus);
             } else if (existingStatus.getLastStatusTime().isBefore(systemJobStatus.getLastStatusTime())) {
                 logger.debug("Updating system status from incoming event: " + systemJobStatus);
+                existingStatus.setLastStatusTime(systemJobStatus.getLastStatusTime());
                 systemJobStatusRepository.save(existingStatus);
             }
 

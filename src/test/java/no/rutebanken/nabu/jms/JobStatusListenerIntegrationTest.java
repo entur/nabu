@@ -32,25 +32,30 @@ public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void jobEventUpdatesSystemJobStatus() {
-        JobEventDTO pendingEvent = createEvent(JobState.PENDING, Instant.now());
-        eventListener.processMessage(toJson(pendingEvent));
-        assertSystemJobStatus(pendingEvent);
+        JobEventDTO firstPendingEvent = createEvent(JobState.PENDING, Instant.now());
+        eventListener.processMessage(toJson(firstPendingEvent));
+        assertSystemJobStatus(firstPendingEvent);
 
-        JobEventDTO failedEvent = createEvent(JobState.FAILED, Instant.now().plusMillis(1000));
-        eventListener.processMessage(toJson(failedEvent));
-        assertSystemJobStatus(failedEvent);
+        JobEventDTO firstFailedEvent = createEvent(JobState.FAILED, Instant.now().plusMillis(1000));
+        eventListener.processMessage(toJson(firstFailedEvent));
+        assertSystemJobStatus(firstFailedEvent);
+
+        JobEventDTO secondFailedEvent = createEvent(JobState.FAILED, Instant.now().plusMillis(2000));
+        eventListener.processMessage(toJson(secondFailedEvent));
+        assertSystemJobStatus(secondFailedEvent);
+
 
         // Old started event should not affect state
-        JobEventDTO startedEvent = createEvent(JobState.STARTED, Instant.now().minusMillis(1000));
-        eventListener.processMessage(toJson(startedEvent));
-        assertSystemJobStatus(failedEvent);
+        JobEventDTO secondPendingEvent = createEvent(JobState.PENDING, Instant.now().minusMillis(1000));
+        eventListener.processMessage(toJson(secondPendingEvent));
+        assertSystemJobStatus(firstPendingEvent);
 
 
-        Assert.assertEquals(3, eventRepository.findAll().size());
+        Assert.assertEquals(4, eventRepository.findAll().size());
 
-        JobEvent queryEvent=JobEvent.builder().domain(pendingEvent.domain).build();
+        JobEvent queryEvent=JobEvent.builder().domain(firstPendingEvent.domain).build();
         queryEvent.setRegisteredTime(null);
-        Assert.assertEquals(3, eventRepository.findAll(Example.of(queryEvent)).size());
+        Assert.assertEquals(4, eventRepository.findAll(Example.of(queryEvent)).size());
 
     }
 
