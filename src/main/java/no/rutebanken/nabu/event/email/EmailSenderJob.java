@@ -1,5 +1,6 @@
-package no.rutebanken.nabu.event;
+package no.rutebanken.nabu.event.email;
 
+import no.rutebanken.nabu.event.NotificationService;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;

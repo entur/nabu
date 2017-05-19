@@ -64,4 +64,36 @@ public class Provider {
         result = 31 * result + (chouetteInfo != null ? chouetteInfo.hashCode() : 0);
         return result;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSftpAccount() {
+        return sftpAccount;
+    }
+
+    public void setSftpAccount(String sftpAccount) {
+        this.sftpAccount = sftpAccount;
+    }
+
+    public ChouetteInfo getChouetteInfo() {
+        return chouetteInfo;
+    }
+
+    public void setChouetteInfo(ChouetteInfo chouetteInfo) {
+        this.chouetteInfo = chouetteInfo;
+    }
 }

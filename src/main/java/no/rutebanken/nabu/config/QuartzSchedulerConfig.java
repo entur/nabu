@@ -1,6 +1,6 @@
 package no.rutebanken.nabu.config;
 
-import no.rutebanken.nabu.event.EmailSenderJob;
+import no.rutebanken.nabu.event.email.EmailSenderJob;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
