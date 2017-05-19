@@ -85,7 +85,7 @@ public class EmailNotificationFormatter {
 
     public String geFreeMarkerTemplateContent(Map<String, Object> model) {
         try {
-            freemarkerConfiguration.setClassForTemplateLoading(this.getClass(), "/ftl/");
+
             return FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("fm_email_notification_template.ftl"), model);
         } catch (Exception e) {
