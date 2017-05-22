@@ -45,6 +45,7 @@ public class User extends VersionedEntity {
 		this.username = username;
 	}
 
+	@NotNull
 	public ContactDetails getContactDetails() {
 		return contactDetails;
 	}

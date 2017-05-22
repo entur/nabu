@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Entity
 public class ContactDetails {
@@ -25,6 +27,7 @@ public class ContactDetails {
 
 	// Email address must be unique in Keycloak
 	@Unique
+	@NotNull
 	private String email;
 
 	public String getFirstName() {
