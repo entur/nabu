@@ -33,12 +33,10 @@ public class UserValidator implements DTOValidator<User, UserDTO> {
             }
         }
 
-        if (dto.contactDetails != null) {
-            if (dto.contactDetails.email != null) {
-                Assert.isTrue(isValidEmailAddress(dto.contactDetails.email), "contactDetails.email must be a valid email address");
-            }
+        Assert.notNull(dto.contactDetails, "contactDetails required");
+        Assert.notNull(dto.contactDetails.email, "contactDetails.email required");
+        Assert.isTrue(isValidEmailAddress(dto.contactDetails.email), "contactDetails.email must be a valid email address");
 
-        }
     }
 
 

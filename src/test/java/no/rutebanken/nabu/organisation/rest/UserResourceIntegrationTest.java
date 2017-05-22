@@ -47,7 +47,7 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
         URI uri = restTemplate.postForLocation(PATH, createUser);
         assertUser(createUser, uri);
 
-        ContactDetailsDTO updateContactDetails = new ContactDetailsDTO("otherFirst", "otherLast", null, null);
+        ContactDetailsDTO updateContactDetails = new ContactDetailsDTO("otherFirst", "otherLast", null, "other@email.org");
         UserDTO updateUser = createUser(createUser.username, createUser.organisationRef, updateContactDetails);
         restTemplate.put(uri, updateUser);
         assertUser(updateUser, uri);
@@ -89,7 +89,8 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void updateUsersResponsibilitySets() throws Exception {
-        UserDTO user = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, null);
+        ContactDetailsDTO contactDetails = new ContactDetailsDTO("first", "last", "phone", "email@email.com");
+        UserDTO user = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, contactDetails);
         URI uri = restTemplate.postForLocation(PATH, user);
         assertUser(user, uri);
 

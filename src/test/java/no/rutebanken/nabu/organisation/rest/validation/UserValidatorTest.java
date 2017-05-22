@@ -33,9 +33,23 @@ public class UserValidatorTest {
         userValidator.validateCreate(user);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void validateCreateWithoutContactDetailsFails() {
+        UserDTO user = minimalUser();
+        user.contactDetails = null;
+        userValidator.validateCreate(user);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void validateCreateWithoutEmailFails() {
+        UserDTO user = minimalUser();
+        user.contactDetails.email = null;
+        userValidator.validateCreate(user);
+    }
+
     @Test
     public void validateUpdateMinimalUserOK() {
-        userValidator.validateUpdate(new UserDTO(), null);
+        userValidator.validateUpdate(minimalUser(), null);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -99,6 +113,8 @@ public class UserValidatorTest {
         UserDTO userDTO = new UserDTO();
         userDTO.username = "username";
         userDTO.organisationRef = "organisation";
+        userDTO.contactDetails=new ContactDetailsDTO(null,null,null, "valid@email.org");
+
         return userDTO;
     }
 
