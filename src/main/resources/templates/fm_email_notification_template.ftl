@@ -58,8 +58,8 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
                 <td>${crudEvent.version}</td>
                 <td>${crudEvent.eventTime}</td>
                 <td><#if crudEvent.changeType?has_content>${message("notification.email.crudevent.changetype.${crudEvent.changeType}")}</#if></td>
-                <td>${crudEvent.oldValue}</td>
-                <td>${crudEvent.newValue}</td>
+                <td>${crudEvent.oldValue!""}</td>
+                <td>${crudEvent.newValue!""}</td>
             </tr>
         </#list>
     </table>
