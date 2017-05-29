@@ -23,6 +23,7 @@ public class ChouetteInfo {
     public String regtoppCalendarStrategy;
     public String dataFormat;
     public boolean enableValidation;
+    public boolean enableStopPlaceUpdate;
     public Long migrateDataToProvider = null;
 
     public ChouetteInfo(){}
@@ -52,6 +53,7 @@ public class ChouetteInfo {
                 (regtoppCoordinateProjection != null? ", regtoppCoordinateProjection='" + regtoppCoordinateProjection + '\'' : "")+
                 (regtoppCalendarStrategy != null? ", regtoppCalendarStrategy='" + regtoppCalendarStrategy + '\'' : "")+
                 ", enableValidation='" + enableValidation + '\'' +
+                ", enableStopPlaceUpdate='" + enableStopPlaceUpdate + '\'' +
                 '}';
     }
 
