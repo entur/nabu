@@ -37,9 +37,13 @@ public class JpaEventRepositoryTest extends BaseIntegrationTest {
         repository.save(s2);
         JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
         repository.save(s3);
-        Collection<JobEvent> statuses = repository.findTimetableJobEvents( 2L, null, null, null, null, null, null);
-        assertThat(statuses).hasSize(2);
+        Collection<JobEvent> eventsForProvider2 = repository.findTimetableJobEvents( 2L, null, null, null, null, null, null);
+        assertThat(eventsForProvider2).hasSize(2);
+
+        Collection<JobEvent> allEvents = repository.findTimetableJobEvents( null, null, null, null, null, null, null);
+        assertThat(allEvents).hasSize(3);
     }
+
 
 
     @Test

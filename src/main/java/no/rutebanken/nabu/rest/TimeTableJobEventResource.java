@@ -46,8 +46,11 @@ public class TimeTableJobEventResource {
                                              @QueryParam("state") List<JobStatus.State> states, @QueryParam("chouetteJobId") List<Long> jobIds,
                                              @QueryParam("fileName") List<String> fileNames) {
 
-        SecurityContextHolder.getContext().getAuthentication();
-        logger.debug("Returning status for provider with id '" + providerId + "'");
+        if (providerId==null){
+            logger.debug("Returning status for all providers");
+        } else {
+            logger.debug("Returning status for provider with id '" + providerId + "'");
+        }
 
         Instant instantFrom = from == null ? null : from.toInstant();
         Instant instantTo = to == null ? null : to.toInstant();
@@ -62,6 +65,15 @@ public class TimeTableJobEventResource {
             logger.error("Erring fetching status for provider with id " + providerId + ": " + e.getMessage(), e);
             throw e;
         }
+    }
+
+    @GET
+    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
+    public List<JobStatus> listStatus(@QueryParam("from") Date from,
+                                             @QueryParam("to") Date to, @QueryParam("action") List<String> actions,
+                                             @QueryParam("state") List<JobStatus.State> states, @QueryParam("chouetteJobId") List<Long> jobIds,
+                                             @QueryParam("fileName") List<String> fileNames) {
+        return listStatus(null, from, to, actions, states, jobIds, fileNames);
     }
 
     @DELETE
