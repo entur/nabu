@@ -22,7 +22,13 @@ public class JobEventMatcher implements EventMatcher {
         }
         JobEvent jobEvent = (JobEvent) event;
 
-        // TODO match organisation against provider id
+        if (filter.getOrganisation() != null) {
+            // TODO need to get providerid from organisation for exact match
+            if (jobEvent.getReferential() == null || !jobEvent.getReferential().endsWith(filter.getOrganisation().getPrivateCode().toLowerCase())) {
+                return false;
+            }
+
+        }
 
         return filter.getJobDomain().equals(jobEvent.getDomain()) &&
                        filter.getState().equals(jobEvent.getState()) &&
