@@ -19,23 +19,21 @@ public class KeyCloakClientConfiguration {
 	@Value("${iam.keycloak.user.realm:rutebanken}")
 	private String userRealm;
 
-	@Value("${iam.keycloak.admin.username:nabu}")
-	private String username;
 
-	@Value("${iam.keycloak.admin.password}")
-	private String password;
-
-	@Value("${iam.keycloak.admin.client:nabu-bot}")
+	@Value("${iam.keycloak.admin.client:nabu}")
 	private String clientId;
+
+	@Value("${iam.keycloak.admin.client.secret}")
+	private String clientSecret;
 
 	@Bean
 	public RealmResource keycloakAdminClient() {
 		return KeycloakBuilder.builder()
 				       .serverUrl(adminPath)
 				       .realm(masterRealm)
-				       .username(username)
-				       .password(password)
 				       .clientId(clientId)
+					   .clientSecret(clientSecret)
+				       .grantType("client_credentials")
 				       .resteasyClient(new ResteasyClientBuilder().connectionPoolSize(10).build())
 				       .build().realm(userRealm);
 

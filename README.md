@@ -104,22 +104,16 @@ spring.datasource.initializationFailFast=false
 
 In order to mange keycloak users from Nabu 
 
-### Add user to Realm 'Master'
- * Go to the keycloak admin console 
- * Select realm=Master
- * Select 'users'
- * Create new user: nabu. 
- * Go to 'Credentials' tab and assign password and toggle temporary to off.
- * Go to 'Role mappings' tab and assign role 'Admin' as a 'Realm role'
- 
 ###  Add client to Realm 'Master'
   * Go to the keycloak admin console 
   * Select realm=Master
   * Select 'clients'
-  * Create new client: nabu-bot
+  * Create new client: nabu
+  * Set 'Access Type' to "Confidential", toggle 'Service Accounts Enabled' on and provide a valid url (whatever) as a redirect url and 'Save'
+  * Add role 'Amin' on tab 'Service Account roles'
+  * Secret for client is displayed on tab 'Credentials'
 
  
 ### Configure nabu with username+password for new user and clientID for new client
-keycloak.admin.username=nabu
-keycloak.admin.password=....
-keycloak.admin.client=nabu-bot
+iam.keycloak.admin.client=nabu
+iam.keycloak.admin.client.secret=<See 'Credentials' tab for Client.>
