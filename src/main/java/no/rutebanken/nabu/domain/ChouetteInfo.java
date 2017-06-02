@@ -24,6 +24,7 @@ public class ChouetteInfo {
     public String dataFormat;
     public boolean enableValidation;
     public boolean enableStopPlaceUpdate;
+    public boolean enableCleanImport;
     public Long migrateDataToProvider = null;
 
     public ChouetteInfo(){}
@@ -54,6 +55,7 @@ public class ChouetteInfo {
                 (regtoppCalendarStrategy != null? ", regtoppCalendarStrategy='" + regtoppCalendarStrategy + '\'' : "")+
                 ", enableValidation='" + enableValidation + '\'' +
                 ", enableStopPlaceUpdate='" + enableStopPlaceUpdate + '\'' +
+                ", enableCleanImport='" + enableCleanImport + '\'' +
                 '}';
     }
 
