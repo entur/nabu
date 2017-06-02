@@ -13,6 +13,8 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class JobEventFilter extends EventFilter {
 
+    public static final String ALL_TYPES = "*";
+
     @NotNull
     private String jobDomain;
 

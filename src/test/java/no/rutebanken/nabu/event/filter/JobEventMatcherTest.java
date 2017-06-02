@@ -38,6 +38,18 @@ public class JobEventMatcherTest {
         Assert.assertFalse(new JobEventMatcher(filter).matches(event));
     }
 
+    @Test
+    public void allStatesMatchingWildcardAction() {
+        JobEventFilter filter = testFilter();
+        filter.setAction(JobEventFilter.ALL_TYPES);
+        JobEvent event = matchingJobEvent(filter);
+
+        Assert.assertTrue(new JobEventMatcher(filter).matches(event));
+
+        event.setAction("randomAction");
+        Assert.assertTrue(new JobEventMatcher(filter).matches(event));
+    }
+
     private JobEvent matchingJobEvent(JobEventFilter filter) {
         return JobEvent.builder().domain(filter.getJobDomain()).state(filter.getState()).action(filter.getAction()).build();
     }
