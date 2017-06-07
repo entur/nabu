@@ -29,7 +29,6 @@ public class EmailNotificationSender implements NotificationProcessor {
     @Autowired
     private EmailNotificationFormatter formatter;
 
-
     @Autowired
     private JavaMailSender mailSender;
 
@@ -70,8 +69,6 @@ public class EmailNotificationSender implements NotificationProcessor {
             helper.setFrom(emailFrom);
         });
 
-
-        logger.info("Missing email setup. Msg not sent: " + msg);
         return true;
     }
 
