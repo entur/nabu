@@ -35,7 +35,7 @@ public class NotificationService {
         logger.info("About to send notifications of type: " + type);
         NotificationProcessor notificationSender = notificationSenders.get(type);
         if (notificationSender == null) {
-            throw new IllegalArgumentException("Not notification sender registered for notification type: " + type);
+            throw new IllegalArgumentException("No notification sender registered for notification type: " + type);
         }
 
         List<Notification> notificationList = notificationRepository.findByTypeAndStatus(type, Notification.NotificationStatus.READY);

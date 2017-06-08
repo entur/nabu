@@ -23,7 +23,7 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
                     <td>${providers[""+jobEvent.providerId]!""}</td>
                     <td><#if jobEvent.action?has_content>${message("notification.email.jobevent.action.${jobEvent.action}")}</#if></td>
                     <td>${message("notification.email.jobevent.jobstate.${jobEvent.state}")}</td>
-                    <td>${jobEvent.name}</td>
+                    <td>${jobEvent.name!""}</td>
                     <td>${jobEvent.eventTime}</td>
                 </tr>
             </#list>

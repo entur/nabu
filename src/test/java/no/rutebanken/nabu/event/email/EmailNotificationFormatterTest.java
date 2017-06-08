@@ -30,7 +30,7 @@ public class EmailNotificationFormatterTest {
 
     @Test
     public void formatMailInNorwegian() {
-        Set<Notification> notifications = Sets.newHashSet(jobNotification(), crudNotification(Instant.now()));
+        Set<Notification> notifications = Sets.newHashSet(jobNotification("file.xml"), crudNotification(Instant.now()));
 
         String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("no"), providerList);
         System.out.println(msg);
@@ -45,7 +45,7 @@ public class EmailNotificationFormatterTest {
     public void formatMailWithTooManyEvents() {
         Instant now = Instant.now();
 
-        Set<Notification> notifications = Sets.newHashSet(jobNotification(), crudNotification(now.minusMillis(1000)), crudNotification(now.minusMillis(2000)),
+        Set<Notification> notifications = Sets.newHashSet(jobNotification(null), crudNotification(now.minusMillis(1000)), crudNotification(now.minusMillis(2000)),
                 crudNotification(now.minusMillis(3000)), crudNotification(now.minusMillis(4000)));
 
         Notification oldestEvent = crudNotification(now.minusMillis(5000));
@@ -62,10 +62,10 @@ public class EmailNotificationFormatterTest {
     }
 
 
-    private Notification jobNotification() {
+    private Notification jobNotification(String fileName) {
         Notification notification = new Notification();
 
-        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).state(JobState.FAILED).providerId(providerList.get(0).id).referential("ref").action("IMPORT").name("fileName.xml").eventTime(Instant.now()).build();
+        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).state(JobState.FAILED).providerId(providerList.get(0).id).referential("ref").action("IMPORT").name(fileName).eventTime(Instant.now()).build();
         event.setPk(pkCounter++);
         notification.setEvent(event);
 
