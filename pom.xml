@@ -59,6 +59,8 @@
         <hibernate-spatial.version>5.1.3.Final</hibernate-spatial.version>
         <!-- Hibernate version deliberatly kept back as hazelcast cache does not support newer version-->
         <hibernate.version>5.0.11.Final</hibernate.version>
+        <!-- Holding back activemq version as newest version no long support spring wired broker config-->
+        <activemq.version>5.13.4</activemq.version>
     </properties>
 
     <dependencyManagement>
@@ -152,8 +154,15 @@
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
-            <version>5.13.0</version>
+            <version>${activemq.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-kahadb-store</artifactId>
+            <version>${activemq.version}</version>
+            <scope>test</scope>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
