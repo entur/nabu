@@ -53,49 +53,6 @@ public class UserValidatorTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void validateCreateNotificationWithoutEventFilterFails() {
-        UserDTO user = userWithCrudFilter();
-        user.notifications.get(0).eventFilter=null;
-        userValidator.validateCreate(user);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void validateCreateNotificationWithoutNotificationTypeFails() {
-        UserDTO user = userWithCrudFilter();
-        user.notifications.get(0).notificationType=null;
-        userValidator.validateCreate(user);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void validateCrudFilterWithoutEntityClassificationsFails() {
-        UserDTO user = userWithCrudFilter();
-        user.notifications.get(0).eventFilter.entityClassificationRefs.clear();
-        userValidator.validateCreate(user);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void validateJobFilterWithoutJobDomainFails() {
-        UserDTO user = userWithJobFilter();
-        user.notifications.get(0).eventFilter.jobDomain=null;
-        userValidator.validateCreate(user);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void validateJobFilterWithoutActionFails() {
-        UserDTO user = userWithJobFilter();
-        user.notifications.get(0).eventFilter.action=null;
-        userValidator.validateCreate(user);
-    }
-
-
-    @Test(expected = IllegalArgumentException.class)
-    public void validateJobFilterWithoutStatenFails() {
-        UserDTO user = userWithJobFilter();
-        user.notifications.get(0).eventFilter.state=null;
-        userValidator.validateCreate(user);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void validateInvalidEmailFails() {
         UserDTO user = minimalUser();
         user.contactDetails=new ContactDetailsDTO("first","last","34234","illegalEmail");
@@ -118,29 +75,4 @@ public class UserValidatorTest {
         return userDTO;
     }
 
-    protected UserDTO userWithCrudFilter() {
-        UserDTO userDTO = minimalUser();
-        NotificationConfigDTO configDTO = new NotificationConfigDTO();
-        configDTO.notificationType = NotificationType.EMAIL;
-
-        EventFilterDTO eventFilter = new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD);
-        eventFilter.entityClassificationRefs.add("ref1");
-        configDTO.eventFilter = eventFilter;
-        userDTO.notifications.add(configDTO);
-        return userDTO;
-    }
-
-    protected UserDTO userWithJobFilter() {
-        UserDTO userDTO = minimalUser();
-        NotificationConfigDTO configDTO = new NotificationConfigDTO();
-        configDTO.notificationType = NotificationType.EMAIL;
-
-        EventFilterDTO eventFilter = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
-        eventFilter.action = "BUILD";
-        eventFilter.jobDomain = JobEvent.JobDomain.GEOCODER;
-        eventFilter.state = JobState.FAILED;
-        configDTO.eventFilter = eventFilter;
-        userDTO.notifications.add(configDTO);
-        return userDTO;
-    }
 }

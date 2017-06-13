@@ -30,6 +30,7 @@ public class JerseyConfig extends ResourceConfig {
         register(OrganisationResource.class);
         register(AdministrativeZoneResource.class);
         register(UserResource.class);
+        register(NotificationConfigurationResource.class);
         register(RoleResource.class);
         register(EntityTypeResource.class);
         register(EntityClassificationResource.class);

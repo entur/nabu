@@ -4,11 +4,9 @@ import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
-import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
-import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.UserDTO;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,8 +40,6 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
     public void crudUser() throws Exception {
         ContactDetailsDTO createContactDetails = new ContactDetailsDTO("first", "last", "phone", "email@email.com");
         UserDTO createUser = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, createContactDetails);
-        createUser.notifications = Arrays.asList(new NotificationConfigDTO(NotificationType.EMAIL, crudEventFilter()),
-                new NotificationConfigDTO(NotificationType.WEB, jobEventFilter()));
         URI uri = restTemplate.postForLocation(PATH, createUser);
         assertUser(createUser, uri);
 
@@ -168,18 +164,6 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
             Assert.assertEquals(inUser.contactDetails.phone, outUser.contactDetails.phone);
         }
 
-        if (CollectionUtils.isEmpty(inUser.notifications)) {
-            Assert.assertTrue(CollectionUtils.isEmpty(outUser.notifications));
-        } else {
-            Assert.assertEquals(inUser.notifications.size(), outUser.notifications.size());
-            for (NotificationConfigDTO in : inUser.notifications) {
-                Assert.assertTrue(outUser.notifications.stream().anyMatch(out -> isEqual(in, out)));
-            }
-        }
-    }
-
-    private boolean isEqual(NotificationConfigDTO in, NotificationConfigDTO out) {
-        return in.notificationType == out.notificationType && isEqual(in.eventFilter, out.eventFilter);
     }
 
     private boolean isEqual(EventFilterDTO in, EventFilterDTO out) {
