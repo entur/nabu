@@ -26,6 +26,8 @@ public class NotificationConfiguration {
     @NotNull
     private EventFilter eventFilter;
 
+    private boolean enabled;
+
 
     public NotificationType getNotificationType() {
         return notificationType;
@@ -43,4 +45,11 @@ public class NotificationConfiguration {
         this.eventFilter = eventFilter;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

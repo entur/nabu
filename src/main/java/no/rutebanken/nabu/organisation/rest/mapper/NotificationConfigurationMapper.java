@@ -37,7 +37,7 @@ public class NotificationConfigurationMapper {
             return new HashSet<>();
         }
 
-        return entity.stream().map(n -> new NotificationConfigDTO(n.getNotificationType(),
+        return entity.stream().map(n -> new NotificationConfigDTO(n.getNotificationType(), n.isEnabled(),
                                                                          toDTO(n.getEventFilter()))).collect(Collectors.toSet());
     }
 
@@ -76,7 +76,7 @@ public class NotificationConfigurationMapper {
     // TODO recreate at every change? or match existing
     private NotificationConfiguration fromDTO(NotificationConfigDTO dto) {
         NotificationConfiguration notificationConfiguration = new NotificationConfiguration();
-
+        notificationConfiguration.setEnabled(dto.enabled);
         notificationConfiguration.setEventFilter(fromDTO(dto.eventFilter));
         notificationConfiguration.setNotificationType(NotificationType.valueOf(dto.notificationType.name()));
         return notificationConfiguration;

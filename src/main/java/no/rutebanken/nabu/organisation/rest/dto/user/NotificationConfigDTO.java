@@ -10,8 +10,11 @@ public class NotificationConfigDTO {
 
     public EventFilterDTO eventFilter;
 
-    public NotificationConfigDTO(NotificationType notificationType, EventFilterDTO eventFilter) {
+    public boolean enabled = true;
+
+    public NotificationConfigDTO(NotificationType notificationType, boolean enabled, EventFilterDTO eventFilter) {
         this.notificationType = notificationType;
+        this.enabled = enabled;
         this.eventFilter = eventFilter;
     }
 

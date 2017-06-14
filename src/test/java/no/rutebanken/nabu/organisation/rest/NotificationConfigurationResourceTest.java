@@ -44,12 +44,12 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
 
         String url = url(TestConstantsOrganisation.USER_USERNAME);
 
-        Set<NotificationConfigDTO> config = Sets.newHashSet(new NotificationConfigDTO(NotificationType.EMAIL, crudEventFilter()),
-                new NotificationConfigDTO(NotificationType.WEB, jobEventFilter()));
+        Set<NotificationConfigDTO> config = Sets.newHashSet(new NotificationConfigDTO(NotificationType.EMAIL, true, crudEventFilter()),
+                new NotificationConfigDTO(NotificationType.WEB, false, jobEventFilter()));
         restTemplate.put(url, config, String.class);
         assertConfig(config);
 
-        Set<NotificationConfigDTO> updateConfig = Sets.newHashSet(new NotificationConfigDTO(NotificationType.EMAIL, jobEventFilter()));
+        Set<NotificationConfigDTO> updateConfig = Sets.newHashSet(new NotificationConfigDTO(NotificationType.EMAIL, true, jobEventFilter()));
         restTemplate.put(url, updateConfig);
         assertConfig(updateConfig);
 
@@ -106,7 +106,7 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
     @Test
     public void createInvalidNotificationConfig() throws Exception {
         Set<NotificationConfigDTO> inConfig = Sets.newHashSet(
-                new NotificationConfigDTO(null, jobEventFilter()));
+                new NotificationConfigDTO(null, true, jobEventFilter()));
         restTemplate.put(PATH, inConfig);
 
     }

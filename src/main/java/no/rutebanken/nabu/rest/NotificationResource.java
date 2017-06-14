@@ -9,6 +9,7 @@ import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.event.NotificationService;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
+import no.rutebanken.nabu.organisation.model.user.eventfilter.JobEventFilter;
 import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
 import no.rutebanken.nabu.rest.domain.ApiCrudEvent;
@@ -22,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityNotFoundException;
 import javax.ws.rs.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -94,19 +96,18 @@ public class NotificationResource {
     @GET
     @Path("job_actions/{jobDomain}")
     public List<String> getJobActions(@PathParam("jobDomain") JobEvent.JobDomain jobDomain) {
-        if (jobDomain != null) {
-            switch (jobDomain) {
+        List<String> actions = new ArrayList<>(Arrays.asList(JobEventFilter.ALL_TYPES));
 
-                case GRAPH:
-                    return Arrays.asList("BUILD_GRAPH");
-                case GEOCODER:
-                    return Arrays.stream(GeoCoderAction.values()).map(value -> value.name()).collect(Collectors.toList());
-                case TIMETABLE:
-                    return Arrays.stream(TimeTableAction.values()).map(value -> value.name()).collect(Collectors.toList());
-
-            }
+        if (JobEvent.JobDomain.GRAPH.equals(jobDomain)) {
+            actions.addAll(Arrays.asList("BUILD_GRAPH"));
+        } else if (JobEvent.JobDomain.GEOCODER.equals(jobDomain)) {
+            actions.addAll(Arrays.stream(GeoCoderAction.values()).map(value -> value.name()).collect(Collectors.toList()));
+        } else if (JobEvent.JobDomain.TIMETABLE.equals(jobDomain)) {
+            actions.addAll(Arrays.stream(TimeTableAction.values()).map(value -> value.name()).collect(Collectors.toList()));
+        } else {
+            throw new EntityNotFoundException("Unknown job domain: " + jobDomain);
         }
-        throw new EntityNotFoundException("Unknown job domain: " + jobDomain);
+        return actions;
     }
 
 
