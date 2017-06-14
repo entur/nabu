@@ -8,6 +8,7 @@ import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
 import org.junit.Test;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class NotificationConfigurationValidatorTest {
@@ -44,19 +45,33 @@ public class NotificationConfigurationValidatorTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void validateJobFilterWithoutActionFails() {
+    public void validateJobFilterWithNullActionFails() {
         Set<NotificationConfigDTO> config = withJobFilter();
-        config.iterator().next().eventFilter.action = null;
+        config.iterator().next().eventFilter.actions = null;
         validator.validate(config);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void validateJobFilterWithoutActionFails() {
+        Set<NotificationConfigDTO> config = withJobFilter();
+        config.iterator().next().eventFilter.actions = new HashSet<>();
+        validator.validate(config);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void validateJobFilterWithNullStatenFails() {
+        Set<NotificationConfigDTO> config = withJobFilter();
+        config.iterator().next().eventFilter.states = null;
+        validator.validate(config);
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void validateJobFilterWithoutStatenFails() {
         Set<NotificationConfigDTO> config = withJobFilter();
-        config.iterator().next().eventFilter.state = null;
+        config.iterator().next().eventFilter.states = new HashSet<>();
         validator.validate(config);
     }
+
 
 
     protected Set<NotificationConfigDTO> withCrudFilter() {
@@ -76,9 +91,9 @@ public class NotificationConfigurationValidatorTest {
         configDTO.notificationType = NotificationType.EMAIL;
 
         EventFilterDTO eventFilter = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
-        eventFilter.action = "BUILD";
+        eventFilter.actions = Sets.newHashSet("BUILD");
         eventFilter.jobDomain = JobEvent.JobDomain.GEOCODER;
-        eventFilter.state = JobState.FAILED;
+        eventFilter.states = Sets.newHashSet(JobState.FAILED);
         configDTO.eventFilter = eventFilter;
 
         return Sets.newHashSet(configDTO);

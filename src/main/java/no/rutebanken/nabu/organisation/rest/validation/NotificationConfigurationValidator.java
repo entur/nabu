@@ -27,8 +27,8 @@ public class NotificationConfigurationValidator {
 
         if (eventFilter.type == EventFilterDTO.EventFilterType.JOB) {
             Assert.notNull(eventFilter.jobDomain, "notifications.eventFilter.jobDomain required for JOB event filter");
-            Assert.notNull(eventFilter.state, "notifications.eventFilter.state required for JOB event filter");
-            Assert.notNull(eventFilter.action, "notifications.eventFilter.action required for JOB event filter");
+            Assert.notEmpty(eventFilter.states, "notifications.eventFilter.states required for JOB event filter");
+            Assert.notEmpty(eventFilter.actions, "notifications.eventFilter.actions required for JOB event filter");
         } else if (eventFilter.type == EventFilterDTO.EventFilterType.CRUD) {
             Assert.notEmpty(eventFilter.entityClassificationRefs, "notifications.eventFilter.entityClassificationRefs required for CRUD event filter");
         }

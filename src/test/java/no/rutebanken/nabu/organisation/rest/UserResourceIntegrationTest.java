@@ -65,24 +65,6 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
 
     }
 
-    private EventFilterDTO crudEventFilter() {
-        EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD);
-        eventFilterDTO.entityClassificationRefs.add(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID);
-
-        eventFilterDTO.administrativeZoneRefs.addAll(ResourceTestUtils.addAdminZones(restTemplate, "z1", "z2"));
-        return eventFilterDTO;
-    }
-
-    private EventFilterDTO jobEventFilter() {
-        EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
-        eventFilterDTO.organisationRef = TestConstantsOrganisation.ORGANISATION_ID;
-        eventFilterDTO.action = TimeTableAction.VALIDATION_LEVEL_1.toString();
-        eventFilterDTO.jobDomain = JobEvent.JobDomain.TIMETABLE;
-        eventFilterDTO.state = JobState.FAILED;
-        return eventFilterDTO;
-    }
-
-
     @Test
     public void updateUsersResponsibilitySets() throws Exception {
         ContactDetailsDTO contactDetails = new ContactDetailsDTO("first", "last", "phone", "email@email.com");

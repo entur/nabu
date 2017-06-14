@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.event.filter;
 
+import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.organisation.model.organisation.Authority;
@@ -73,7 +74,7 @@ public class JobEventMatcherTest {
     @Test
     public void allStatesMatchingWildcardAction() {
         JobEventFilter filter = testFilter();
-        filter.setAction(JobEventFilter.ALL_TYPES);
+        filter.setActions(Sets.newHashSet(JobEventFilter.ALL_TYPES));
         JobEvent event = matchingJobEvent(filter);
 
         Assert.assertTrue(new JobEventMatcher(filter).matches(event));
@@ -84,7 +85,7 @@ public class JobEventMatcherTest {
 
     private JobEvent matchingJobEvent(JobEventFilter filter) {
         String ref = filter.getOrganisation() == null ? null : filter.getOrganisation().getPrivateCode().toLowerCase();
-        return JobEvent.builder().domain(filter.getJobDomain()).referential(ref).state(filter.getState()).action(filter.getAction()).build();
+        return JobEvent.builder().domain(filter.getJobDomain()).referential(ref).state(filter.getStates().iterator().next()).action(filter.getActions().iterator().next()).build();
     }
 
     private JobEventFilter testFilter() {
@@ -94,9 +95,9 @@ public class JobEventMatcherTest {
     private JobEventFilter testFilter(Organisation organisation) {
         JobEventFilter filter = new JobEventFilter();
         filter.setJobDomain("testDomain");
-        filter.setAction("testAction");
+        filter.setActions(Sets.newHashSet("testAction"));
         filter.setOrganisation(organisation);
-        filter.setState(JobState.FAILED);
+        filter.setStates(Sets.newHashSet(JobState.FAILED));
         return filter;
     }
 

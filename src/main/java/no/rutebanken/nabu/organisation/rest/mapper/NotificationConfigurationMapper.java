@@ -56,8 +56,8 @@ public class NotificationConfigurationMapper {
         if (eventFilter instanceof JobEventFilter) {
             JobEventFilter jobEventFilter = (JobEventFilter) eventFilter;
             dto.type = EventFilterDTO.EventFilterType.JOB;
-            dto.state = jobEventFilter.getState();
-            dto.action = jobEventFilter.getAction();
+            dto.states = jobEventFilter.getStates();
+            dto.actions = jobEventFilter.getActions();
             dto.jobDomain = JobEvent.JobDomain.valueOf(jobEventFilter.getJobDomain());
         } else if (eventFilter instanceof CrudEventFilter) {
             CrudEventFilter crudEventFilter = (CrudEventFilter) eventFilter;
@@ -93,8 +93,8 @@ public class NotificationConfigurationMapper {
             eventFilter = crudEventFilter;
         } else if (EventFilterDTO.EventFilterType.JOB.equals(dto.type)) {
             JobEventFilter jobEventFilter = new JobEventFilter();
-            jobEventFilter.setAction(dto.action);
-            jobEventFilter.setState(dto.state);
+            jobEventFilter.setActions(dto.actions);
+            jobEventFilter.setStates(dto.states);
             jobEventFilter.setJobDomain(dto.jobDomain.toString());
             eventFilter = jobEventFilter;
         } else {

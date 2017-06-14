@@ -31,9 +31,8 @@ public class JobEventMatcher implements EventMatcher {
         }
 
         return filter.getJobDomain().equals(jobEvent.getDomain()) &&
-                       filter.getState().equals(jobEvent.getState()) &&
-                       (JobEventFilter.ALL_TYPES.equals(filter.getAction()) || filter.getAction().equals(jobEvent.getAction()));
-
+                       filter.getStates().contains(jobEvent.getState()) &&
+                       (filter.getActions().contains(JobEventFilter.ALL_TYPES) || filter.getActions().contains(jobEvent.getAction()));
 
     }
 }

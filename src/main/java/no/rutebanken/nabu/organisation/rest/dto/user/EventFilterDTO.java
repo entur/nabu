@@ -28,9 +28,9 @@ public class EventFilterDTO {
     // Job event filter values
     public JobEvent.JobDomain jobDomain;
 
-    public String action;
+    public Set<String> actions = new HashSet<>();
 
-    public JobState state;
+    public Set<JobState> states = new HashSet<>();
 
     // Crud event filter values
     public Set<String> administrativeZoneRefs = new HashSet<>();
@@ -57,8 +57,8 @@ public class EventFilterDTO {
         if (organisationRef != null ? !organisationRef.equals(that.organisationRef) : that.organisationRef != null)
             return false;
         if (jobDomain != that.jobDomain) return false;
-        if (action != null ? !action.equals(that.action) : that.action != null) return false;
-        if (state != that.state) return false;
+        if (actions != null ? !actions.equals(that.actions) : that.actions != null) return false;
+        if (states != null ? !states.equals(that.states) : that.states != null) return false;
         if (administrativeZoneRefs != null ? !administrativeZoneRefs.equals(that.administrativeZoneRefs) : that.administrativeZoneRefs != null)
             return false;
         return entityClassificationRefs != null ? entityClassificationRefs.equals(that.entityClassificationRefs) : that.entityClassificationRefs == null;
@@ -69,8 +69,8 @@ public class EventFilterDTO {
         int result = type != null ? type.hashCode() : 0;
         result = 31 * result + (organisationRef != null ? organisationRef.hashCode() : 0);
         result = 31 * result + (jobDomain != null ? jobDomain.hashCode() : 0);
-        result = 31 * result + (action != null ? action.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (actions != null ? actions.hashCode() : 0);
+        result = 31 * result + (states != null ? states.hashCode() : 0);
         result = 31 * result + (administrativeZoneRefs != null ? administrativeZoneRefs.hashCode() : 0);
         result = 31 * result + (entityClassificationRefs != null ? entityClassificationRefs.hashCode() : 0);
         return result;

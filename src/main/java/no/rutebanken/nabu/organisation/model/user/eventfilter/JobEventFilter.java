@@ -4,8 +4,12 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.filter.EventMatcher;
 import no.rutebanken.nabu.event.filter.JobEventMatcher;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User defined event filter for job related events.
@@ -19,10 +23,12 @@ public class JobEventFilter extends EventFilter {
     private String jobDomain;
 
     @NotNull
-    private String action;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> actions;
 
     @NotNull
-    private JobState state;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<JobState> states;
 
     public String getJobDomain() {
         return jobDomain;
@@ -32,24 +38,33 @@ public class JobEventFilter extends EventFilter {
         this.jobDomain = jobDomain;
     }
 
-    public String getAction() {
-        return action;
+    public Set<String> getActions() {
+        if (actions == null) {
+            actions = new HashSet<>();
+        }
+        return actions;
     }
 
-    public void setAction(String action) {
-        this.action = action;
+    public void setActions(Set<String> actions) {
+        getActions().clear();
+        getActions().addAll(actions);
     }
 
-    public JobState getState() {
-        return state;
+    public Set<JobState> getStates() {
+        if (states == null) {
+            states = new HashSet<>();
+        }
+        return states;
     }
 
-    public void setState(JobState state) {
-        this.state = state;
+    public void setStates(Set<JobState> states) {
+        getStates().clear();
+        getStates().addAll(states);
     }
 
     @Override
     public EventMatcher getMatcher() {
         return new JobEventMatcher(this);
     }
+
 }

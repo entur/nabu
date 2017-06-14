@@ -72,9 +72,9 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
     private EventFilterDTO jobEventFilter() {
         EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
         eventFilterDTO.organisationRef = TestConstantsOrganisation.ORGANISATION_ID;
-        eventFilterDTO.action = TimeTableAction.VALIDATION_LEVEL_1.toString();
+        eventFilterDTO.actions = Sets.newHashSet(TimeTableAction.VALIDATION_LEVEL_1.toString());
         eventFilterDTO.jobDomain = JobEvent.JobDomain.TIMETABLE;
-        eventFilterDTO.state = JobState.FAILED;
+        eventFilterDTO.states = Sets.newHashSet(JobState.FAILED);
         return eventFilterDTO;
     }
 
