@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
@@ -63,9 +64,9 @@ public class NotificationConfigurationResourceTest extends BaseIntegrationTest {
 
     private EventFilterDTO crudEventFilter() {
         EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD);
-        eventFilterDTO.entityClassificationRefs.add(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID);
+        eventFilterDTO.entityClassificationRefs = Sets.newHashSet(TestConstantsOrganisation.ENTITY_CLASSIFICATION_ID);
 
-        eventFilterDTO.administrativeZoneRefs.addAll(ResourceTestUtils.addAdminZones(restTemplate, "z1", "z2"));
+        eventFilterDTO.administrativeZoneRefs = new HashSet<>(ResourceTestUtils.addAdminZones(restTemplate, "z1", "z2"));
         return eventFilterDTO;
     }
 

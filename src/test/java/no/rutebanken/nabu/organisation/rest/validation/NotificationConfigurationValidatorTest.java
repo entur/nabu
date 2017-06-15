@@ -73,13 +73,12 @@ public class NotificationConfigurationValidatorTest {
     }
 
 
-
     protected Set<NotificationConfigDTO> withCrudFilter() {
         NotificationConfigDTO configDTO = new NotificationConfigDTO();
         configDTO.notificationType = NotificationType.EMAIL;
 
         EventFilterDTO eventFilter = new EventFilterDTO(EventFilterDTO.EventFilterType.CRUD);
-        eventFilter.entityClassificationRefs.add("ref1");
+        eventFilter.entityClassificationRefs = Sets.newHashSet("ref1");
         configDTO.eventFilter = eventFilter;
 
         return Sets.newHashSet(configDTO);

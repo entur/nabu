@@ -28,14 +28,14 @@ public class EventFilterDTO {
     // Job event filter values
     public JobEvent.JobDomain jobDomain;
 
-    public Set<String> actions = new HashSet<>();
+    public Set<String> actions;
 
-    public Set<JobState> states = new HashSet<>();
+    public Set<JobState> states;
 
     // Crud event filter values
-    public Set<String> administrativeZoneRefs = new HashSet<>();
+    public Set<String> administrativeZoneRefs;
 
-    public Set<String> entityClassificationRefs = new HashSet<>();
+    public Set<String> entityClassificationRefs;
 
 
     public EventFilterDTO(EventFilterType type) {
