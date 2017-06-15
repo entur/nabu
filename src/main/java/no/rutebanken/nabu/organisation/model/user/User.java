@@ -7,6 +7,7 @@ import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
 
+import javax.jdo.annotations.Unique;
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,6 +24,7 @@ import java.util.Set;
 public class User extends VersionedEntity {
 
     @NotNull
+    @Unique
     private String username;
 
     @OneToOne(cascade = CascadeType.ALL)
