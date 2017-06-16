@@ -7,7 +7,7 @@ import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
-import no.rutebanken.nabu.event.NotificationService;
+import no.rutebanken.nabu.event.ScheduledNotificationService;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import no.rutebanken.nabu.organisation.model.user.eventfilter.JobEventFilter;
 import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
@@ -51,7 +51,10 @@ public class NotificationResource {
     @PreAuthorize("#userName == authentication.name")
     public void markAsRead(@PathParam("userName") String userName, List<Long> notificationPks) {
         if (!CollectionUtils.isEmpty(notificationPks)) {
-            notificationPks.stream().map(pk -> notificationRepository.getOne(pk)).filter(n -> n.getUserName().equals(userName)).forEach(n -> notificationRepository.delete(n));
+            List<Notification> notifications = notificationPks.stream().map(pk -> notificationRepository.getOne(pk)).filter(n -> n.getUserName().equals(userName)).collect(Collectors.toList());
+
+            notifications.forEach(n -> n.setStatus(Notification.NotificationStatus.COMPLETE));
+            notificationRepository.save(notifications);
         }
     }
 
@@ -59,12 +62,12 @@ public class NotificationResource {
     // TODO tmp service until scheduling?
 
     @Autowired
-    private NotificationService notificationService;
+    private ScheduledNotificationService scheduledNotificationService;
 
     @POST
     @Path("/email")
     public void sendEmails() {
-        notificationService.sendNotifications(NotificationType.EMAIL);
+        scheduledNotificationService.sendNotifications(NotificationType.EMAIL_BATCH);
     }
 
 

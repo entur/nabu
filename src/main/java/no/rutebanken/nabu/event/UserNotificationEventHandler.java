@@ -26,6 +26,9 @@ public class UserNotificationEventHandler implements EventHandler {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private ImmediateNotificationService immediateNotificationService;
+
     @Override
     public void onEvent(Event event) {
         userRepository.findAll().forEach(user -> createNotificationsForUser(user, event));
@@ -46,8 +49,14 @@ public class UserNotificationEventHandler implements EventHandler {
 
     private void createNotification(User user, NotificationConfiguration notificationConfig, Event event) {
         Notification notification = new Notification(user.getUsername(), notificationConfig.getNotificationType(), event);
-        logger.info("Registered new notification: " + notification);
-        notificationRepository.save(notification);
+
+        if (notification.getType().isImmediate()) {
+            immediateNotificationService.sendNotifications(notification, user);
+        } else {
+            logger.debug("Registered new notification: " + notification);
+            notificationRepository.save(notification);
+        }
+
     }
 
 

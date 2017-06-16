@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.event;
 
+import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import no.rutebanken.nabu.organisation.model.user.User;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class NotificationService {
+public class ScheduledNotificationService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
@@ -45,7 +46,6 @@ public class NotificationService {
 
         logger.info("Finished sending " + notificationList.size() + " notifications of type: " + type);
     }
-
 
     private void sendNotificationsForUser(NotificationProcessor notificationSender, String userName, Set<Notification> notifications) {
         User user = userRepository.getUserByUsername(userName);

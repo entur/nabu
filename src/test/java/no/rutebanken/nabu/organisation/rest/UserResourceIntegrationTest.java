@@ -1,8 +1,5 @@
 package no.rutebanken.nabu.organisation.rest;
 
-import no.rutebanken.nabu.domain.event.JobEvent;
-import no.rutebanken.nabu.domain.event.JobState;
-import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
 import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;

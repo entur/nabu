@@ -15,6 +15,6 @@ public interface NotificationProcessor {
      */
     void processNotificationsForUser(User user, Set<Notification> notifications);
 
-    NotificationType getSupportedNotificationType();
+    Set<NotificationType> getSupportedNotificationTypes();
 
 }

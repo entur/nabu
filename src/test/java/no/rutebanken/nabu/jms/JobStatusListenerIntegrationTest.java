@@ -6,7 +6,6 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.jms.dto.JobEventDTO;
 import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.repository.EventRepository;
-import no.rutebanken.nabu.repository.NotificationRepository;
 import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,10 +24,6 @@ public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private SystemJobStatusRepository systemJobStatusRepository;
-
-    @Autowired
-    private NotificationRepository notificationRepository;
-
 
     @Test
     public void jobEventUpdatesSystemJobStatus() {

@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.event.email;
 
+import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.event.NotificationProcessor;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
@@ -53,14 +54,13 @@ public class EmailNotificationSender implements NotificationProcessor {
 
         Locale locale = new Locale(emailLanguageDefault); // TODO get users default from user
 
-        boolean sent = sendEmail(user.getContactDetails().getEmail(), formatter.getSubject(locale), formatter.formatMessage(notifications, locale));
+        sendEmail(user.getContactDetails().getEmail(), formatter.getSubject(locale), formatter.formatMessage(notifications, locale));
 
-        if (sent) {
-            notificationRepository.delete(notifications);
-        }
+        notifications.forEach(n -> n.setStatus(Notification.NotificationStatus.COMPLETE));
+        notificationRepository.save(notifications);
     }
 
-    protected boolean sendEmail(String to, String subject, String msg) {
+    protected void sendEmail(String to, String subject, String msg) {
         mailSender.send(mimeMessage -> {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setText(msg, true);
@@ -68,13 +68,11 @@ public class EmailNotificationSender implements NotificationProcessor {
             helper.setTo(to);
             helper.setFrom(emailFrom);
         });
-
-        return true;
     }
 
 
     @Override
-    public NotificationType getSupportedNotificationType() {
-        return NotificationType.EMAIL;
+    public Set<NotificationType> getSupportedNotificationTypes() {
+        return Sets.newHashSet(NotificationType.EMAIL, NotificationType.EMAIL_BATCH);
     }
 }
