@@ -6,6 +6,7 @@ import org.wololo.geojson.Geometry;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(indexes = {@Index(name = "i_event_provider", columnList = "providerId,correlationId,action,eventTime")})
@@ -86,6 +87,17 @@ public abstract class Event implements Comparable<Event> {
 
     public void setPk(Long pk) {
         this.pk = pk;
+    }
+
+
+    /**
+     * Event time as date because freemarker does not support instants very well.
+     *
+     * @return
+     */
+    @Transient
+    public Date getEventTimeAsDate() {
+        return Date.from(eventTime);
     }
 
     @Override

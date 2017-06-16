@@ -24,7 +24,7 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
                     <td><#if jobEvent.action?has_content>${message("notification.email.jobevent.action.${jobEvent.action}")}</#if></td>
                     <td>${message("notification.email.jobevent.jobstate.${jobEvent.state}")}</td>
                     <td>${jobEvent.name!""}</td>
-                    <td>${jobEvent.eventTime}</td>
+                    <td>${jobEvent.eventTimeAsDate?datetime?iso_nz("Europe/Oslo")}</td>
                 </tr>
             </#list>
         </table>
@@ -53,7 +53,7 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
                     <td>${crudEvent.name}</td>
                     <td>${crudEvent.externalId!""}</td>
                     <td>${crudEvent.version}</td>
-                    <td>${crudEvent.eventTime}</td>
+                    <td>${crudEvent.eventTimeAsDate?datetime?iso_nz("Europe/Oslo")}</td>
                     <td><#if crudEvent.changeType?has_content>${message("notification.email.crudevent.changetype.${crudEvent.changeType}")}</#if></td>
                     <td>${crudEvent.oldValue!""}</td>
                     <td>${crudEvent.newValue!""}</td>
