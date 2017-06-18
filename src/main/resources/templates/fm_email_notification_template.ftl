@@ -48,7 +48,7 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
 
             <#list crudEventsForType as crudEvent>
                 <tr>
-                    <td>${crudEvent.entityClassifier}</td>
+                    <td><#if crudEvent.entityClassifier?has_content>${message("notification.email.crudevent.eventclassifier.${entityType}.${crudEvent.entityClassifier}")}</#if></td>
                     <td><#if crudEvent.action?has_content>${message("notification.email.crudevent.action.${crudEvent.action}")}</#if></td>
                     <td>${crudEvent.name}</td>
                     <td>${crudEvent.externalId!""}</td>
