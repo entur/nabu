@@ -106,6 +106,10 @@ public abstract class Event implements Comparable<Event> {
         if (corrCmp != 0) {
             return corrCmp;
         }
+        int extermalIdCmp = ObjectUtils.compare(externalId, o.externalId);
+        if (extermalIdCmp != 0) {
+            return extermalIdCmp;
+        }
 
         int dateCmp = ObjectUtils.compare(eventTime, o.eventTime);
         if (dateCmp != 0) {

@@ -30,7 +30,7 @@ public class EmailNotificationFormatterTest {
 
     @Test
     public void formatMailInNorwegian() {
-        Set<Notification> notifications = Sets.newHashSet(jobNotification("file.xml"), crudNotification(Instant.now()));
+        Set<Notification> notifications = Sets.newHashSet(jobNotification("file.xml"), crudNotification("NSR:StopPlace:16688", Instant.now()));
 
         String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("no"), providerList);
         System.out.println(msg);
@@ -45,10 +45,10 @@ public class EmailNotificationFormatterTest {
     public void formatMailWithTooManyEvents() {
         Instant now = Instant.now();
 
-        Set<Notification> notifications = Sets.newHashSet(jobNotification(null), crudNotification(now.minusMillis(1000)), crudNotification(now.minusMillis(2000)),
-                crudNotification(now.minusMillis(3000)), crudNotification(now.minusMillis(4000)));
+        Set<Notification> notifications = Sets.newHashSet(jobNotification(null), crudNotification("NSR:StopPlace:2", now.minusMillis(1000)), crudNotification("NSR:StopPlace:1", now.minusMillis(2000)),
+                crudNotification("NSR:StopPlace:2", now.minusMillis(3000)), crudNotification("NSR:StopPlace:3", now.minusMillis(4000)));
 
-        Notification oldestEvent = crudNotification(now.minusMillis(5000));
+        Notification oldestEvent = crudNotification("NSR:StopPlace:2", now.minusMillis(5000));
         oldestEvent.getEvent().setName("nameShouldNotBeInEmail");
         notifications.add(oldestEvent);
 
@@ -74,9 +74,9 @@ public class EmailNotificationFormatterTest {
 
     long pkCounter = 1;
 
-    private Notification crudNotification(Instant time) {
+    private Notification crudNotification(String id, Instant time) {
         Notification notification = new Notification();
-        CrudEvent event = CrudEvent.builder().entityType("StopPlace").entityClassifier("onstreetBus").version(1l).changeType("NAME").oldValue("Old name").newValue("Hakkadal").action("CREATE").name("Hakkadal").externalId("NSR:StopPlace:16688").eventTime(time).build();
+        CrudEvent event = CrudEvent.builder().entityType("StopPlace").entityClassifier("onstreetBus").version(1l).changeType("NAME").oldValue("Old name").newValue("Hakkadal").action("CREATE").name("Hakkadal").externalId(id).eventTime(time).build();
         event.setPk(pkCounter++);
         notification.setEvent(event);
 
