@@ -36,6 +36,8 @@ public class CrudEvent extends Event {
     @Column(columnDefinition = "geometry")
     private Geometry geometry;
 
+    private String comment;
+
     public String getEntityType() {
         return entityType;
     }
@@ -96,6 +98,14 @@ public class CrudEvent extends Event {
         return new CrudEventBuilder();
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public static class CrudEventBuilder extends EventBuilder<CrudEvent> {
 
 
@@ -124,21 +134,23 @@ public class CrudEvent extends Event {
             return this;
         }
 
-
         public CrudEventBuilder changeType(String changeType) {
             event.changeType = changeType;
             return this;
         }
-
 
         public CrudEventBuilder entityType(String entityType) {
             event.entityType = entityType;
             return this;
         }
 
-
         public CrudEventBuilder entityClassifier(String entityClassifier) {
             event.entityClassifier = entityClassifier;
+            return this;
+        }
+
+        public CrudEventBuilder comment(String comment) {
+            event.comment = comment;
             return this;
         }
     }
@@ -157,6 +169,7 @@ public class CrudEvent extends Event {
                        ", correlationId='" + getCorrelationId() + '\'' +
                        ", name='" + getName() + '\'' +
                        ", externalId='" + getExternalId() + '\'' +
+                       ", comment='" + getComment() + '\'' +
                        '}';
     }
 }
