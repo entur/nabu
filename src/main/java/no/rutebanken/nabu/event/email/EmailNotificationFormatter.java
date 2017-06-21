@@ -34,8 +34,11 @@ public class EmailNotificationFormatter {
 
     @Autowired
     private Configuration freemarkerConfiguration;
-    @Value("${notification.configuration.link:https://operator-test.rutebanken.org/}")
+
+    @Value("${notification.configuration.link:https://operator.rutebanken.org/}")
     private String notificationConfigurationLink;
+    @Value("${stop.place.link.prefix:https://stoppested-test.entur.org/edit/}")
+    private String stopPlaceLinkPrefix;
     @Value("${email.notification.max.length:50}")
     private int emailNotificationMaxEvents;
 
@@ -74,6 +77,7 @@ public class EmailNotificationFormatter {
         model.put("crudEvents", crudEventsPerEntityType);
         model.put("message", new MessageResolverMethod(locale));
         model.put("notificationConfigurationLink", notificationConfigurationLink);
+        model.put("stopPlaceLinkPrefix", stopPlaceLinkPrefix);
         model.put("emailNotificationMaxEvents", emailNotificationMaxEvents);
         model.put("totalNotificationsCnt", notifications.size());
 

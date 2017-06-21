@@ -76,7 +76,7 @@ public class EmailNotificationFormatterTest {
 
     private Notification crudNotification(Instant time) {
         Notification notification = new Notification();
-        CrudEvent event = CrudEvent.builder().entityType("StopPlace").entityClassifier("onstreetBus").version(1l).changeType("NAME").oldValue("Old name").newValue("Hakkadal").action("CREATE").name("Hakkadal").eventTime(time).build();
+        CrudEvent event = CrudEvent.builder().entityType("StopPlace").entityClassifier("onstreetBus").version(1l).changeType("NAME").oldValue("Old name").newValue("Hakkadal").action("CREATE").name("Hakkadal").externalId("NSR:StopPlace:16688").eventTime(time).build();
         event.setPk(pkCounter++);
         notification.setEvent(event);
 

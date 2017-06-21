@@ -51,7 +51,7 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
                     <td><#if crudEvent.entityClassifier?has_content>${message("notification.email.crudevent.eventclassifier.${entityType}.${crudEvent.entityClassifier}")}</#if></td>
                     <td><#if crudEvent.action?has_content>${message("notification.email.crudevent.action.${crudEvent.action}")}</#if></td>
                     <td>${crudEvent.name}</td>
-                    <td>${crudEvent.externalId!""}</td>
+                    <td><a href="${stopPlaceLinkPrefix!""}${crudEvent.externalId!""}">${crudEvent.externalId!""}</a></td>
                     <td>${crudEvent.version}</td>
                     <td>${crudEvent.eventTimeAsDate?datetime?iso_nz("Europe/Oslo")}</td>
                     <td><#if crudEvent.changeType?has_content>${message("notification.email.crudevent.changetype.${crudEvent.changeType}")}</#if></td>
