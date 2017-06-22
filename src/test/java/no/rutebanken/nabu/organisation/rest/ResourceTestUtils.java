@@ -1,6 +1,5 @@
 package no.rutebanken.nabu.organisation.rest;
 
-import no.rutebanken.nabu.organisation.model.user.NotificationConfiguration;
 import no.rutebanken.nabu.organisation.rest.dto.TypeDTO;
 import no.rutebanken.nabu.organisation.rest.dto.organisation.AdministrativeZoneDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;

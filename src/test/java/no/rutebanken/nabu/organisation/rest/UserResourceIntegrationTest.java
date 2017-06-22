@@ -1,9 +1,14 @@
 package no.rutebanken.nabu.organisation.rest;
 
+import com.google.common.collect.Sets;
+import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
+import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
+import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.UserDTO;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Set;
 
 
 public class UserResourceIntegrationTest extends BaseIntegrationTest {
@@ -60,6 +66,21 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
                 UserDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
 
+    }
+
+    @Test
+    public void updateUserWithNotificationConfigurations() {
+        ContactDetailsDTO createContactDetails = new ContactDetailsDTO("first", "last", "phone", "email@email.com");
+        UserDTO user = createUser("userWithNotificationConfig", TestConstantsOrganisation.ORGANISATION_ID, createContactDetails);
+        URI uri = restTemplate.postForLocation(PATH, user);
+        assertUser(user, uri);
+
+        Set<NotificationConfigDTO> config = Sets.newHashSet(new NotificationConfigDTO(NotificationType.WEB, false, jobEventFilter("action", JobState.FAILED)));
+        ResourceTestUtils.setNotificationConfig(restTemplate, user.username, config);
+
+        user.contactDetails.firstName = "changeFirstName";
+        restTemplate.put(uri, user);
+        assertUser(user, uri);
     }
 
     @Test
@@ -145,10 +166,6 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
 
     }
 
-    private boolean isEqual(EventFilterDTO in, EventFilterDTO out) {
-        return in.equals(out);
-    }
-
     @Test
     public void createInvalidUser() throws Exception {
         UserDTO inUser = createUser("user name", "privateCode", null);
@@ -157,4 +174,12 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
         Assert.assertEquals(HttpStatus.BAD_REQUEST, rsp.getStatusCode());
     }
 
+
+    private EventFilterDTO jobEventFilter(String action, JobState jobState) {
+        EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
+        eventFilterDTO.actions = Sets.newHashSet(action);
+        eventFilterDTO.jobDomain = JobEvent.JobDomain.TIMETABLE;
+        eventFilterDTO.states = Sets.newHashSet(jobState);
+        return eventFilterDTO;
+    }
 }

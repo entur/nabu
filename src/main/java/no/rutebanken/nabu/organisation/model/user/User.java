@@ -34,7 +34,7 @@ public class User extends VersionedEntity {
     @ManyToOne
     private Organisation organisation;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<NotificationConfiguration> notificationConfigurations;
 
     @ManyToMany
