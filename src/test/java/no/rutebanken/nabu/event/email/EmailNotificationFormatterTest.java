@@ -65,7 +65,7 @@ public class EmailNotificationFormatterTest {
     private Notification jobNotification(String fileName) {
         Notification notification = new Notification();
 
-        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).state(JobState.FAILED).providerId(providerList.get(0).id).referential("ref").action("IMPORT").name(fileName).eventTime(Instant.now()).build();
+        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).state(JobState.FAILED).providerId(providerList.get(0).id).referential("rb_bra").action("IMPORT").externalId("3209").name(fileName).eventTime(Instant.now()).build();
         event.setPk(pkCounter++);
         notification.setEvent(event);
 

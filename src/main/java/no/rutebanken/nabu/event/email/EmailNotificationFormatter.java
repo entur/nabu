@@ -46,8 +46,10 @@ public class EmailNotificationFormatter {
 
     @Value("${notification.configuration.link:https://operator.rutebanken.org/}")
     private String notificationConfigurationLink;
-    @Value("${stop.place.link.prefix:https://stoppested-test.entur.org/edit/}")
+    @Value("${stop.place.link.prefix:https://stoppested.entur.org/edit/}")
     private String stopPlaceLinkPrefix;
+    @Value("${stop.place.link.prefix:https://rutedb.entur.org/referentials/}")
+    private String timetableJobLinkPrefix;
     @Value("${email.notification.max.length:200}")
     private int emailNotificationMaxEvents;
 
@@ -87,6 +89,7 @@ public class EmailNotificationFormatter {
         model.put("message", new MessageResolverMethod(locale));
         model.put("notificationConfigurationLink", notificationConfigurationLink);
         model.put("stopPlaceLinkPrefix", stopPlaceLinkPrefix);
+        model.put("jobLink", new JobLinkResolverMethod(timetableJobLinkPrefix));
         model.put("emailNotificationMaxEvents", emailNotificationMaxEvents);
         model.put("totalNotificationsCnt", notifications.size());
 
