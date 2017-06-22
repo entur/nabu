@@ -48,7 +48,7 @@ public class EmailNotificationFormatter {
     private String notificationConfigurationLink;
     @Value("${stop.place.link.prefix:https://stoppested-test.entur.org/edit/}")
     private String stopPlaceLinkPrefix;
-    @Value("${email.notification.max.length:50}")
+    @Value("${email.notification.max.length:200}")
     private int emailNotificationMaxEvents;
 
 
