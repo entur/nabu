@@ -49,8 +49,8 @@ public class NotificationConfigurationResource {
     @PUT
     @PreAuthorize("#userName == authentication.name or hasRole('" + ROLE_ORGANISATION_EDIT + "')")
     public void createOrUpdate(@PathParam("userName") String userName, Set<NotificationConfigDTO> config) {
-        validator.validate(config);
-        User user = getUser(userName);
+        validator.validate(userName, config);
+        User user = getUser(userName.toLowerCase());
         user.setNotificationConfigurations(mapper.fromDTO(config));
         repository.save(user);
     }

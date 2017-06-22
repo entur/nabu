@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class NotificationConfigurationMapper {
     private OrganisationRepository organisationRepository;
 
 
-    public Set<NotificationConfigDTO> toDTO(Set<NotificationConfiguration> entity) {
+    public Set<NotificationConfigDTO> toDTO(Collection<NotificationConfiguration> entity) {
         if (CollectionUtils.isEmpty(entity)) {
             return new HashSet<>();
         }

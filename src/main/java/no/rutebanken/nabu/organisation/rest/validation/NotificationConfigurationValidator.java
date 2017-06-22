@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.Set;
+
 @Service
 public class NotificationConfigurationValidator {
 
 
-    public void validate(Set<NotificationConfigDTO> config) {
+    public void validate(String userName, Set<NotificationConfigDTO> config) {
+        Assert.notNull(userName, "userName required");
         if (config != null) {
             for (NotificationConfigDTO notificationConfigDTO : config) {
                 Assert.notNull(notificationConfigDTO.notificationType, "notifications.notificationType required");

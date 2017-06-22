@@ -18,6 +18,6 @@ public class TestConstantsOrganisation {
 
 	public static final String ROLE_ID = "testRole1";
 
-	public static final String USER_USERNAME = "testUser";
+	public static final String USER_USERNAME = "testuser";
 
 }
