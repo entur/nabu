@@ -21,4 +21,9 @@ public class CodeSpaceValidator implements DTOValidator<CodeSpace, CodeSpaceDTO>
 	private void assertCommon(CodeSpaceDTO dto) {
 		Assert.hasLength(dto.xmlnsUrl, "xmlnsUrl required");
 	}
+
+	@Override
+	public void validateDelete(CodeSpace entity) {
+		// TODO check whether in user
+	}
 }

@@ -56,6 +56,7 @@ public abstract class BaseResource<E extends VersionedEntity, D extends BaseDTO>
 
     public E deleteEntity(String id) {
         E entity = getExisting(id);
+        getValidator().validateDelete(entity);
         getRepository().delete(entity);
         return entity;
     }

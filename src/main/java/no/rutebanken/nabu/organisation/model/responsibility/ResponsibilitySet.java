@@ -4,8 +4,12 @@ import no.rutebanken.nabu.organisation.model.CodeSpace;
 import no.rutebanken.nabu.organisation.model.CodeSpaceEntity;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.*;
-import javax.validation.ValidationException;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;

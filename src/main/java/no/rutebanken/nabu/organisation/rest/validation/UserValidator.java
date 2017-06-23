@@ -1,8 +1,6 @@
 package no.rutebanken.nabu.organisation.rest.validation;
 
 import no.rutebanken.nabu.organisation.model.user.User;
-import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
-import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.UserDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -32,7 +30,10 @@ public class UserValidator implements DTOValidator<User, UserDTO> {
 
     }
 
-
+    @Override
+    public void validateDelete(User entity) {
+        // TODO check whether in user
+    }
 
 
     public static boolean isValidEmailAddress(String email) {

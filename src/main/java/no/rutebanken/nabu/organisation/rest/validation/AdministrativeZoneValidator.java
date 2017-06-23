@@ -21,4 +21,10 @@ public class AdministrativeZoneValidator implements DTOValidator<AdministrativeZ
 		Assert.hasLength(dto.name, "name required");
 		Assert.notNull(dto.polygon,"polygon required");
 	}
+
+
+	@Override
+	public void validateDelete(AdministrativeZone entity) {
+		// TODO check whether in user
+	}
 }
