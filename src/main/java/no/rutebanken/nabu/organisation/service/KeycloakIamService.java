@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -78,13 +79,15 @@ public class KeycloakIamService implements IamService {
 
         try {
             iamRealm.roles().get(role.getId()).remove();
+            logger.info("Role successfully removed from Keycloak: " + role.getId());
+        } catch (NotFoundException nfe) {
+            logger.info("Ignoring removeRole for role not found in Keycloak: " + role.getId());
         } catch (Exception e) {
             String msg = "Keycloak removeRole failed: " + e.getMessage();
             logger.info(msg, e);
             throw new OrganisationException(msg);
         }
 
-        logger.info("Role successfully removed from Keycloak: " + role.getId());
     }
 
     public void createUser(User user) {
@@ -146,13 +149,19 @@ public class KeycloakIamService implements IamService {
         try {
             UserResource iamUser = getUserResourceByUsername(user.getUsername());
             iamUser.remove();
+            logger.info("User successfully removed from Keycloak: " + user.getUsername());
+        } catch (NotFoundException nfe) {
+            logger.info("Ignoring removeUser for user not found in Keycloak: " + user.getUsername());
         } catch (Exception e) {
-            String msg = "Keycloak removeUser failed: " + e.getMessage();
-            logger.info(msg, e);
-            throw new OrganisationException(msg);
-        }
 
-        logger.info("User successfully removed from Keycloak: " + user.getUsername());
+            if (e.getMessage() != null && e.getMessage().startsWith("Username not found")) {
+                logger.info("Ignoring removeUser for user not found in Keycloak: " + user.getUsername());
+            } else {
+                String msg = "Keycloak removeUser failed: " + e.getMessage();
+                logger.info(msg, e);
+                throw new OrganisationException(msg);
+            }
+        }
     }
 
     @Override
