@@ -22,6 +22,7 @@ public class AdministrativeZone extends CodeSpaceEntity {
 	private Polygon polygon;
 
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	private AdministrativeZoneType administrativeZoneType;
 
 	public String getName() {
