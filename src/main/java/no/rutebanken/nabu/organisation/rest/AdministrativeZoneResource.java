@@ -1,6 +1,8 @@
 package no.rutebanken.nabu.organisation.rest;
 
 import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZone;
+import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZoneType;
+import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import no.rutebanken.nabu.organisation.repository.AdministrativeZoneRepository;
 import no.rutebanken.nabu.organisation.repository.VersionedEntityRepository;
 import no.rutebanken.nabu.organisation.rest.dto.organisation.AdministrativeZoneDTO;
@@ -13,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
@@ -52,4 +55,12 @@ public class AdministrativeZoneResource extends AnnotatedBaseResource<Administra
     protected DTOValidator<AdministrativeZone, AdministrativeZoneDTO> getValidator() {
         return validator;
     }
+
+
+    @GET
+    @Path("types")
+    public AdministrativeZoneType[] getAdministrativeZoneTypes() {
+        return AdministrativeZoneType.values();
+    }
+
 }

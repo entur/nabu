@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.organisation.rest;
 
+import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZoneType;
 import no.rutebanken.nabu.organisation.rest.dto.TypeDTO;
 import no.rutebanken.nabu.organisation.rest.dto.organisation.AdministrativeZoneDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
@@ -52,6 +53,7 @@ public class ResourceTestUtils {
         administrativeZone.privateCode = privateCode;
         administrativeZone.polygon = polygon;
         administrativeZone.codeSpace = CODE_SPACE_ID;
+        administrativeZone.type = AdministrativeZoneType.CUSTOM;
         return administrativeZone;
     }
 

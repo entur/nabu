@@ -29,6 +29,7 @@ public class AdministrativeZoneMapper implements DTOMapper<AdministrativeZone, A
 		dto.name = entity.getName();
 		dto.privateCode = entity.getPrivateCode();
 		dto.codeSpace = entity.getCodeSpace().getId();
+		dto.type = entity.getAdministrativeZoneType();
 
 		if (fullDetails) {
 			dto.polygon = (org.wololo.geojson.Polygon) writer.write(entity.getPolygon());
@@ -41,6 +42,7 @@ public class AdministrativeZoneMapper implements DTOMapper<AdministrativeZone, A
 		AdministrativeZone entity = new AdministrativeZone();
 		entity.setPrivateCode(dto.privateCode);
 		entity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
+		entity.setAdministrativeZoneType(dto.type);
 		return updateFromDTO(dto, entity);
 	}
 

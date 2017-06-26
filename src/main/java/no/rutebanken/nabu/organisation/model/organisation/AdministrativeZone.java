@@ -21,6 +21,9 @@ public class AdministrativeZone extends CodeSpaceEntity {
 	@NotNull
 	private Polygon polygon;
 
+	@NotNull
+	private AdministrativeZoneType administrativeZoneType;
+
 	public String getName() {
 		return name;
 	}
@@ -35,5 +38,14 @@ public class AdministrativeZone extends CodeSpaceEntity {
 
 	public void setPolygon(Polygon polygon) {
 		this.polygon = polygon;
+	}
+
+
+	public AdministrativeZoneType getAdministrativeZoneType() {
+		return administrativeZoneType;
+	}
+
+	public void setAdministrativeZoneType(AdministrativeZoneType administrativeZoneType) {
+		this.administrativeZoneType = administrativeZoneType;
 	}
 }

@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZone;
+import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZoneType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,6 +22,7 @@ public class AdministrativeZoneRepositoryTest extends BaseIntegrationTest {
 		zone.setPrivateCode("0101");
 		zone.setName("name");
 		zone.setCodeSpace(defaultCodeSpace);
+		zone.setAdministrativeZoneType(AdministrativeZoneType.COUNTY);
 
 		GeometryFactory fact = new GeometryFactory();
 		LinearRing linear = new GeometryFactory().createLinearRing(new Coordinate[]{new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(0, 0)});

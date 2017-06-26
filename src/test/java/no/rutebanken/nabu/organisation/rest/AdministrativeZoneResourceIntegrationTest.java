@@ -67,6 +67,7 @@ public class AdministrativeZoneResourceIntegrationTest extends BaseIntegrationTe
         AdministrativeZoneDTO outAdministrativeZone = rsp.getBody();
         Assert.assertEquals(inAdministrativeZone.name, outAdministrativeZone.name);
         Assert.assertEquals(inAdministrativeZone.privateCode, outAdministrativeZone.privateCode);
+        Assert.assertEquals(inAdministrativeZone.type, outAdministrativeZone.type);
     }
 
     @Test
