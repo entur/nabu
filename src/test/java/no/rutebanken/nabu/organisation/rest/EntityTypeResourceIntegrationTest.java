@@ -41,6 +41,10 @@ public class EntityTypeResourceIntegrationTest extends BaseIntegrationTest {
 		restTemplate.put(uri, updateEntityType);
 		assertEntityType(updateEntityType, uri);
 
+		// Save same again, should yield no changes
+		restTemplate.put(uri, updateEntityType);
+		assertEntityType(updateEntityType, uri);
+
 
 		EntityTypeDTO[] allEntityTypes =
 				restTemplate.getForObject(PATH, EntityTypeDTO[].class);
