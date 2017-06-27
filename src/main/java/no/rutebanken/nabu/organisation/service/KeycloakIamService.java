@@ -222,7 +222,9 @@ public class KeycloakIamService implements IamService {
     }
 
     private UserResource getUserResourceByUsername(String username) {
-        List<UserRepresentation> userRepresentations = iamRealm.users().search(username, null, null, null, 0, 2);
+        List<UserRepresentation> matchingUserRepresentations = iamRealm.users().search(username, null, null, null, 0, 50);
+
+        List<UserRepresentation> userRepresentations = matchingUserRepresentations.stream().filter(ur -> username.equals(ur.getUsername())).collect(Collectors.toList());
 
         if (userRepresentations.size() == 0) {
             throw new BadRequestException("Username not found in KeyCloak: " + username);
