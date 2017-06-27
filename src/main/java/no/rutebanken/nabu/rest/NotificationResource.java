@@ -103,6 +103,8 @@ public class NotificationResource {
 
         if (JobEvent.JobDomain.GRAPH.equals(jobDomain)) {
             actions.addAll(Arrays.asList("BUILD_GRAPH"));
+        } else if (JobEvent.JobDomain.TIAMAT.equals(jobDomain)) {
+            actions.addAll(Arrays.asList("EXPORT"));
         } else if (JobEvent.JobDomain.GEOCODER.equals(jobDomain)) {
             actions.addAll(Arrays.stream(GeoCoderAction.values()).map(value -> value.name()).collect(Collectors.toList()));
         } else if (JobEvent.JobDomain.TIMETABLE.equals(jobDomain)) {
