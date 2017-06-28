@@ -2,11 +2,17 @@ package no.rutebanken.nabu.organisation.rest.validation;
 
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.nabu.organisation.repository.UserRepository;
+import no.rutebanken.nabu.organisation.rest.dto.responsibility.EntityClassificationAssignmentDTO;
 import no.rutebanken.nabu.organisation.rest.dto.responsibility.ResponsibilityRoleAssignmentDTO;
 import no.rutebanken.nabu.organisation.rest.dto.responsibility.ResponsibilitySetDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class ResponsibilitySetValidator implements DTOValidator<ResponsibilitySet, ResponsibilitySetDTO> {
@@ -34,6 +40,20 @@ public class ResponsibilitySetValidator implements DTOValidator<ResponsibilitySe
             Assert.notNull(roleDto, "roles cannot be empty");
             Assert.hasLength(roleDto.typeOfResponsibilityRoleRef, "roles.typeOfResponsibilityRoleRef required");
             Assert.hasLength(roleDto.responsibleOrganisationRef, "roles.responsibleOrganisationRef required");
+
+            if (!CollectionUtils.isEmpty(roleDto.entityClassificationAssignments)) {
+                Set<String> uniqueClassificationIds=new HashSet<>();
+                for (EntityClassificationAssignmentDTO assignmentDTO:roleDto.entityClassificationAssignments){
+                    Assert.hasLength(assignmentDTO.entityClassificationRef,
+                            "roles.entityClassificationAssignments.entityClassificationRef required");
+
+                    Assert.isTrue(uniqueClassificationIds.add(assignmentDTO.entityClassificationRef),
+                            "roles.entityClassificationAssignments.entityClassificationRe must be unique");
+                }
+
+
+
+            }
         }
     }
 

@@ -11,7 +11,7 @@ public class ResponsibilityRoleAssignmentDTO extends BaseDTO {
 	public String responsibleOrganisationRef;
 	public String responsibleAreaRef;
 
-	public List<String> entityClassificationRefs = new ArrayList<>();
+	public List<EntityClassificationAssignmentDTO> entityClassificationAssignments = new ArrayList<>();
 
 	public ResponsibilityRoleAssignmentDTO() {
 	}

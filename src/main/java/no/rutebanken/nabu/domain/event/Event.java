@@ -1,9 +1,14 @@
 package no.rutebanken.nabu.domain.event;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.wololo.geojson.Geometry;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.Date;
@@ -28,6 +33,8 @@ public abstract class Event implements Comparable<Event> {
     private String name;
 
     private String externalId;
+
+    private String username;
 
     public Event() {
         registeredTime = Instant.now();
@@ -89,6 +96,13 @@ public abstract class Event implements Comparable<Event> {
         this.pk = pk;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     /**
      * Event time as date because freemarker does not support instants very well.
@@ -157,6 +171,10 @@ public abstract class Event implements Comparable<Event> {
             return this;
         }
 
+        public EventBuilder<T> username(String username) {
+            event.setExternalId(username);
+            return this;
+        }
 
         public EventBuilder<T> correlationId(String correlationId) {
             event.setCorrelationId(correlationId);

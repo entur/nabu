@@ -34,6 +34,7 @@ public class ApiCrudEvent {
 
     public String comment;
 
+    public String username;
 
     public static ApiCrudEvent fromCrudEvent(CrudEvent crudEvent) {
         ApiCrudEvent apiCrudEvent = new ApiCrudEvent();
@@ -49,6 +50,7 @@ public class ApiCrudEvent {
         apiCrudEvent.oldValue = crudEvent.getOldValue();
         apiCrudEvent.newValue = crudEvent.getNewValue();
         apiCrudEvent.comment = crudEvent.getComment();
+        apiCrudEvent.username = crudEvent.getUsername();
         return apiCrudEvent;
     }
 

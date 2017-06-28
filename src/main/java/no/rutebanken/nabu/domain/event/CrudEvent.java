@@ -169,6 +169,7 @@ public class CrudEvent extends Event {
                        ", correlationId='" + getCorrelationId() + '\'' +
                        ", name='" + getName() + '\'' +
                        ", externalId='" + getExternalId() + '\'' +
+                       ", username='" + getUsername() + '\'' +
                        ", comment='" + getComment() + '\'' +
                        '}';
     }

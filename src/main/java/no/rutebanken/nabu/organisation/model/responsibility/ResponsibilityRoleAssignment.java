@@ -4,6 +4,7 @@ import no.rutebanken.nabu.organisation.model.CodeSpace;
 import no.rutebanken.nabu.organisation.model.CodeSpaceEntity;
 import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.nabu.organisation.model.organisation.Organisation;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -28,9 +29,9 @@ public class ResponsibilityRoleAssignment extends CodeSpaceEntity {
     private AdministrativeZone responsibleArea;
 
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
-    @JoinTable(name = "RESPONSIBILITY_ROLE_ASSIGNMENT_ENTITY_CLASSIFICATIONS")
-    private Set<EntityClassification> responsibleEntityClassifications;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="responsibility_role_assignment_pk")
+    private Set<EntityClassificationAssignment> responsibleEntityClassifications;
 
 
     public Role getTypeOfResponsibilityRole() {
@@ -57,14 +58,25 @@ public class ResponsibilityRoleAssignment extends CodeSpaceEntity {
         this.responsibleArea = responsibleArea;
     }
 
-    public Set<EntityClassification> getResponsibleEntityClassifications() {
+    public Set<EntityClassificationAssignment> getResponsibleEntityClassifications() {
         if (responsibleEntityClassifications == null) {
             this.responsibleEntityClassifications = new HashSet<>();
         }
         return responsibleEntityClassifications;
     }
 
-    public void setResponsibleEntityClassifications(Set<EntityClassification> responsibleEntityClassifications) {
+    public EntityClassificationAssignment getResponsibleEntityClassification(String entityClassificationId) {
+        if (entityClassificationId != null && !CollectionUtils.isEmpty(responsibleEntityClassifications)) {
+            for (EntityClassificationAssignment existingClassificationAssignment : responsibleEntityClassifications) {
+                if (entityClassificationId.equals(existingClassificationAssignment.getEntityClassification().getId())) {
+                    return existingClassificationAssignment;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void setResponsibleEntityClassifications(Set<EntityClassificationAssignment> responsibleEntityClassifications) {
         getResponsibleEntityClassifications().clear();
         getResponsibleEntityClassifications().addAll(responsibleEntityClassifications);
     }
@@ -109,7 +121,7 @@ public class ResponsibilityRoleAssignment extends CodeSpaceEntity {
             return this;
         }
 
-        public Builder withResponsibleEntityClassifications(Set<EntityClassification> responsibleEntityClassifications) {
+        public Builder withResponsibleEntityClassifications(Set<EntityClassificationAssignment> responsibleEntityClassifications) {
             target.setResponsibleEntityClassifications(responsibleEntityClassifications);
             return this;
         }

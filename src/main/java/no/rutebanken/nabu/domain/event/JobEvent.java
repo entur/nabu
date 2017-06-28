@@ -131,6 +131,7 @@ public class JobEvent extends Event {
                        ", correlationId='" + getCorrelationId() + '\'' +
                        ", name='" + getName() + '\'' +
                        ", externalId='" + getExternalId() + '\'' +
+                       ", username='" + getUsername() + '\'' +
                        '}';
     }
 }

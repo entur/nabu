@@ -3,6 +3,7 @@ package no.rutebanken.nabu.organisation.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.rutebanken.nabu.organisation.model.OrganisationException;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
+import no.rutebanken.nabu.organisation.model.responsibility.EntityClassificationAssignment;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.nabu.organisation.model.responsibility.Role;
@@ -300,18 +301,28 @@ public class KeycloakIamService implements IamService {
     }
 
 
-    private void addEntityClassification(RoleAssignment atr, EntityClassification entityClassification) {
+    private void addEntityClassification(RoleAssignment atr, EntityClassificationAssignment entityClassificationAssignment) {
         if (atr.e == null) {
             atr.e = new HashMap<>();
         }
 
-        String entityTypeRef = entityClassification.getEntityType().getPrivateCode();
+
+        String entityTypeRef = entityClassificationAssignment.getEntityClassification().getEntityType().getPrivateCode();
         List<String> entityClassificationsForEntityType = atr.e.get(entityTypeRef);
         if (entityClassificationsForEntityType == null) {
             entityClassificationsForEntityType = new ArrayList<>();
             atr.e.put(entityTypeRef, entityClassificationsForEntityType);
         }
-        entityClassificationsForEntityType.add(entityClassification.getPrivateCode());
+
+
+        // Represented negated entity classifications with '!' prefix for now. consider more structured representation.
+        String classifierCode = entityClassificationAssignment.getEntityClassification().getPrivateCode();
+        if (!entityClassificationAssignment.isAllow()) {
+            classifierCode = "!" + classifierCode;
+        }
+
+        entityClassificationsForEntityType.add(classifierCode);
     }
+
 
 }
