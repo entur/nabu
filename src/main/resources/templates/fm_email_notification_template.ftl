@@ -72,7 +72,7 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
         <th>${message("notification.email.crudevent.header.classifier")}</th>
         <th>${message("notification.email.crudevent.header.action")}</th>
         <th>${message("notification.email.crudevent.header.name")}</th>
-        <th>${message("notification.email.crudevent.header.id")}</th>
+        <!--<th>${message("notification.email.crudevent.header.id")}</th> -->
         <th>${message("notification.email.crudevent.header.version")}</th>
         <th>${message("notification.email.crudevent.header.validFrom")}</th>
         <th>${message("notification.email.crudevent.header.comment")}</th>
@@ -86,8 +86,8 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
         <tr>
             <td><#if crudEvent.entityClassifier?has_content>${message("notification.email.crudevent.eventclassifier.${entityType}.${crudEvent.entityClassifier}")}</#if></td>
             <td><#if crudEvent.action?has_content>${message("notification.email.crudevent.action.${crudEvent.action}")}</#if></td>
-            <td>${crudEvent.name!""}</td>
-            <td><a href="${stopPlaceLinkPrefix!""}${crudEvent.externalId!""}">${crudEvent.externalId!""}</a></td>
+            <!--<td>${crudEvent.name!""}</td> -->
+            <td><a href="${stopPlaceLinkPrefix!""}${crudEvent.externalId!""}">${crudEvent.name!""}</a></td>
             <td>${crudEvent.version}</td>
             <td>${crudEvent.eventTimeAsDate?datetime?iso_nz("Europe/Oslo")}</td>
             <td>${crudEvent.comment!""}</td>
