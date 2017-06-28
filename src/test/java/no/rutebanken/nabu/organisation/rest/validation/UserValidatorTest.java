@@ -1,11 +1,6 @@
 package no.rutebanken.nabu.organisation.rest.validation;
 
-import no.rutebanken.nabu.domain.event.JobEvent;
-import no.rutebanken.nabu.domain.event.JobState;
-import no.rutebanken.nabu.organisation.model.user.NotificationType;
 import no.rutebanken.nabu.organisation.rest.dto.user.ContactDetailsDTO;
-import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
-import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.organisation.rest.dto.user.UserDTO;
 import org.junit.Test;
 

@@ -3,6 +3,7 @@ package no.rutebanken.nabu.organisation.service;
 import no.rutebanken.nabu.organisation.model.organisation.Authority;
 import no.rutebanken.nabu.organisation.model.organisation.Organisation;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
+import no.rutebanken.nabu.organisation.model.responsibility.EntityClassificationAssignment;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityType;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.nabu.organisation.model.responsibility.Role;
@@ -23,13 +24,21 @@ public class KeycloakIamServiceTest {
         Organisation organisation = new Authority();
         organisation.setPrivateCode("testOrg");
 
-        EntityClassification entityClassification = new EntityClassification();
-        entityClassification.setPrivateCode("*");
         EntityType entityType = new EntityType();
         entityType.setPrivateCode("StopPlace");
-        entityClassification.setEntityType(entityType);
 
-        orgRegRoleAssignment.getResponsibleEntityClassifications().add(entityClassification);
+        EntityClassification entityClassification = new EntityClassification();
+        entityClassification.setPrivateCode("*");
+        entityClassification.setEntityType(entityType);
+        EntityClassificationAssignment entityClassificationAssignment = new EntityClassificationAssignment(entityClassification, true);
+        orgRegRoleAssignment.getResponsibleEntityClassifications().add(entityClassificationAssignment);
+
+        EntityClassification entityClassificationNegated = new EntityClassification();
+        entityClassificationNegated.setPrivateCode("buss");
+        entityClassificationNegated.setEntityType(entityType);
+        EntityClassificationAssignment entityClassificationAssignmentNegated = new EntityClassificationAssignment(entityClassificationNegated, false);
+        orgRegRoleAssignment.getResponsibleEntityClassifications().add(entityClassificationAssignmentNegated);
+
 
         orgRegRoleAssignment.setTypeOfResponsibilityRole(role);
         orgRegRoleAssignment.setResponsibleOrganisation(organisation);
@@ -39,7 +48,8 @@ public class KeycloakIamServiceTest {
 
         Assert.assertEquals(role.getPrivateCode(), keycloakRoleAssignment.getRole());
         Assert.assertEquals(organisation.getPrivateCode(), keycloakRoleAssignment.getOrganisation());
-        Assert.assertEquals(Arrays.asList(entityClassification.getPrivateCode()), keycloakRoleAssignment.getEntityClassifications().get(entityType.getPrivateCode()));
+        Assert.assertEquals(Arrays.asList(entityClassification.getPrivateCode(), "!" + entityClassificationNegated.getPrivateCode()),
+                keycloakRoleAssignment.getEntityClassifications().get(entityType.getPrivateCode()));
         Assert.assertNull(keycloakRoleAssignment.getAdministrativeZone());
     }
 
