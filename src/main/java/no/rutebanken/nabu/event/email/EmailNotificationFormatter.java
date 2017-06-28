@@ -44,13 +44,13 @@ public class EmailNotificationFormatter {
     @Autowired
     private Configuration freemarkerConfiguration;
 
-    @Value("${notification.configuration.link:https://operator.rutebanken.org/}")
+    @Value("${notification.operator.link:https://operator.rutebanken.org/}")
     private String notificationConfigurationLink;
-    @Value("${stop.place.link.prefix:https://stoppested.entur.org/edit/}")
+    @Value("${notification.stop.place.link.prefix:https://stoppested.entur.org/edit/}")
     private String stopPlaceLinkPrefix;
-    @Value("${stop.place.link.prefix:https://rutedb.entur.org/referentials/}")
+    @Value("${notification.timetable.link.prefix:https://rutedb.entur.org/referentials/}")
     private String timetableJobLinkPrefix;
-    @Value("${email.notification.max.length:200}")
+    @Value("${notification.email.max.length:200}")
     private int emailNotificationMaxEvents;
 
 

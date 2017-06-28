@@ -33,11 +33,11 @@ public class EmailNotificationSender implements NotificationProcessor {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${email.notification.from:varsel@entur.no}")
+    @Value("${notification.email.from:varsel@entur.no}")
     private String emailFrom;
 
 
-    @Value("${email.notification.language.default:en}")
+    @Value("${notification.email.language.default:en}")
     private String emailLanguageDefault;
 
 
