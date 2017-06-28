@@ -33,13 +33,13 @@ public class KeycloakIamServiceTest {
         EntityClassification entityClassification = new EntityClassification();
         entityClassification.setPrivateCode("*");
         entityClassification.setEntityType(entityType);
-        EntityClassificationAssignment entityClassificationAssignment = new EntityClassificationAssignment(entityClassification, true);
+        EntityClassificationAssignment entityClassificationAssignment = new EntityClassificationAssignment(entityClassification, orgRegRoleAssignment, true);
         orgRegRoleAssignment.getResponsibleEntityClassifications().add(entityClassificationAssignment);
 
         EntityClassification entityClassificationNegated = new EntityClassification();
         entityClassificationNegated.setPrivateCode("buss");
         entityClassificationNegated.setEntityType(entityType);
-        EntityClassificationAssignment entityClassificationAssignmentNegated = new EntityClassificationAssignment(entityClassificationNegated, false);
+        EntityClassificationAssignment entityClassificationAssignmentNegated = new EntityClassificationAssignment(entityClassificationNegated, orgRegRoleAssignment, false);
         orgRegRoleAssignment.getResponsibleEntityClassifications().add(entityClassificationAssignmentNegated);
 
 

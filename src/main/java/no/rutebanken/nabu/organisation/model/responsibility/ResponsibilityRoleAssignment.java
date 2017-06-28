@@ -29,8 +29,7 @@ public class ResponsibilityRoleAssignment extends CodeSpaceEntity {
     private AdministrativeZone responsibleArea;
 
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="responsibility_role_assignment_pk")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER, mappedBy = "responsibilityRoleAssignment")
     private Set<EntityClassificationAssignment> responsibleEntityClassifications;
 
 
@@ -83,9 +82,7 @@ public class ResponsibilityRoleAssignment extends CodeSpaceEntity {
 
     @PreRemove
     private void removeResponsibilitySetConnections() {
-        if (responsibleEntityClassifications != null) {
-            responsibleEntityClassifications.clear();
-        }
+        getResponsibleEntityClassifications().clear();
     }
 
     public static Builder builder() {

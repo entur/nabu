@@ -91,6 +91,10 @@ public class ResponsibilitySetResourceIntegrationTest extends BaseIntegrationTes
 
         restTemplate.put(uri, responsibilitySet);
         assertResponsibilitySet(responsibilitySet, uri);
+
+        responsibilitySet.roles.remove(0);
+        restTemplate.put(uri, responsibilitySet);
+        assertResponsibilitySet(responsibilitySet, uri);
     }
 
 

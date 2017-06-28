@@ -6,6 +6,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
@@ -24,7 +25,7 @@ public class ResponsibilitySet extends CodeSpaceEntity {
     private String name;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<ResponsibilityRoleAssignment> roles;
 
     public String getName() {
@@ -43,7 +44,13 @@ public class ResponsibilitySet extends CodeSpaceEntity {
     }
 
     public void setRoles(Set<ResponsibilityRoleAssignment> roles) {
-        this.roles = roles;
+        if (this.roles == null) {
+            this.roles = roles;
+        } else {
+            this.roles.clear();
+            this.roles.addAll(roles);
+        }
+
     }
 
     public ResponsibilitySet() {

@@ -141,7 +141,8 @@ public class ResponsibilitySetMapper implements DTOMapper<ResponsibilitySet, Res
                 existingClassification.setAllow(dtoClassification.allow);
             } else {
                 EntityClassification entityClassification = entityClassificationRepository.getOneByPublicId(dtoClassification.entityClassificationRef);
-                entity.getResponsibleEntityClassifications().add(new EntityClassificationAssignment(entityClassification, dtoClassification.allow));
+
+                entity.getResponsibleEntityClassifications().add(new EntityClassificationAssignment(entityClassification, entity, dtoClassification.allow));
             }
         }
         entity.getResponsibleEntityClassifications().removeAll(removedClassifications);

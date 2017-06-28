@@ -21,13 +21,17 @@ public class EntityClassificationAssignment {
     @NotNull
     private EntityClassification entityClassification;
 
+    @ManyToOne
+    private ResponsibilityRoleAssignment responsibilityRoleAssignment;
+
     private boolean allow = true;
 
     public EntityClassificationAssignment() {
     }
 
-    public EntityClassificationAssignment(EntityClassification entityClassification, boolean allow) {
+    public EntityClassificationAssignment(EntityClassification entityClassification, ResponsibilityRoleAssignment responsibilityRoleAssignment, boolean allow) {
         this.entityClassification = entityClassification;
+        this.responsibilityRoleAssignment = responsibilityRoleAssignment;
         this.allow = allow;
     }
 
@@ -45,6 +49,15 @@ public class EntityClassificationAssignment {
 
     public void setAllow(boolean allow) {
         this.allow = allow;
+    }
+
+
+    public ResponsibilityRoleAssignment getResponsibilityRoleAssignment() {
+        return responsibilityRoleAssignment;
+    }
+
+    public void setResponsibilityRoleAssignment(ResponsibilityRoleAssignment responsibilityRoleAssignment) {
+        this.responsibilityRoleAssignment = responsibilityRoleAssignment;
     }
 
     @Override
