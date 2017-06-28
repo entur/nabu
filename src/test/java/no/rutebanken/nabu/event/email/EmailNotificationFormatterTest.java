@@ -1,12 +1,13 @@
 package no.rutebanken.nabu.event.email;
 
-import com.google.common.collect.Sets;
-import no.rutebanken.nabu.NabuTestApp;
-import no.rutebanken.nabu.domain.Provider;
-import no.rutebanken.nabu.domain.event.CrudEvent;
-import no.rutebanken.nabu.domain.event.JobEvent;
-import no.rutebanken.nabu.domain.event.JobState;
-import no.rutebanken.nabu.domain.event.Notification;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import com.google.common.collect.Sets;
+
+import no.rutebanken.nabu.NabuTestApp;
+import no.rutebanken.nabu.domain.Provider;
+import no.rutebanken.nabu.domain.event.CrudEvent;
+import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.domain.event.Notification;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = NabuTestApp.class)
@@ -29,11 +33,14 @@ public class EmailNotificationFormatterTest {
     private List<Provider> providerList = Arrays.asList(new Provider(1l, "ProviderName", null, null));
 
     @Test
-    public void formatMailInNorwegian() {
+    public void formatMailInNorwegian() throws FileNotFoundException {
         Set<Notification> notifications = Sets.newHashSet(jobNotification("file.xml"), maxCrudNotification("NSR:StopPlace:16688", Instant.now()));
 
         String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("no"), providerList);
         System.out.println(msg);
+        PrintWriter out = new PrintWriter("target/email.html");
+        out.write(msg);
+        out.close();
         Assert.assertTrue(msg.startsWith("<html>"));
         Assert.assertFalse("Expected all message keys to have been resolved", msg.contains("notification.email"));
         Assert.assertTrue(msg.contains("varsling"));   // TODO norwegian still missing lots of values. How do we verify?
