@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.organisation.service;
 
+import com.google.common.collect.Sets;
 import no.rutebanken.nabu.organisation.model.organisation.Authority;
 import no.rutebanken.nabu.organisation.model.organisation.Organisation;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
@@ -11,7 +12,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.rutebanken.helper.organisation.RoleAssignment;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class KeycloakIamServiceTest {
 
@@ -48,8 +51,12 @@ public class KeycloakIamServiceTest {
 
         Assert.assertEquals(role.getPrivateCode(), keycloakRoleAssignment.getRole());
         Assert.assertEquals(organisation.getPrivateCode(), keycloakRoleAssignment.getOrganisation());
-        Assert.assertEquals(Arrays.asList(entityClassification.getPrivateCode(), "!" + entityClassificationNegated.getPrivateCode()),
-                keycloakRoleAssignment.getEntityClassifications().get(entityType.getPrivateCode()));
+
+
+        Set<String> expectedCodes = Sets.newHashSet(entityClassification.getPrivateCode(), "!" + entityClassificationNegated.getPrivateCode());
+        List<String> classificationCodeList = keycloakRoleAssignment.getEntityClassifications().get(entityType.getPrivateCode());
+        Assert.assertEquals(expectedCodes,
+                new HashSet<>(classificationCodeList));
         Assert.assertNull(keycloakRoleAssignment.getAdministrativeZone());
     }
 
