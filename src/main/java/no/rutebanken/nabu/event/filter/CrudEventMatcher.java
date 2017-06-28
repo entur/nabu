@@ -14,6 +14,8 @@ public class CrudEventMatcher implements EventMatcher {
 
     public CrudEventMatcher(CrudEventFilter crudEventFilter) {
         this.crudEventFilter = crudEventFilter;
+        // Ensure (potentially to be cached) administrative zone polygons are loaded.
+        this.crudEventFilter.getAdministrativeZones().forEach(az -> az.getPolygon().isValid());
     }
 
     @Override
