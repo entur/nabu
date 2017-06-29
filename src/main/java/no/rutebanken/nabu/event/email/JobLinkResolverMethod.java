@@ -45,7 +45,7 @@ public class JobLinkResolverMethod implements TemplateMethodModelEx {
             resource = "exports/" + jobEvent.getExternalId() + "/compliance_check";
         } else if (jobEvent.getAction().equals(TimeTableAction.VALIDATION_LEVEL_1.name())
                            || jobEvent.getAction().equals(TimeTableAction.VALIDATION_LEVEL_2.name())) {
-            resource = "compliance_check/" + jobEvent.getExternalId() + "/report";
+            resource = "compliance_checks/" + jobEvent.getExternalId() + "/report";
         }
 
         if (resource == null) {
