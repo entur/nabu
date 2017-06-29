@@ -37,13 +37,13 @@ public class JobLinkResolverMethodTest {
     @Test
     public void testValidationL1Link() {
         JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).referential("rb_ref").action(TimeTableAction.VALIDATION_LEVEL_1.name()).externalId("7").build();
-        assertLink(event, "rb_ref/compliance_check/7/report");
+        assertLink(event, "rb_ref/compliance_checks/7/report");
     }
 
     @Test
     public void testValidationL2Link() {
         JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).referential("rb_ref").action(TimeTableAction.VALIDATION_LEVEL_2.name()).externalId("7").build();
-        assertLink(event, "rb_ref/compliance_check/7/report");
+        assertLink(event, "rb_ref/compliance_checks/7/report");
     }
 
     @Test
