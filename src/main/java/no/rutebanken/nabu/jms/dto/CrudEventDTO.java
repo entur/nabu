@@ -35,6 +35,8 @@ public class CrudEventDTO {
 
     public String comment;
 
+    public String username;
+
     public Geometry geometry;
 
 

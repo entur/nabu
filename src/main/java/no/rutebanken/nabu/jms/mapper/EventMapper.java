@@ -25,6 +25,7 @@ public class EventMapper {
         event.setOldValue(dto.oldValue);
         event.setNewValue(dto.newValue);
         event.setComment(dto.comment);
+        event.setUsername(dto.username);
 
         if (dto.geometry != null) {
             event.setGeometry(new GeoJSONReader().read(dto.geometry));

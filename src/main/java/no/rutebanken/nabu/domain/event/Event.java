@@ -172,7 +172,7 @@ public abstract class Event implements Comparable<Event> {
         }
 
         public EventBuilder<T> username(String username) {
-            event.setExternalId(username);
+            event.setUsername(username);
             return this;
         }
 

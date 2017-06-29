@@ -92,7 +92,7 @@ public class EmailNotificationFormatterTest {
 
     private Notification maxCrudNotification(String id, Instant time) {
         Notification notification = new Notification();
-        CrudEvent event = CrudEvent.builder().entityType("StopPlace").entityClassifier("onstreetBus").version(1l).comment("comment").changeType("NAME").oldValue("Old name").newValue("Hakkadal").action("CREATE").name("Hakkadal").externalId(id).eventTime(time).build();
+        CrudEvent event = CrudEvent.builder().entityType("StopPlace").entityClassifier("onstreetBus").version(1l).comment("comment").changeType("NAME").oldValue("Old name").newValue("Hakkadal").username("User e").action("CREATE").name("Hakkadal").externalId(id).eventTime(time).build();
         event.setPk(pkCounter++);
         notification.setEvent(event);
 
