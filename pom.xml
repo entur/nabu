@@ -326,6 +326,11 @@
             <version>${httpcomponents-fluent.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.passay</groupId>
+            <artifactId>passay</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.assertj</groupId>

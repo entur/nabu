@@ -15,6 +15,9 @@ import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
 import org.rutebanken.helper.organisation.RoleAssignment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +40,6 @@ public class KeycloakIamService implements IamService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${iam.keycloak.integration.enabled:true}")
     private boolean enabled;
-
-    @Value("${iam.keycloak.default.password:Password123}")
-    private String defaultPassword;
 
     @Value("#{'${iam.keycloak.default.roles:rutebanken}'.split(',')}")
     private List<String> defaultRoles;
@@ -128,6 +128,17 @@ public class KeycloakIamService implements IamService {
         }
     }
 
+    @Override
+    public void resetPassword(User user) {
+        try {
+            resetPassword(user.getUsername());
+        } catch (Exception e) {
+            String msg = "Keycloak resetPassword failed: " + e.getMessage();
+            logger.info(msg, e);
+            throw new OrganisationException(msg);
+        }
+    }
+
     private void updateUser(User user, List<Role> systemRoles) {
         if (!enabled) {
             logger.info("Keycloak disabled! Ignored updateUser: " + user.getUsername());
@@ -188,7 +199,7 @@ public class KeycloakIamService implements IamService {
     private void resetPassword(String username) {
         CredentialRepresentation credential = new CredentialRepresentation();
         credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(defaultPassword);
+        credential.setValue(generatePassword());
         credential.setTemporary(Boolean.TRUE);
         getUserResourceByUsername(username).resetPassword(credential);
     }
@@ -199,6 +210,17 @@ public class KeycloakIamService implements IamService {
             roleNames.addAll(responsibilitySet.getRoles().stream().map(r -> r.getTypeOfResponsibilityRole().getId()).collect(Collectors.toSet()));
         }
         return roleNames;
+    }
+
+    String generatePassword() {
+        List<CharacterRule> rules = Arrays.asList(
+                // at least one upper-case character
+                new CharacterRule(EnglishCharacterData.UpperCase, 1),
+                // at least one lower-case character
+                new CharacterRule(EnglishCharacterData.LowerCase, 1),
+                // at least one digit character
+                new CharacterRule(EnglishCharacterData.Digit, 1));
+        return new PasswordGenerator().generatePassword(12, rules);
     }
 
 

@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.organisation.rest;
 
+import no.rutebanken.nabu.organisation.email.NewUserEmailSender;
 import no.rutebanken.nabu.organisation.model.user.User;
 import no.rutebanken.nabu.organisation.repository.UserRepository;
 import no.rutebanken.nabu.organisation.repository.VersionedEntityRepository;
@@ -14,7 +15,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.ws.rs.*;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -38,6 +46,9 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @Autowired
     private IamService iamService;
 
+    @Autowired
+    private NewUserEmailSender newUserEmailSender;
+
     @GET
     @Path("{id}")
     public UserDTO get(@PathParam("id") String id, @QueryParam("full") boolean fullObject) {
@@ -49,6 +60,7 @@ public class UserResource extends BaseResource<User, UserDTO> {
     public Response create(UserDTO dto, @Context UriInfo uriInfo) {
         User user = createEntity(dto);
         iamService.createUser(user);
+        newUserEmailSender.sendEmail(user);
         return buildCreatedResponse(uriInfo, user);
     }
 
@@ -65,6 +77,15 @@ public class UserResource extends BaseResource<User, UserDTO> {
     public void delete(@PathParam("id") String id) {
         User user = deleteEntity(id);
         iamService.removeUser(user);
+    }
+
+
+    @POST
+    @Path("{id}/resetPassword")
+    public void resetPassword(@PathParam("id") String id) {
+        User user = getExisting(id);
+        iamService.resetPassword(user);
+        newUserEmailSender.sendEmail(user);
     }
 
     @GET

@@ -60,5 +60,15 @@ public class KeycloakIamServiceTest {
         Assert.assertNull(keycloakRoleAssignment.getAdministrativeZone());
     }
 
+    @Test
+    public void testGeneratePassword() {
+        KeycloakIamService iamService = new KeycloakIamService();
+
+        String password = iamService.generatePassword();
+        Assert.assertEquals(12, password.length());
+        Assert.assertNotEquals(password.toLowerCase(),password);
+        Assert.assertNotEquals(password.toUpperCase(),password);
+    }
+
 
 }

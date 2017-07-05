@@ -8,6 +8,7 @@ import no.rutebanken.nabu.domain.Provider;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.Notification;
+import no.rutebanken.nabu.organisation.email.MessageResolverMethod;
 import no.rutebanken.nabu.repository.ProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,12 +45,13 @@ public class EmailNotificationFormatter {
     @Autowired
     private Configuration freemarkerConfiguration;
 
-    @Value("${notification.operator.link:https://operator.rutebanken.org/}")
-    private String notificationConfigurationLink;
-    @Value("${notification.stop.place.link.prefix:https://stoppested.entur.org/edit/}")
-    private String stopPlaceLinkPrefix;
-    @Value("${notification.timetable.link.prefix:https://rutedb.entur.org/referentials/}")
-    private String timetableJobLinkPrefix;
+    @Value("${email.link.operator:https://operator.rutebanken.org/}")
+    private String operatorLink;
+    @Value("${email.link.stop.place:https://stoppested.entur.org/}")
+    private String stopPlaceLink;
+    @Value("${email.link.routedb:https://rutedb.entur.org/}")
+    private String routedbLink;
+
     @Value("${notification.email.max.length:200}")
     private int emailNotificationMaxEvents;
 
@@ -86,10 +88,10 @@ public class EmailNotificationFormatter {
 
         model.put("jobEvents", jobEventsPerDomain);
         model.put("crudEvents", crudEventsPerEntityType);
-        model.put("message", new MessageResolverMethod(locale));
-        model.put("notificationConfigurationLink", notificationConfigurationLink);
-        model.put("stopPlaceLinkPrefix", stopPlaceLinkPrefix);
-        model.put("jobLink", new JobLinkResolverMethod(timetableJobLinkPrefix));
+        model.put("message", new MessageResolverMethod(messageSource,locale));
+        model.put("notificationConfigurationLink", operatorLink);
+        model.put("stopPlaceLinkPrefix", stopPlaceLink+"edit/");
+        model.put("jobLink", new JobLinkResolverMethod(routedbLink+"/referentials"));
         model.put("emailNotificationMaxEvents", emailNotificationMaxEvents);
         model.put("totalNotificationsCnt", notifications.size());
 
@@ -111,33 +113,6 @@ public class EmailNotificationFormatter {
     }
 
 
-    private class MessageResolverMethod implements TemplateMethodModelEx {
 
-        private Locale locale;
-
-        public MessageResolverMethod(Locale locale) {
-            this.locale = locale;
-        }
-
-
-        @Override
-        public Object exec(List arguments) throws TemplateModelException {
-            if (arguments.size() < 1) {
-                throw new TemplateModelException("Wrong number of arguments");
-            }
-            SimpleScalar arg = (SimpleScalar) arguments.get(0);
-            String code = arg.getAsString();
-            if (code == null || code.isEmpty()) {
-                throw new TemplateModelException("Invalid code value '" + code + "'");
-            }
-
-            Object[] argsArray = null;
-            if (arguments.size() > 1) {
-                argsArray = arguments.subList(1, arguments.size()).toArray();
-            }
-
-            return messageSource.getMessage(code, argsArray, code, locale);
-        }
-    }
 
 }
