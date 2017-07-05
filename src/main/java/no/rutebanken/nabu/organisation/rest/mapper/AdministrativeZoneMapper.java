@@ -15,45 +15,47 @@ import javax.ws.rs.BadRequestException;
 @Service
 public class AdministrativeZoneMapper implements DTOMapper<AdministrativeZone, AdministrativeZoneDTO> {
 
-	private GeoJSONWriter writer = new GeoJSONWriter();
-	private GeoJSONReader reader = new GeoJSONReader();
+    private GeoJSONWriter writer = new GeoJSONWriter();
+    private GeoJSONReader reader = new GeoJSONReader();
 
 
-	@Autowired
-	protected CodeSpaceRepository codeSpaceRepository;
+    @Autowired
+    protected CodeSpaceRepository codeSpaceRepository;
 
 
-	public AdministrativeZoneDTO toDTO(AdministrativeZone entity, boolean fullDetails) {
-		AdministrativeZoneDTO dto = new AdministrativeZoneDTO();
-		dto.id = entity.getId();
-		dto.name = entity.getName();
-		dto.privateCode = entity.getPrivateCode();
-		dto.codeSpace = entity.getCodeSpace().getId();
-		dto.type = entity.getAdministrativeZoneType();
+    public AdministrativeZoneDTO toDTO(AdministrativeZone entity, boolean fullDetails) {
+        AdministrativeZoneDTO dto = new AdministrativeZoneDTO();
+        dto.id = entity.getId();
+        dto.name = entity.getName();
+        dto.privateCode = entity.getPrivateCode();
+        dto.codeSpace = entity.getCodeSpace().getId();
+        dto.type = entity.getAdministrativeZoneType();
+        dto.source = entity.getSource();
 
-		if (fullDetails) {
-			dto.polygon = (org.wololo.geojson.Polygon) writer.write(entity.getPolygon());
-		}
-		return dto;
-	}
+        if (fullDetails) {
+            dto.polygon = (org.wololo.geojson.Polygon) writer.write(entity.getPolygon());
+        }
+        return dto;
+    }
 
-	@Override
-	public AdministrativeZone createFromDTO(AdministrativeZoneDTO dto, Class<AdministrativeZone> clazz) {
-		AdministrativeZone entity = new AdministrativeZone();
-		entity.setPrivateCode(dto.privateCode);
-		entity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
-		entity.setAdministrativeZoneType(dto.type);
-		return updateFromDTO(dto, entity);
-	}
+    @Override
+    public AdministrativeZone createFromDTO(AdministrativeZoneDTO dto, Class<AdministrativeZone> clazz) {
+        AdministrativeZone entity = new AdministrativeZone();
+        entity.setPrivateCode(dto.privateCode);
+        entity.setCodeSpace(codeSpaceRepository.getOneByPublicId(dto.codeSpace));
+        return updateFromDTO(dto, entity);
+    }
 
-	@Override
-	public AdministrativeZone updateFromDTO(AdministrativeZoneDTO dto, AdministrativeZone entity) {
-		Geometry geometry = reader.read(dto.polygon);
-		if (!(geometry instanceof Polygon)) {
-			throw new BadRequestException("Polygon is not a valid polygon");
-		}
-		entity.setPolygon((Polygon) geometry);
-		entity.setName(dto.name);
-		return entity;
-	}
+    @Override
+    public AdministrativeZone updateFromDTO(AdministrativeZoneDTO dto, AdministrativeZone entity) {
+        Geometry geometry = reader.read(dto.polygon);
+        if (!(geometry instanceof Polygon)) {
+            throw new BadRequestException("Polygon is not a valid polygon");
+        }
+        entity.setPolygon((Polygon) geometry);
+        entity.setAdministrativeZoneType(dto.type);
+        entity.setName(dto.name);
+        entity.setSource(dto.source);
+        return entity;
+    }
 }
