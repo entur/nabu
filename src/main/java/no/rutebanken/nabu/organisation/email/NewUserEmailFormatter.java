@@ -21,7 +21,7 @@ public class NewUserEmailFormatter {
     @Autowired
     private Configuration freemarkerConfiguration;
 
-    @Value("${email.link.operator:https://www.dit.no/auth/realms/rutebanken/login-actions/reset-credentials}")
+    @Value("${email.link.password.reset:https://www.dit.no/auth/realms/rutebanken/login-actions/reset-credentials}")
     private String forgotPasswordLink;
 
     @Value("${email.link.operator:https://operator.rutebanken.org/}")
