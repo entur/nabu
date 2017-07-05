@@ -54,6 +54,7 @@ public class ResourceTestUtils {
         administrativeZone.polygon = polygon;
         administrativeZone.codeSpace = CODE_SPACE_ID;
         administrativeZone.type = AdministrativeZoneType.CUSTOM;
+        administrativeZone.source = "KVE";
         return administrativeZone;
     }
 

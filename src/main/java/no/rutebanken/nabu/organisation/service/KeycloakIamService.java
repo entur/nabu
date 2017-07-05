@@ -2,7 +2,6 @@ package no.rutebanken.nabu.organisation.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.rutebanken.nabu.organisation.model.OrganisationException;
-import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassificationAssignment;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilityRoleAssignment;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
@@ -31,7 +30,13 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -313,7 +318,7 @@ public class KeycloakIamService implements IamService {
         atr.o = roleAssignment.getResponsibleOrganisation().getPrivateCode();
 
         if (roleAssignment.getResponsibleArea() != null) {
-            atr.z = roleAssignment.getResponsibleArea().getPrivateCode();
+            atr.z = roleAssignment.getResponsibleArea().getRoleAssignmentId();
         }
 
         if (!CollectionUtils.isEmpty(roleAssignment.getResponsibleEntityClassifications())) {

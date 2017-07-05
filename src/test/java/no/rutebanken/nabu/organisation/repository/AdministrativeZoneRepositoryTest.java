@@ -23,6 +23,7 @@ public class AdministrativeZoneRepositoryTest extends BaseIntegrationTest {
 		zone.setName("name");
 		zone.setCodeSpace(defaultCodeSpace);
 		zone.setAdministrativeZoneType(AdministrativeZoneType.COUNTY);
+		zone.setSource("KVE");
 
 		GeometryFactory fact = new GeometryFactory();
 		LinearRing linear = new GeometryFactory().createLinearRing(new Coordinate[]{new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(1, 1), new Coordinate(0, 0)});

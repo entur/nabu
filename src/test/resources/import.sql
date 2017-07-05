@@ -26,8 +26,8 @@ insert into responsibility_role_assignment (pk,entity_version,lock_version,priva
 insert into responsibility_role_assignment (pk,entity_version,lock_version,private_code,code_space_pk,responsible_organisation_pk,type_of_responsibility_role_pk) VALUES (2,1,1,'2',1,1,2);
 insert into responsibility_role_assignment (pk,entity_version,lock_version,private_code,code_space_pk,responsible_organisation_pk,type_of_responsibility_role_pk) VALUES (3,1,1,'3',1,1,2);
 
-insert into ENTITY_CLASSIFICATION_ASSIGNMENT (pk,responsibility_role_assignment_pk, entity_classifications_pk, allowed) values (1,1,1,'t');
-insert into ENTITY_CLASSIFICATION_ASSIGNMENT (pk,responsibility_role_assignment_pk, entity_classifications_pk, allowed) values (2,1,3,'t');
+insert into ENTITY_CLASSIFICATION_ASSIGNMENT (pk,responsibility_role_assignment_pk, entity_classification_pk, allowed) values (1,1,1,'t');
+insert into ENTITY_CLASSIFICATION_ASSIGNMENT (pk,responsibility_role_assignment_pk, entity_classification_pk, allowed) values (2,1,3,'t');
 
 
 insert into responsibility_set (pk,entity_version,lock_version,private_code,code_space_pk,name) values (1,1,1,'RspSetTst',1,'Test rsp set');

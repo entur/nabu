@@ -1,6 +1,7 @@
 package no.rutebanken.nabu.organisation.service;
 
 import com.google.common.collect.Sets;
+import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.nabu.organisation.model.organisation.Authority;
 import no.rutebanken.nabu.organisation.model.organisation.Organisation;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
@@ -46,6 +47,10 @@ public class KeycloakIamServiceTest {
         orgRegRoleAssignment.setTypeOfResponsibilityRole(role);
         orgRegRoleAssignment.setResponsibleOrganisation(organisation);
 
+        AdministrativeZone administrativeZone = new AdministrativeZone();
+        administrativeZone.setSource("KVE");
+        administrativeZone.setPrivateCode("05");
+        orgRegRoleAssignment.setResponsibleArea(administrativeZone);
 
         RoleAssignment keycloakRoleAssignment = new KeycloakIamService().toRoleAssignment(orgRegRoleAssignment);
 
@@ -57,7 +62,8 @@ public class KeycloakIamServiceTest {
         List<String> classificationCodeList = keycloakRoleAssignment.getEntityClassifications().get(entityType.getPrivateCode());
         Assert.assertEquals(expectedCodes,
                 new HashSet<>(classificationCodeList));
-        Assert.assertNull(keycloakRoleAssignment.getAdministrativeZone());
+
+        Assert.assertEquals("KVE:TopographicPlace:05", keycloakRoleAssignment.getAdministrativeZone());
     }
 
     @Test
@@ -66,8 +72,8 @@ public class KeycloakIamServiceTest {
 
         String password = iamService.generatePassword();
         Assert.assertEquals(12, password.length());
-        Assert.assertNotEquals(password.toLowerCase(),password);
-        Assert.assertNotEquals(password.toUpperCase(),password);
+        Assert.assertNotEquals(password.toLowerCase(), password);
+        Assert.assertNotEquals(password.toUpperCase(), password);
     }
 
 

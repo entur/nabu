@@ -68,6 +68,7 @@ public class AdministrativeZoneResourceIntegrationTest extends BaseIntegrationTe
         Assert.assertEquals(inAdministrativeZone.name, outAdministrativeZone.name);
         Assert.assertEquals(inAdministrativeZone.privateCode, outAdministrativeZone.privateCode);
         Assert.assertEquals(inAdministrativeZone.type, outAdministrativeZone.type);
+        Assert.assertEquals(inAdministrativeZone.source, outAdministrativeZone.source);
     }
 
     @Test

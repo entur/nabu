@@ -12,17 +12,20 @@ public class AdministrativeZoneValidator implements DTOValidator<AdministrativeZ
 	public void validateCreate(AdministrativeZoneDTO dto) {
 		Assert.hasLength(dto.privateCode, "privateCode required");
 		Assert.hasLength(dto.codeSpace, "codeSpace required");
-		Assert.hasLength(dto.name, "name required");
-		Assert.notNull(dto.polygon,"polygon required");
-		Assert.notNull(dto.type,"type required");
+		assertCommon(dto);
 	}
 
 	@Override
 	public void validateUpdate(AdministrativeZoneDTO dto, AdministrativeZone entity) {
-		Assert.hasLength(dto.name, "name required");
-		Assert.notNull(dto.polygon,"polygon required");
+		assertCommon(dto);
 	}
 
+	private void assertCommon(AdministrativeZoneDTO dto){
+		Assert.hasLength(dto.name, "name required");
+		Assert.notNull(dto.polygon,"polygon required");
+		Assert.notNull(dto.source,"source required");
+		Assert.notNull(dto.type,"type required");
+	}
 
 	@Override
 	public void validateDelete(AdministrativeZone entity) {

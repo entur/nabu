@@ -9,6 +9,8 @@ public class AdministrativeZoneDTO extends BaseDTO {
 
 	public String name;
 
+	public String source;
+
 	public Polygon polygon;
 
 	public AdministrativeZoneType type;

@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.organisation.model.organisation;
 
+import com.google.common.base.Joiner;
 import com.vividsolutions.jts.geom.Polygon;
 import no.rutebanken.nabu.organisation.model.CodeSpaceEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -14,8 +15,13 @@ import javax.validation.constraints.NotNull;
 })
 public class AdministrativeZone extends CodeSpaceEntity {
 
+    private static final String ROLE_ASSIGNMENT_TYPE_NAME = "TopographicPlace";
+
     @NotNull
     private String name;
+
+    @NotNull
+    private String source;
 
     /**
      * Polygon is wrapped in PersistablePolygon.
@@ -35,6 +41,14 @@ public class AdministrativeZone extends CodeSpaceEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public Polygon getPolygon() {
@@ -60,4 +74,14 @@ public class AdministrativeZone extends CodeSpaceEntity {
     public void setAdministrativeZoneType(AdministrativeZoneType administrativeZoneType) {
         this.administrativeZoneType = administrativeZoneType;
     }
+
+    /**
+     * Return ID for this admin zone when referred to in a role assignment.
+     *
+     */
+    @Transient
+    public String getRoleAssignmentId() {
+        return Joiner.on(":").join(getSource(), ROLE_ASSIGNMENT_TYPE_NAME, getPrivateCode());
+    }
+
 }
