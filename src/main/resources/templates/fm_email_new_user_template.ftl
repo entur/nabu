@@ -40,6 +40,12 @@ ${message("new.user.email.username")}: ${user.username}
 ${message("new.user.email.password.text")} <a href="${forgotPasswordLink}">${message("new.user.email.password.forgot.text")}</a>
 </p>
 
+
+<p>
+${message("new.user.email.stop.place.user.guide.text")} <a href="${stopPlaceUserGuideLink}">${message("new.user.email.stop.place.user.guide.link.text")}</a>
+</p>
+
+
 <h4>${message("new.user.email.link.text")}: </h4>
 <table>
     <tr>

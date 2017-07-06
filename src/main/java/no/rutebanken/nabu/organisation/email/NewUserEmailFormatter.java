@@ -38,6 +38,9 @@ public class NewUserEmailFormatter {
     private String netexProfileLink;
     @Value("${email.link.siriprofile:https://rutebanken.atlassian.net/wiki/display/PUBLIC/SIRI+profil+Norge}")
     private String siriProfileLink;
+    @Value("${email.link.stop.place.user.guide:https://rutebanken.atlassian.net/wiki/pages/viewpage.action?pageId=69735716}")
+    private String stopPlaceUserGuideLink;
+
 
     @Value("${email.contact.info:kollektivdata@entur.org}")
     private String contactInfoEmail;
@@ -53,7 +56,6 @@ public class NewUserEmailFormatter {
         model.put("user", user);
         model.put("message", new MessageResolverMethod(messageSource, locale));
 
-
         model.put("stopPlaceLink", stopPlaceLink);
         model.put("operatorLink", operatorLink);
         model.put("routedbLink", routedbLink);
@@ -62,8 +64,8 @@ public class NewUserEmailFormatter {
         model.put("netexProfileLink", netexProfileLink);
         model.put("siriProfileLink", siriProfileLink);
         model.put("forgotPasswordLink", forgotPasswordLink);
-        model.put("contactInfoEmail",contactInfoEmail);
-
+        model.put("contactInfoEmail", contactInfoEmail);
+        model.put("stopPlaceUserGuideLink", stopPlaceUserGuideLink);
 
         return geFreeMarkerTemplateContent(model);
     }
