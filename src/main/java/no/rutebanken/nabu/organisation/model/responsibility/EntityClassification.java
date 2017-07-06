@@ -45,7 +45,7 @@ public class EntityClassification extends CodeSpaceEntity implements TypeEntity 
 
     @Override
     public String getType() {
-        return "TypeOf" + entityType.getPrivateCode();
+        return entityType.getPrivateCode();
     }
 
     public boolean isMatch(String entityClassificationCode) {

@@ -10,11 +10,11 @@ public class TestConstantsOrganisation {
 
 	public static final String RESPONSIBILITY_SET_ID_2 = "TST:ResponsibilitySet:RspSetTst2";
 
-	public static final String ENTITY_TYPE_ID = "TST:TypeOfEntity:StopPlace";
+	public static final String ENTITY_TYPE_ID = "TST:TypeOfEntity:StopPlaceType";
 
-	public static final String ENTITY_CLASSIFICATION_ID = "TST:TypeOfStopPlace:busStop";
+	public static final String ENTITY_CLASSIFICATION_ID = "TST:StopPlaceType:busStop";
 
-	public static final String ENTITY_CLASSIFICATION_ID_2 = "TST:TypeOfStopPlace:tramStop";
+	public static final String ENTITY_CLASSIFICATION_ID_2 = "TST:StopPlaceType:tramStop";
 
 	public static final String ROLE_ID = "testRole1";
 

@@ -3,6 +3,7 @@ package no.rutebanken.nabu.event.filter;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.geom.*;
 import no.rutebanken.nabu.domain.event.CrudEvent;
+import no.rutebanken.nabu.organisation.model.CodeSpace;
 import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
 import no.rutebanken.nabu.organisation.model.responsibility.EntityType;
@@ -14,20 +15,18 @@ public class CrudEventMatcherTest {
 
     private static final String STOP_ENTITY_TYPE = "StopPlace";
 
-    private static final String POI_ENTITY_TYPE = "PlaceOfInterest";
-
     private static final String BUS_ENTITY_CLASSIFICATION = "onstreetBus";
 
     @Test
     public void eventMatchingFilterWithoutAdminZonesSpecificType() {
         CrudEvent event = CrudEvent.builder().entityType(STOP_ENTITY_TYPE).entityClassifier(BUS_ENTITY_CLASSIFICATION).build();
-        Assert.assertTrue(new CrudEventMatcher(filter()).matches(event));
+        Assert.assertTrue(new CrudEventMatcher(filter(BUS_ENTITY_CLASSIFICATION)).matches(event));
     }
 
     @Test
     public void eventMatchingFilterWithoutAdminZonesWildcardType() {
-        CrudEvent event = CrudEvent.builder().entityType(POI_ENTITY_TYPE).entityClassifier("whatever").build();
-        Assert.assertTrue(new CrudEventMatcher(filter()).matches(event));
+        CrudEvent event = CrudEvent.builder().entityType(STOP_ENTITY_TYPE).entityClassifier("whatever").build();
+        Assert.assertTrue(new CrudEventMatcher(filter(EntityClassification.ALL_TYPES)).matches(event));
     }
 
 
@@ -35,7 +34,7 @@ public class CrudEventMatcherTest {
     public void eventInAdminZoneMatching() {
 
         AdministrativeZone zone = adminZone();
-        CrudEventFilter filterWithAdminZone = filter();
+        CrudEventFilter filterWithAdminZone = filter(BUS_ENTITY_CLASSIFICATION);
         filterWithAdminZone.getAdministrativeZones().add(zone);
 
 
@@ -46,7 +45,7 @@ public class CrudEventMatcherTest {
     @Test
     public void eventOutsideAdminZoneNotMatching() {
         AdministrativeZone zone = adminZone();
-        CrudEventFilter filterWithAdminZone = filter();
+        CrudEventFilter filterWithAdminZone = filter(BUS_ENTITY_CLASSIFICATION);
         filterWithAdminZone.getAdministrativeZones().add(zone);
 
         Point pointOutside=new GeometryFactory().createPoint(new Coordinate(-50,-50));
@@ -58,31 +57,36 @@ public class CrudEventMatcherTest {
     @Test
     public void eventWrongTypeNotMatchingFilter() {
         CrudEvent event = CrudEvent.builder().entityType("NotMatchingType").entityClassifier(BUS_ENTITY_CLASSIFICATION).build();
-        Assert.assertFalse(new CrudEventMatcher(filter()).matches(event));
+        Assert.assertFalse(new CrudEventMatcher(filter(EntityClassification.ALL_TYPES)).matches(event));
     }
 
     @Test
     public void eventWrongClassificationNotMatchingFilter() {
         CrudEvent event = CrudEvent.builder().entityType(STOP_ENTITY_TYPE).entityClassifier("onstreetTram").build();
-        Assert.assertFalse(new CrudEventMatcher(filter()).matches(event));
+        Assert.assertFalse(new CrudEventMatcher(filter(BUS_ENTITY_CLASSIFICATION)).matches(event));
     }
 
-    private CrudEventFilter filter() {
+    private CrudEventFilter filter(String stopPlaceTypeClassificationCode) {
         CrudEventFilter filter = new CrudEventFilter();
 
-        EntityType stopType = new EntityType();
-        stopType.setPrivateCode(STOP_ENTITY_TYPE);
-        EntityClassification busStopClassification = new EntityClassification();
-        busStopClassification.setPrivateCode(BUS_ENTITY_CLASSIFICATION);
-        busStopClassification.setEntityType(stopType);
+        CodeSpace codeSpace=new CodeSpace("GLB", "glb","url");
+        EntityType entityType = new EntityType();
+        entityType.setPrivateCode("EntityType");
+        entityType.setCodeSpace(codeSpace);
+        EntityClassification entityTypeStopPlaceClassification = new EntityClassification();
+        entityTypeStopPlaceClassification.setCodeSpace(codeSpace);
+        entityTypeStopPlaceClassification.setPrivateCode(STOP_ENTITY_TYPE);
+        entityTypeStopPlaceClassification.setEntityType(entityType);
 
-        EntityType poiType = new EntityType();
-        poiType.setPrivateCode(POI_ENTITY_TYPE);
-        EntityClassification allPois = new EntityClassification();
-        allPois.setEntityType(poiType);
-        allPois.setPrivateCode(EntityClassification.ALL_TYPES);
+        EntityType stopPlaceType = new EntityType();
+        stopPlaceType.setCodeSpace(codeSpace);
+        stopPlaceType.setPrivateCode("StopPlaceType");
+        EntityClassification stopPlaceTypeClassification = new EntityClassification();
+        stopPlaceTypeClassification.setCodeSpace(codeSpace);
+        stopPlaceTypeClassification.setEntityType(stopPlaceType);
+        stopPlaceTypeClassification.setPrivateCode(stopPlaceTypeClassificationCode);
 
-        filter.setEntityClassifications(Sets.newHashSet(allPois, busStopClassification));
+        filter.setEntityClassifications(Sets.newHashSet(stopPlaceTypeClassification, entityTypeStopPlaceClassification));
         return filter;
     }
 

@@ -13,12 +13,12 @@ insert into role (pk, entity_version,lock_version,private_code,name) VALUES (1,1
 insert into role (pk, entity_version,lock_version,private_code,name) VALUES (2,1,1,'testRole2','Test role 2');
 
 
-insert into entity_type (pk, entity_version,lock_version,code_space_pk,private_code,name) VALUES (1,1,1,1,'StopPlace','Stoppesteder');
-insert into entity_type (pk, entity_version,lock_version,code_space_pk,private_code,name) VALUES (2,1,1,1,'PlaceOfInterest','Place of interest');
+insert into entity_type (pk, entity_version,lock_version,code_space_pk,private_code,name) VALUES (1,1,1,1,'StopPlaceType','Stop place types');
+insert into entity_type (pk, entity_version,lock_version,code_space_pk,private_code,name) VALUES (2,1,1,1,'EntityType','Entity types');
 
 insert into entity_classification (pk, entity_version,lock_version,entity_type_pk,code_space_pk,private_code,name) VALUES (1,1,1,1,1,'busStop','Bus stop');
 insert into entity_classification (pk, entity_version,lock_version,entity_type_pk,code_space_pk,private_code,name) VALUES (2,1,1,1,1,'tramStop','Tram stop');
-insert into entity_classification (pk, entity_version,lock_version,entity_type_pk,code_space_pk,private_code,name) VALUES (3,1,1,2,1,'*','All placeOfInterest');
+insert into entity_classification (pk, entity_version,lock_version,entity_type_pk,code_space_pk,private_code,name) VALUES (3,1,1,2,1,'*','All entity types');
 
 insert into organisation(pk, dtype,entity_version,lock_version,code_space_pk,private_code,name) values (nextval('hibernate_sequence'),'Authority',1,1,1,'OrgTest','Test Org');
 
