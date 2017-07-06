@@ -1,6 +1,11 @@
 package no.rutebanken.nabu.repository;
 
-import no.rutebanken.nabu.domain.event.*;
+import no.rutebanken.nabu.domain.event.CrudEvent;
+import no.rutebanken.nabu.domain.event.CrudEventSearch;
+import no.rutebanken.nabu.domain.event.Event;
+import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.domain.event.TimeTableAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +43,8 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
                                                      "(select s.correlationId from JobEvent s where  s.domain=:domain  ");
 
         Map<String, Object> params = new HashMap<>();
-        if (providerId !=null){
-            params.put("providerId",providerId);
+        if (providerId != null) {
+            params.put("providerId", providerId);
             sb.append("and s.providerId = :providerId");
         }
         if (from != null) {
@@ -67,7 +72,7 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
             sb.append(" and s.name in (:names)");
         }
 
-        if (params.isEmpty() || params.size()==1 && providerId!=null) {
+        if (params.isEmpty() || params.size() == 1 && providerId != null) {
             // Use simpler and faster query if no criteria or only providerId is set
             return getJobEventsForDomainAndProvider(JobEvent.JobDomain.TIMETABLE.toString(), providerId);
         }
@@ -80,11 +85,57 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
         return query.getResultList();
     }
 
-    private List<JobEvent> getJobEventsForDomainAndProvider(String domain, Long providerId) {
-        StringBuilder sb=new StringBuilder("SELECT e FROM JobEvent e WHERE e.domain=:domain ");
+
+    @Override
+    public List<CrudEvent> findCrudEvents(CrudEventSearch search) {
+        StringBuilder sb = new StringBuilder("SELECT e FROM CrudEvent e WHERE type(e)=CrudEvent ");
+
         Map<String, Object> params = new HashMap<>();
-        if (providerId !=null){
-            params.put("providerId",providerId);
+        if (search.getAction() != null) {
+            params.put("action", search.getAction());
+            sb.append(" and e.action = :action");
+        }
+        if (search.getFrom() != null) {
+            params.put("from", search.getFrom());
+            sb.append(" and e.eventTime>=:from");
+        }
+        if (search.getTo() != null) {
+            params.put("to", search.getTo());
+            sb.append(" and e.eventTime<=:to");
+        }
+        if (search.getUsername() != null) {
+            params.put("username", search.getUsername());
+            sb.append("and e.username = :username");
+        }
+        if (search.getEntityClassifier() != null) {
+            params.put("entityClassifier", search.getEntityClassifier());
+            sb.append(" and e.entityClassifier = :entityClassifier");
+        }
+        if (search.getEntityType() != null) {
+            params.put("entityType", search.getEntityType());
+            sb.append(" and e.entityType = :entityType");
+        }
+        if (search.getExternalId() != null) {
+            params.put("externalId", search.getExternalId());
+            sb.append(" and e.externalId = :externalId");
+        }
+
+        if (params.isEmpty()) {
+            throw new IllegalArgumentException("At least one search argument must be specified");
+        }
+
+        sb.append(" ORDER by e.eventTime");
+        TypedQuery<CrudEvent> query = entityManager.createQuery(sb.toString(), CrudEvent.class);
+        params.forEach((param, value) -> query.setParameter(param, value));
+
+        return query.getResultList();
+    }
+
+    private List<JobEvent> getJobEventsForDomainAndProvider(String domain, Long providerId) {
+        StringBuilder sb = new StringBuilder("SELECT e FROM JobEvent e WHERE e.domain=:domain ");
+        Map<String, Object> params = new HashMap<>();
+        if (providerId != null) {
+            params.put("providerId", providerId);
             sb.append("and e.providerId = :providerId");
         }
 

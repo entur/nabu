@@ -1,9 +1,30 @@
 package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.filter.CorsResponseFilter;
-import no.rutebanken.nabu.organisation.rest.*;
-import no.rutebanken.nabu.organisation.rest.exception.*;
-import no.rutebanken.nabu.rest.*;
+import no.rutebanken.nabu.organisation.rest.AdministrativeZoneResource;
+import no.rutebanken.nabu.organisation.rest.CodeSpaceResource;
+import no.rutebanken.nabu.organisation.rest.EntityClassificationResource;
+import no.rutebanken.nabu.organisation.rest.EntityTypeResource;
+import no.rutebanken.nabu.organisation.rest.NotificationConfigurationResource;
+import no.rutebanken.nabu.organisation.rest.OrganisationResource;
+import no.rutebanken.nabu.organisation.rest.ResponsibilitySetResource;
+import no.rutebanken.nabu.organisation.rest.RoleResource;
+import no.rutebanken.nabu.organisation.rest.UserResource;
+import no.rutebanken.nabu.organisation.rest.exception.AccessDeniedExceptionMapper;
+import no.rutebanken.nabu.organisation.rest.exception.IllegalArgumentExceptionMapper;
+import no.rutebanken.nabu.organisation.rest.exception.NotAuthenticatedExceptionMapper;
+import no.rutebanken.nabu.organisation.rest.exception.OrganisationExceptionMapper;
+import no.rutebanken.nabu.organisation.rest.exception.PersistenceExceptionMapper;
+import no.rutebanken.nabu.organisation.rest.exception.SpringExceptionMapper;
+import no.rutebanken.nabu.rest.ApplicationStatusResource;
+import no.rutebanken.nabu.rest.CrudEventResource;
+import no.rutebanken.nabu.rest.DataDeliveryStatusResource;
+import no.rutebanken.nabu.rest.FileUploadResource;
+import no.rutebanken.nabu.rest.HazelcastResource;
+import no.rutebanken.nabu.rest.NotificationResource;
+import no.rutebanken.nabu.rest.ProviderResource;
+import no.rutebanken.nabu.rest.SystemJobResource;
+import no.rutebanken.nabu.rest.TimeTableJobEventResource;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +45,7 @@ public class JerseyConfig extends ResourceConfig {
         register(ApplicationStatusResource.class);
         register(HazelcastResource.class);
         register(NotificationResource.class);
+        register(CrudEventResource.class);
         register(CorsResponseFilter.class);
 
         register(CodeSpaceResource.class);
