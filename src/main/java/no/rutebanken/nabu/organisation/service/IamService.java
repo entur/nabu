@@ -6,18 +6,17 @@ import no.rutebanken.nabu.organisation.model.user.User;
 
 public interface IamService {
 
-	void createUser(User user);
+	String createUser(User user);
 
 	void updateUser(User user);
 
-	void resetPassword(User user);
+	String resetPassword(User user);
 
 	void removeUser(User user);
 
 	void createRole(Role role);
 
 	void removeRole(Role role);
-
 
 	void updateResponsibilitySet(ResponsibilitySet responsibilitySet);
 }

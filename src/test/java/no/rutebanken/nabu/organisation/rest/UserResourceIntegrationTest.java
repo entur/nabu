@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 
+import javax.xml.ws.Response;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Set;
@@ -35,7 +36,6 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
         ResponseEntity<UserDTO> entity = restTemplate.getForEntity(PATH + "/unknownUser",
                 UserDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
-
     }
 
 
@@ -43,7 +43,9 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
     public void crudUser() throws Exception {
         ContactDetailsDTO createContactDetails = new ContactDetailsDTO("first", "last", "phone", "email@email.com");
         UserDTO createUser = createUser("userName", TestConstantsOrganisation.ORGANISATION_ID, createContactDetails);
-        URI uri = restTemplate.postForLocation(PATH, createUser);
+        ResponseEntity<String> createResponse = restTemplate.postForEntity(PATH, createUser, String.class);
+        Assert.assertNotNull(createResponse.getBody());
+        URI uri = createResponse.getHeaders().getLocation();
         assertUser(createUser, uri);
 
         ContactDetailsDTO updateContactDetails = new ContactDetailsDTO("otherFirst", "otherLast", null, "other@email.org");
@@ -65,6 +67,11 @@ public class UserResourceIntegrationTest extends BaseIntegrationTest {
         ResponseEntity<UserDTO> entity = restTemplate.getForEntity(uri,
                 UserDTO.class);
         Assert.assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+
+
+        ResponseEntity<String> resetPasswordResponse = restTemplate.postForEntity(uri.getPath() + "/resetPassword", createUser, String.class);
+        Assert.assertNotNull(resetPasswordResponse.getBody());
+        Assert.assertNotEquals(resetPasswordResponse.getBody(), createResponse.getBody());
 
     }
 

@@ -25,6 +25,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
@@ -59,9 +60,9 @@ public class UserResource extends BaseResource<User, UserDTO> {
     @POST
     public Response create(UserDTO dto, @Context UriInfo uriInfo) {
         User user = createEntity(dto);
-        iamService.createUser(user);
+        String password = iamService.createUser(user);
         newUserEmailSender.sendEmail(user);
-        return buildCreatedResponse(uriInfo, user);
+        return buildCreatedResponse(uriInfo, user, password);
     }
 
     @PUT
@@ -82,10 +83,11 @@ public class UserResource extends BaseResource<User, UserDTO> {
 
     @POST
     @Path("{id}/resetPassword")
-    public void resetPassword(@PathParam("id") String id) {
+    public String resetPassword(@PathParam("id") String id) {
         User user = getExisting(id);
-        iamService.resetPassword(user);
+        String password = iamService.resetPassword(user);
         newUserEmailSender.sendEmail(user);
+        return password;
     }
 
     @GET
@@ -113,4 +115,10 @@ public class UserResource extends BaseResource<User, UserDTO> {
         return validator;
     }
 
+
+    protected Response buildCreatedResponse(UriInfo uriInfo, User entity, String newPassword) {
+        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+        builder.path(entity.getId());
+        return Response.created(builder.build()).entity(newPassword).build();
+    }
 }

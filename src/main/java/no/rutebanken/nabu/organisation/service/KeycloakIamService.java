@@ -96,10 +96,12 @@ public class KeycloakIamService implements IamService {
 
     }
 
-    public void createUser(User user) {
+    public String createUser(User user) {
+        String password = generatePassword();
+        ;
         if (!enabled) {
             logger.info("Keycloak disabled! Ignored createUser: " + user.getUsername());
-            return;
+            return password;
         }
         Response rsp = iamRealm.users().create(toKeycloakUser(user));
         if (rsp.getStatus() >= 300) {
@@ -109,9 +111,8 @@ public class KeycloakIamService implements IamService {
             }
             throw new OrganisationException(msg, rsp.getStatus());
         }
-
         try {
-            resetPassword(user.getUsername());
+            resetPassword(user.getUsername(), password);
             updateRoles(user, roleRepository.findAll());
         } catch (Exception e) {
             logger.info("Password or role assignment failed for new Keycloak user. Attempting to remove user");
@@ -120,6 +121,7 @@ public class KeycloakIamService implements IamService {
         }
 
         logger.info("User successfully created in Keycloak: " + user.getUsername());
+        return password;
     }
 
     public void updateUser(User user) {
@@ -134,14 +136,21 @@ public class KeycloakIamService implements IamService {
     }
 
     @Override
-    public void resetPassword(User user) {
+    public String resetPassword(User user) {
+        String password = generatePassword();
+        if (!enabled) {
+            logger.info("Keycloak disabled! Ignored resetPassword: " + user.getUsername());
+            return password;
+        }
         try {
-            resetPassword(user.getUsername());
+            resetPassword(user.getUsername(), password);
         } catch (Exception e) {
             String msg = "Keycloak resetPassword failed: " + e.getMessage();
             logger.info(msg, e);
             throw new OrganisationException(msg);
         }
+
+        return password;
     }
 
     private void updateUser(User user, List<Role> systemRoles) {
@@ -201,10 +210,10 @@ public class KeycloakIamService implements IamService {
     }
 
     // Credentials may not be set when creating a user
-    private void resetPassword(String username) {
+    private void resetPassword(String username, String password) {
         CredentialRepresentation credential = new CredentialRepresentation();
         credential.setType(CredentialRepresentation.PASSWORD);
-        credential.setValue(generatePassword());
+        credential.setValue(password);
         credential.setTemporary(Boolean.TRUE);
         getUserResourceByUsername(username).resetPassword(credential);
     }
