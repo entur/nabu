@@ -45,12 +45,12 @@ ${message("new.user.email.password.text")} <a href="${forgotPasswordLink}">${mes
     <tr>
         <td><a href="${stopPlaceLink}">${stopPlaceLink}</a></td> <td>${message("new.user.email.link.stopplace")}</td>
     </tr>
-    <tr>
-        <td><a href="${operatorLink}">${operatorLink}</a></td> <td>${message("new.user.email.link.operator")}</td>
-    </tr>
-    <tr>
-        <td><a href="${routedbLink}">${routedbLink}</a></td> <td>${message("new.user.email.link.routedb")}</td>
-    </tr>
+    <#--<tr>-->
+        <#--<td><a href="${operatorLink}">${operatorLink}</a></td> <td>${message("new.user.email.link.operator")}</td>-->
+    <#--</tr>-->
+    <#--<tr>-->
+        <#--<td><a href="${routedbLink}">${routedbLink}</a></td> <td>${message("new.user.email.link.routedb")}</td>-->
+    <#--</tr>-->
     <tr>
         <td><a href="${devLink}">${devLink}</a></td> <td>${message("new.user.email.link.dev")}</td>
     </tr>
