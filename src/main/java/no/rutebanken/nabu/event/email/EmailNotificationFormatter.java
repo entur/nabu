@@ -91,7 +91,7 @@ public class EmailNotificationFormatter {
         model.put("message", new MessageResolverMethod(messageSource,locale));
         model.put("notificationConfigurationLink", operatorLink);
         model.put("stopPlaceLinkPrefix", stopPlaceLink+"edit/");
-        model.put("jobLink", new JobLinkResolverMethod(routedbLink+"/referentials"));
+        model.put("jobLink", new JobLinkResolverMethod(routedbLink+"referentials/"));
         model.put("emailNotificationMaxEvents", emailNotificationMaxEvents);
         model.put("totalNotificationsCnt", notifications.size());
 
