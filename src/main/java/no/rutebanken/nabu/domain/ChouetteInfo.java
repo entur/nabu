@@ -23,7 +23,8 @@ public class ChouetteInfo {
     public String regtoppCalendarStrategy;
     public String dataFormat;
     public boolean enableValidation;
-    public boolean enableStopPlaceUpdate;
+    public boolean allowCreateMissingStopPlace;
+    public boolean enableStopPlaceIdMapping;
     public boolean enableCleanImport;
     public Long migrateDataToProvider = null;
 
@@ -54,7 +55,8 @@ public class ChouetteInfo {
                 (regtoppCoordinateProjection != null? ", regtoppCoordinateProjection='" + regtoppCoordinateProjection + '\'' : "")+
                 (regtoppCalendarStrategy != null? ", regtoppCalendarStrategy='" + regtoppCalendarStrategy + '\'' : "")+
                 ", enableValidation='" + enableValidation + '\'' +
-                ", enableStopPlaceUpdate='" + enableStopPlaceUpdate + '\'' +
+                ", allowCreateMissingStopPlace='" + allowCreateMissingStopPlace + '\'' +
+                ", enableStopPlaceIdMapping='" + enableStopPlaceIdMapping + '\'' +
                 ", enableCleanImport='" + enableCleanImport + '\'' +
                 '}';
     }
