@@ -51,7 +51,7 @@ public class DataDeliveryStatusResource {
             latestDeliveryDate = Date.from(sortedEvents.first().getEventTime());
             if (sortedEvents.stream().anyMatch(e -> TimeTableAction.BUILD_GRAPH.toString().equals(e.getAction()) && JobState.OK.equals(e.getState()))) {
                 state = DataDeliveryStatus.State.OK;
-            } else if (sortedEvents.stream().anyMatch(e -> Sets.newHashSet(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT).contains(e.getState()))) {
+            } else if (sortedEvents.stream().anyMatch(e -> Sets.newHashSet(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED).contains(e.getState()))) {
                 state = DataDeliveryStatus.State.FAILED;
             } else {
                 state = DataDeliveryStatus.State.IN_PROGRESS;
