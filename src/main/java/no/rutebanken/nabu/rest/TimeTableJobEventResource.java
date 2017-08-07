@@ -105,6 +105,7 @@ public class TimeTableJobEventResource {
                 currentAggregation.setFirstEvent(Date.from(in.getEventTime()));
                 currentAggregation.setFileName(in.getName());
                 currentAggregation.setCorrelationId(in.getCorrelationId());
+                currentAggregation.setProviderId(in.getProviderId());
 
                 list.add(currentAggregation);
             }

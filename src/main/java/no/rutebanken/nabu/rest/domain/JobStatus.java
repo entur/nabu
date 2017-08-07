@@ -35,6 +35,9 @@ public class JobStatus {
     @JsonProperty("fileName")
     private String fileName;
 
+    @JsonProperty("providerId")
+    private Long providerId;
+
     public List<JobStatusEvent> getEvents() {
         return events;
     }
@@ -91,4 +94,11 @@ public class JobStatus {
         this.durationMillis = durationMillis;
     }
 
+    public Long getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(Long providerId) {
+        this.providerId = providerId;
+    }
 }
