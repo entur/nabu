@@ -2,6 +2,7 @@ package no.rutebanken.nabu.organisation.rest.validation;
 
 import no.rutebanken.nabu.organisation.model.user.User;
 import no.rutebanken.nabu.organisation.rest.dto.user.UserDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -11,9 +12,14 @@ import javax.mail.internet.InternetAddress;
 @Service
 public class UserValidator implements DTOValidator<User, UserDTO> {
 
+
+    @Value("${username.pattern:^[a-zA-Z0-9_-]{3,30}$}")
+    private String usernamePattern = "^[a-zA-Z0-9_-]{3,30}$";
+
     @Override
     public void validateCreate(UserDTO dto) {
         Assert.hasLength(dto.username, "username required");
+        Assert.isTrue(dto.username.matches(usernamePattern),"username must be alphanumeric");
         Assert.hasLength(dto.organisationRef, "organisationRef required");
         assertCommon(dto);
     }

@@ -14,12 +14,22 @@ public class UserValidatorTest {
         userValidator.validateCreate(minimalUser());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void validateCreateWithoutUsernameFails() {
+
+    @Test
+    public void validateCreateWithCapitalAndNumberAllowed() {
         UserDTO user = minimalUser();
-        user.username = null;
+        user.username = "userNo1";
         userValidator.validateCreate(user);
     }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void validateCreateWithInvalidUsernameFails() {
+        UserDTO user = minimalUser();
+        user.username = "user 1";
+        userValidator.validateCreate(user);
+    }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void validateCreateWithoutOrganisationFails() {
@@ -50,14 +60,14 @@ public class UserValidatorTest {
     @Test(expected = IllegalArgumentException.class)
     public void validateInvalidEmailFails() {
         UserDTO user = minimalUser();
-        user.contactDetails=new ContactDetailsDTO("first","last","34234","illegalEmail");
+        user.contactDetails = new ContactDetailsDTO("first", "last", "34234", "illegalEmail");
         userValidator.validateCreate(user);
     }
 
     @Test
     public void validateValidEmailOK() {
         UserDTO user = minimalUser();
-        user.contactDetails=new ContactDetailsDTO("first","last","34234","legal@email.com");
+        user.contactDetails = new ContactDetailsDTO("first", "last", "34234", "legal@email.com");
         userValidator.validateCreate(user);
     }
 
@@ -65,7 +75,7 @@ public class UserValidatorTest {
         UserDTO userDTO = new UserDTO();
         userDTO.username = "username";
         userDTO.organisationRef = "organisation";
-        userDTO.contactDetails=new ContactDetailsDTO(null,null,null, "valid@email.org");
+        userDTO.contactDetails = new ContactDetailsDTO(null, null, null, "valid@email.org");
 
         return userDTO;
     }
