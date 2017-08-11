@@ -13,8 +13,10 @@ import javax.mail.internet.InternetAddress;
 public class UserValidator implements DTOValidator<User, UserDTO> {
 
 
-    @Value("${username.pattern:^[a-zA-Z0-9_-[.]]{3,30}$}")
-    private String usernamePattern = "^[a-zA-Z0-9_-[.]]{3,30}$";
+    private static final String DEFAULT_PATTERN = "^[a-zA-Z0-9_-[.]]{3,30}$";
+
+    @Value("${username.pattern:" + DEFAULT_PATTERN + "}")
+    private String usernamePattern = DEFAULT_PATTERN;
 
     @Override
     public void validateCreate(UserDTO dto) {
