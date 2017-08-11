@@ -14,7 +14,7 @@ public class UserValidator implements DTOValidator<User, UserDTO> {
 
 
     @Value("${username.pattern:^[a-zA-Z0-9_-]{3,30}$}")
-    private String usernamePattern = "^[a-zA-Z0-9_-]{3,30}$";
+    private String usernamePattern = "^[a-zA-Z0-9_-[.]]{3,30}$";
 
     @Override
     public void validateCreate(UserDTO dto) {

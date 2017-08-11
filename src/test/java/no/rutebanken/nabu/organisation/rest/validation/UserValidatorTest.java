@@ -23,6 +23,13 @@ public class UserValidatorTest {
     }
 
 
+    @Test
+    public void validateCreateWithDotAllowed() {
+        UserDTO user = minimalUser();
+        user.username = "user.No1";
+        userValidator.validateCreate(user);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void validateCreateWithInvalidUsernameFails() {
         UserDTO user = minimalUser();
