@@ -36,7 +36,7 @@
         <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
         <docker.image>eu.gcr.io/${fabric8.dockerUser}${project.artifactId}:${project.version}</docker.image>
         <docker.cleanup>none</docker.cleanup>
-        <hazelcast-hibernate5.version>1.2.1</hazelcast-hibernate5.version>
+        <hazelcast-hibernate5.version>1.2.2</hazelcast-hibernate5.version>
         <fabric8.service.name>springboot-webmvc</fabric8.service.name>
         <fabric8.service.port>80</fabric8.service.port>
         <fabric8.service.containerPort>9004</fabric8.service.containerPort>
@@ -56,9 +56,9 @@
         <rest-assured.version>2.9.0</rest-assured.version>
         <geodb.version>0.8</geodb.version>
         <geotools.version>17.2</geotools.version>
-        <hibernate-spatial.version>5.1.3.Final</hibernate-spatial.version>
+        <hibernate-spatial.version>5.1.9.Final</hibernate-spatial.version>
         <!-- Hibernate version deliberatly kept back as hazelcast cache does not support newer version-->
-        <hibernate.version>5.0.11.Final</hibernate.version>
+        <hibernate.version>5.1.9.Final</hibernate.version>
         <!-- Holding back activemq version as newest version no long support spring wired broker config-->
         <activemq.version>5.15.0</activemq.version>
         <fabric8.version>2.3.4</fabric8.version>
