@@ -1,6 +1,7 @@
 package no.rutebanken.nabu.rest;
 
 import com.google.common.collect.Sets;
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
@@ -24,6 +25,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 @Produces("application/json")
 @Path("/dataDelivery")
+@Api
 public class DataDeliveryStatusResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

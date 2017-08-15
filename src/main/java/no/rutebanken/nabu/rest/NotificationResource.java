@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.rest;
 
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.domain.event.GeoCoderAction;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 @Component
 @Produces("application/json")
 @Path("/notifications")
+@Api
 public class NotificationResource {
 
     @Autowired

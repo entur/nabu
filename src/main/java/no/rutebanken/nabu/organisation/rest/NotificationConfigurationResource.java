@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.organisation.rest;
 
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.organisation.model.user.User;
 import no.rutebanken.nabu.organisation.repository.UserRepository;
 import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
@@ -29,6 +30,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@Api
 public class NotificationConfigurationResource {
 
     @Autowired

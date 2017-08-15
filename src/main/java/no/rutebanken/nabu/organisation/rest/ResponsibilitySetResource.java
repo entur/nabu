@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.organisation.rest;
 
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.organisation.model.responsibility.ResponsibilitySet;
 import no.rutebanken.nabu.organisation.repository.ResponsibilitySetRepository;
 import no.rutebanken.nabu.organisation.repository.VersionedEntityRepository;
@@ -26,6 +27,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@Api
 public class ResponsibilitySetResource extends AnnotatedBaseResource<ResponsibilitySet, ResponsibilitySetDTO> {
 
 	@Autowired

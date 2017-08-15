@@ -62,6 +62,7 @@
         <!-- Holding back activemq version as newest version no long support spring wired broker config-->
         <activemq.version>5.15.0</activemq.version>
         <fabric8.version>2.3.4</fabric8.version>
+        <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
     </properties>
 
     <dependencyManagement>
@@ -86,7 +87,11 @@
 
 
     <dependencies>
-
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jersey2-jaxrs</artifactId>
+            <version>${swagger-jersey2.version}</version>
+        </dependency>
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>

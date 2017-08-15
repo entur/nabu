@@ -1,6 +1,7 @@
 package no.rutebanken.nabu.rest;
 
 import com.google.cloud.storage.Storage;
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.Provider;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
@@ -37,6 +38,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 
 @Path("/files")
+@Api
 public class FileUploadResource {
 
     @Value("${queue.upload.destination.name}")

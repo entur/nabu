@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.rest;
 
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.event.CrudEventSearch;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.ApiCrudEvent;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Component
 @Produces("application/json")
 @Path("/crud_events")
+@Api(tags = {"Crud event resource"}, produces = "application/json")
 public class CrudEventResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

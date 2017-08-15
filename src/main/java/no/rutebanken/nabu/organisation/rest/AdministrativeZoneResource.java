@@ -1,5 +1,7 @@
 package no.rutebanken.nabu.organisation.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZone;
 import no.rutebanken.nabu.organisation.model.organisation.AdministrativeZoneType;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
@@ -26,6 +28,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@Api(tags = {"Administrative zone resource"}, produces = "application/json")
 public class AdministrativeZoneResource extends AnnotatedBaseResource<AdministrativeZone, AdministrativeZoneDTO> {
 
 

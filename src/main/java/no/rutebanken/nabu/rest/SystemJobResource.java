@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.rest;
 
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.SystemJobStatus;
 import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import no.rutebanken.nabu.rest.domain.SystemStatusAggregation;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Component
 @Produces("application/json")
 @Path("/systemJobs")
+@Api
 public class SystemJobResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

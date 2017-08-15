@@ -1,6 +1,7 @@
 package no.rutebanken.nabu.organisation.rest;
 
 
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.organisation.model.responsibility.Role;
 import no.rutebanken.nabu.organisation.repository.RoleRepository;
 import no.rutebanken.nabu.organisation.repository.VersionedEntityRepository;
@@ -29,6 +30,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Produces("application/json")
 @Transactional
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@Api
 public class RoleResource extends BaseResource<Role, TypeDTO> {
 
 	@Autowired

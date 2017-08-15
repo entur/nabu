@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.rest;
 
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.EventService;
@@ -29,6 +30,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 @Produces("application/json")
 @Path("/jobs")
+@Api
 public class TimeTableJobEventResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

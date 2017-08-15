@@ -1,5 +1,8 @@
 package no.rutebanken.nabu.config;
 
+import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.jaxrs.listing.ApiListingResource;
+import io.swagger.jaxrs.listing.SwaggerSerializers;
 import no.rutebanken.nabu.filter.CorsResponseFilter;
 import no.rutebanken.nabu.organisation.rest.AdministrativeZoneResource;
 import no.rutebanken.nabu.organisation.rest.CodeSpaceResource;
@@ -64,6 +67,25 @@ public class JerseyConfig extends ResourceConfig {
         register(IllegalArgumentExceptionMapper.class);
         register(AccessDeniedExceptionMapper.class);
         register(OrganisationExceptionMapper.class);
+
+        configureSwagger();
+    }
+
+
+    private void configureSwagger() {
+        // Available at localhost:port/api/swagger.json
+        this.register(ApiListingResource.class);
+        this.register(SwaggerSerializers.class);
+
+        BeanConfig config = new BeanConfig();
+        config.setConfigId("nabu-swagger-doc");
+        config.setTitle("Nabu API");
+        config.setVersion("v1");
+        config.setSchemes(new String[]{"http", "https"});
+        config.setBasePath("/jersey");
+        config.setResourcePackage("no.rutebanken.nabu");
+        config.setPrettyPrint(true);
+        config.setScan(true);
     }
 
 }

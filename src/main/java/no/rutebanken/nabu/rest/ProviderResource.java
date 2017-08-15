@@ -1,5 +1,6 @@
 package no.rutebanken.nabu.rest;
 
+import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.Provider;
 import no.rutebanken.nabu.repository.ProviderRepository;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 @Produces("application/json")
 @Path("/providers")
+@Api
 public class ProviderResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
