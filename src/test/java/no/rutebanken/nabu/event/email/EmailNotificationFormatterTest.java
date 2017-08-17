@@ -43,7 +43,7 @@ public class EmailNotificationFormatterTest {
         out.close();
         Assert.assertTrue(msg.startsWith("<html>"));
         Assert.assertFalse("Expected all message keys to have been resolved", msg.contains("notification.email"));
-        Assert.assertTrue(msg.contains("varsling"));   // TODO norwegian still missing lots of values. How do we verify?
+        Assert.assertTrue(msg.contains("hendelser"));   // TODO norwegian still missing lots of values. How do we verify?
 
         Assert.assertTrue("Should be able to map providerId to name", msg.contains(providerList.get(0).getName()));
     }

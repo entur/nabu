@@ -100,8 +100,8 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
     </#list>
 </table>
 </#list>
-<p>
-    <span>${message("notification.email.footer","${notificationConfigurationLink}")}</span>
-</p>
+<#-- Commented out as self service notification config is not yet supported <p>-->
+    <#--<span>${message("notification.email.footer","${notificationConfigurationLink}")}</span>-->
+<#--</p>-->
 </body>
 </html>
