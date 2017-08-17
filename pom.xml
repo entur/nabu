@@ -30,7 +30,8 @@
         <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
         <spring.security.version>4.2.3.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
-        <keycloak.version>3.2.1.Final</keycloak.version>
+        <keycloak.version>3.1.0.Final</keycloak.version>
+
         <!-- Docker & Fabric8 Configs -->
         <docker.from>eu.gcr.io/carbon-1287/java-base-image</docker.from>
         <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
@@ -45,6 +46,7 @@
         <fabric8.label.component>${project.artifactId}</fabric8.label.component>
         <fabric8.label.container>spring-boot</fabric8.label.container>
         <fabric8.label.group>rutebanken</fabric8.label.group>
+        <fabric8.iconRef>spring-boot</fabric8.iconRef>
         <fabric8.iconRef>spring-boot</fabric8.iconRef>
 
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
@@ -224,7 +226,7 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
-            <version>3.1.1.Final</version>
+            <version>3.1.4.Final</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
