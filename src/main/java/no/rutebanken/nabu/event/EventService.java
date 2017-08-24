@@ -26,9 +26,9 @@ public class EventService {
     private List<EventHandler> eventHandlers;
 
 
-    public List<JobEvent> findTimetableJobEvents(Long providerId, Instant from, Instant to, List<String> actions,
+    public List<JobEvent> findTimetableJobEvents(List<Long> providerIds, Instant from, Instant to, List<String> actions,
                                                         List<JobState> states, List<String> externalIds, List<String> fileNames) {
-        return eventRepository.findTimetableJobEvents(providerId, from, to, actions, states, externalIds, fileNames);
+        return eventRepository.findTimetableJobEvents(providerIds, from, to, actions, states, externalIds, fileNames);
     }
 
 

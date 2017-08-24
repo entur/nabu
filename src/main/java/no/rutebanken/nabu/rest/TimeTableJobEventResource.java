@@ -4,14 +4,13 @@ import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.EventService;
-import no.rutebanken.nabu.repository.EventRepository;
+import no.rutebanken.nabu.repository.ProviderRepository;
 import no.rutebanken.nabu.rest.domain.JobStatus;
 import no.rutebanken.nabu.rest.domain.JobStatusEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -38,6 +37,9 @@ public class TimeTableJobEventResource {
     @Autowired
     private EventService eventService;
 
+    @Autowired
+    private ProviderRepository providerRepository;
+
     private static final String STATUS_JOB_TYPE = JobEvent.JobDomain.TIMETABLE.name();
 
     @GET
@@ -48,7 +50,7 @@ public class TimeTableJobEventResource {
                                              @QueryParam("state") List<JobStatus.State> states, @QueryParam("chouetteJobId") List<Long> jobIds,
                                              @QueryParam("fileName") List<String> fileNames) {
 
-        if (providerId==null){
+        if (providerId == null) {
             logger.debug("Returning status for all providers");
         } else {
             logger.debug("Returning status for provider with id '" + providerId + "'");
@@ -58,15 +60,33 @@ public class TimeTableJobEventResource {
         Instant instantTo = to == null ? null : to.toInstant();
 
         List<String> externalIds = jobIds == null ? null : jobIds.stream().map(jobId -> jobId.toString()).collect(Collectors.toList());
-
+        List<Long> relatedProviderIds = mapToAllRelatedProviderIds(providerId);
         try {
-            List<JobEvent> eventsForProvider = eventService.findTimetableJobEvents(providerId, instantFrom, instantTo,
+            List<JobEvent> eventsForProvider = eventService.findTimetableJobEvents(relatedProviderIds, instantFrom, instantTo,
                     actions, convertEnums(states, JobState.class), externalIds, fileNames);
             return convert(eventsForProvider);
         } catch (Exception e) {
             logger.error("Erring fetching status for provider with id " + providerId + ": " + e.getMessage(), e);
             throw e;
         }
+    }
+
+    /**
+     * Return all ids for providers related to a given provider, that is the provider it self + either the provider that it migrates to or the provider that migrates to it.
+     */
+    private List<Long> mapToAllRelatedProviderIds(Long providerId) {
+        if (providerId == null) {
+            return null;
+        }
+        List<Long> relatedProviderIds = providerRepository.getProviders().stream().filter(provider -> providerId.equals(provider.chouetteInfo.migrateDataToProvider))
+                                                .map(provider -> provider.id).collect(Collectors.toList());
+        relatedProviderIds.add(providerId);
+        Long migrateToProviderId = providerRepository.getProvider(providerId).chouetteInfo.migrateDataToProvider;
+        if (migrateToProviderId != null) {
+            relatedProviderIds.add(migrateToProviderId);
+        }
+
+        return relatedProviderIds;
     }
 
     @GET

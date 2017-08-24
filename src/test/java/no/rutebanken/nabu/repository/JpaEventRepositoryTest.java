@@ -41,7 +41,7 @@ public class JpaEventRepositoryTest extends BaseIntegrationTest {
         repository.save(s2);
         JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
         repository.save(s3);
-        Collection<JobEvent> eventsForProvider2 = repository.findTimetableJobEvents(2L, null, null, null, null, null, null);
+        Collection<JobEvent> eventsForProvider2 = repository.findTimetableJobEvents(Arrays.asList(2L), null, null, null, null, null, null);
         assertThat(eventsForProvider2).hasSize(2);
 
         Collection<JobEvent> allEvents = repository.findTimetableJobEvents(null, null, null, null, null, null, null);
@@ -58,12 +58,12 @@ public class JpaEventRepositoryTest extends BaseIntegrationTest {
         JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
         repository.save(s3);
 
-        Collection<JobEvent> statusesQueryMatchingS1 = repository.findTimetableJobEvents(3L, now, now, Arrays.asList(TimeTableAction.IMPORT.toString()), Arrays.asList(JobState.OK), Arrays.asList("1"), Arrays.asList("file1.zip"));
+        Collection<JobEvent> statusesQueryMatchingS1 = repository.findTimetableJobEvents(Arrays.asList(3L), now, now, Arrays.asList(TimeTableAction.IMPORT.toString()), Arrays.asList(JobState.OK), Arrays.asList("1"), Arrays.asList("file1.zip"));
         assertThat(statusesQueryMatchingS1).hasSize(2);
         assertThat(statusesQueryMatchingS1).contains(s1, s2);
 
 
-        Collection<JobEvent> statusesQueryMatchingS1andS3 = repository.findTimetableJobEvents(3L, now, now, Arrays.asList(TimeTableAction.IMPORT.toString(), TimeTableAction.EXPORT.toString()),
+        Collection<JobEvent> statusesQueryMatchingS1andS3 = repository.findTimetableJobEvents(Arrays.asList(3L), now, now, Arrays.asList(TimeTableAction.IMPORT.toString(), TimeTableAction.EXPORT.toString()),
                 Arrays.asList(JobState.OK, JobState.TIMEOUT), null, Arrays.asList("file1.zip", "file2.zip"));
         assertThat(statusesQueryMatchingS1andS3).hasSize(3);
     }
@@ -97,8 +97,8 @@ public class JpaEventRepositoryTest extends BaseIntegrationTest {
 
         repository.clearAll(JobEvent.JobDomain.TIMETABLE.toString());
 
-        Assert.assertTrue(repository.findTimetableJobEvents(3L, null, null, null, null, null, null).isEmpty());
-        Assert.assertTrue(repository.findTimetableJobEvents(4L, null, null, null, null, null, null).isEmpty());
+        Assert.assertTrue(repository.findTimetableJobEvents(Arrays.asList(3L), null, null, null, null, null, null).isEmpty());
+        Assert.assertTrue(repository.findTimetableJobEvents(Arrays.asList(4L), null, null, null, null, null, null).isEmpty());
     }
 
     @Test
@@ -112,8 +112,8 @@ public class JpaEventRepositoryTest extends BaseIntegrationTest {
 
         repository.clear(JobEvent.JobDomain.TIMETABLE.toString(), 3L);
 
-        Assert.assertTrue(repository.findTimetableJobEvents(3L, null, null, null, null, null, null).isEmpty());
-        Assert.assertEquals(1, repository.findTimetableJobEvents(4L, null, null, null, null, null, null).size());
+        Assert.assertTrue(repository.findTimetableJobEvents(Arrays.asList(3L), null, null, null, null, null, null).isEmpty());
+        Assert.assertEquals(1, repository.findTimetableJobEvents(Arrays.asList(4L), null, null, null, null, null, null).size());
     }
 
     @Test

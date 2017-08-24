@@ -38,14 +38,14 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
 
 
     @Override
-    public List<JobEvent> findTimetableJobEvents(Long providerId, Instant from, Instant to, List<String> actions, List<JobState> states, List<String> externalIds, List<String> fileNames) {
+    public List<JobEvent> findTimetableJobEvents(List<Long> providerIds, Instant from, Instant to, List<String> actions, List<JobState> states, List<String> externalIds, List<String> fileNames) {
         StringBuilder sb = new StringBuilder("SELECT sf FROM JobEvent sf WHERE sf.correlationId in " +
                                                      "(select s.correlationId from JobEvent s where  s.domain=:domain  ");
 
         Map<String, Object> params = new HashMap<>();
-        if (providerId != null) {
-            params.put("providerId", providerId);
-            sb.append("and s.providerId = :providerId");
+        if (!CollectionUtils.isEmpty(providerIds)) {
+            params.put("providerIds", providerIds);
+            sb.append("and s.providerId in (:providerIds)");
         }
         if (from != null) {
             params.put("from", from);
@@ -72,9 +72,9 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
             sb.append(" and s.name in (:names)");
         }
 
-        if (params.isEmpty() || params.size() == 1 && providerId != null) {
+        if (params.isEmpty() || params.size() == 1 && !CollectionUtils.isEmpty(providerIds)) {
             // Use simpler and faster query if no criteria or only providerId is set
-            return getJobEventsForDomainAndProvider(JobEvent.JobDomain.TIMETABLE.toString(), providerId);
+            return getJobEventsForDomainAndProvider(JobEvent.JobDomain.TIMETABLE.toString(), providerIds);
         }
 
         sb.append(") ORDER by sf.correlationId, sf.eventTime");
@@ -131,12 +131,12 @@ public class JpaEventRepository extends SimpleJpaRepository<Event, Long> impleme
         return query.getResultList();
     }
 
-    private List<JobEvent> getJobEventsForDomainAndProvider(String domain, Long providerId) {
+    private List<JobEvent> getJobEventsForDomainAndProvider(String domain, List<Long> providerIds) {
         StringBuilder sb = new StringBuilder("SELECT e FROM JobEvent e WHERE e.domain=:domain ");
         Map<String, Object> params = new HashMap<>();
-        if (providerId != null) {
-            params.put("providerId", providerId);
-            sb.append("and e.providerId = :providerId");
+        if (!CollectionUtils.isEmpty(providerIds)) {
+            params.put("providerIds", providerIds);
+            sb.append("and e.providerId in (:providerIds)");
         }
 
         sb.append(" ORDER by e.correlationId, e.eventTime");

@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    List<JobEvent> findTimetableJobEvents(Long providerId, Instant from, Instant to, List<String> actions,
+    List<JobEvent> findTimetableJobEvents(List<Long> providerIds, Instant from, Instant to, List<String> actions,
                                         List<JobState> states, List<String> externalIds, List<String> fileNames);
 
     List<JobEvent> getLatestTimetableFileTransfer(Long providerId);
