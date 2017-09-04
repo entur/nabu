@@ -50,7 +50,7 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
 
     <#list jobEventsForDomain as jobEvent>
         <tr>
-            <td>${providers[""+jobEvent.providerId]!""}</td>
+            <td>${providers[""+jobEvent.providerId!""]!""}</td>
             <#if jobLink(jobEvent)?has_content>
                 <td><a href="${jobLink(jobEvent)!""}">${jobEvent.externalId!""}</a></td>
             <#else>
