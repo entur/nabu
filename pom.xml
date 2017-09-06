@@ -65,6 +65,7 @@
         <activemq.version>5.15.0</activemq.version>
         <fabric8.version>2.3.4</fabric8.version>
         <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
+        <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
     </properties>
 
     <dependencyManagement>
@@ -90,10 +91,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax.jdo</groupId>
+            <artifactId>jdo2-api</artifactId>
+            <version>${javax.jdo.jdo2-api.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-jersey2-jaxrs</artifactId>
             <version>${swagger-jersey2.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
@@ -127,7 +135,6 @@
             <artifactId>organisation</artifactId>
             <version>${rutebanken.helpers.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>org.rutebanken.helpers</groupId>
