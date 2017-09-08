@@ -62,9 +62,4 @@ public class JobEventFilter extends EventFilter {
         getStates().addAll(states);
     }
 
-    @Override
-    public EventMatcher getMatcher() {
-        return new JobEventMatcher(this);
-    }
-
 }

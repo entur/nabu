@@ -2,6 +2,7 @@ package no.rutebanken.nabu.event;
 
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.domain.event.Notification;
+import no.rutebanken.nabu.event.filter.EventMatcherFactory;
 import no.rutebanken.nabu.organisation.model.user.NotificationConfiguration;
 import no.rutebanken.nabu.organisation.model.user.User;
 import no.rutebanken.nabu.organisation.repository.UserRepository;
@@ -29,6 +30,9 @@ public class UserNotificationEventHandler implements EventHandler {
     @Autowired
     private ImmediateNotificationService immediateNotificationService;
 
+    @Autowired
+    private EventMatcherFactory eventMatcherFactory;
+
     @Override
     public void onEvent(Event event) {
         userRepository.findAll().forEach(user -> createNotificationsForUser(user, event));
@@ -42,7 +46,7 @@ public class UserNotificationEventHandler implements EventHandler {
 
         user.getNotificationConfigurations().stream()
                 .filter(notificationConfiguration -> notificationConfiguration.isEnabled())
-                .filter(notificationConfig -> notificationConfig.getEventFilter().getMatcher().matches(event))
+                .filter(notificationConfig -> eventMatcherFactory.createEventMatcher(notificationConfig.getEventFilter()).matches(event))
                 .forEach(notificationConfig -> createNotification(user, notificationConfig, event));
 
     }
