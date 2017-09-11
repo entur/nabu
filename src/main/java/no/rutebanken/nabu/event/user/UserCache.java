@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
+import java.net.ConnectException;
 import java.util.Collection;
 
 @Service
@@ -39,18 +41,19 @@ public class UserCache implements UserRepository {
             cache = newCache;
 
             logger.info("Updated user cache with result from REST User Service. Cache now has " + cache.size() + " elements");
-        } catch (RuntimeException re) {
-
-            // TODO check type, rethrow if not connection failure?
-
-            if (cache == null) {
-                logger.warn("Refresh REST User cache failed:" + re.getMessage() + ". No user info available");
+        } catch (ResourceAccessException re) {
+            if (re.getCause() instanceof ConnectException) {
+                if (cache == null) {
+                    logger.warn("Refresh REST User cache failed:" + re.getMessage() + ". No user info available");
+                } else {
+                    logger.warn("Refresh REST User cache failed:" + re.getMessage() + ". Could not update user cache, but keeping " + cache.size() + " existing elements.");
+                }
             } else {
-                logger.warn("Refresh REST User cache failed:" + re.getMessage() + ". Could not update user cache, but keeping " + cache.size() + " existing elements.");
+                throw re;
             }
         }
-
     }
+
 
     @Override
     public Collection<UserDTO> findAll() {
