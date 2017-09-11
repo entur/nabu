@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class AdministrativeZoneResource {
 
-    @Value("${administrative.zone.registry.rest.service.url:http://baba/services/organisations/administrative_zones}")
+    @Value("${administrative.zone.registry.rest.service.url:http://baba/services/organisations/administrative_zones/}")
     private String restServiceUrl;
 
     @Autowired
