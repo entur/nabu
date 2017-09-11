@@ -1,25 +1,31 @@
 package no.rutebanken.nabu.jms;
 
 import com.google.common.collect.Sets;
+import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.Notification;
+import no.rutebanken.nabu.domain.event.NotificationType;
+import no.rutebanken.nabu.event.UserNotificationEventHandler;
+import no.rutebanken.nabu.event.user.UserRepository;
+import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
+import no.rutebanken.nabu.event.user.dto.user.NotificationConfigDTO;
+import no.rutebanken.nabu.event.user.dto.user.UserDTO;
 import no.rutebanken.nabu.jms.dto.JobEventDTO;
-import no.rutebanken.nabu.organisation.TestConstantsOrganisation;
-import no.rutebanken.nabu.organisation.model.user.NotificationType;
-import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
-import no.rutebanken.nabu.organisation.rest.ResourceTestUtils;
-import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
-import no.rutebanken.nabu.organisation.rest.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+
+import static org.mockito.Mockito.when;
+
 
 public class EventNotificationIntegrationTest extends BaseIntegrationTest {
     @Autowired
@@ -28,9 +34,16 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    @Mock
+    private UserRepository userRepositoryMock;
 
+    @Autowired
+    private UserNotificationEventHandler userNotificationEventHandler;
+
+    @Before
+    public void setUp() throws Exception {
+        userNotificationEventHandler.setUserRepository(userRepositoryMock);
+    }
 
     @Test
     public void eventsTriggerNotifications() {
@@ -40,8 +53,11 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
         Set<NotificationConfigDTO> config = Sets.newHashSet(new NotificationConfigDTO(NotificationType.WEB, false, jobEventFilter(inactiveFilterAction, JobState.FAILED)),
                 new NotificationConfigDTO(NotificationType.WEB, true, jobEventFilter(activeFilterAction, JobState.FAILED)));
 
-        ResourceTestUtils.setNotificationConfig(restTemplate, TestConstantsOrganisation.USER_USERNAME, config);
+        UserDTO user = new UserDTO();
+        user.username = "username";
+        user.notifications = config;
 
+        when(userRepositoryMock.findAll()).thenReturn(Arrays.asList(user));
 
         // Matching action, but not state
         JobEventDTO notMatchingDifferentState = createEvent(JobState.PENDING, activeFilterAction, Instant.now());
@@ -55,18 +71,19 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
         JobEventDTO matchingEvent = createEvent(JobState.FAILED, activeFilterAction, Instant.now().plusMillis(2000));
         eventListener.processMessage(toJson(matchingEvent));
 
-        List<Notification> notifications = notificationRepository.findByUserNameAndTypeAndStatus(TestConstantsOrganisation.USER_USERNAME, NotificationType.WEB, Notification.NotificationStatus.READY);
+        List<Notification> notifications = notificationRepository.findByUserNameAndTypeAndStatus(user.getUsername(), NotificationType.WEB, Notification.NotificationStatus.READY);
 
         Assert.assertEquals(1, notifications.size());
         Assert.assertEquals(notifications.get(0).getEvent().getEventTime(), matchingEvent.eventTime);
     }
 
     private EventFilterDTO jobEventFilter(String action, JobState jobState) {
-        EventFilterDTO eventFilterDTO = new EventFilterDTO(EventFilterDTO.EventFilterType.JOB);
-        eventFilterDTO.actions = Sets.newHashSet(action);
-        eventFilterDTO.jobDomain = JobEvent.JobDomain.TIMETABLE;
-        eventFilterDTO.states = Sets.newHashSet(jobState);
-        return eventFilterDTO;
+        EventFilterDTO eventFilter = new EventFilterDTO();
+        eventFilter.type = EventFilterDTO.EventFilterType.JOB;
+        eventFilter.jobDomain = JobEvent.JobDomain.TIMETABLE.toString();
+        eventFilter.actions = Sets.newHashSet(action);
+        eventFilter.states = Sets.newHashSet(jobState);
+        return eventFilter;
     }
 
 

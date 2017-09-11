@@ -2,13 +2,14 @@ package no.rutebanken.nabu.rest;
 
 import com.google.cloud.storage.Storage;
 import io.swagger.annotations.Api;
-import no.rutebanken.nabu.domain.Provider;
+
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
-import no.rutebanken.nabu.jms.JmsSender;
-import no.rutebanken.nabu.repository.ProviderRepository;
 import no.rutebanken.nabu.event.EventService;
+import no.rutebanken.nabu.jms.JmsSender;
+import no.rutebanken.nabu.provider.ProviderRepository;
+import no.rutebanken.nabu.provider.model.Provider;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;

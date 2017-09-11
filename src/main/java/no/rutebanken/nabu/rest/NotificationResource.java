@@ -7,11 +7,11 @@ import no.rutebanken.nabu.domain.event.GeoCoderAction;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.Notification;
+import no.rutebanken.nabu.domain.event.NotificationType;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.event.ScheduledNotificationService;
-import no.rutebanken.nabu.organisation.model.user.NotificationType;
-import no.rutebanken.nabu.organisation.model.user.eventfilter.JobEventFilter;
-import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
+import no.rutebanken.nabu.event.filter.EventMatcher;
+import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
 import no.rutebanken.nabu.rest.domain.ApiCrudEvent;
 import no.rutebanken.nabu.rest.domain.ApiJobEvent;
@@ -23,7 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -101,7 +105,7 @@ public class NotificationResource {
     @GET
     @Path("job_actions/{jobDomain}")
     public List<String> getJobActions(@PathParam("jobDomain") JobEvent.JobDomain jobDomain) {
-        List<String> actions = new ArrayList<>(Arrays.asList(JobEventFilter.ALL_TYPES));
+        List<String> actions = new ArrayList<>(Arrays.asList(EventMatcher.ALL_TYPES));
 
         if (JobEvent.JobDomain.GRAPH.equals(jobDomain)) {
             actions.addAll(Arrays.asList("BUILD_GRAPH"));

@@ -2,8 +2,8 @@ package no.rutebanken.nabu.event;
 
 import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.Notification;
-import no.rutebanken.nabu.organisation.model.user.NotificationType;
-import no.rutebanken.nabu.organisation.model.user.User;
+import no.rutebanken.nabu.domain.event.NotificationType;
+import no.rutebanken.nabu.event.user.dto.user.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class ImmediateNotificationService {
     @Autowired
     private Map<NotificationType, NotificationProcessor> notificationSenders;
 
-    public void sendNotifications(Notification notification, User user) {
+    public void sendNotifications(Notification notification, UserDTO user) {
         NotificationType type = notification.getType();
         logger.info("About to send notifications of type: " + type + " to user " + user.getUsername());
         NotificationProcessor notificationSender = notificationSenders.get(type);

@@ -1,7 +1,8 @@
 package no.rutebanken.nabu.config;
 
+import no.rutebanken.nabu.domain.event.NotificationType;
 import no.rutebanken.nabu.event.NotificationProcessor;
-import no.rutebanken.nabu.organisation.model.user.NotificationType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

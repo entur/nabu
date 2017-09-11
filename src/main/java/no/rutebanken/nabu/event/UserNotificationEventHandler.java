@@ -3,9 +3,9 @@ package no.rutebanken.nabu.event;
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.event.filter.EventMatcherFactory;
-import no.rutebanken.nabu.organisation.model.user.NotificationConfiguration;
-import no.rutebanken.nabu.organisation.model.user.User;
-import no.rutebanken.nabu.organisation.repository.UserRepository;
+import no.rutebanken.nabu.event.user.UserRepository;
+import no.rutebanken.nabu.event.user.dto.user.NotificationConfigDTO;
+import no.rutebanken.nabu.event.user.dto.user.UserDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,20 +38,20 @@ public class UserNotificationEventHandler implements EventHandler {
         userRepository.findAll().forEach(user -> createNotificationsForUser(user, event));
     }
 
-    void createNotificationsForUser(User user, Event event) {
+    void createNotificationsForUser(UserDTO user, Event event) {
 
-        if (CollectionUtils.isEmpty(user.getNotificationConfigurations())) {
+        if (CollectionUtils.isEmpty(user.getNotifications())) {
             return;
         }
 
-        user.getNotificationConfigurations().stream()
+        user.getNotifications().stream()
                 .filter(notificationConfiguration -> notificationConfiguration.isEnabled())
                 .filter(notificationConfig -> eventMatcherFactory.createEventMatcher(notificationConfig.getEventFilter()).matches(event))
                 .forEach(notificationConfig -> createNotification(user, notificationConfig, event));
 
     }
 
-    private void createNotification(User user, NotificationConfiguration notificationConfig, Event event) {
+    private void createNotification(UserDTO user, NotificationConfigDTO notificationConfig, Event event) {
         Notification notification = new Notification(user.getUsername(), notificationConfig.getNotificationType(), event);
 
         if (notification.getType().isImmediate()) {
@@ -64,4 +64,7 @@ public class UserNotificationEventHandler implements EventHandler {
     }
 
 
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 }

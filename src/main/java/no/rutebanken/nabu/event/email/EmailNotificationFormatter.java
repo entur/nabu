@@ -1,15 +1,12 @@
 package no.rutebanken.nabu.event.email;
 
 import freemarker.template.Configuration;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
-import no.rutebanken.nabu.domain.Provider;
+
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.Notification;
-import no.rutebanken.nabu.organisation.email.MessageResolverMethod;
-import no.rutebanken.nabu.repository.ProviderRepository;
+import no.rutebanken.nabu.provider.ProviderRepository;
+import no.rutebanken.nabu.provider.model.Provider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;

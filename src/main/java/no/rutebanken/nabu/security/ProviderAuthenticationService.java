@@ -1,8 +1,9 @@
 package no.rutebanken.nabu.security;
 
 
-import no.rutebanken.nabu.domain.Provider;
-import no.rutebanken.nabu.repository.ProviderRepository;
+
+import no.rutebanken.nabu.provider.ProviderRepository;
+import no.rutebanken.nabu.provider.model.Provider;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

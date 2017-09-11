@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import no.rutebanken.nabu.repository.DbStatus;
 import no.rutebanken.nabu.repository.EventRepository;
-import no.rutebanken.nabu.repository.ProviderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,9 @@ public class ApplicationStatusResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    ProviderRepository providerRepository;
 
     @Autowired
-    EventRepository eventRepository;
+    private EventRepository eventRepository;
 
     @GET
     @Path("/ready")
@@ -40,7 +37,7 @@ public class ApplicationStatusResource {
     })
     public Response isReady() {
         logger.debug("Checking readiness...");
-        if (((DbStatus) providerRepository).isDbUp() && ((DbStatus) eventRepository).isDbUp()) {
+        if (((DbStatus) eventRepository).isDbUp()) {
             return Response.ok().build();
         } else {
             return Response.serverError().build();

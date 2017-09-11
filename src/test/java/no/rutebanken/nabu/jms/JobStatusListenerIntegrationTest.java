@@ -1,18 +1,25 @@
 package no.rutebanken.nabu.jms;
 
+import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.SystemJobStatus;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.event.UserNotificationEventHandler;
+import no.rutebanken.nabu.event.user.UserRepository;
 import no.rutebanken.nabu.jms.dto.JobEventDTO;
-import no.rutebanken.nabu.organisation.repository.BaseIntegrationTest;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
 import java.time.Instant;
+import java.util.ArrayList;
+
+import static org.mockito.Mockito.when;
 
 public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
@@ -24,6 +31,19 @@ public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private SystemJobStatusRepository systemJobStatusRepository;
+
+    @Mock
+    private UserRepository userRepositoryMock;
+
+    @Autowired
+    private UserNotificationEventHandler userNotificationEventHandler;
+
+    @Before
+    public void setUp() throws Exception {
+        userNotificationEventHandler.setUserRepository(userRepositoryMock);
+        when(userRepositoryMock.findAll()).thenReturn(new ArrayList<>());
+    }
+
 
     @Test
     public void jobEventUpdatesSystemJobStatus() {
@@ -48,7 +68,7 @@ public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
         Assert.assertEquals(4, eventRepository.findAll().size());
 
-        JobEvent queryEvent=JobEvent.builder().domain(firstPendingEvent.domain).build();
+        JobEvent queryEvent = JobEvent.builder().domain(firstPendingEvent.domain).build();
         queryEvent.setRegisteredTime(null);
         Assert.assertEquals(4, eventRepository.findAll(Example.of(queryEvent)).size());
 
