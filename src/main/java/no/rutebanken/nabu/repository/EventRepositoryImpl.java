@@ -21,11 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static no.rutebanken.nabu.repository.DbStatusChecker.isPostgresUp;
-
 @Repository
 @Transactional
-public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implements EventRepository, DbStatus {
+public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implements EventRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -171,10 +169,5 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
         this.entityManager.createQuery("delete from JobEvent je where je.domain=:domain and je.providerId=:providerId").setParameter("domain", domain).setParameter("providerId", providerId).executeUpdate();
     }
 
-
-    @Override
-    public boolean isDbUp() {
-        return isPostgresUp(entityManager, logger);
-    }
 
 }

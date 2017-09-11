@@ -4,8 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import no.rutebanken.nabu.repository.DbStatus;
-import no.rutebanken.nabu.repository.EventRepository;
+import no.rutebanken.nabu.repository.DbStatusChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,8 @@ public class ApplicationStatusResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
     @Autowired
-    private EventRepository eventRepository;
+    private DbStatusChecker dbStatusChecker;
 
     @GET
     @Path("/ready")
@@ -37,7 +35,7 @@ public class ApplicationStatusResource {
     })
     public Response isReady() {
         logger.debug("Checking readiness...");
-        if (((DbStatus) eventRepository).isDbUp()) {
+        if (dbStatusChecker.isDbUp()) {
             return Response.ok().build();
         } else {
             return Response.serverError().build();

@@ -1,12 +1,20 @@
 package no.rutebanken.nabu.repository;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
+@Service
+public class DbStatusChecker {
 
-class DbStatusChecker {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public static boolean isPostgresUp(EntityManager entityManager, Logger logger) {
+    @Autowired
+    private EntityManager entityManager;
+
+    public boolean isDbUp() {
         try {
             if ((Integer) entityManager.createNativeQuery("SELECT 1").getSingleResult() == 1) {
                 return true;
@@ -16,5 +24,4 @@ class DbStatusChecker {
         }
         return false;
     }
-
 }
