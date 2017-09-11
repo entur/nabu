@@ -84,20 +84,41 @@ spring.datasource.initializationFailFast=false
 `docker run -it --name nabu -e JAVA_OPTIONS="-Xmx1280m" --link activemq --link some-postgres -v /git/config/nabu/test/application.properties:/app/config/application.properties:ro dr.rutebanken.org/rutebanken/nabu:0.0.1-SNAPSHOT`
 
 
-## Enable nabu to admin users in keycloak
+# Flyway
+To create the database for nabu, download and use the flyway command line tool:
+https://flywaydb.org/documentation/commandline/
 
-In order to mange keycloak users from Nabu 
+## Migration
+Execute the migration. Point to the migration files in nabu.
 
-###  Add client to Realm 'Master'
-  * Go to the keycloak admin console 
-  * Select realm=Master
-  * Select 'clients'
-  * Create new client: nabu
-  * Set 'Access Type' to "Confidential", toggle 'Service Accounts Enabled' on and provide a valid url (whatever) as a redirect url and 'Save'
-  * Add role 'Amin' on tab 'Service Account roles'
-  * Secret for client is displayed on tab 'Credentials'
+```
+./flyway -url=jdbc:postgresql://localhost:5433/nabu -locations=filesystem:/path/to/tiamat/src/main/resources/db/migrations migrate
+```
 
- 
-### Configure nabu with username+password for new user and clientID for new client
-iam.keycloak.admin.client=nabu
-iam.keycloak.admin.client.secret=<See 'Credentials' tab for Client.>
+### Example migration
+```
+./flyway -url=jdbc:postgresql://localhost:5433/nabu -locations=filesystem:/path/to/tiamat/src/main/resources/db/migrations migrate
+Flyway 4.2.0 by Boxfuse
+
+Database password: 
+Database: jdbc:postgresql://localhost:5433/nabu (PostgreSQL 9.6)
+Successfully validated 1 migration (execution time 00:00.016s)
+Creating Metadata table: "public"."schema_version"
+Current version of schema "public": << Empty Schema >>
+Migrating schema "public" to version 1 - Base version
+Successfully applied 1 migration to schema "public" (execution time 00:04.220s).
+```
+
+
+## Baseline existing database
+To baseline an existing database that does not contain the table `schema_version`.
+The schema of this database must be exactly equivalent to the first migration file. If not, you might be better off by starting from scratch and using the restoring_import to repopulate the new database.
+
+```
+./flyway -url=jdbc:postgresql://localhost:6432/nabu -locations=filesystem:/path/to/nabu/src/main/resources/db/migrations baseline
+```
+
+
+## Schema changes
+Create a new file according to the flyway documentation in the folder `resources/db/migrations`.
+Commit the migration together with code changes that requires this schema change.

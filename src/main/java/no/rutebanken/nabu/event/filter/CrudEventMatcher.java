@@ -2,25 +2,27 @@ package no.rutebanken.nabu.event.filter;
 
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.Event;
-import no.rutebanken.nabu.organisation.model.responsibility.EntityClassification;
-import no.rutebanken.nabu.organisation.model.user.eventfilter.CrudEventFilter;
+import no.rutebanken.nabu.event.user.AdministrativeZoneRepository;
+import no.rutebanken.nabu.event.user.dto.responsibility.EntityClassificationDTO;
+import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Check whether an Event matches a given CrudEventFilter.
+ * Check whether an Event matches a given EventFilterDTO.
  */
 public class CrudEventMatcher implements EventMatcher {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private CrudEventFilter crudEventFilter;
+    private EventFilterDTO eventFilter;
 
     private static final String ENTITY_TYPE = "EntityType";
 
-    public CrudEventMatcher(CrudEventFilter crudEventFilter) {
-        this.crudEventFilter = crudEventFilter;
-        // Ensure (potentially to be cached) administrative zone polygons are loaded.
-        this.crudEventFilter.getAdministrativeZones().forEach(az -> az.getPolygon().isValid());
+    private AdministrativeZoneRepository administrativeZoneRepository;
+
+    public CrudEventMatcher(AdministrativeZoneRepository administrativeZoneRepository, EventFilterDTO crudEventFilter) {
+        this.eventFilter = crudEventFilter;
+        this.administrativeZoneRepository = administrativeZoneRepository;
     }
 
     @Override
@@ -34,41 +36,48 @@ public class CrudEventMatcher implements EventMatcher {
     }
 
     private boolean matchesEventClassifier(CrudEvent crudEvent) {
-        return crudEventFilter.getEntityClassifications().stream().allMatch(ec -> isMatch(crudEvent, ec));
+        return eventFilter.getEntityClassifications().stream().allMatch(ec -> isMatch(crudEvent, ec));
     }
 
-    private boolean isMatch(CrudEvent crudEvent, EntityClassification ec) {
+    private boolean isMatch(CrudEvent crudEvent, EntityClassificationDTO ec) {
         if (isEntityTypeCriterion(ec)) {
-            return ec.isMatch(crudEvent.getEntityType());
+            return isClassificationMatch(ec, crudEvent.getEntityType());
         } else if (isSubTypeCriterion(ec)) {
             return isSubTypeMatch(crudEvent, ec);
         }
 
-        logger.warn("Unable to check entityClassification: " + ec.getId() + " for crudEventFilter. Ignored.");
+        logger.warn("Unable to check entityClassification: " + ec + " for eventFilter. Ignored.");
         return true;
     }
 
 
-
-    private boolean isEntityTypeCriterion(EntityClassification ec) {
+    private boolean isEntityTypeCriterion(EntityClassificationDTO ec) {
         return ENTITY_TYPE.equals(ec.getEntityType().getPrivateCode());
     }
 
 
     // Verify subtype
-    private boolean isSubTypeMatch(CrudEvent crudEvent, EntityClassification ec) {
-        return ec.isMatch(crudEvent.getEntityClassifier()) && ec.getEntityType().getPrivateCode().replace("Type","").equals(crudEvent.getEntityType());
+    private boolean isSubTypeMatch(CrudEvent crudEvent, EntityClassificationDTO ec) {
+        return isClassificationMatch(ec, crudEvent.getEntityClassifier()) && ec.getEntityType().getPrivateCode().replace("Type", "").equals(crudEvent.getEntityType());
     }
 
     // TODO This is highly dubious, how can we be sure whether this is a subtype criterion?
-    private boolean isSubTypeCriterion(EntityClassification ec) {
+    private boolean isSubTypeCriterion(EntityClassificationDTO ec) {
         return !isEntityTypeCriterion(ec) && ec.getEntityType().getPrivateCode().endsWith("Type");
     }
 
     private boolean matchesAdministrativeZone(CrudEvent crudEvent) {
-        if (crudEvent.getGeometry() == null || crudEventFilter.getAdministrativeZones().isEmpty()) {
+        if (crudEvent.getGeometry() == null || eventFilter.getAdministrativeZoneRefs().isEmpty()) {
             return true;
         }
-        return crudEventFilter.getAdministrativeZones().stream().anyMatch(az -> az.getPolygon().contains(crudEvent.getGeometry()));
+        return eventFilter.getAdministrativeZoneRefs().stream().map(azRef -> administrativeZoneRepository.getAdministrativeZone(azRef))
+                       .anyMatch(az -> az.getPolygon().contains(crudEvent.getGeometry()));
     }
+
+    private boolean isClassificationMatch(EntityClassificationDTO entityClassification, String entityClassificationCode) {
+        if (EventMatcher.ALL_TYPES.equals(entityClassification.getPrivateCode())) {
+            return true;
+        } else return entityClassification.getPrivateCode().equals(entityClassificationCode);
+    }
+
 }

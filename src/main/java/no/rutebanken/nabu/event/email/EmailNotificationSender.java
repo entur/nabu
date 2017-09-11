@@ -2,9 +2,9 @@ package no.rutebanken.nabu.event.email;
 
 import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.Notification;
+import no.rutebanken.nabu.domain.event.NotificationType;
 import no.rutebanken.nabu.event.NotificationProcessor;
-import no.rutebanken.nabu.organisation.model.user.NotificationType;
-import no.rutebanken.nabu.organisation.model.user.User;
+import no.rutebanken.nabu.event.user.dto.user.UserDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class EmailNotificationSender implements NotificationProcessor {
 
 
     @Override
-    public void processNotificationsForUser(User user, Set<Notification> notifications) {
+    public void processNotificationsForUser(UserDTO user, Set<Notification> notifications) {
 
         if (user.getContactDetails() == null || user.getContactDetails().getEmail() == null) {
             logger.warn("Unable to notify user without registered email address: " + user.getUsername() + ". Discarding notifications: " + notifications);

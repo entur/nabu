@@ -1,7 +1,7 @@
 package no.rutebanken.nabu.repository;
 
 import no.rutebanken.nabu.domain.event.Notification;
-import no.rutebanken.nabu.organisation.model.user.NotificationType;
+import no.rutebanken.nabu.domain.event.NotificationType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

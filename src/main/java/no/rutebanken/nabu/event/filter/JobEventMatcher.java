@@ -2,16 +2,17 @@ package no.rutebanken.nabu.event.filter;
 
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.domain.event.JobEvent;
-import no.rutebanken.nabu.organisation.model.user.eventfilter.JobEventFilter;
+import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
+
 
 /**
  * Check whether an Event matches a given JobEventFilter.
  */
 public class JobEventMatcher implements EventMatcher {
 
-    private JobEventFilter filter;
+    private EventFilterDTO filter;
 
-    public JobEventMatcher(JobEventFilter jobEventFilter) {
+    public JobEventMatcher(EventFilterDTO jobEventFilter) {
         this.filter = jobEventFilter;
     }
 
@@ -23,7 +24,7 @@ public class JobEventMatcher implements EventMatcher {
         JobEvent jobEvent = (JobEvent) event;
 
         if (filter.getOrganisation() != null) {
-            // TODO need to get providerid from organisation for exact match
+            // TODO need to get providerid from organisationDTO for exact match
             if (jobEvent.getReferential() == null || !jobEvent.getReferential().endsWith(filter.getOrganisation().getPrivateCode().toLowerCase())) {
                 return false;
             }
@@ -32,7 +33,7 @@ public class JobEventMatcher implements EventMatcher {
 
         return filter.getJobDomain().equals(jobEvent.getDomain()) &&
                        filter.getStates().contains(jobEvent.getState()) &&
-                       (filter.getActions().contains(JobEventFilter.ALL_TYPES) || filter.getActions().contains(jobEvent.getAction()));
+                       (filter.getActions().contains(ALL_TYPES) || filter.getActions().contains(jobEvent.getAction()));
 
     }
 }

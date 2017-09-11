@@ -37,7 +37,6 @@
         <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
         <docker.image>eu.gcr.io/${fabric8.dockerUser}${project.artifactId}:${project.version}</docker.image>
         <docker.cleanup>none</docker.cleanup>
-        <hazelcast-hibernate5.version>1.2.2</hazelcast-hibernate5.version>
         <fabric8.service.name>springboot-webmvc</fabric8.service.name>
         <fabric8.service.port>80</fabric8.service.port>
         <fabric8.service.containerPort>9004</fabric8.service.containerPort>
@@ -120,11 +119,6 @@
             <version>${rutebanken.helpers.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.rutebanken.helpers</groupId>
-            <artifactId>hazelcast-helper</artifactId>
-            <version>${rutebanken.helpers.version}</version>
-        </dependency>
         <!-- Due to maven artifact cache, this dependency needs to be explicit -->
         <dependency>
             <groupId>io.fabric8</groupId>
@@ -192,12 +186,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jersey</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-hibernate5</artifactId>
-            <version>${hazelcast-hibernate5.version}</version>
         </dependency>
 
         <dependency>

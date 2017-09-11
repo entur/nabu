@@ -1,10 +1,9 @@
 package no.rutebanken.nabu.event;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.Notification;
-import no.rutebanken.nabu.organisation.model.user.NotificationType;
-import no.rutebanken.nabu.organisation.model.user.User;
-import no.rutebanken.nabu.organisation.repository.UserRepository;
+import no.rutebanken.nabu.domain.event.NotificationType;
+import no.rutebanken.nabu.event.user.UserRepository;
+import no.rutebanken.nabu.event.user.dto.user.UserDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +47,7 @@ public class ScheduledNotificationService {
     }
 
     private void sendNotificationsForUser(NotificationProcessor notificationSender, String userName, Set<Notification> notifications) {
-        User user = userRepository.getUserByUsername(userName);
+        UserDTO user = userRepository.getByUsername(userName);
         if (user != null) {
             notificationSender.processNotificationsForUser(user, notifications);
         } else {
