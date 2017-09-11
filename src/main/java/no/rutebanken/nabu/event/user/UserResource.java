@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class UserResource {
 
-    @Value("${user.registry.rest.service.url:http://baba/services/organisations/users}")
+    @Value("${user.registry.rest.service.url:http://baba/services/organisations/users?full=true}")
     private String restServiceUrl;
 
     @Autowired
