@@ -7,8 +7,6 @@ import no.rutebanken.nabu.filter.CorsResponseFilter;
 import no.rutebanken.nabu.rest.ApplicationStatusResource;
 import no.rutebanken.nabu.rest.CrudEventResource;
 import no.rutebanken.nabu.rest.DataDeliveryStatusResource;
-import no.rutebanken.nabu.rest.FileUploadResource;
-import no.rutebanken.nabu.rest.HazelcastResource;
 import no.rutebanken.nabu.rest.NotificationResource;
 import no.rutebanken.nabu.rest.SystemJobResource;
 import no.rutebanken.nabu.rest.TimeTableJobEventResource;
@@ -28,7 +26,6 @@ public class JerseyConfig extends ResourceConfig {
 
         register(ApplicationStatusResource.class);
 
-        register(FileUploadResource.class);
         register(TimeTableJobEventResource.class);
         register(SystemJobResource.class);
         register(DataDeliveryStatusResource.class);
