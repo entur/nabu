@@ -22,13 +22,11 @@ import no.rutebanken.nabu.organisation.rest.exception.SpringExceptionMapper;
 import no.rutebanken.nabu.rest.ApplicationStatusResource;
 import no.rutebanken.nabu.rest.CrudEventResource;
 import no.rutebanken.nabu.rest.DataDeliveryStatusResource;
-import no.rutebanken.nabu.rest.FileUploadResource;
 import no.rutebanken.nabu.rest.HazelcastResource;
 import no.rutebanken.nabu.rest.NotificationResource;
 import no.rutebanken.nabu.rest.ProviderResource;
 import no.rutebanken.nabu.rest.SystemJobResource;
 import no.rutebanken.nabu.rest.TimeTableJobEventResource;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
 
@@ -39,8 +37,6 @@ import javax.ws.rs.ApplicationPath;
 public class JerseyConfig extends ResourceConfig {
 
     public JerseyConfig() {
-        register(MultiPartFeature.class);
-        register(FileUploadResource.class);
         register(TimeTableJobEventResource.class);
         register(SystemJobResource.class);
         register(DataDeliveryStatusResource.class);

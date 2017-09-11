@@ -3,15 +3,10 @@ package no.rutebanken.nabu.rest;
 import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.Event;
-import no.rutebanken.nabu.domain.event.GeoCoderAction;
 import no.rutebanken.nabu.domain.event.JobEvent;
-import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.Notification;
-import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.event.ScheduledNotificationService;
 import no.rutebanken.nabu.organisation.model.user.NotificationType;
-import no.rutebanken.nabu.organisation.model.user.eventfilter.JobEventFilter;
-import no.rutebanken.nabu.organisation.rest.dto.user.EventFilterDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
 import no.rutebanken.nabu.rest.domain.ApiCrudEvent;
 import no.rutebanken.nabu.rest.domain.ApiJobEvent;
@@ -22,10 +17,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,51 +66,6 @@ public class NotificationResource {
     @Path("/email")
     public void sendEmails() {
         scheduledNotificationService.sendNotifications(NotificationType.EMAIL_BATCH);
-    }
-
-
-    @GET
-    @Path("notification_types")
-    public NotificationType[] getNotificationTypes() {
-        return NotificationType.values();
-    }
-
-    @GET
-    @Path("job_domains")
-    public JobEvent.JobDomain[] getJobDomains() {
-        return JobEvent.JobDomain.values();
-    }
-
-    @GET
-    @Path("job_states")
-    public JobState[] getJobStates() {
-        return JobState.values();
-    }
-
-
-    @GET
-    @Path("event_filter_types")
-    public EventFilterDTO.EventFilterType[] getEventFilterTypes() {
-        return EventFilterDTO.EventFilterType.values();
-    }
-
-    @GET
-    @Path("job_actions/{jobDomain}")
-    public List<String> getJobActions(@PathParam("jobDomain") JobEvent.JobDomain jobDomain) {
-        List<String> actions = new ArrayList<>(Arrays.asList(JobEventFilter.ALL_TYPES));
-
-        if (JobEvent.JobDomain.GRAPH.equals(jobDomain)) {
-            actions.addAll(Arrays.asList("BUILD_GRAPH"));
-        } else if (JobEvent.JobDomain.TIAMAT.equals(jobDomain)) {
-            actions.addAll(Arrays.asList("EXPORT"));
-        } else if (JobEvent.JobDomain.GEOCODER.equals(jobDomain)) {
-            actions.addAll(Arrays.stream(GeoCoderAction.values()).map(value -> value.name()).collect(Collectors.toList()));
-        } else if (JobEvent.JobDomain.TIMETABLE.equals(jobDomain)) {
-            actions.addAll(Arrays.stream(TimeTableAction.values()).map(value -> value.name()).collect(Collectors.toList()));
-        } else {
-            throw new EntityNotFoundException("Unknown job domain: " + jobDomain);
-        }
-        return actions;
     }
 
 
