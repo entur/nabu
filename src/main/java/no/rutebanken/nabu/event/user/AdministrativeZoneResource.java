@@ -23,7 +23,7 @@ public class AdministrativeZoneResource {
 
     public AdministrativeZoneDTO getAdministrativeZone(String id) {
         ResponseEntity<AdministrativeZoneDTO> rateResponse =
-                restTemplate.exchange(restServiceUrl,
+                restTemplate.exchange(restServiceUrl + id,
                         HttpMethod.GET, tokenService.getEntityWithAuthenticationToken(), new ParameterizedTypeReference<AdministrativeZoneDTO>() {
                         });
         return rateResponse.getBody();
