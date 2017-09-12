@@ -1,4 +1,4 @@
-package no.rutebanken.nabu.repository;
+package no.rutebanken.nabu.health.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

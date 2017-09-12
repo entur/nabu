@@ -1,10 +1,10 @@
-package no.rutebanken.nabu.rest;
+package no.rutebanken.nabu.health.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import no.rutebanken.nabu.repository.DbStatusChecker;
+import no.rutebanken.nabu.health.repository.DbStatusChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import javax.ws.rs.core.Response;
 
 @Component
 @Produces("application/json")
-@Path("/appstatus")
+@Path("")
 @Api(tags = {"Application status resource"}, produces = "text/plain")
-public class ApplicationStatusResource {
+public class HealthResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -43,12 +43,12 @@ public class ApplicationStatusResource {
     }
 
     @GET
-    @Path("/up")
+    @Path("/live")
     @ApiOperation(value = "Returns OK if application is running", response = Void.class)
     @ApiResponses(value = {
                                   @ApiResponse(code = 200, message = "application is running")
     })
-    public Response isUp() {
+    public Response isLive() {
         return Response.ok().build();
     }
 

@@ -24,7 +24,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 
 @Component
 @Produces("application/json")
-@Path("/dataDelivery")
+@Path("events/latest_upload")
 @Api
 public class DataDeliveryStatusResource {
 
@@ -34,7 +34,7 @@ public class DataDeliveryStatusResource {
     EventRepository eventRepository;
 
     @GET
-    @Path("/{providerId}/latest")
+    @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public DataDeliveryStatus getLatestDataDeliveryStatus(@PathParam("providerId") Long providerId) {
 

@@ -33,7 +33,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 
 @Component
 @Produces("application/json")
-@Path("/jobs")
+@Path("events/timetable")
 @Api
 public class TimeTableJobEventResource {
 

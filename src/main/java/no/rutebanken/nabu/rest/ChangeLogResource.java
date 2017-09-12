@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 
 @Component
 @Produces("application/json")
-@Path("/crud_events")
+@Path("events//change_log")
 @Api(tags = {"Crud event resource"}, produces = "application/json")
-public class CrudEventResource {
+public class ChangeLogResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

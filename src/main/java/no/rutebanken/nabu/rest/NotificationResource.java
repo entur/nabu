@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Produces("application/json")
-@Path("/notifications")
+@Path("events/notifications")
 @Api
 public class NotificationResource {
 
@@ -52,7 +52,7 @@ public class NotificationResource {
 
 
     @POST
-    @Path("/{userName}/read")
+    @Path("/{userName}/mark_read")
     @Transactional
     @PreAuthorize("#userName == authentication.name")
     public void markAsRead(@PathParam("userName") String userName, List<Long> notificationPks) {
