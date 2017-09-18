@@ -24,7 +24,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 
 @Component
 @Produces("application/json")
-@Path("events/latest_upload")
+@Path("latest_upload")
 @Api
 public class DataDeliveryStatusResource {
 

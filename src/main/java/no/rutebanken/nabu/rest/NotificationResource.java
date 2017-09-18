@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Produces("application/json")
-@Path("events/notifications")
+@Path("notifications")
 @Api
 public class NotificationResource {
 

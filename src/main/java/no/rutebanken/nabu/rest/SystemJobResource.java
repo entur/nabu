@@ -21,7 +21,7 @@ import java.util.Map;
 
 @Component
 @Produces("application/json")
-@Path("events/admin_summary")
+@Path("admin_summary")
 @Api
 public class SystemJobResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

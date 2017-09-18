@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Produces("application/json")
-@Path("events//change_log")
+@Path("change_log")
 @Api(tags = {"Crud event resource"}, produces = "application/json")
 public class ChangeLogResource {
 

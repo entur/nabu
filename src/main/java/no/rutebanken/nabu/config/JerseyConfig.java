@@ -26,7 +26,7 @@ public class JerseyConfig {
     public ServletRegistrationBean publicJersey() {
         ServletRegistrationBean publicJersey
                 = new ServletRegistrationBean(new ServletContainer(new ServicesConfig()));
-        publicJersey.addUrlMappings("/services/*");
+        publicJersey.addUrlMappings("/services/events/*");
         publicJersey.setName("PublicJersey");
         publicJersey.setLoadOnStartup(0);
         return publicJersey;
@@ -71,7 +71,6 @@ public class JerseyConfig {
             config.setTitle("Event API");
             config.setVersion("v1");
             config.setSchemes(new String[]{"http", "https"});
-            config.setBasePath("/services");
             config.setResourcePackage("no.rutebanken.nabu.rest");
             config.setPrettyPrint(true);
             config.setScan(true);
@@ -97,7 +96,6 @@ public class JerseyConfig {
             config.setTitle("Nabu Health API");
             config.setVersion("v1");
             config.setSchemes(new String[]{"http", "https"});
-            config.setBasePath("/health");
             config.setResourcePackage("no.rutebanken.baba.health");
             config.setPrettyPrint(true);
             config.setScan(true);
