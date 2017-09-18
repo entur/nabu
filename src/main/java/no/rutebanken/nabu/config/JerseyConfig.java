@@ -29,6 +29,8 @@ public class JerseyConfig {
         publicJersey.addUrlMappings("/services/events/*");
         publicJersey.setName("PublicJersey");
         publicJersey.setLoadOnStartup(0);
+        publicJersey.getInitParameters().put("swagger.scanner.id", "events-scanner");
+        publicJersey.getInitParameters().put("swagger.config.id","events-swagger-doc");
         return publicJersey;
     }
 
@@ -38,7 +40,9 @@ public class JerseyConfig {
                 = new ServletRegistrationBean(new ServletContainer(new HealthConfig()));
         privateJersey.addUrlMappings("/health/*");
         privateJersey.setName("PrivateJersey");
-        privateJersey.setLoadOnStartup(1);
+        privateJersey.setLoadOnStartup(0);
+        privateJersey.getInitParameters().put("swagger.scanner.id", "health-scanner");
+        privateJersey.getInitParameters().put("swagger.config.id","nabu-health-swagger-doc");
         return privateJersey;
     }
 
@@ -74,6 +78,7 @@ public class JerseyConfig {
             config.setResourcePackage("no.rutebanken.nabu.rest");
             config.setPrettyPrint(true);
             config.setScan(true);
+            config.setScannerId("events-scanner");
         }
     }
 
@@ -99,6 +104,7 @@ public class JerseyConfig {
             config.setResourcePackage("no.rutebanken.baba.health");
             config.setPrettyPrint(true);
             config.setScan(true);
+            config.setScannerId("health-scanner");
         }
     }
 
