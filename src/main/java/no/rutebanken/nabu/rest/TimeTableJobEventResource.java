@@ -81,7 +81,7 @@ public class TimeTableJobEventResource {
      */
     private List<Long> mapToAllRelatedProviderIds(Long providerId) {
         if (providerId == null) {
-            return null;
+            return new ArrayList<>();
         }
         List<Long> relatedProviderIds = providerRepository.getProviders().stream().filter(provider -> providerId.equals(provider.chouetteInfo.migrateDataToProvider))
                                                 .map(provider -> provider.id).collect(Collectors.toList());
@@ -113,7 +113,7 @@ public class TimeTableJobEventResource {
     @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
     public void clearStatusForProvider(@PathParam("providerId") Long providerId) {
-        eventService.clear(STATUS_JOB_TYPE, providerId);
+        mapToAllRelatedProviderIds(providerId).stream().forEach(clearProviderId -> eventService.clear(STATUS_JOB_TYPE, clearProviderId));
     }
 
     public List<JobStatus> convert(List<JobEvent> statusForProvider) {
