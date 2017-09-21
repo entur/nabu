@@ -25,8 +25,8 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 @Produces("application/json")
 @Path("latest_upload")
-@Api
-public class DataDeliveryStatusResource {
+@Api(tags = {"Latest upload resource"}, produces = "application/json")
+public class LatestUploadResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

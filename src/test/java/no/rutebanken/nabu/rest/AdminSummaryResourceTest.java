@@ -13,18 +13,18 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class SystemJobResourceTest {
+public class AdminSummaryResourceTest {
 
 	@Test
 	public void testConvertToSystemStatusAggregationEmptyCollection() {
-		SystemJobResource resource = new SystemJobResource();
+		AdminSummaryResource resource = new AdminSummaryResource();
 		Collection<SystemStatusAggregation> aggregations = resource.convertToSystemStatusAggregation(new ArrayList<>());
 		Assert.assertTrue(aggregations.isEmpty());
 	}
 
 	@Test
 	public void testConvertToSystemStatusAggregation() {
-		SystemJobResource resource = new SystemJobResource();
+		AdminSummaryResource resource = new AdminSummaryResource();
 		List<SystemJobStatus> statusList = new ArrayList<>();
 		
 		Instant now= Instant.now();

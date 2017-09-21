@@ -34,7 +34,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 @Produces("application/json")
 @Path("timetable")
-@Api
+@Api(tags = {"Timetable job event resource"}, produces = "application/json")
 public class TimeTableJobEventResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

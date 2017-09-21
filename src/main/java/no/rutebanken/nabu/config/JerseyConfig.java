@@ -6,9 +6,9 @@ import io.swagger.jaxrs.listing.SwaggerSerializers;
 import no.rutebanken.nabu.filter.CorsResponseFilter;
 import no.rutebanken.nabu.health.rest.HealthResource;
 import no.rutebanken.nabu.rest.ChangeLogResource;
-import no.rutebanken.nabu.rest.DataDeliveryStatusResource;
+import no.rutebanken.nabu.rest.LatestUploadResource;
 import no.rutebanken.nabu.rest.NotificationResource;
-import no.rutebanken.nabu.rest.SystemJobResource;
+import no.rutebanken.nabu.rest.AdminSummaryResource;
 import no.rutebanken.nabu.rest.TimeTableJobEventResource;
 import no.rutebanken.nabu.rest.exception.AccessDeniedExceptionMapper;
 import no.rutebanken.nabu.rest.exception.NotAuthenticatedExceptionMapper;
@@ -53,8 +53,8 @@ public class JerseyConfig {
             register(CorsResponseFilter.class);
 
             register(TimeTableJobEventResource.class);
-            register(SystemJobResource.class);
-            register(DataDeliveryStatusResource.class);
+            register(AdminSummaryResource.class);
+            register(LatestUploadResource.class);
             register(NotificationResource.class);
             register(ChangeLogResource.class);
 

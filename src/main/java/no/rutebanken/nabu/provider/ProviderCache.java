@@ -2,6 +2,7 @@ package no.rutebanken.nabu.provider;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import no.rutebanken.nabu.exceptions.NabuException;
 import no.rutebanken.nabu.provider.model.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +50,18 @@ public class ProviderCache implements ProviderRepository {
         }
     }
 
+    protected void assertCache() {
+        if (cache == null) {
+            populate();
+            if (cache == null) {
+                throw new NabuException("Unable to get user info from organisation registry");
+            }
+        }
+    }
 
     @Override
     public Collection<Provider> getProviders() {
+        assertCache();
         return cache.asMap().values();
     }
 

@@ -22,8 +22,8 @@ import java.util.Map;
 @Component
 @Produces("application/json")
 @Path("admin_summary")
-@Api
-public class SystemJobResource {
+@Api(tags = {"Admini summary resource"}, produces = "application/json")
+public class AdminSummaryResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired

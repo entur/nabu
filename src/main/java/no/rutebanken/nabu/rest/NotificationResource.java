@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Component
 @Produces("application/json")
 @Path("notifications")
-@Api
+@Api(tags = {"Notificaftion resource"}, produces = "application/json")
 public class NotificationResource {
 
     @Autowired
