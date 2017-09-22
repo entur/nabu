@@ -22,7 +22,7 @@ import java.util.Map;
 @Component
 @Produces("application/json")
 @Path("admin_summary")
-@Api(tags = {"Admini summary resource"}, produces = "application/json")
+@Api(tags = {"Admin summary resource"}, produces = "application/json")
 public class AdminSummaryResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

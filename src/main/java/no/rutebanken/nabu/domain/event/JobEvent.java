@@ -12,7 +12,7 @@ import java.time.Instant;
 @DiscriminatorValue("job")
 public class JobEvent extends Event {
 
-    public enum JobDomain {TIMETABLE, GEOCODER, GRAPH, TIAMAT}
+    public enum JobDomain {TIMETABLE, GEOCODER, GRAPH, TIAMAT, TIMETABLE_PUBLISH}
 
     @NotNull
     private JobState state;

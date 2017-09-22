@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Component
 @Produces("application/json")
 @Path("notifications")
-@Api(tags = {"Notificaftion resource"}, produces = "application/json")
+@Api(tags = {"Notification resource"}, produces = "application/json")
 public class NotificationResource {
 
     @Autowired
@@ -115,6 +115,8 @@ public class NotificationResource {
             actions.addAll(Arrays.stream(GeoCoderAction.values()).map(value -> value.name()).collect(Collectors.toList()));
         } else if (JobEvent.JobDomain.TIMETABLE.equals(jobDomain)) {
             actions.addAll(Arrays.stream(TimeTableAction.values()).map(value -> value.name()).collect(Collectors.toList()));
+        } else if (JobEvent.JobDomain.TIMETABLE_PUBLISH.equals(jobDomain)) {
+            actions.addAll(Arrays.asList("EXPORT_NETEX_MERGED", "EXPORT_GOOGLE_GTFS"));
         } else {
             throw new EntityNotFoundException("Unknown job domain: " + jobDomain);
         }
