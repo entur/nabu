@@ -88,17 +88,17 @@ public class EmailNotificationFormatter {
         model.put("message", new MessageResolverMethod(messageSource,locale));
         model.put("notificationConfigurationLink", operatorLink);
         model.put("stopPlaceLinkPrefix", stopPlaceLink+"edit/");
-        model.put("jobLink", new JobLinkResolverMethod(routedbLink+"referentials/"));
+        model.put("jobLink", new JobLinkResolverMethod(routedbLink + "referentials/"));
         model.put("emailNotificationMaxEvents", emailNotificationMaxEvents);
         model.put("totalNotificationsCnt", notifications.size());
 
         Map<String, String> providerMap = providers.stream().collect(Collectors.toMap(provider -> provider.getId().toString(), Provider::getName));
         model.put("providers", providerMap);
 
-        return geFreeMarkerTemplateContent(model);
+        return getFreeMarkerTemplateContent(model);
     }
 
-    public String geFreeMarkerTemplateContent(Map<String, Object> model) {
+    public String getFreeMarkerTemplateContent(Map<String, Object> model) {
         try {
 
             return FreeMarkerTemplateUtils.processTemplateIntoString(

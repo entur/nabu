@@ -28,7 +28,7 @@ public class EmailNotificationFormatterTest {
 
     @Autowired
     private EmailNotificationFormatter emailNotificationFormatter;
-    private List<Provider> providerList = Arrays.asList(new Provider(1l, "ProviderName", null));
+    private List<Provider> providerList = Arrays.asList(new Provider(1011l, "ProviderName", null));
 
     @Test
     public void formatMailInNorwegian() throws FileNotFoundException {
