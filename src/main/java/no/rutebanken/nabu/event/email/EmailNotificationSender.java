@@ -40,6 +40,8 @@ public class EmailNotificationSender implements NotificationProcessor {
     @Value("${notification.email.language.default:en}")
     private String emailLanguageDefault;
 
+    @Value("${notification.email.enabled:true}")
+    private boolean emailEnabled;
 
     @Override
     public void processNotificationsForUser(UserDTO user, Set<Notification> notifications) {
@@ -61,13 +63,17 @@ public class EmailNotificationSender implements NotificationProcessor {
     }
 
     protected void sendEmail(String to, String subject, String msg) {
-        mailSender.send(mimeMessage -> {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setText(msg, true);
-            helper.setSubject(subject);
-            helper.setTo(to);
-            helper.setFrom(emailFrom);
-        });
+        if (emailEnabled) {
+            mailSender.send(mimeMessage -> {
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+                helper.setText(msg, true);
+                helper.setSubject(subject);
+                helper.setTo(to);
+                helper.setFrom(emailFrom);
+            });
+        } else {
+            logger.warn("Email disabled, not sending: " + msg);
+        }
     }
 
 
