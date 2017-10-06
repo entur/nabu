@@ -52,6 +52,7 @@
         <docker.port.container.jolokia>8778</docker.port.container.jolokia>
         <jackson-jaxrs-xml-provider.version>2.9.0</jackson-jaxrs-xml-provider.version>
 
+        <flyway-core.version>4.2.0</flyway-core.version>
         <httpcomponents-fluent.version>4.5.3</httpcomponents-fluent.version>
         <assertj-core.version>3.8.0</assertj-core.version>
         <rest-assured.version>2.9.0</rest-assured.version>
@@ -89,6 +90,11 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway-core.version}</version>
+        </dependency>
         <dependency>
             <groupId>javax.jdo</groupId>
             <artifactId>jdo2-api</artifactId>
