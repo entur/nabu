@@ -104,16 +104,6 @@ public abstract class Event implements Comparable<Event> {
         this.username = username;
     }
 
-    /**
-     * Event time as date because freemarker does not support instants very well.
-     *
-     * @return
-     */
-    @Transient
-    public Date getEventTimeAsDate() {
-        return Date.from(eventTime);
-    }
-
     @Override
     public int compareTo(Event o) {
         int corrCmp = ObjectUtils.compare(correlationId, o.correlationId);

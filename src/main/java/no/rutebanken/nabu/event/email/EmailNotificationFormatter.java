@@ -86,6 +86,7 @@ public class EmailNotificationFormatter {
         model.put("jobEvents", jobEventsPerDomain);
         model.put("crudEvents", crudEventsPerEntityType);
         model.put("message", new MessageResolverMethod(messageSource,locale));
+        model.put("formatTime",new TemporalAccessorFormatter());
         model.put("notificationConfigurationLink", operatorLink);
         model.put("stopPlaceLinkPrefix", stopPlaceLink+"edit/");
         model.put("jobLink", new JobLinkResolverMethod(routedbLink + "referentials/"));
