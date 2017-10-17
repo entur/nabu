@@ -74,6 +74,7 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
         <th>${message("notification.email.crudevent.header.name")}</th>
         <!--<th>${message("notification.email.crudevent.header.id")}</th> -->
         <th>${message("notification.email.crudevent.header.version")}</th>
+        <th>${message("notification.email.crudevent.header.location")}</th>
         <th>${message("notification.email.crudevent.header.validFrom")}</th>
         <th>${message("notification.email.crudevent.header.changedBy")}</th>
         <th>${message("notification.email.crudevent.header.comment")}</th>
@@ -90,6 +91,7 @@ ${message("notification.email.truncated","${totalNotificationsCnt}","${emailNoti
             <!--<td>${crudEvent.name!""}</td> -->
             <td><a href="${stopPlaceLinkPrefix!""}${crudEvent.externalId!""}">${crudEvent.name!""}</a></td>
             <td>${crudEvent.version}</td>
+            <td>${crudEvent.location!""}</td>
             <td>${formatTime(crudEvent.eventTime)}</td>
             <td>${crudEvent.username!""}</td>
             <td>${crudEvent.comment!""}</td>

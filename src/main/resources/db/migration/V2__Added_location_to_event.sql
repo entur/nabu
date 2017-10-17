@@ -1,0 +1,1 @@
+ALTER TABLE EVENT ADD COLUMN  LOCATION character varying(255);

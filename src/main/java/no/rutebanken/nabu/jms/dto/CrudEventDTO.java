@@ -39,6 +39,7 @@ public class CrudEventDTO {
 
     public Geometry geometry;
 
+    public String location;
 
     public static CrudEventDTO fromString(String string) {
         try {

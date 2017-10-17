@@ -38,6 +38,16 @@ public class CrudEvent extends Event {
 
     private String comment;
 
+    private String location;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public String getEntityType() {
         return entityType;
     }
