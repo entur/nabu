@@ -47,21 +47,22 @@ public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void jobEventUpdatesSystemJobStatus() {
-        JobEventDTO firstPendingEvent = createEvent(JobState.PENDING, Instant.now());
+        Instant now = Instant.now();
+        JobEventDTO firstPendingEvent = createEvent(JobState.PENDING, now);
         eventListener.processMessage(toJson(firstPendingEvent));
         assertSystemJobStatus(firstPendingEvent);
 
-        JobEventDTO firstFailedEvent = createEvent(JobState.FAILED, Instant.now().plusMillis(1000));
+        JobEventDTO firstFailedEvent = createEvent(JobState.FAILED, now.plusMillis(1000));
         eventListener.processMessage(toJson(firstFailedEvent));
         assertSystemJobStatus(firstFailedEvent);
 
-        JobEventDTO secondFailedEvent = createEvent(JobState.FAILED, Instant.now().plusMillis(2000));
+        JobEventDTO secondFailedEvent = createEvent(JobState.FAILED, now.plusMillis(2000));
         eventListener.processMessage(toJson(secondFailedEvent));
         assertSystemJobStatus(secondFailedEvent);
 
 
         // Old started event should not affect state
-        JobEventDTO secondPendingEvent = createEvent(JobState.PENDING, Instant.now().minusMillis(1000));
+        JobEventDTO secondPendingEvent = createEvent(JobState.PENDING, now.minusMillis(1000));
         eventListener.processMessage(toJson(secondPendingEvent));
         assertSystemJobStatus(firstPendingEvent);
 
