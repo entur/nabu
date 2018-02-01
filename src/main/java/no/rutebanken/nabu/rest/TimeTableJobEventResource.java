@@ -5,6 +5,7 @@ import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.EventService;
 import no.rutebanken.nabu.provider.ProviderRepository;
+import no.rutebanken.nabu.provider.model.Provider;
 import no.rutebanken.nabu.rest.domain.JobStatus;
 import no.rutebanken.nabu.rest.domain.JobStatusEvent;
 import org.slf4j.Logger;
@@ -86,9 +87,9 @@ public class TimeTableJobEventResource {
         List<Long> relatedProviderIds = providerRepository.getProviders().stream().filter(provider -> providerId.equals(provider.chouetteInfo.migrateDataToProvider))
                                                 .map(provider -> provider.id).collect(Collectors.toList());
         relatedProviderIds.add(providerId);
-        Long migrateToProviderId = providerRepository.getProvider(providerId).chouetteInfo.migrateDataToProvider;
-        if (migrateToProviderId != null) {
-            relatedProviderIds.add(migrateToProviderId);
+        Provider provider = providerRepository.getProvider(providerId);
+        if (provider != null && provider.chouetteInfo.migrateDataToProvider != null) {
+            relatedProviderIds.add(provider.chouetteInfo.migrateDataToProvider);
         }
 
         return relatedProviderIds;
