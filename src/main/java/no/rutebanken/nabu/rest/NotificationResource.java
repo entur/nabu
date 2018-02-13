@@ -123,7 +123,7 @@ public class NotificationResource {
         List<String> actions = new ArrayList<>(Arrays.asList(EventMatcher.ALL_TYPES));
 
         if (JobEvent.JobDomain.GRAPH.equals(jobDomain)) {
-            actions.addAll(Arrays.asList("BUILD_GRAPH"));
+            actions.addAll(Arrays.asList("BUILD_BASE", "BUILD_GRAPH"));
         } else if (JobEvent.JobDomain.TIAMAT.equals(jobDomain)) {
             actions.addAll(Arrays.asList("EXPORT"));
         } else if (JobEvent.JobDomain.GEOCODER.equals(jobDomain)) {
