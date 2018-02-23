@@ -24,6 +24,7 @@ import no.rutebanken.nabu.domain.event.TimeTableAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,9 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private EntityManager entityManager;
+
+    @Value("${event.repository.max.results:10000}")
+    public int maxResults;
 
     public EventRepositoryImpl(@Autowired EntityManager em) {
         super(Event.class, em);
@@ -156,7 +160,7 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
         TypedQuery<JobEvent> query = entityManager.createQuery(sb.toString(), JobEvent.class);
         params.put("domain", domain);
         params.forEach((param, value) -> query.setParameter(param, value));
-
+        query.setMaxResults(maxResults);
         return query.getResultList();
     }
 
