@@ -38,6 +38,7 @@ import javax.ws.rs.QueryParam;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -137,7 +138,10 @@ public class TimeTableJobEventResource {
         // Map from internal Status object to Rest service JobStatusEvent object
         String correlationId = null;
         JobStatus currentAggregation = null;
-        for (JobEvent in : statusForProvider) {
+
+        List<JobEvent> sortedStatusForProvider = statusForProvider.stream().sorted(Comparator.comparing(JobEvent::getCorrelationId).thenComparing(JobEvent::getEventTime)).collect(Collectors.toList());
+
+        for (JobEvent in : sortedStatusForProvider) {
 
             if (!in.getCorrelationId().equals(correlationId)) {
 
@@ -165,7 +169,7 @@ public class TimeTableJobEventResource {
             agg.setDurationMillis(durationMillis);
         }
 
-        Collections.sort(list, (o1, o2) -> o1.getFirstEvent().compareTo(o2.getFirstEvent()));
+        Collections.sort(list,Comparator.comparing(JobStatus::getFirstEvent));
 
         return list;
     }

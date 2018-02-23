@@ -156,7 +156,7 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
             sb.append("and e.providerId in (:providerIds)");
         }
 
-        sb.append(" ORDER by e.correlationId, e.eventTime");
+        sb.append(" ORDER by e.eventTime desc");
         TypedQuery<JobEvent> query = entityManager.createQuery(sb.toString(), JobEvent.class);
         params.put("domain", domain);
         params.forEach((param, value) -> query.setParameter(param, value));
