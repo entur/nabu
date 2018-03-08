@@ -16,7 +16,6 @@ spring.activemq.broker-url=tcp://activemq:61616
 #spring.activemq.pooled=true
 spring.activemq.user=admin
 spring.activemq.password=admin
-spring.jms.pub-sub-domain=true
 
 # JPA settings (in-memory)
 spring.jpa.show-sql=false
