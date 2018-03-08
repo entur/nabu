@@ -41,11 +41,11 @@
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
         <rutebanken.helpers.version>0.0.3-SNAPSHOT</rutebanken.helpers.version>
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
-        <spring-boot-plugin.version>1.5.6.RELEASE</spring-boot-plugin.version>
-        <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
+        <spring-boot-plugin.version>2.0.0.RELEASE</spring-boot-plugin.version>
+        <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
         <spring.security.version>4.2.3.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
-        <keycloak.version>3.2.1.Final</keycloak.version>
+        <keycloak.version>3.4.3.Final</keycloak.version>
 
         <!-- Docker & Fabric8 Configs -->
         <docker.from>eu.gcr.io/carbon-1287/java-base-image</docker.from>

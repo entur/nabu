@@ -63,7 +63,7 @@ public class EmailNotificationSender implements NotificationProcessor {
 
         if (user.getContactDetails() == null || user.getContactDetails().getEmail() == null) {
             logger.warn("Unable to notify user without registered email address: " + user.getUsername() + ". Discarding notifications: " + notifications);
-            notificationRepository.delete(notifications);
+            notificationRepository.deleteAll(notifications);
             return;
         }
 
@@ -74,7 +74,7 @@ public class EmailNotificationSender implements NotificationProcessor {
         sendEmail(user.getContactDetails().getEmail(), formatter.getSubject(locale), formatter.formatMessage(notifications, locale));
 
         notifications.forEach(n -> n.setStatus(Notification.NotificationStatus.COMPLETE));
-        notificationRepository.save(notifications);
+        notificationRepository.saveAll(notifications);
     }
 
     protected void sendEmail(String to, String subject, String msg) {
