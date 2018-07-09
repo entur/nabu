@@ -41,9 +41,8 @@
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
         <rutebanken.helpers.version>0.0.3-SNAPSHOT</rutebanken.helpers.version>
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
-        <spring-boot-plugin.version>1.5.6.RELEASE</spring-boot-plugin.version>
-        <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
-        <spring.security.version>4.2.3.RELEASE</spring.security.version>
+        <spring-boot-plugin.version>1.5.14.RELEASE</spring-boot-plugin.version>
+        <spring-boot.version>1.5.14.RELEASE</spring-boot.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
         <keycloak.version>3.2.1.Final</keycloak.version>
 
@@ -65,7 +64,7 @@
 
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
         <docker.port.container.jolokia>8778</docker.port.container.jolokia>
-        <jackson-jaxrs-xml-provider.version>2.9.0</jackson-jaxrs-xml-provider.version>
+        <jackson-jaxrs-xml-provider.version>2.9.6</jackson-jaxrs-xml-provider.version>
 
         <flyway-core.version>4.2.0</flyway-core.version>
         <httpcomponents-fluent.version>4.5.3</httpcomponents-fluent.version>
@@ -135,7 +134,7 @@
         </dependency>
 
         <dependency>
-            <groupId>org.rutebanken.helpers</groupId>
+            <groupId>org.entur.helpers</groupId>
             <artifactId>organisation</artifactId>
             <version>${rutebanken.helpers.version}</version>
         </dependency>
@@ -165,12 +164,10 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${spring.security.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -420,6 +417,11 @@
                         </image>
                     </images>
                 </configuration>
+            </plugin>            
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>3.2.1</version>
             </plugin>
         </plugins>
     </build>
@@ -427,6 +429,27 @@
     <!-- Default sample commands: mvn -Pf8-build ... build Docker images and create OpenShift deployment configs mvn -Pf8-deploy
         ... f8-build + push to Docker registry + applying deployment config to OpenShift mvn -Pf8-local-deploy ... deployment for
         a single node setup without pushing to a registry For individual goal usage please consult the fabric8 documentation -->
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <layout>default</layout>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>geotools</id>
+            <name>geotools</name>
+            <layout>default</layout>
+            <url>https://download.osgeo.org/webdav/geotools/</url>
+        </repository>        
+        <repository>
+            <id>boundlessgeo</id>
+            <name>boundlessgeo</name>
+            <layout>default</layout>
+            <url>https://repo.boundlessgeo.com/main/</url>
+        </repository>
+    </repositories>
 
     <profiles>
         <profile>
