@@ -43,9 +43,9 @@
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
         <spring-boot-plugin.version>1.5.6.RELEASE</spring-boot-plugin.version>
         <spring-boot.version>1.5.6.RELEASE</spring-boot.version>
-        <spring.security.version>4.2.3.RELEASE</spring.security.version>
+        <spring.security.version>4.2.4.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
-        <keycloak.version>3.2.1.Final</keycloak.version>
+        <keycloak.version>4.0.0.Final</keycloak.version>
 
         <!-- Docker & Fabric8 Configs -->
         <docker.from>eu.gcr.io/carbon-1287/java-base-image</docker.from>
@@ -65,7 +65,7 @@
 
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
         <docker.port.container.jolokia>8778</docker.port.container.jolokia>
-        <jackson-jaxrs-xml-provider.version>2.9.0</jackson-jaxrs-xml-provider.version>
+        <jackson-jaxrs-xml-provider.version>2.9.5</jackson-jaxrs-xml-provider.version>
 
         <flyway-core.version>4.2.0</flyway-core.version>
         <httpcomponents-fluent.version>4.5.3</httpcomponents-fluent.version>
@@ -79,7 +79,7 @@
         <!-- Holding back activemq version as newest version no long support spring wired broker config-->
         <activemq.version>5.15.0</activemq.version>
         <fabric8.version>2.3.4</fabric8.version>
-        <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
+        <swagger-jersey2.version>1.5.19</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
     </properties>
 
@@ -242,7 +242,7 @@
         <dependency>
             <groupId>org.wololo</groupId>
             <artifactId>jts2geojson</artifactId>
-            <version>0.11.0</version>
+            <version>0.12.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
