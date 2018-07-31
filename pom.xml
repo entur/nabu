@@ -74,7 +74,7 @@
         <geodb.version>0.8</geodb.version>
         <geotools.version>17.2</geotools.version>
         <hibernate-spatial.version>5.2.17.Final</hibernate-spatial.version>
-        <!-- Hibernate version deliberatly kept back as hazelcast cache does not support newer version-->
+
         <hibernate.version>5.2.17.Final</hibernate.version>
         <!-- Holding back activemq version as newest version no long support spring wired broker config-->
         <activemq.version>5.15.0</activemq.version>
