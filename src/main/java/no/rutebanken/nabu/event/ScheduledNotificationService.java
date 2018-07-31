@@ -67,7 +67,7 @@ public class ScheduledNotificationService {
             notificationSender.processNotificationsForUser(user, notifications);
         } else {
             logger.warn("Cannot send notifications to unknown user: " + userName + ". Discarding notifications: " + notifications);
-            notificationRepository.delete(notifications);
+            notificationRepository.deleteAll(notifications);
         }
 
     }

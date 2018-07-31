@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Update system job state for relevant events (ie JobEvents without provider).
  */
@@ -47,16 +49,16 @@ public class SystemJobStatusUpdater implements EventHandler {
         if (jobEvent.getProviderId() == null) {
 
             SystemJobStatus systemJobStatus = new SystemJobStatus(jobEvent.getDomain(), jobEvent.getAction(), jobEvent.getState(), null);
-            SystemJobStatus existingStatus = systemJobStatusRepository.findOne(Example.of(systemJobStatus));
+            Optional<SystemJobStatus> existingStatus = systemJobStatusRepository.findOne(Example.of(systemJobStatus));
 
             systemJobStatus.setLastStatusTime(jobEvent.getEventTime());
-            if (existingStatus == null) {
+            if (!existingStatus.isPresent()) {
                 logger.info("Registering new system status from incoming event: " + systemJobStatus);
                 systemJobStatusRepository.save(systemJobStatus);
-            } else if (existingStatus.getLastStatusTime().isBefore(systemJobStatus.getLastStatusTime())) {
+            } else if (existingStatus.get().getLastStatusTime().isBefore(systemJobStatus.getLastStatusTime())) {
                 logger.debug("Updating system status from incoming event: " + systemJobStatus);
-                existingStatus.setLastStatusTime(systemJobStatus.getLastStatusTime());
-                systemJobStatusRepository.save(existingStatus);
+                existingStatus.get().setLastStatusTime(systemJobStatus.getLastStatusTime());
+                systemJobStatusRepository.save(existingStatus.get());
             }
 
         }

@@ -40,7 +40,7 @@ public class SystemJobStatusRepositoryImplTest extends BaseIntegrationTest {
         SystemJobStatus s2 = new SystemJobStatus("dom1", "type2", JobState.OK, Instant.now().plusMillis(1000));
         SystemJobStatus s3 = new SystemJobStatus("dom2", "type1", JobState.FAILED, Instant.now());
 
-        systemJobStatusRepository.save(Arrays.asList(s1, s2, s3));
+        systemJobStatusRepository.saveAll(Arrays.asList(s1, s2, s3));
 
         Assert.assertEquals(3, systemJobStatusRepository.find(null, null).size());
 
