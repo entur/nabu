@@ -41,11 +41,11 @@
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
         <rutebanken.helpers.version>0.0.3-SNAPSHOT</rutebanken.helpers.version>
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
-        <spring-boot-plugin.version>2.0.0.RELEASE</spring-boot-plugin.version>
-        <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
-        <spring.security.version>4.2.3.RELEASE</spring.security.version>
+        <spring-boot-plugin.version>2.0.3.RELEASE</spring-boot-plugin.version>
+        <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
+        <spring.security.version>5.0.7.RELEASE</spring.security.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
-        <keycloak.version>3.4.3.Final</keycloak.version>
+        <keycloak.version>4.1.0.Final</keycloak.version>
 
         <!-- Docker & Fabric8 Configs -->
         <docker.from>eu.gcr.io/carbon-1287/java-base-image</docker.from>
@@ -73,9 +73,9 @@
         <rest-assured.version>2.9.0</rest-assured.version>
         <geodb.version>0.8</geodb.version>
         <geotools.version>17.2</geotools.version>
-        <hibernate-spatial.version>5.1.9.Final</hibernate-spatial.version>
+        <hibernate-spatial.version>5.2.17.Final</hibernate-spatial.version>
         <!-- Hibernate version deliberatly kept back as hazelcast cache does not support newer version-->
-        <hibernate.version>5.1.9.Final</hibernate.version>
+        <hibernate.version>5.2.17.Final</hibernate.version>
         <!-- Holding back activemq version as newest version no long support spring wired broker config-->
         <activemq.version>5.15.0</activemq.version>
         <fabric8.version>2.3.4</fabric8.version>
@@ -192,12 +192,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <exclusions>
-                <exclusion><groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                </exclusion>
-
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -295,7 +289,7 @@
 
         <dependency>
             <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-spring-boot-adapter</artifactId>
+            <artifactId>keycloak-spring-boot-2-adapter</artifactId>
             <version>${keycloak.version}</version>
         </dependency>
 
