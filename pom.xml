@@ -39,7 +39,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
-        <rutebanken.helpers.version>0.0.3-SNAPSHOT</rutebanken.helpers.version>
+        <entur.helpers.version>0.0.3-SNAPSHOT</entur.helpers.version>
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
         <spring-boot-plugin.version>2.0.3.RELEASE</spring-boot-plugin.version>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
@@ -135,9 +135,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.rutebanken.helpers</groupId>
+            <groupId>org.entur.helpers</groupId>
             <artifactId>organisation</artifactId>
-            <version>${rutebanken.helpers.version}</version>
+            <version>${entur.helpers.version}</version>
         </dependency>
 
         <!-- Due to maven artifact cache, this dependency needs to be explicit -->
