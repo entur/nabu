@@ -39,7 +39,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
-        <entur.helpers.version>0.0.3-SNAPSHOT</entur.helpers.version>
+        <entur.helpers.version>0.0.4-SNAPSHOT</entur.helpers.version>
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
         <spring-boot-plugin.version>2.0.3.RELEASE</spring-boot-plugin.version>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
