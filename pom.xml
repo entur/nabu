@@ -65,7 +65,7 @@
 
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
         <docker.port.container.jolokia>8778</docker.port.container.jolokia>
-        <jackson-jaxrs-xml-provider.version>2.9.0</jackson-jaxrs-xml-provider.version>
+        <jackson-jaxrs-xml-provider.version>2.9.6</jackson-jaxrs-xml-provider.version>
 
         <flyway-core.version>4.2.0</flyway-core.version>
         <httpcomponents-fluent.version>4.5.3</httpcomponents-fluent.version>
@@ -125,7 +125,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>4.11</version>
+            <version>5.2</version>
         </dependency>
 
         <dependency>
