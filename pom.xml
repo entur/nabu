@@ -77,7 +77,7 @@
 
         <hibernate.version>5.2.17.Final</hibernate.version>
         <!-- Holding back activemq version as newest version no long support spring wired broker config-->
-        <activemq.version>5.15.0</activemq.version>
+        <activemq.version>5.15.6</activemq.version>
         <fabric8.version>2.3.4</fabric8.version>
         <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
