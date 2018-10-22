@@ -1,4 +1,4 @@
-# Nabu
+# Nabu [![CircleCI](https://circleci.com/gh/entur/nabu/tree/master.svg?style=svg)](https://circleci.com/gh/entur/nabu/tree/master)
 
 ## Liveness and readyiness
 In production, nabu can be probed with:
