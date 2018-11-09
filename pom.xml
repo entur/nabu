@@ -36,6 +36,13 @@
         <developerConnection>scm:git:ssh://git@github.com/rutebanken/nabu.git</developerConnection>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>osgeo</id>
+            <name>Open Source Geospatial Foundation Repository</name>
+            <url>http://download.osgeo.org/webdav/geotools/</url>
+        </repository>
+    </repositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
