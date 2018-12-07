@@ -17,7 +17,7 @@ package no.rutebanken.nabu.event.user;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.vividsolutions.jts.geom.Polygon;
+import org.locationtech.jts.geom.Polygon;
 import no.rutebanken.nabu.event.user.dto.organisation.AdministrativeZoneDTO;
 import no.rutebanken.nabu.event.user.model.AdministrativeZone;
 import org.slf4j.Logger;

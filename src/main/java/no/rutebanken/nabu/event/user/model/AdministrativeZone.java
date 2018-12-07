@@ -15,7 +15,8 @@
 
 package no.rutebanken.nabu.event.user.model;
 
-import com.vividsolutions.jts.geom.Polygon;
+
+import org.locationtech.jts.geom.Polygon;
 
 public class AdministrativeZone {
 
