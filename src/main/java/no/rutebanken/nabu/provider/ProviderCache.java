@@ -37,7 +37,7 @@ public class ProviderCache implements ProviderRepository {
     @Autowired
     private ProviderResource restProviderService;
 
-    @Value("${provider.cache.max.size:100}")
+    @Value("${provider.cache.max.size:1000}")
     private Integer cacheMaxSize;
 
     private static Cache<Long, Provider> cache;
