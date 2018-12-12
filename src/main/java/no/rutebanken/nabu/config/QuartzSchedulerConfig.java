@@ -87,7 +87,7 @@ public class QuartzSchedulerConfig {
     }
 
     @Bean(name = "emailNotificationTrigger")
-    public CronTriggerFactoryBean sampleJobTrigger(@Qualifier("emailNotificationJob") JobDetail jobDetail,
+    public CronTriggerFactoryBean emailNotificationTrigger(@Qualifier("emailNotificationJob") JobDetail jobDetail,
                                                           @Value("${notification.email.send.cron:0 0 17 ? * MON-FRI}") String cron) {
         return createCronTrigger(jobDetail, cron);
     }
