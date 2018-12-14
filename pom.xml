@@ -49,11 +49,11 @@
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
         <entur.helpers.version>0.0.4-SNAPSHOT</entur.helpers.version>
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
-        <spring-boot-plugin.version>2.1.0.RELEASE</spring-boot-plugin.version>
-        <spring-boot.version>2.1.0.RELEASE</spring-boot.version>
-        <spring.security.version>5.0.7.RELEASE</spring.security.version>
-        <postgresql.version>9.4-1201-jdbc41</postgresql.version>
-        <keycloak.version>4.6.0.Final</keycloak.version>
+        <spring-boot-plugin.version>2.1.1.RELEASE</spring-boot-plugin.version>
+        <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
+        <spring.security.version>5.1.2.RELEASE</spring.security.version>
+        <postgresql.version>42.2.5</postgresql.version>
+        <keycloak.version>4.7.0.Final</keycloak.version>
 
         <docker.from>eu.gcr.io/carbon-1287/openjdk11-base-image</docker.from>
         <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
@@ -68,9 +68,9 @@
         <rest-assured.version>2.9.0</rest-assured.version>
         <geodb.version>0.8</geodb.version>
         <geotools.version>20.1</geotools.version>
-        <hibernate-spatial.version>5.3.7.Final</hibernate-spatial.version>
+        <hibernate-spatial.version>5.4.0.Final</hibernate-spatial.version>
 
-        <hibernate.version>5.3.7.Final</hibernate.version>
+        <hibernate.version>5.4.0.Final</hibernate.version>
 
         <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
