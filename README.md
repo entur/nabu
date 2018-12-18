@@ -91,12 +91,12 @@ https://flywaydb.org/documentation/commandline/
 Execute the migration. Point to the migration files in nabu.
 
 ```
-./flyway -url=jdbc:postgresql://localhost:5433/nabu -locations=filesystem:/path/to/tiamat/src/main/resources/db/migrations migrate
+./flyway -url=jdbc:postgresql://localhost:5433/nabu -locations=filesystem:/path/to/nabu/src/main/resources/db/migration migrate
 ```
 
 ### Example migration
 ```
-./flyway -url=jdbc:postgresql://localhost:5433/nabu -locations=filesystem:/path/to/tiamat/src/main/resources/db/migrations migrate
+./flyway -url=jdbc:postgresql://localhost:5433/nabu -locations=filesystem:/path/to/nabu/src/main/resources/db/migration migrate
 Flyway 4.2.0 by Boxfuse
 
 Database password: 
@@ -114,10 +114,10 @@ To baseline an existing database that does not contain the table `schema_version
 The schema of this database must be exactly equivalent to the first migration file. If not, you might be better off by starting from scratch and using the restoring_import to repopulate the new database.
 
 ```
-./flyway -url=jdbc:postgresql://localhost:6432/nabu -locations=filesystem:/path/to/nabu/src/main/resources/db/migrations baseline
+./flyway -url=jdbc:postgresql://localhost:6432/nabu -locations=filesystem:/path/to/nabu/src/main/resources/db/migration baseline
 ```
 
 
 ## Schema changes
-Create a new file according to the flyway documentation in the folder `resources/db/migrations`.
+Create a new file according to the flyway documentation in the folder `resources/db/migration`.
 Commit the migration together with code changes that requires this schema change.
