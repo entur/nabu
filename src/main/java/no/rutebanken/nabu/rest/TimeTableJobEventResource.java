@@ -153,7 +153,7 @@ public class TimeTableJobEventResource {
                 currentAggregation.setFileName(in.getName());
                 currentAggregation.setCorrelationId(in.getCorrelationId());
                 currentAggregation.setProviderId(in.getProviderId());
-
+                currentAggregation.setUsername(in.getUsername());
                 list.add(currentAggregation);
             }
 
