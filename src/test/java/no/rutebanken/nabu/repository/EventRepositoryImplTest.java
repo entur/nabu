@@ -26,6 +26,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
@@ -132,10 +134,26 @@ public class EventRepositoryImplTest extends BaseIntegrationTest {
     @Test
     public void findCrudEventsAllParamsSet() {
 
-        CrudEvent crudEvent = CrudEvent.builder().entityClassifier("class").changeType("changeType").entityType("entityType").version(1l).comment("comm").action("CREATE").externalId("213").eventTime(Instant.now()).build();
+        final Instant refTime = LocalDateTime.of(2019, 02, 19, 16, 19, 00)
+                .atOffset(ZoneOffset.UTC)
+                .toInstant();
+
+        CrudEvent crudEvent = CrudEvent.builder()
+                .entityClassifier("class")
+                .changeType("changeType")
+                .entityType("entityType")
+                .version(1l).comment("comm")
+                .action("CREATE").externalId("213").eventTime(refTime).build();
 
         CrudEvent savedCrudEvent = repository.save(crudEvent);
-        CrudEventSearch search = new CrudEventSearch(crudEvent.getUsername(), crudEvent.getEntityType(), crudEvent.getEntityClassifier(), crudEvent.getAction(), crudEvent.getExternalId(), crudEvent.getEventTime().minusSeconds(20), Instant.now());
+        CrudEventSearch search =
+                new CrudEventSearch(crudEvent.getUsername(),
+                        crudEvent.getEntityType(),
+                        crudEvent.getEntityClassifier(),
+                        crudEvent.getAction(),
+                        crudEvent.getExternalId(),
+                        crudEvent.getEventTime().minusSeconds(20),
+                        refTime);
 
         List<CrudEvent> crudEvents = repository.findCrudEvents(search);
         Assert.assertEquals(1, crudEvents.size());
