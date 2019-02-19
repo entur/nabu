@@ -72,7 +72,7 @@
 
         <hibernate.version>5.4.0.Final</hibernate.version>
 
-        <swagger-jersey2.version>1.5.16</swagger-jersey2.version>
+        <swagger-jersey2.version>1.5.22</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
     </properties>
 
@@ -125,7 +125,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>5.2</version>
+            <version>5.3</version>
         </dependency>
 
         <dependency>
