@@ -45,7 +45,7 @@
         <docker.maven.plugin.version>0.21.0</docker.maven.plugin.version>
         <spring-boot-plugin.version>2.1.1.RELEASE</spring-boot-plugin.version>
         <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
-        <spring.security.version>5.1.2.RELEASE</spring.security.version>
+        <spring.security.version>5.1.5.RELEASE</spring.security.version>
         <postgresql.version>42.2.5</postgresql.version>
         <keycloak.version>4.7.0.Final</keycloak.version>
 
