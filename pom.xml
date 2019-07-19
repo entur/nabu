@@ -54,7 +54,7 @@
         <docker.image>eu.gcr.io/${fabric8.dockerUser}${project.artifactId}:${project.version}</docker.image>
         <docker.cleanup>none</docker.cleanup>
 
-        <jackson-jaxrs-xml-provider.version>2.9.8</jackson-jaxrs-xml-provider.version>
+        <jackson-jaxrs-xml-provider.version>2.10.0.pr1</jackson-jaxrs-xml-provider.version>
 
         <flyway-core.version>5.2.1</flyway-core.version>
         <httpcomponents-fluent.version>4.5.3</httpcomponents-fluent.version>
