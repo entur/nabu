@@ -47,7 +47,7 @@
         <spring-boot.version>2.1.1.RELEASE</spring-boot.version>
         <spring.security.version>5.1.2.RELEASE</spring.security.version>
         <postgresql.version>42.2.5</postgresql.version>
-        <keycloak.version>4.7.0.Final</keycloak.version>
+        <keycloak.version>7.0.0</keycloak.version>
 
         <docker.from>eu.gcr.io/carbon-1287/openjdk11-base-image</docker.from>
         <fabric8.dockerUser>carbon-1287/</fabric8.dockerUser>
