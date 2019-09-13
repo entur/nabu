@@ -80,6 +80,12 @@
             <version>${entur.helpers.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.entur.helpers</groupId>
+            <artifactId>entur-google-pubsub</artifactId>
+            <version>${entur.helpers.version}</version>
+        </dependency>
+
         <!--Spring Boot -->
 
         <dependency>
@@ -365,6 +371,33 @@
                 <version>3.8.1</version>
                 <configuration>
                     <release>11</release>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-pubsub-emulator</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>com.google.cloud</groupId>
+                            <artifactId>pubsub-emulator</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                            <type>jar</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${project.build.directory}/pubsub-emulator</outputDirectory>
+                        </artifactItem>
+                    </artifactItems>
                 </configuration>
             </plugin>
 

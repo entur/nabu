@@ -13,13 +13,12 @@
  * limitations under the Licence.
  */
 
-package no.rutebanken.nabu.jms;
+package no.rutebanken.nabu.event.listener;
 
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.event.EventService;
-import no.rutebanken.nabu.jms.dto.CrudEventDTO;
-import no.rutebanken.nabu.jms.mapper.EventMapper;
-import no.rutebanken.nabu.repository.EventRepository;
+import no.rutebanken.nabu.event.listener.dto.CrudEventDTO;
+import no.rutebanken.nabu.event.listener.mapper.EventMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

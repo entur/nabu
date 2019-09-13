@@ -13,42 +13,53 @@
  * limitations under the Licence.
  */
 
-package no.rutebanken.nabu.jms.dto;
+package no.rutebanken.nabu.event.listener.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import no.rutebanken.nabu.domain.event.JobState;
+import org.wololo.geojson.Geometry;
 
 import java.io.IOException;
 import java.time.Instant;
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class JobEventDTO {
+public class CrudEventDTO {
 
     public Instant eventTime;
 
     public String correlationId;
 
-    public String domain;
-    public String action;
-    public JobState state;
+    public String entityType;
 
+    public String entityClassifier;
+
+    public String action;
 
     public String externalId;
 
-    public Long providerId;
-
-    public String referential;
+    public Long version;
 
     public String name;
 
+    public String changeType;
+
+    public String oldValue;
+
+    public String newValue;
+
+    public String comment;
+
     public String username;
 
-    public static JobEventDTO fromString(String string) {
+    public Geometry geometry;
+
+    public String location;
+
+    public static CrudEventDTO fromString(String string) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
-            return mapper.readValue(string, JobEventDTO.class);
+            return mapper.readValue(string, CrudEventDTO.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

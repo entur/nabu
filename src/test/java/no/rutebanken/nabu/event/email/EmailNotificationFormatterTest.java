@@ -16,6 +16,7 @@
 package no.rutebanken.nabu.event.email;
 
 import com.google.common.collect.Sets;
+import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.NabuTestApp;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.JobEvent;
@@ -38,9 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = NabuTestApp.class)
-public class EmailNotificationFormatterTest {
+public class EmailNotificationFormatterTest extends BaseIntegrationTest {
 
     @Autowired
     private EmailNotificationFormatter emailNotificationFormatter;
