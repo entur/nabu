@@ -13,12 +13,12 @@
  * limitations under the Licence.
  */
 
-package no.rutebanken.nabu.jms.mapper;
+package no.rutebanken.nabu.event.listener.mapper;
 
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.JobEvent;
-import no.rutebanken.nabu.jms.dto.CrudEventDTO;
-import no.rutebanken.nabu.jms.dto.JobEventDTO;
+import no.rutebanken.nabu.event.listener.dto.CrudEventDTO;
+import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import org.wololo.jts2geojson.GeoJSONReader;
 
 public class EventMapper {

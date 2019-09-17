@@ -13,7 +13,7 @@
  * limitations under the Licence.
  */
 
-package no.rutebanken.nabu.jms;
+package no.rutebanken.nabu.event.listener;
 
 import com.google.common.collect.Sets;
 import no.rutebanken.nabu.BaseIntegrationTest;
@@ -22,11 +22,11 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.domain.event.NotificationType;
 import no.rutebanken.nabu.event.UserNotificationEventHandler;
+import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import no.rutebanken.nabu.event.user.UserRepository;
 import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
 import no.rutebanken.nabu.event.user.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.event.user.dto.user.UserDTO;
-import no.rutebanken.nabu.jms.dto.JobEventDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 
 public class EventNotificationIntegrationTest extends BaseIntegrationTest {
     @Autowired
-    private JobEventListener eventListener;
+    private JobEventProcessor jobEventProcessor;
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -76,15 +76,15 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
 
         // Matching action, but not state
         JobEventDTO notMatchingDifferentState = createEvent(JobState.PENDING, activeFilterAction, Instant.now());
-        eventListener.processMessage(toJson(notMatchingDifferentState));
+        jobEventProcessor.processMessage(toJson(notMatchingDifferentState));
 
         // Matching state for inactive filter
         JobEventDTO actionForInactiveFilter = createEvent(JobState.FAILED, inactiveFilterAction, Instant.now().plusMillis(1000));
-        eventListener.processMessage(toJson(actionForInactiveFilter));
+        jobEventProcessor.processMessage(toJson(actionForInactiveFilter));
 
         // Matching event for active filter
         JobEventDTO matchingEvent = createEvent(JobState.FAILED, activeFilterAction, Instant.now().plusMillis(2000));
-        eventListener.processMessage(toJson(matchingEvent));
+        jobEventProcessor.processMessage(toJson(matchingEvent));
 
         List<Notification> notifications = notificationRepository.findByUserNameAndTypeAndStatus(user.getUsername(), NotificationType.WEB, Notification.NotificationStatus.READY);
 

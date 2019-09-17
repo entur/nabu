@@ -13,15 +13,15 @@
  * limitations under the Licence.
  */
 
-package no.rutebanken.nabu.jms;
+package no.rutebanken.nabu.event.listener;
 
 import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.SystemJobStatus;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.UserNotificationEventHandler;
+import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import no.rutebanken.nabu.event.user.UserRepository;
-import no.rutebanken.nabu.jms.dto.JobEventDTO;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import org.junit.Assert;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private JobEventListener eventListener;
+    private JobEventProcessor jobEventProcessor;
 
     @Autowired
     private EventRepository eventRepository;
@@ -64,21 +64,21 @@ public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
     public void jobEventUpdatesSystemJobStatus() {
         Instant now = Instant.now();
         JobEventDTO firstPendingEvent = createEvent(JobState.PENDING, now);
-        eventListener.processMessage(toJson(firstPendingEvent));
+        jobEventProcessor.processMessage(toJson(firstPendingEvent));
         assertSystemJobStatus(firstPendingEvent);
 
         JobEventDTO firstFailedEvent = createEvent(JobState.FAILED, now.plusMillis(1000));
-        eventListener.processMessage(toJson(firstFailedEvent));
+        jobEventProcessor.processMessage(toJson(firstFailedEvent));
         assertSystemJobStatus(firstFailedEvent);
 
         JobEventDTO secondFailedEvent = createEvent(JobState.FAILED, now.plusMillis(2000));
-        eventListener.processMessage(toJson(secondFailedEvent));
+        jobEventProcessor.processMessage(toJson(secondFailedEvent));
         assertSystemJobStatus(secondFailedEvent);
 
 
         // Old started event should not affect state
         JobEventDTO secondPendingEvent = createEvent(JobState.PENDING, now.minusMillis(1000));
-        eventListener.processMessage(toJson(secondPendingEvent));
+        jobEventProcessor.processMessage(toJson(secondPendingEvent));
         assertSystemJobStatus(firstPendingEvent);
 
 

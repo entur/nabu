@@ -16,6 +16,7 @@
 package no.rutebanken.nabu.event.email;
 
 import com.google.common.collect.Sets;
+import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.NabuTestApp;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.JobEvent;
@@ -27,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.FileNotFoundException;
@@ -37,12 +39,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = NabuTestApp.class)
-public class EmailNotificationFormatterTest {
+public class EmailNotificationFormatterTest extends BaseIntegrationTest {
 
     @Autowired
     private EmailNotificationFormatter emailNotificationFormatter;
+
+    @Autowired
+    private MessageSource messageSource;
+
     private List<Provider> providerList = Arrays.asList(new Provider(1011l, "ProviderName", null));
 
     @Test
@@ -76,7 +80,9 @@ public class EmailNotificationFormatterTest {
         System.out.println(msg);
         Assert.assertTrue(msg.startsWith("<html>"));
         Assert.assertFalse("Expected all message keys to have been resolved", msg.contains("notification.email"));
-        Assert.assertTrue(msg.contains("Too many events have been registered in the period (6). Only the 5 newest events are included"));
+
+        String messageTooManyEvent =  messageSource.getMessage("notification.email.truncated", new String[] {"6","5"}, Locale.getDefault());
+        Assert.assertTrue(msg.contains(messageTooManyEvent));
 
         Assert.assertFalse("Expected oldest event to be omitted", msg.contains(oldestEvent.getEvent().getName()));
     }
