@@ -43,7 +43,7 @@
         <!-- versions for use in mvn plugins as we cannot inherit them from a BOM -->
         <entur.helpers.version>0.0.6-SNAPSHOT</entur.helpers.version>
         <spring-boot.version>2.1.8.RELEASE</spring-boot.version>
-        <keycloak.version>4.8.3.Final</keycloak.version>
+        <keycloak.version>6.0.0</keycloak.version>
 
         <httpcomponents-fluent.version>4.5.10</httpcomponents-fluent.version>
         <rest-assured.version>4.1.1</rest-assured.version>
@@ -238,7 +238,7 @@
         <dependency>
             <groupId>org.wololo</groupId>
             <artifactId>jts2geojson</artifactId>
-            <version>0.13.0</version>
+            <version>0.14.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
