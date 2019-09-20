@@ -54,4 +54,14 @@ public class JobEventDTO {
         }
     }
 
+    public static String toString(JobEventDTO jobEventDTO) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            return mapper.writeValueAsString(jobEventDTO);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
