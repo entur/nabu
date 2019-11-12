@@ -47,7 +47,7 @@
 
     <properties>
         <entur.helpers.version>0.0.6-SNAPSHOT</entur.helpers.version>
-        <keycloak.version>4.8.3.Final</keycloak.version>
+        <keycloak.version>6.0.1</keycloak.version>
 
         <rest-assured.version>4.1.1</rest-assured.version>
         <geodb.version>0.9</geodb.version>
