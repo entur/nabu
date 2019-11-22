@@ -47,7 +47,7 @@
 
     <properties>
         <entur.helpers.version>0.0.6-SNAPSHOT</entur.helpers.version>
-        <keycloak.version>4.8.3.Final</keycloak.version>
+        <keycloak.version>8.0.0</keycloak.version>
 
         <rest-assured.version>4.1.1</rest-assured.version>
         <geodb.version>0.9</geodb.version>
@@ -56,7 +56,7 @@
         <hibernate.version>5.4.4.Final</hibernate.version>
         <guava.version>28.1-jre</guava.version>
 
-        <swagger-jersey2.version>1.5.23</swagger-jersey2.version>
+        <swagger-jersey2.version>1.6.0</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
 
     </properties>
