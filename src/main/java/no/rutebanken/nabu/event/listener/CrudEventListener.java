@@ -19,14 +19,18 @@ import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.event.EventService;
 import no.rutebanken.nabu.event.listener.dto.CrudEventDTO;
 import no.rutebanken.nabu.event.listener.mapper.EventMapper;
+import org.entur.pubsub.base.AbstractEnturGooglePubSubConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
-public class CrudEventListener {
+public class CrudEventListener extends AbstractEnturGooglePubSubConsumer {
+
+    public static final String CRUD_EVENT_QUEUE = "CrudEventQueue";
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -35,10 +39,15 @@ public class CrudEventListener {
 
     private EventMapper eventMapper = new EventMapper();
 
-    @JmsListener(destination = "CrudEventQueue")
-    public void processMessage(String content) {
-        CrudEventDTO dto = CrudEventDTO.fromString(content);
+    @Override
+    protected String getDestinationName() {
+        return CRUD_EVENT_QUEUE;
+    }
 
+    @Override
+    public void onMessage(byte[] content, Map<String, String> headers) {
+
+        CrudEventDTO dto = CrudEventDTO.fromString(new String(content));
         Event event = eventMapper.toCrudEvent(dto);
         logger.info("Received crud event: " + event);
         eventService.addEvent(event);

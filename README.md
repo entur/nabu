@@ -11,12 +11,6 @@ to check liveness and readiness, accordingly
 ```
 server.port=9004
 
-# activemq settings
-spring.activemq.broker-url=tcp://activemq:61616
-#spring.activemq.pooled=true
-spring.activemq.user=admin
-spring.activemq.password=admin
-
 # JPA settings (in-memory)
 spring.jpa.show-sql=false
 spring.jpa.hibernate.ddl-auto=create
@@ -31,12 +25,6 @@ logging.level.org.apache=INFO
 ```
 
 server.port=9006
-
-# activemq settings
-spring.activemq.broker-url=tcp://activemq:61616
-#spring.activemq.pooled=true
-spring.activemq.user=admin
-spring.activemq.password=admin
 
 # logging settings
 logging.level.org.hibernate.tool.hbm2ddl=INFO
@@ -77,10 +65,10 @@ spring.datasource.initializationFailFast=false
 `curl -vX POST -F "file=@\"avinor-netex_201609291122.zip\"" http://localhost:9004/jersey/files/21`
 
 * Running in docker (development)
-`docker rm -f nabu ; docker run -it --name nabu -e JAVA_OPTIONS="-Xmx1280m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" --link activemq -p 5005:5005 -v /git/config/nabu/dev/application.properties:/app/config/application.properties:ro dr.rutebanken.org/rutebanken/nabu:0.0.1-SNAPSHOT`
+`docker rm -f nabu ; docker run -it --name nabu -e JAVA_OPTIONS="-Xmx1280m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" -p 5005:5005 -v /git/config/nabu/dev/application.properties:/app/config/application.properties:ro dr.rutebanken.org/rutebanken/nabu:0.0.1-SNAPSHOT`
 
 * Running in docker (test ++)
-`docker run -it --name nabu -e JAVA_OPTIONS="-Xmx1280m" --link activemq --link some-postgres -v /git/config/nabu/test/application.properties:/app/config/application.properties:ro dr.rutebanken.org/rutebanken/nabu:0.0.1-SNAPSHOT`
+`docker run -it --name nabu -e JAVA_OPTIONS="-Xmx1280m" --link some-postgres -v /git/config/nabu/test/application.properties:/app/config/application.properties:ro dr.rutebanken.org/rutebanken/nabu:0.0.1-SNAPSHOT`
 
 
 # Flyway
