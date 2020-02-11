@@ -1,0 +1,16 @@
+env: dev
+
+sql:
+  instance: carbon-1287:europe-west1:nabu-db-1=tcp:5432
+
+configMap:
+  projectId: carbon-1287
+  keycloakUrl: https://kc-dev.devstage.entur.io/auth
+  mail:
+    stopPlace: https://stoppested-test.entur.org/
+    routedb: https://rutedb.dev.entur.org/
+    notificationFrom: varsel-test@entur.org
+    operator: https://operator-test.entur.org/
+
+
+

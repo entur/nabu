@@ -1,0 +1,82 @@
+apiVersion: v1
+data:
+  application.properties: |-
+
+    #Spring mail configuration
+    spring.mail.properties.mail.smtp.writetimeout=5000
+    spring.mail.properties.mail.smtp.connecttimeout=5000
+    spring.mail.properties.mail.smtp.timeout=3000
+    spring.mail.properties.mail.smtp.ssl.enable=false
+    spring.mail.properties.mail.smtp.starttls.enable=true
+    spring.mail.host=smtp.postmarkapp.com
+    notification.email.send.cron=0 0 * * * ?
+    new.user.email.enabled=true
+    email.link.stop.place={{ .Values.configMap.mail.stopPlace }}
+    email.link.routedb={{ .Values.configMap.mail.routedb }}
+    notification.email.from={{ .Values.configMap.mail.notificationFrom }}
+    email.link.operator={{ .Values.configMap.mail.operator }}
+    server.port=9004
+    spring.mail.port=2525
+
+    # Database config
+    spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisDialect
+    spring.database.driverClassName=org.postgresql.Driver
+    spring.jpa.open-in-view=false
+    spring.datasource.url=jdbc:postgresql://localhost:5432/nabu
+    spring.jpa.database=POSTGRESQL
+    spring.datasource.username=nabu
+    spring.jpa.hibernate.use-new-id-generator-mappings=true
+    spring.jpa.properties.hibernate.cache.use_second_level_cache=false
+    spring.jpa.properties.hibernate.cache.region.factory_class=com.hazelcast.hibernate.HazelcastCacheRegionFactory
+    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
+    spring.jpa.properties.hibernate.cache.use_minimal_puts=true
+    spring.jpa.properties.hibernate.cache.use_query_cache=false
+    spring.jpa.show-sql=false
+    spring.datasource.platform=postgres
+
+    #Keycloak config
+    keycloak.auth-server-url={{ .Values.configMap.keycloakUrl }}
+    keycloak.principal-attribute=preferred_username
+    keycloak.resource=nabu
+    keycloak.realm=rutebanken
+
+    #Logging config
+    logging.level.org.hibernate.SQL=INFO
+    logging.level.org.hibernate.tool.hbm2ddl=INFO
+    logging.level.no.rutebanken=INFO
+    logging.level.org.apache=WARN
+    logging.level.org.hibernate.type=WARN
+    logging.level.org.springframework.orm.hibernate4.support=WARN
+
+    spring.activemq.user=admin
+    spring.activemq.broker-url=tcp://activemq.default:61616?jms.blobTransferPolicy.uploadUrl=http://activemq.default:8161/fileserver/
+
+    #pubsub config
+    spring.cloud.gcp.pubsub.project-id={{ .Values.configMap.projectId }}
+    spring.cloud.gcp.pubsub.credentials.location=file:/etc/marduk-pubsub-account/marduk-pubsub-credentials.json
+    spring.cloud.gcp.pubsub.subscriber.parallel-pull-count=1
+    spring.cloud.gcp.pubsub.subscriber.executor-threads=30
+    spring.cloud.gcp.pubsub.subscriber.max-ack-extension-period=36000
+
+    management.server.port=9001
+    management.endpoints.enabled-by-default=false
+    management.endpoint.info.enabled=true
+    management.endpoint.health.enabled=true
+    management.endpoint.prometheus.enabled=true
+    management.endpoints.web.base-path=/
+    management.endpoints.web.exposure.include=info,health,prometheus
+    management.health.mail.enabled=false
+
+    administrative.zone.registry.rest.service.url=http://baba/services/organisations/administrative_zones/
+    user.registry.rest.service.url=http://baba/services/organisations/users?full=true
+    provider.registry.rest.service.url=http://baba/services/providers/
+    quartz.enabled=true
+    queue.upload.destination.name=MardukInboundQueue
+    queue.gtfs.upload.destination.name=ExternalFileUploadQueue
+    spring.main.allow-bean-definition-overriding=true
+kind: ConfigMap
+metadata:
+  name: {{ template "nabu.name" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "common.labels" . | indent 4 }}
