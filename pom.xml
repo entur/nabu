@@ -56,7 +56,7 @@
         <hibernate.version>5.4.4.Final</hibernate.version>
         <guava.version>28.1-jre</guava.version>
 
-        <swagger-jersey2.version>1.5.23</swagger-jersey2.version>
+        <swagger-jersey2.version>1.6.0</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
 
         <com.h2database.version>1.4.196</com.h2database.version>
@@ -189,7 +189,7 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>5.3</version>
+            <version>6.3</version>
         </dependency>
 
         <dependency>
@@ -226,7 +226,7 @@
         <dependency>
             <groupId>org.wololo</groupId>
             <artifactId>jts2geojson</artifactId>
-            <version>0.13.0</version>
+            <version>0.14.3</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
