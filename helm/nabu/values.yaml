@@ -16,7 +16,6 @@ resources:
   memRequest: 1200Mi
   xmx: 768m
   xms: 512m
-  xss: 64m
 
 service:
   http:
