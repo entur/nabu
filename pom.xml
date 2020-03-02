@@ -54,13 +54,13 @@
         <geotools.version>20.1</geotools.version>
 
         <postgis-jdbc.version>2.3.0</postgis-jdbc.version>
-        <wololo.version>0.13.0</wololo.version>
+        <wololo.version>0.14.3</wololo.version>
         <commons-io.version>2.6</commons-io.version>
         <resteasy.version>3.6.1.Final</resteasy.version>
 
         <guava.version>28.1-jre</guava.version>
 
-        <swagger-jersey2.version>1.5.23</swagger-jersey2.version>
+        <swagger-jersey2.version>1.6.0</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
 
         <!--H2 version set to 1.4.199 until the following issue is fixed :  https://hibernate.atlassian.net/projects/HHH/issues/HHH-13711-->
