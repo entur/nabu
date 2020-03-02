@@ -19,7 +19,7 @@ data:
     spring.mail.port=2525
 
     # Database config
-    spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisDialect
+    spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
     spring.database.driverClassName=org.postgresql.Driver
     spring.jpa.open-in-view=false
     spring.datasource.url=jdbc:postgresql://localhost:5432/nabu
