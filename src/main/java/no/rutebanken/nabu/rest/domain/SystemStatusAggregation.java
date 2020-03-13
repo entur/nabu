@@ -21,7 +21,7 @@ import no.rutebanken.nabu.domain.SystemJobStatus;
 import no.rutebanken.nabu.domain.event.JobState;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 @JsonRootName("systemStatusAggregation")
@@ -40,7 +40,7 @@ public class SystemStatusAggregation {
     public Date currentStateDate;
 
     @JsonProperty("latestDatePerState")
-    public Map<JobState, Date> latestDatePerState = new HashMap<>();
+    public Map<JobState, Date> latestDatePerState = new EnumMap<>(JobState.class);
 
 
     public SystemStatusAggregation(SystemJobStatus in) {

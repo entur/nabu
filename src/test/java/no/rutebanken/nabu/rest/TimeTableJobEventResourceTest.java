@@ -32,21 +32,21 @@ public class TimeTableJobEventResourceTest {
     private static final String ACTION2="EXPORT";
     
     @Test
-    public void testGetStatusForProvider() throws Exception {
+    public void testGetStatusForProvider() {
 
         List<JobEvent> rawEvents = new ArrayList<>();
 
         Instant t0 = Instant.now().minusMillis(2000);
 
         // Job "b" -> OK
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2l, null, ACTION2, JobState.PENDING, "b", t0.plusMillis(4), "ost"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2l, "1", ACTION2, JobState.STARTED, "b", t0.plusMillis(5), "pb"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2l, "1", ACTION2, JobState.OK, "b", t0.plusMillis(6), "pb"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2L, null, ACTION2, JobState.PENDING, "b", t0.plusMillis(4), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2L, "1", ACTION2, JobState.STARTED, "b", t0.plusMillis(5), "pb"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2L, "1", ACTION2, JobState.OK, "b", t0.plusMillis(6), "pb"));
 
         // Job "a" -> FAILED
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, null, ACTION1, JobState.PENDING, "a", t0.plusMillis(1), "ost"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, "2", ACTION1, JobState.STARTED, "a", t0.plusMillis(2), "ost"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2l, "2", ACTION1, JobState.FAILED, "a", t0.plusMillis(3), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2L, null, ACTION1, JobState.PENDING, "a", t0.plusMillis(1), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2L, "2", ACTION1, JobState.STARTED, "a", t0.plusMillis(2), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2L, "2", ACTION1, JobState.FAILED, "a", t0.plusMillis(3), "ost"));
 
 
         List<JobStatus> listStatus = new TimeTableJobEventResource().convert(rawEvents);

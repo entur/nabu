@@ -27,7 +27,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.List;
 
 public class TemporalAccessorFormatter implements TemplateMethodModelEx {
-    private final static DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss").toFormatter()
+    private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss").toFormatter()
                                                                .withZone(ZoneId.of("Europe/Oslo"));
 
 

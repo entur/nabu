@@ -18,6 +18,7 @@ package no.rutebanken.nabu.event.listener.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import no.rutebanken.nabu.exceptions.NabuException;
 import org.wololo.geojson.Geometry;
 
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class CrudEventDTO {
             mapper.registerModule(new JavaTimeModule());
             return mapper.readValue(string, CrudEventDTO.class);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new NabuException("Error while processing CRUD event", e);
         }
     }
 

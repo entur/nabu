@@ -47,7 +47,7 @@ public class ScheduledNotificationService {
     private Map<NotificationType, NotificationProcessor> notificationSenders;
 
     public void sendNotifications(NotificationType type) {
-        logger.info("About to send notifications of type: " + type);
+        logger.info("About to send notifications of type: {}", type);
         NotificationProcessor notificationSender = notificationSenders.get(type);
         if (notificationSender == null) {
             throw new IllegalArgumentException("No notification sender registered for notification type: " + type);
@@ -58,7 +58,7 @@ public class ScheduledNotificationService {
         Map<String, Set<Notification>> notificationsPerUser = notificationList.stream().collect(Collectors.groupingBy(Notification::getUserName, Collectors.mapping(Function.identity(), Collectors.toSet())));
         notificationsPerUser.forEach((username, notifications) -> sendNotificationsForUser(notificationSender, username, notifications));
 
-        logger.info("Finished sending " + notificationList.size() + " notifications of type: " + type);
+        logger.info("Finished sending {} notifications of type: {}", notificationList.size(), type);
     }
 
     private void sendNotificationsForUser(NotificationProcessor notificationSender, String userName, Set<Notification> notifications) {
@@ -66,7 +66,7 @@ public class ScheduledNotificationService {
         if (user != null) {
             notificationSender.processNotificationsForUser(user, notifications);
         } else {
-            logger.warn("Cannot send notifications to unknown user: " + userName + ". Discarding notifications: " + notifications);
+            logger.warn("Cannot send notifications to unknown user: {}. Discarding notifications: {}", userName, notifications);
             notificationRepository.deleteAll(notifications);
         }
 

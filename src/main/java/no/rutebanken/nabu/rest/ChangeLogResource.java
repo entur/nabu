@@ -19,8 +19,6 @@ import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.event.CrudEventSearch;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.ApiCrudEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,13 +35,11 @@ import java.util.stream.Collectors;
 @Api(tags = {"Change log resource"}, produces = "application/json")
 public class ChangeLogResource {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     private EventRepository eventRepository;
 
     @GET
     public List<ApiCrudEvent> find(@BeanParam CrudEventSearch search) {
-        return eventRepository.findCrudEvents(search).stream().map(crudEvent -> ApiCrudEvent.fromCrudEvent(crudEvent)).collect(Collectors.toList());
+        return eventRepository.findCrudEvents(search).stream().map(ApiCrudEvent::fromCrudEvent).collect(Collectors.toList());
     }
 }

@@ -48,16 +48,16 @@ public class ProviderCache implements ProviderRepository {
     public void populate() {
         try {
             Cache<Long, Provider> newCache = CacheBuilder.newBuilder().maximumSize(cacheMaxSize).build();
-            restProviderService.getProviders().stream().forEach(provider -> newCache.put(provider.getId(), provider));
+            restProviderService.getProviders().forEach(provider -> newCache.put(provider.getId(), provider));
 
             cache = newCache;
-            logger.info("Updated provider cache with result from REST Provider Service. Cache now has " + cache.size() + " elements");
+            logger.info("Updated provider cache with result from REST Provider Service. Cache now has {} elements", cache.size());
         } catch (ResourceAccessException re) {
             if (re.getCause() instanceof ConnectException) {
                 if (cache == null) {
-                    logger.warn("Refresh REST provider cache failed:" + re.getMessage() + ". No provider info available");
+                    logger.warn("Refresh REST provider cache failed: {}. No provider info available", re.getMessage());
                 } else {
-                    logger.warn("Refresh REST provider cache failed:" + re.getMessage() + ". Could not update provider cache, but keeping " + cache.size() + " existing elements.");
+                    logger.warn("Refresh REST provider cache failed: {}. Could not update provider cache, but keeping {} existing elements.", re.getMessage(), cache.size());
                 }
             } else {
                 throw re;

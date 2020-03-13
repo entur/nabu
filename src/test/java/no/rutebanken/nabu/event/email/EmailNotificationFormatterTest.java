@@ -17,7 +17,6 @@ package no.rutebanken.nabu.event.email;
 
 import com.google.common.collect.Sets;
 import no.rutebanken.nabu.BaseIntegrationTest;
-import no.rutebanken.nabu.NabuTestApp;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
@@ -25,16 +24,13 @@ import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.provider.model.Provider;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -47,7 +43,7 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
     @Autowired
     private MessageSource messageSource;
 
-    private List<Provider> providerList = Arrays.asList(new Provider(1011l, "ProviderName", null));
+    private List<Provider> providerList = Collections.singletonList(new Provider(1011L, "ProviderName", null));
 
     @Test
     public void formatMailInNorwegian() throws FileNotFoundException {
@@ -102,7 +98,7 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
 
     private Notification minCrudNotification(String id, Instant time) {
         Notification notification = new Notification();
-        CrudEvent event = CrudEvent.builder().entityType("StopPlace").version(1l).eventTime(time).build();
+        CrudEvent event = CrudEvent.builder().entityType("StopPlace").version(1L).eventTime(time).build();
         event.setPk(pkCounter++);
         notification.setEvent(event);
 
@@ -111,7 +107,7 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
 
     private Notification maxCrudNotification(String id, Instant time) {
         Notification notification = new Notification();
-        CrudEvent event = CrudEvent.builder().entityType("StopPlace").entityClassifier("onstreetBus").version(1l).comment("comment").changeType("NAME").oldValue("Old name").newValue("Hakkadal").username("UserDTO e").action("CREATE").name("Hakkadal").externalId(id).eventTime(time).build();
+        CrudEvent event = CrudEvent.builder().entityType("StopPlace").entityClassifier("onstreetBus").version(1L).comment("comment").changeType("NAME").oldValue("Old name").newValue("Hakkadal").username("UserDTO e").action("CREATE").name("Hakkadal").externalId(id).eventTime(time).build();
         event.setPk(pkCounter++);
         notification.setEvent(event);
 

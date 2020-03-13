@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class SystemJobStatusRepositoryImplTest extends BaseIntegrationTest {
 
@@ -44,8 +45,8 @@ public class SystemJobStatusRepositoryImplTest extends BaseIntegrationTest {
 
         Assert.assertEquals(3, systemJobStatusRepository.find(null, null).size());
 
-        Assert.assertEquals(Arrays.asList(s3), systemJobStatusRepository.find(Arrays.asList("dom2"), null));
-        Assert.assertEquals(Arrays.asList(s2), systemJobStatusRepository.find(new ArrayList<>(), Arrays.asList("type2")));
-        Assert.assertEquals(Arrays.asList(s1), systemJobStatusRepository.find(Arrays.asList("dom1"), Arrays.asList("type1")));
+        Assert.assertEquals(Collections.singletonList(s3), systemJobStatusRepository.find(Collections.singletonList("dom2"), null));
+        Assert.assertEquals(Collections.singletonList(s2), systemJobStatusRepository.find(new ArrayList<>(), Collections.singletonList("type2")));
+        Assert.assertEquals(Collections.singletonList(s1), systemJobStatusRepository.find(Collections.singletonList("dom1"), Collections.singletonList("type1")));
     }
 }

@@ -22,7 +22,7 @@ public class JobEventProcessor {
     public void processMessage(String content) {
         JobEventDTO dto = JobEventDTO.fromString(content);
         Event event = eventMapper.toJobEvent(dto);
-        logger.info("Received job event: " + event);
+        logger.info("Received job event: {}", event);
         eventService.addEvent(event);
     }
 }

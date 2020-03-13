@@ -22,8 +22,6 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.DataDeliveryStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -42,8 +40,6 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Path("latest_upload")
 @Api(tags = {"Latest upload resource"}, produces = "application/json")
 public class LatestUploadResource {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     EventRepository eventRepository;

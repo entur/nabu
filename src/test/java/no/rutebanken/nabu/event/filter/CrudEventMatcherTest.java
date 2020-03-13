@@ -15,7 +15,6 @@
 
 package no.rutebanken.nabu.event.filter;
 
-import com.google.common.collect.Sets;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.LinearRing;
@@ -31,7 +30,6 @@ import no.rutebanken.nabu.event.user.model.AdministrativeZone;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -45,7 +43,7 @@ public class CrudEventMatcherTest {
     private AdministrativeZoneRepository administrativeZoneRepositoryMock;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         administrativeZoneRepositoryMock = mock(AdministrativeZoneRepository.class);
     }
 

@@ -52,11 +52,11 @@ public class SystemJobStatusUpdater implements EventHandler {
             Optional<SystemJobStatus> existingStatus = systemJobStatusRepository.findOne(Example.of(systemJobStatus));
 
             systemJobStatus.setLastStatusTime(jobEvent.getEventTime());
-            if (!existingStatus.isPresent()) {
-                logger.info("Registering new system status from incoming event: " + systemJobStatus);
+            if (existingStatus.isEmpty()) {
+                logger.info("Registering new system status from incoming event: {}", systemJobStatus);
                 systemJobStatusRepository.save(systemJobStatus);
             } else if (existingStatus.get().getLastStatusTime().isBefore(systemJobStatus.getLastStatusTime())) {
-                logger.debug("Updating system status from incoming event: " + systemJobStatus);
+                logger.debug("Updating system status from incoming event: {}", systemJobStatus);
                 existingStatus.get().setLastStatusTime(systemJobStatus.getLastStatusTime());
                 systemJobStatusRepository.save(existingStatus.get());
             }

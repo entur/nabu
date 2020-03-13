@@ -63,14 +63,8 @@ public class AdminSummaryResource {
         Map<Pair<String, String>, SystemStatusAggregation> aggregationPerJobType = new HashMap<>();
 
         for (SystemJobStatus in : systemStatuses) {
-
             Pair<String, String> key = Pair.of(in.getJobDomain(), in.getAction());
-            SystemStatusAggregation currentAggregation = aggregationPerJobType.get(key);
-
-            if (currentAggregation == null) {
-                currentAggregation = new SystemStatusAggregation(in);
-                aggregationPerJobType.put(key, currentAggregation);
-            }
+            SystemStatusAggregation currentAggregation = aggregationPerJobType.computeIfAbsent(key, k -> new SystemStatusAggregation(in));
             currentAggregation.addSystemStatus(in);
         }
 

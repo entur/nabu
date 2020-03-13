@@ -62,12 +62,12 @@ public class EmailNotificationSender implements NotificationProcessor {
     public void processNotificationsForUser(UserDTO user, Set<Notification> notifications) {
 
         if (user.getContactDetails() == null || user.getContactDetails().getEmail() == null) {
-            logger.warn("Unable to notify user without registered email address: " + user.getUsername() + ". Discarding notifications: " + notifications);
+            logger.warn("Unable to notify user without registered email address: {}. Discarding notifications: {}", user.getUsername(), notifications);
             notificationRepository.deleteAll(notifications);
             return;
         }
 
-        logger.info("Sending email to user: " + user.getUsername() + " for notifications: " + notifications);
+        logger.info("Sending email to user: {} for notifications: {}", user.getUsername(), notifications);
 
         Locale locale = new Locale(emailLanguageDefault); // TODO get users default from user
 
@@ -87,7 +87,7 @@ public class EmailNotificationSender implements NotificationProcessor {
                 helper.setFrom(emailFrom);
             });
         } else {
-            logger.warn("Email disabled, not sending: " + msg);
+            logger.warn("Email disabled, not sending: {}", msg);
         }
     }
 

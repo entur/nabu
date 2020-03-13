@@ -20,8 +20,6 @@ import com.google.common.cache.CacheBuilder;
 import org.locationtech.jts.geom.Polygon;
 import no.rutebanken.nabu.event.user.dto.organisation.AdministrativeZoneDTO;
 import no.rutebanken.nabu.event.user.model.AdministrativeZone;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,9 +33,6 @@ public class AdministrativeZoneCache implements AdministrativeZoneRepository {
 
     @Autowired
     private AdministrativeZoneResource administrativeZoneResource;
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
 
     @Value("${administrative.zone.cache.max.size:100}")
     private Integer cacheMaxSize;

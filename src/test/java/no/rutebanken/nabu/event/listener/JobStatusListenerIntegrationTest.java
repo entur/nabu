@@ -54,7 +54,7 @@ public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
     private UserNotificationEventHandler userNotificationEventHandler;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         userNotificationEventHandler.setUserRepository(userRepositoryMock);
         when(userRepositoryMock.findAll()).thenReturn(new ArrayList<>());
     }

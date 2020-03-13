@@ -36,7 +36,7 @@ public class ImmediateNotificationService {
 
     public void sendNotifications(Notification notification, UserDTO user) {
         NotificationType type = notification.getType();
-        logger.info("About to send notifications of type: " + type + " to user " + user.getUsername());
+        logger.info("About to send notifications of type: {} to user {}", type, user.getUsername());
         NotificationProcessor notificationSender = notificationSenders.get(type);
         if (notificationSender == null) {
             throw new IllegalArgumentException("No notification sender registered for notification type: " + type);

@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class NotificationRepositoryImplTest extends BaseIntegrationTest {
@@ -47,7 +47,7 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
     public void clearAllRemovesAllNotificationsForJobDomain() {
         JobEvent matchingEvent = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         JobEvent otherDomainEvent = JobEvent.builder().domain("otherDomain").providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
-        CrudEvent crudEvent = CrudEvent.builder().entityType("type").entityClassifier("classifier").version(1l).externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
+        CrudEvent crudEvent = CrudEvent.builder().entityType("type").entityClassifier("classifier").version(1L).externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         eventRepository.saveAll(Sets.newHashSet(matchingEvent, otherDomainEvent, crudEvent));
 
         Notification matchingEventNotification = new Notification("user1", NotificationType.WEB, matchingEvent);
@@ -69,7 +69,7 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
         JobEvent matchingEvent = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         JobEvent otherProviderEvent = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(666L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         JobEvent otherDomainEvent = JobEvent.builder().domain("otherDomain").providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
-        CrudEvent crudEvent = CrudEvent.builder().entityType("type").entityClassifier("classifier").version(1l).externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
+        CrudEvent crudEvent = CrudEvent.builder().entityType("type").entityClassifier("classifier").version(1L).externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         eventRepository.saveAll(Sets.newHashSet(matchingEvent, otherProviderEvent, otherDomainEvent, crudEvent));
 
         Notification matchingEventNotification = new Notification("user1", NotificationType.WEB, matchingEvent);
@@ -102,7 +102,7 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
 
 
         List<Notification> matchingNotifications = notificationRepository.findByUserNameAndTypeAndStatus("user1", NotificationType.WEB, Notification.NotificationStatus.READY);
-        Assert.assertEquals(Arrays.asList(matchingEventNotification), matchingNotifications);
+        Assert.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
     }
 
     @Test
@@ -118,6 +118,6 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
 
 
         List<Notification> matchingNotifications = notificationRepository.findByTypeAndStatus(NotificationType.WEB, Notification.NotificationStatus.READY);
-        Assert.assertEquals(Arrays.asList(matchingEventNotification), matchingNotifications);
+        Assert.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
     }
 }

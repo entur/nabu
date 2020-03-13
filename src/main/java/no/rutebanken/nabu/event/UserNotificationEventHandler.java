@@ -72,7 +72,7 @@ public class UserNotificationEventHandler implements EventHandler {
         if (notification.getType().isImmediate()) {
             immediateNotificationService.sendNotifications(notification, user);
         } else {
-            logger.debug("Registered new notification: " + notification);
+            logger.debug("Registered new notification: {}", notification);
             notificationRepository.save(notification);
         }
 

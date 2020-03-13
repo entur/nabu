@@ -30,7 +30,7 @@ public class JobStatus {
     }
 
     @JsonProperty("events")
-    private List<JobStatusEvent> events = new ArrayList<JobStatusEvent>();
+    private List<JobStatusEvent> events = new ArrayList<>();
 
     @JsonProperty("correlationId")
     private String correlationId;
