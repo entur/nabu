@@ -15,7 +15,6 @@
 
 package no.rutebanken.nabu.event.email;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.domain.event.NotificationType;
 import no.rutebanken.nabu.event.NotificationProcessor;
@@ -94,6 +93,6 @@ public class EmailNotificationSender implements NotificationProcessor {
 
     @Override
     public Set<NotificationType> getSupportedNotificationTypes() {
-        return Sets.newHashSet(NotificationType.EMAIL, NotificationType.EMAIL_BATCH);
+        return Set.of(NotificationType.EMAIL, NotificationType.EMAIL_BATCH);
     }
 }

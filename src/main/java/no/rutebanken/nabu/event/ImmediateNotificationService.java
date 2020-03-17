@@ -15,7 +15,6 @@
 
 package no.rutebanken.nabu.event;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.domain.event.NotificationType;
 import no.rutebanken.nabu.event.user.dto.user.UserDTO;
@@ -25,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ImmediateNotificationService {
@@ -42,7 +42,7 @@ public class ImmediateNotificationService {
             throw new IllegalArgumentException("No notification sender registered for notification type: " + type);
         }
 
-        notificationSender.processNotificationsForUser(user, Sets.newHashSet(notification));
+        notificationSender.processNotificationsForUser(user, Set.of(notification));
     }
 
 }

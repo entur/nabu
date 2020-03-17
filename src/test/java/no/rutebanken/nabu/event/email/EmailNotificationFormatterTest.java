@@ -15,7 +15,6 @@
 
 package no.rutebanken.nabu.event.email;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.JobEvent;
@@ -47,7 +46,7 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
 
     @Test
     public void formatMailInNorwegian() throws FileNotFoundException {
-        Set<Notification> notifications = Sets.newHashSet(jobNotification("file.xml"), maxCrudNotification("NSR:StopPlace:16688", Instant.now()));
+        Set<Notification> notifications = Set.of(jobNotification("file.xml"), maxCrudNotification("NSR:StopPlace:16688", Instant.now()));
 
         String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("no"), providerList);
         System.out.println(msg);
@@ -65,7 +64,7 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
     public void formatMailWithTooManyEvents() {
         Instant now = Instant.now();
 
-        Set<Notification> notifications = Sets.newHashSet(jobNotification(null), maxCrudNotification("NSR:StopPlace:2", now.minusMillis(1000)), maxCrudNotification("NSR:StopPlace:1", now.minusMillis(2000)),
+        Set<Notification> notifications = Set.of(jobNotification(null), maxCrudNotification("NSR:StopPlace:2", now.minusMillis(1000)), maxCrudNotification("NSR:StopPlace:1", now.minusMillis(2000)),
                 minCrudNotification("NSR:StopPlace:2", now.minusMillis(3000)), maxCrudNotification("NSR:StopPlace:3", now.minusMillis(4000)));
 
         Notification oldestEvent = maxCrudNotification("NSR:StopPlace:2", now.minusMillis(5000));

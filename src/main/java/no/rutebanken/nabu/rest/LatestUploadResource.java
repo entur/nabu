@@ -15,7 +15,6 @@
 
 package no.rutebanken.nabu.rest;
 
-import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
@@ -66,7 +65,7 @@ public class LatestUploadResource {
             fileName = firstEvent.getName();
             if (sortedEvents.stream().anyMatch(e -> TimeTableAction.BUILD_GRAPH.toString().equals(e.getAction()) && JobState.OK.equals(e.getState()))) {
                 state = DataDeliveryStatus.State.OK;
-            } else if (sortedEvents.stream().anyMatch(e -> Sets.newHashSet(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED).contains(e.getState()))) {
+            } else if (sortedEvents.stream().anyMatch(e -> Set.of(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED).contains(e.getState()))) {
                 state = DataDeliveryStatus.State.FAILED;
             } else {
                 state = DataDeliveryStatus.State.IN_PROGRESS;
