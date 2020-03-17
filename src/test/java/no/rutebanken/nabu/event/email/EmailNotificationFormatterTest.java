@@ -64,12 +64,11 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
     public void formatMailWithTooManyEvents() {
         Instant now = Instant.now();
 
-        Set<Notification> notifications = Set.of(jobNotification(null), maxCrudNotification("NSR:StopPlace:2", now.minusMillis(1000)), maxCrudNotification("NSR:StopPlace:1", now.minusMillis(2000)),
-                minCrudNotification("NSR:StopPlace:2", now.minusMillis(3000)), maxCrudNotification("NSR:StopPlace:3", now.minusMillis(4000)));
-
         Notification oldestEvent = maxCrudNotification("NSR:StopPlace:2", now.minusMillis(5000));
         oldestEvent.getEvent().setName("nameShouldNotBeInEmail");
-        notifications.add(oldestEvent);
+
+        Set<Notification> notifications = Set.of(oldestEvent, jobNotification(null), maxCrudNotification("NSR:StopPlace:2", now.minusMillis(1000)), maxCrudNotification("NSR:StopPlace:1", now.minusMillis(2000)),
+                minCrudNotification("NSR:StopPlace:2", now.minusMillis(3000)), maxCrudNotification("NSR:StopPlace:3", now.minusMillis(4000)));
 
         String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("en"), providerList);
         System.out.println(msg);

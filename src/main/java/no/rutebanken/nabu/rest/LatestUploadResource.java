@@ -40,6 +40,8 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Api(tags = {"Latest upload resource"}, produces = "application/json")
 public class LatestUploadResource {
 
+    public static final Set<JobState> ERROR_JOB_STATES = Set.of(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED);
+
     @Autowired
     EventRepository eventRepository;
 
@@ -65,7 +67,7 @@ public class LatestUploadResource {
             fileName = firstEvent.getName();
             if (sortedEvents.stream().anyMatch(e -> TimeTableAction.BUILD_GRAPH.toString().equals(e.getAction()) && JobState.OK.equals(e.getState()))) {
                 state = DataDeliveryStatus.State.OK;
-            } else if (sortedEvents.stream().anyMatch(e -> Set.of(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED).contains(e.getState()))) {
+            } else if (sortedEvents.stream().anyMatch(e -> ERROR_JOB_STATES.contains(e.getState()))) {
                 state = DataDeliveryStatus.State.FAILED;
             } else {
                 state = DataDeliveryStatus.State.IN_PROGRESS;
