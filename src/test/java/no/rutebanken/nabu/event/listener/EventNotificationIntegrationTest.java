@@ -15,7 +15,6 @@
 
 package no.rutebanken.nabu.event.listener;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
@@ -35,7 +34,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +55,7 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
     private UserNotificationEventHandler userNotificationEventHandler;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         userNotificationEventHandler.setUserRepository(userRepositoryMock);
     }
 
@@ -65,14 +64,14 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
         String activeFilterAction = "active";
         String inactiveFilterAction = "inActive";
 
-        Set<NotificationConfigDTO> config = Sets.newHashSet(new NotificationConfigDTO(NotificationType.WEB, false, jobEventFilter(inactiveFilterAction, JobState.FAILED)),
+        Set<NotificationConfigDTO> config = Set.of(new NotificationConfigDTO(NotificationType.WEB, false, jobEventFilter(inactiveFilterAction, JobState.FAILED)),
                 new NotificationConfigDTO(NotificationType.WEB, true, jobEventFilter(activeFilterAction, JobState.FAILED)));
 
         UserDTO user = new UserDTO();
         user.username = "username";
         user.notifications = config;
 
-        when(userRepositoryMock.findAll()).thenReturn(Arrays.asList(user));
+        when(userRepositoryMock.findAll()).thenReturn(Collections.singletonList(user));
 
         // Matching action, but not state
         JobEventDTO notMatchingDifferentState = createEvent(JobState.PENDING, activeFilterAction, Instant.now());
@@ -96,8 +95,8 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
         EventFilterDTO eventFilter = new EventFilterDTO();
         eventFilter.type = EventFilterDTO.EventFilterType.JOB;
         eventFilter.jobDomain = JobEvent.JobDomain.TIMETABLE.toString();
-        eventFilter.actions = Sets.newHashSet(action);
-        eventFilter.states = Sets.newHashSet(jobState);
+        eventFilter.actions = Set.of(action);
+        eventFilter.states = Set.of(jobState);
         return eventFilter;
     }
 

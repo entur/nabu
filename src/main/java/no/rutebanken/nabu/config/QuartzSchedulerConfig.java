@@ -16,6 +16,7 @@
 package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.event.email.EmailSenderJob;
+import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
@@ -39,7 +40,7 @@ import java.util.Properties;
 /**
  * Based on spring boot quartz example.
  *
- * @see https://github.com/davidkiss/spring-boot-quartz-demo
+ *@see <a href="https://github.com/davidkiss/spring-boot-quartz-demo">https://github.com/davidkiss/spring-boot-quartz-demo</a>
  */
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
@@ -92,7 +93,7 @@ public class QuartzSchedulerConfig {
         return createCronTrigger(jobDetail, cron);
     }
 
-    private static JobDetailFactoryBean createJobDetail(Class jobClass) {
+    private static JobDetailFactoryBean createJobDetail(Class<? extends Job> jobClass) {
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
         factoryBean.setJobClass(jobClass);
         // job has to be durable to be stored in DB:

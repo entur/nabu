@@ -37,7 +37,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -75,7 +74,7 @@ public class TimeTableJobEventResource {
         if (providerId == null) {
             logger.debug("Returning status for all providers");
         } else {
-            logger.debug("Returning status for provider with id '" + providerId + "'");
+            logger.debug("Returning status for provider with id '{}'", providerId);
         }
 
         Instant instantFrom = from == null ? null : from.toInstant();
@@ -130,7 +129,7 @@ public class TimeTableJobEventResource {
     @Path("/{providerId}")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
     public void clearStatusForProvider(@PathParam("providerId") Long providerId) {
-        mapToAllRelatedProviderIds(providerId).stream().forEach(clearProviderId -> eventService.clear(STATUS_JOB_TYPE, clearProviderId));
+        mapToAllRelatedProviderIds(providerId).forEach(clearProviderId -> eventService.clear(STATUS_JOB_TYPE, clearProviderId));
     }
 
     public List<JobStatus> convert(List<JobEvent> statusForProvider) {
@@ -169,7 +168,7 @@ public class TimeTableJobEventResource {
             agg.setDurationMillis(durationMillis);
         }
 
-        Collections.sort(list,Comparator.comparing(JobStatus::getFirstEvent));
+        list.sort(Comparator.comparing(JobStatus::getFirstEvent));
 
         return list;
     }

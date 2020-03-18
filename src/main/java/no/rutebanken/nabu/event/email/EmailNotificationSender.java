@@ -15,7 +15,6 @@
 
 package no.rutebanken.nabu.event.email;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.domain.event.NotificationType;
 import no.rutebanken.nabu.event.NotificationProcessor;
@@ -62,12 +61,12 @@ public class EmailNotificationSender implements NotificationProcessor {
     public void processNotificationsForUser(UserDTO user, Set<Notification> notifications) {
 
         if (user.getContactDetails() == null || user.getContactDetails().getEmail() == null) {
-            logger.warn("Unable to notify user without registered email address: " + user.getUsername() + ". Discarding notifications: " + notifications);
+            logger.warn("Unable to notify user without registered email address: {}. Discarding notifications: {}", user.getUsername(), notifications);
             notificationRepository.deleteAll(notifications);
             return;
         }
 
-        logger.info("Sending email to user: " + user.getUsername() + " for notifications: " + notifications);
+        logger.info("Sending email to user: {} for notifications: {}", user.getUsername(), notifications);
 
         Locale locale = new Locale(emailLanguageDefault); // TODO get users default from user
 
@@ -87,13 +86,13 @@ public class EmailNotificationSender implements NotificationProcessor {
                 helper.setFrom(emailFrom);
             });
         } else {
-            logger.warn("Email disabled, not sending: " + msg);
+            logger.warn("Email disabled, not sending: {}", msg);
         }
     }
 
 
     @Override
     public Set<NotificationType> getSupportedNotificationTypes() {
-        return Sets.newHashSet(NotificationType.EMAIL, NotificationType.EMAIL_BATCH);
+        return Set.of(NotificationType.EMAIL, NotificationType.EMAIL_BATCH);
     }
 }

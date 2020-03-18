@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.exceptions.NabuException;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -50,7 +51,7 @@ public class JobEventDTO {
             mapper.registerModule(new JavaTimeModule());
             return mapper.readValue(string, JobEventDTO.class);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new NabuException("Error while processing Job Event", e);
         }
     }
 
@@ -60,7 +61,7 @@ public class JobEventDTO {
             mapper.registerModule(new JavaTimeModule());
             return mapper.writeValueAsString(jobEventDTO);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new NabuException("Error while processing ", e);
         }
     }
 

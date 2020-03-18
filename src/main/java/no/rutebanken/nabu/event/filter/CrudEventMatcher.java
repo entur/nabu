@@ -61,7 +61,7 @@ public class CrudEventMatcher implements EventMatcher {
             return isSubTypeMatch(crudEvent, ec);
         }
 
-        logger.warn("Unable to check entityClassification: " + ec + " for eventFilter. Ignored.");
+        logger.warn("Unable to check entityClassification: {} for eventFilter. Ignored.", ec);
         return true;
     }
 

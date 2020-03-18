@@ -47,7 +47,7 @@ public class NabuSecurityConfiguration extends KeycloakWebSecurityConfigurerAdap
      * manager.
      */
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(keycloakAuthenticationProvider());
     }
 
@@ -61,7 +61,7 @@ public class NabuSecurityConfiguration extends KeycloakWebSecurityConfigurerAdap
     }
 
     @Bean
-    public KeycloakConfigResolver KeycloakConfigResolver() {
+    public KeycloakConfigResolver keycloakConfigResolver() {
         return new KeycloakSpringBootConfigResolver();
     }
 

@@ -62,7 +62,7 @@ public class JerseyConfig {
     }
 
 
-    private class ServicesConfig extends ResourceConfig {
+    private static class ServicesConfig extends ResourceConfig {
 
         public ServicesConfig() {
             register(CorsResponseFilter.class);
@@ -98,7 +98,7 @@ public class JerseyConfig {
     }
 
 
-    private class HealthConfig extends ResourceConfig {
+    private static class HealthConfig extends ResourceConfig {
 
         public HealthConfig() {
             register(HealthResource.class);

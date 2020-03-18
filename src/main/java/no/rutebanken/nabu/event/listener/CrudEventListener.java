@@ -49,7 +49,7 @@ public class CrudEventListener extends AbstractEnturGooglePubSubConsumer {
 
         CrudEventDTO dto = CrudEventDTO.fromString(new String(content));
         Event event = eventMapper.toCrudEvent(dto);
-        logger.info("Received crud event: " + event);
+        logger.info("Received crud event: {}", event);
         eventService.addEvent(event);
     }
 

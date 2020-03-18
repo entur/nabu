@@ -21,8 +21,6 @@ import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
@@ -40,8 +38,6 @@ import java.util.Map;
 @Repository
 @Transactional
 public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implements EventRepository {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private EntityManager entityManager;
 

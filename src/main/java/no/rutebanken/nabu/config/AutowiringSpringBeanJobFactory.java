@@ -22,12 +22,12 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 /**
  * Based on spring boot quartz example.
- * @see https://github.com/davidkiss/spring-boot-quartz-demo
+ * @see <a href="https://github.com/davidkiss/spring-boot-quartz-demo">https://github.com/davidkiss/spring-boot-quartz-demo</a>
  */
 public final class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory implements
         ApplicationContextAware {
 
-    private transient AutowireCapableBeanFactory beanFactory;
+    private AutowireCapableBeanFactory beanFactory;
 
     @Override
     public void setApplicationContext(final ApplicationContext context) {

@@ -51,17 +51,17 @@ public class UserCache implements UserRepository {
         try {
             Cache<String, UserDTO> newCache = CacheBuilder.newBuilder().maximumSize(cacheMaxSize).build();
 
-            userResource.findAll().stream().forEach(user -> newCache.put(user.getUsername(), user));
+            userResource.findAll().forEach(user -> newCache.put(user.getUsername(), user));
 
             cache = newCache;
 
-            logger.info("Updated user cache with result from REST User Service. Cache now has " + cache.size() + " elements");
+            logger.info("Updated user cache with result from REST User Service. Cache now has {} elements", cache.size());
         } catch (ResourceAccessException re) {
             if (re.getCause() instanceof ConnectException) {
                 if (cache == null) {
-                    logger.warn("Refresh REST User cache failed:" + re.getMessage() + ". No user info available");
+                    logger.warn("Refresh REST User cache failed: {}. No user info available", re.getMessage());
                 } else {
-                    logger.warn("Refresh REST User cache failed:" + re.getMessage() + ". Could not update user cache, but keeping " + cache.size() + " existing elements.");
+                    logger.warn("Refresh REST User cache failed: {}. Could not update user cache, but keeping {} existing elements.", re.getMessage() , cache.size());
                 }
             } else {
                 throw re;

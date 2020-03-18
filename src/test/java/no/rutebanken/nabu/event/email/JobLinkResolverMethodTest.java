@@ -23,7 +23,7 @@ import no.rutebanken.nabu.domain.event.TimeTableAction;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class JobLinkResolverMethodTest {
 
@@ -100,7 +100,7 @@ public class JobLinkResolverMethodTest {
 
     private void assertLink(JobEvent jobEvent, String relativeExpectedLink) {
         try {
-            Object link = jobLinkResolverMethod.exec(Arrays.asList(new BeanModel(jobEvent, new SimpleObjectWrapper())));
+            Object link = jobLinkResolverMethod.exec(Collections.singletonList(new BeanModel(jobEvent, new SimpleObjectWrapper())));
             if (relativeExpectedLink == null) {
                 Assert.assertNull(link);
             } else {

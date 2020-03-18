@@ -15,15 +15,12 @@
 
 package no.rutebanken.nabu.rest;
 
-import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.DataDeliveryStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -43,7 +40,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Api(tags = {"Latest upload resource"}, produces = "application/json")
 public class LatestUploadResource {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    public static final Set<JobState> ERROR_JOB_STATES = Set.of(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED);
 
     @Autowired
     EventRepository eventRepository;
@@ -70,7 +67,7 @@ public class LatestUploadResource {
             fileName = firstEvent.getName();
             if (sortedEvents.stream().anyMatch(e -> TimeTableAction.BUILD_GRAPH.toString().equals(e.getAction()) && JobState.OK.equals(e.getState()))) {
                 state = DataDeliveryStatus.State.OK;
-            } else if (sortedEvents.stream().anyMatch(e -> Sets.newHashSet(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED).contains(e.getState()))) {
+            } else if (sortedEvents.stream().anyMatch(e -> ERROR_JOB_STATES.contains(e.getState()))) {
                 state = DataDeliveryStatus.State.FAILED;
             } else {
                 state = DataDeliveryStatus.State.IN_PROGRESS;

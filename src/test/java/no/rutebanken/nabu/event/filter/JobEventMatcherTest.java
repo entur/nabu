@@ -15,13 +15,14 @@
 
 package no.rutebanken.nabu.event.filter;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.user.dto.organisation.OrganisationDTO;
 import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Set;
 
 public class JobEventMatcherTest {
 
@@ -87,7 +88,7 @@ public class JobEventMatcherTest {
     @Test
     public void allStatesMatchingWildcardAction() {
         EventFilterDTO filter = testFilter();
-        filter.actions = Sets.newHashSet(EventMatcher.ALL_TYPES);
+        filter.actions = Set.of(EventMatcher.ALL_TYPES);
         JobEvent event = matchingJobEvent(filter);
 
         Assert.assertTrue(new JobEventMatcher(filter).matches(event));
@@ -108,9 +109,9 @@ public class JobEventMatcherTest {
     private EventFilterDTO testFilter(OrganisationDTO organisationDTO) {
         EventFilterDTO filter = new EventFilterDTO();
         filter.jobDomain = JobEvent.JobDomain.TIMETABLE.toString();
-        filter.actions = (Sets.newHashSet("testAction"));
+        filter.actions = Set.of("testAction");
         filter.organisation = organisationDTO;
-        filter.states = Sets.newHashSet(JobState.FAILED);
+        filter.states = Set.of(JobState.FAILED);
         return filter;
     }
 

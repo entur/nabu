@@ -52,7 +52,7 @@ public class SystemJobStatusRepositoryImpl extends SimpleJpaRepository<SystemJob
         boolean firstCrit = true;
 
         if (!CollectionUtils.isEmpty(jobDomains)) {
-            jpql.append(firstCrit ? " where " : " and ").append(" s.jobDomain in (:jobDomains) ");
+            jpql.append(" where ").append(" s.jobDomain in (:jobDomains) ");
             parameters.put("jobDomains", jobDomains);
             firstCrit = false;
         }
@@ -60,10 +60,9 @@ public class SystemJobStatusRepositoryImpl extends SimpleJpaRepository<SystemJob
         if (!CollectionUtils.isEmpty(actions)) {
             jpql.append(firstCrit ? " where " : " and ").append(" s.action in (:actions) ");
             parameters.put("actions", actions);
-            firstCrit = false;
         }
 
-        TypedQuery query = entityManager.createQuery(jpql.toString(), SystemJobStatus.class);
+        TypedQuery<SystemJobStatus> query = entityManager.createQuery(jpql.toString(), SystemJobStatus.class);
         query.setHint(QueryHints.CACHEABLE, Boolean.TRUE);
         parameters.forEach((key, value) -> query.setParameter(key, value));
         return query.getResultList();

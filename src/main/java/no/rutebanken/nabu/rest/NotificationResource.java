@@ -45,6 +45,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -120,12 +121,12 @@ public class NotificationResource {
     @GET
     @Path("job_actions/{jobDomain}")
     public List<String> getJobActions(@PathParam("jobDomain") JobEvent.JobDomain jobDomain) {
-        List<String> actions = new ArrayList<>(Arrays.asList(EventMatcher.ALL_TYPES));
+        List<String> actions = new ArrayList<>(Collections.singletonList(EventMatcher.ALL_TYPES));
 
         if (JobEvent.JobDomain.GRAPH.equals(jobDomain)) {
             actions.addAll(Arrays.asList("BUILD_BASE", "BUILD_GRAPH"));
         } else if (JobEvent.JobDomain.TIAMAT.equals(jobDomain)) {
-            actions.addAll(Arrays.asList("EXPORT"));
+            actions.addAll(Collections.singletonList("EXPORT"));
         } else if (JobEvent.JobDomain.GEOCODER.equals(jobDomain)) {
             actions.addAll(Arrays.stream(GeoCoderAction.values()).map(value -> value.name()).collect(Collectors.toList()));
         } else if (JobEvent.JobDomain.TIMETABLE.equals(jobDomain)) {

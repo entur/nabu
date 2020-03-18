@@ -51,7 +51,7 @@ public class AdminSummaryResourceTest {
 		statusList.add(new SystemJobStatus("job2", "", JobState.OK, now.plusMillis(1)));
 
 		Collection<SystemStatusAggregation> aggregations = resource.convertToSystemStatusAggregation(statusList);
-		Assert.assertEquals(aggregations.size(), 2);
+		Assert.assertEquals(2, aggregations.size());
 
 		SystemStatusAggregation agg1 = findAgg(aggregations, "job1");
 		Assert.assertEquals(JobState.STARTED, agg1.currentState);

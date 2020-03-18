@@ -19,6 +19,7 @@ import no.rutebanken.nabu.domain.event.JobState;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Objects;
 
 @Entity
 @Table(uniqueConstraints = {
@@ -88,10 +89,10 @@ public class SystemJobStatus {
 
         SystemJobStatus that = (SystemJobStatus) o;
 
-        if (jobDomain != null ? !jobDomain.equals(that.jobDomain) : that.jobDomain != null) return false;
-        if (action != null ? !action.equals(that.action) : that.action != null) return false;
+        if (!Objects.equals(jobDomain, that.jobDomain)) return false;
+        if (!Objects.equals(action, that.action)) return false;
         if (state != that.state) return false;
-        return lastStatusTime != null ? lastStatusTime.equals(that.lastStatusTime) : that.lastStatusTime == null;
+        return Objects.equals(lastStatusTime, that.lastStatusTime);
     }
 
     @Override

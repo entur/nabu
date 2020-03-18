@@ -25,4 +25,5 @@ public class NabuException extends RuntimeException {
     public NabuException(String message, Throwable cause) {
         super(message, cause);
     }
+
 }

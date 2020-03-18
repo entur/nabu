@@ -16,7 +16,6 @@
 package no.rutebanken.nabu.rest.mapper;
 
 import no.rutebanken.nabu.domain.event.TimeTableAction;
-import no.rutebanken.nabu.rest.domain.JobStatus;
 import org.junit.Assert;
 import org.junit.Test;
 

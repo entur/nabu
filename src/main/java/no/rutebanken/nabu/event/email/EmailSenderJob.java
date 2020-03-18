@@ -20,7 +20,6 @@ import no.rutebanken.nabu.event.ScheduledNotificationService;
 
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -32,7 +31,7 @@ public class EmailSenderJob implements Job {
     private ScheduledNotificationService scheduledNotificationService;
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    public void execute(JobExecutionContext jobExecutionContext) {
         scheduledNotificationService.sendNotifications(NotificationType.EMAIL_BATCH);
     }
 }

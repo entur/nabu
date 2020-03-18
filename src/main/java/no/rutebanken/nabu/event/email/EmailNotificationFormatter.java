@@ -20,6 +20,7 @@ import freemarker.template.Configuration;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.Notification;
+import no.rutebanken.nabu.exceptions.NabuException;
 import no.rutebanken.nabu.provider.ProviderRepository;
 import no.rutebanken.nabu.provider.model.Provider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -80,7 +81,7 @@ public class EmailNotificationFormatter {
         Collection<Notification> filteredNotifications;
         if (notifications.size() > emailNotificationMaxEvents) {
             List<Notification> chronologicalNotifications = new ArrayList<>(notifications);
-            Collections.sort(chronologicalNotifications, (o1, o2) -> o1.getEvent().getEventTime().compareTo(o2.getEvent().getEventTime()));
+            chronologicalNotifications.sort(Comparator.comparing(o -> o.getEvent().getEventTime()));
 
             filteredNotifications = chronologicalNotifications.subList(notifications.size() - emailNotificationMaxEvents, notifications.size());
         } else {
@@ -120,7 +121,7 @@ public class EmailNotificationFormatter {
             return FreeMarkerTemplateUtils.processTemplateIntoString(
                     freemarkerConfiguration.getTemplate("fm_email_notification_template.ftl"), model);
         } catch (Exception e) {
-            throw new RuntimeException("Exception occurred while processing email template:" + e.getMessage(), e);
+            throw new NabuException("Exception occurred while processing email template", e);
         }
 
     }

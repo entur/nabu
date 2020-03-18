@@ -15,7 +15,6 @@
 
 package no.rutebanken.nabu.repository;
 
-import com.google.common.collect.Sets;
 import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.JobEvent;
@@ -29,8 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class NotificationRepositoryImplTest extends BaseIntegrationTest {
 
@@ -47,13 +47,13 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
     public void clearAllRemovesAllNotificationsForJobDomain() {
         JobEvent matchingEvent = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         JobEvent otherDomainEvent = JobEvent.builder().domain("otherDomain").providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
-        CrudEvent crudEvent = CrudEvent.builder().entityType("type").entityClassifier("classifier").version(1l).externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
-        eventRepository.saveAll(Sets.newHashSet(matchingEvent, otherDomainEvent, crudEvent));
+        CrudEvent crudEvent = CrudEvent.builder().entityType("type").entityClassifier("classifier").version(1L).externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
+        eventRepository.saveAll(Set.of(matchingEvent, otherDomainEvent, crudEvent));
 
         Notification matchingEventNotification = new Notification("user1", NotificationType.WEB, matchingEvent);
         Notification otherDomainEventNotification = new Notification("user1", NotificationType.WEB, otherDomainEvent);
         Notification crudEventNotification = new Notification("user1", NotificationType.WEB, crudEvent);
-        notificationRepository.saveAll(Sets.newHashSet(matchingEventNotification, otherDomainEventNotification, crudEventNotification));
+        notificationRepository.saveAll(Set.of(matchingEventNotification, otherDomainEventNotification, crudEventNotification));
 
 
         notificationRepository.clearAll(matchingEvent.getDomain());
@@ -69,14 +69,14 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
         JobEvent matchingEvent = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         JobEvent otherProviderEvent = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(666L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         JobEvent otherDomainEvent = JobEvent.builder().domain("otherDomain").providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
-        CrudEvent crudEvent = CrudEvent.builder().entityType("type").entityClassifier("classifier").version(1l).externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
-        eventRepository.saveAll(Sets.newHashSet(matchingEvent, otherProviderEvent, otherDomainEvent, crudEvent));
+        CrudEvent crudEvent = CrudEvent.builder().entityType("type").entityClassifier("classifier").version(1L).externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
+        eventRepository.saveAll(Set.of(matchingEvent, otherProviderEvent, otherDomainEvent, crudEvent));
 
         Notification matchingEventNotification = new Notification("user1", NotificationType.WEB, matchingEvent);
         Notification otherProviderEventNotification = new Notification("user1", NotificationType.WEB, otherProviderEvent);
         Notification otherDomainEventNotification = new Notification("user1", NotificationType.WEB, otherDomainEvent);
         Notification crudEventNotification = new Notification("user1", NotificationType.WEB, crudEvent);
-        notificationRepository.saveAll(Sets.newHashSet(matchingEventNotification, otherProviderEventNotification, otherDomainEventNotification, crudEventNotification));
+        notificationRepository.saveAll(Set.of(matchingEventNotification, otherProviderEventNotification, otherDomainEventNotification, crudEventNotification));
 
 
         notificationRepository.clear(matchingEvent.getDomain(), matchingEvent.getProviderId());
@@ -91,33 +91,33 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
     @Test
     public void findByUserNameAndTypeAndStatus() {
         JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
-        eventRepository.saveAll(Sets.newHashSet(event));
+        eventRepository.saveAll(Set.of(event));
 
         Notification matchingEventNotification = new Notification("user1", NotificationType.WEB, event);
         Notification otherUserName = new Notification("otherUser", NotificationType.WEB, event);
         Notification otherType = new Notification("user1", NotificationType.EMAIL, event);
         Notification otherStatus = new Notification("user1", NotificationType.WEB, event);
         otherStatus.setStatus(Notification.NotificationStatus.COMPLETE);
-        notificationRepository.saveAll(Sets.newHashSet(matchingEventNotification, otherUserName, otherType, otherStatus));
+        notificationRepository.saveAll(Set.of(matchingEventNotification, otherUserName, otherType, otherStatus));
 
 
         List<Notification> matchingNotifications = notificationRepository.findByUserNameAndTypeAndStatus("user1", NotificationType.WEB, Notification.NotificationStatus.READY);
-        Assert.assertEquals(Arrays.asList(matchingEventNotification), matchingNotifications);
+        Assert.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
     }
 
     @Test
     public void findByTypeAndStatus() {
         JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
-        eventRepository.saveAll(Sets.newHashSet(event));
+        eventRepository.saveAll(Set.of(event));
 
         Notification matchingEventNotification = new Notification("user1", NotificationType.WEB, event);
         Notification otherType = new Notification("user1", NotificationType.EMAIL, event);
         Notification otherStatus = new Notification("user1", NotificationType.WEB, event);
         otherStatus.setStatus(Notification.NotificationStatus.COMPLETE);
-        notificationRepository.saveAll(Sets.newHashSet(matchingEventNotification, otherType, otherStatus));
+        notificationRepository.saveAll(Set.of(matchingEventNotification, otherType, otherStatus));
 
 
         List<Notification> matchingNotifications = notificationRepository.findByTypeAndStatus(NotificationType.WEB, Notification.NotificationStatus.READY);
-        Assert.assertEquals(Arrays.asList(matchingEventNotification), matchingNotifications);
+        Assert.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
     }
 }
