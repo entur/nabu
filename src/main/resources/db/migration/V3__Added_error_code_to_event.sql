@@ -1,0 +1,1 @@
+ALTER TABLE EVENT ADD COLUMN error_code character varying(255);
