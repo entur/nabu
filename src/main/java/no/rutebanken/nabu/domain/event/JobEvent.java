@@ -147,6 +147,7 @@ public class JobEvent extends Event {
                        ", name='" + getName() + '\'' +
                        ", externalId='" + getExternalId() + '\'' +
                        ", username='" + getUsername() + '\'' +
+                       ", errorCode='" + getErrorCode() + '\'' +
                        '}';
     }
 }

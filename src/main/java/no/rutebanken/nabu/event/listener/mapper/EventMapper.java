@@ -41,6 +41,7 @@ public class EventMapper {
         event.setNewValue(dto.newValue);
         event.setComment(dto.comment);
         event.setUsername(dto.username);
+        event.setErrorCode(dto.errorCode);
         event.setLocation(dto.location);
 
         if (dto.geometry != null) {
@@ -62,6 +63,7 @@ public class EventMapper {
         event.setState(dto.state);
         event.setDomain(dto.domain);
         event.setUsername(dto.username);
+        event.setErrorCode(dto.errorCode);
 
         return event;
     }

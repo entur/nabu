@@ -45,6 +45,8 @@ public class JobEventDTO {
 
     public String username;
 
+    public String errorCode;
+
     public static JobEventDTO fromString(String string) {
         try {
             ObjectMapper mapper = new ObjectMapper();
