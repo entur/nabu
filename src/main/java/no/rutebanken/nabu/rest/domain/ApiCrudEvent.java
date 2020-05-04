@@ -51,6 +51,8 @@ public class ApiCrudEvent {
 
     public String username;
 
+    public String errorCode;
+
     public static ApiCrudEvent fromCrudEvent(CrudEvent crudEvent) {
         ApiCrudEvent apiCrudEvent = new ApiCrudEvent();
         apiCrudEvent.eventTime = crudEvent.getEventTime();
@@ -66,6 +68,7 @@ public class ApiCrudEvent {
         apiCrudEvent.newValue = crudEvent.getNewValue();
         apiCrudEvent.comment = crudEvent.getComment();
         apiCrudEvent.username = crudEvent.getUsername();
+        apiCrudEvent.errorCode = crudEvent.getErrorCode();
         return apiCrudEvent;
     }
 

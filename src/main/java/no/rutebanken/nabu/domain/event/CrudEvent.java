@@ -195,6 +195,7 @@ public class CrudEvent extends Event {
                        ", name='" + getName() + '\'' +
                        ", externalId='" + getExternalId() + '\'' +
                        ", username='" + getUsername() + '\'' +
+                       ", errorCode='" + getUsername() + '\'' +
                        ", comment='" + getComment() + '\'' +
                        '}';
     }

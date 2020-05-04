@@ -56,6 +56,9 @@ public class JobStatus {
     @JsonProperty("username")
     private String username;
 
+    @JsonProperty("errorCode")
+    private String errorCode;
+
     public List<JobStatusEvent> getEvents() {
         return events;
     }
@@ -126,5 +129,13 @@ public class JobStatus {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 }

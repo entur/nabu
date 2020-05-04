@@ -52,6 +52,8 @@ public class CrudEventDTO {
 
     public String username;
 
+    public String errorCode;
+
     public Geometry geometry;
 
     public String location;
