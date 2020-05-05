@@ -153,11 +153,12 @@ public class TimeTableJobEventResource {
                 currentAggregation.setCorrelationId(in.getCorrelationId());
                 currentAggregation.setProviderId(in.getProviderId());
                 currentAggregation.setUsername(in.getUsername());
-                currentAggregation.setErrorCode(in.getErrorCode());
+
                 list.add(currentAggregation);
             }
 
-
+            // errorCode overwritten when processing each event so that only the error code for the last event is sent.
+            currentAggregation.setErrorCode(in.getErrorCode());
             currentAggregation.addEvent(JobStatusEvent.createFromJobEvent(in));
         }
 

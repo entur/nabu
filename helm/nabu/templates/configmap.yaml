@@ -49,9 +49,6 @@ data:
     logging.level.org.hibernate.type=WARN
     logging.level.org.springframework.orm.hibernate4.support=WARN
 
-    spring.activemq.user=admin
-    spring.activemq.broker-url=tcp://activemq.default:61616?jms.blobTransferPolicy.uploadUrl=http://activemq.default:8161/fileserver/
-
     #pubsub config
     spring.cloud.gcp.pubsub.project-id={{ .Values.configMap.projectId }}
     spring.cloud.gcp.pubsub.credentials.location=file:/etc/marduk-pubsub-account/marduk-pubsub-credentials.json
