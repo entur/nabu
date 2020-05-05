@@ -123,8 +123,6 @@ spec:
             - mountPath: /etc/marduk-pubsub-account
               name: marduk-pubsub-key
       dnsPolicy: ClusterFirst
-      imagePullSecrets:
-        - name: rutebanken-registry-key
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
