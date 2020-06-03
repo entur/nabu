@@ -29,7 +29,7 @@ spec:
         - command:
             - /cloud_sql_proxy
             - -instances={{ .Values.sql.instance }}
-            - -credential_file=/etc/nabu-service-account/nabu-service-account.json
+            - -credential_file=/etc/nabu-service-account/credentials.json
             - -log_debug_stdout
           image: gcr.io/cloudsql-docker/gce-proxy:1.15
           imagePullPolicy: IfNotPresent
@@ -60,23 +60,28 @@ spec:
             - name: SPRING_MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
-                  key: smtp-user
-                  name: nabu-smtp-credentials
+                  key: nabu-smtp-username
+                  name: ror-nabu-secret
             - name: SPRING_MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: smtp-password
-                  name: nabu-smtp-credentials
+                  key: nabu-smtp-password
+                  name: ror-nabu-secret
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: nabu-db-username
+                  name: ror-nabu-secret      
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  key: password
-                  name: nabu-db-password
+                  key: nabu-db-password
+                  name: ror-nabu-secret
             - name: IAM_KEYCLOAK_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  key: password
-                  name: nabu-keycloak-secret
+                  key: nabu-keycloak-secret
+                  name: ror-nabu-secret
           image: {{ .Values.image.identifier }}
           imagePullPolicy: {{ .Values.image.imagePullPolicy }}
           livenessProbe:
@@ -93,9 +98,6 @@ spec:
           ports:
             - containerPort: {{ .Values.service.http.internalPort }}
               name: http
-              protocol: TCP
-            - containerPort: 8778
-              name: jolokia
               protocol: TCP
           readinessProbe:
             failureThreshold: 3
@@ -120,20 +122,17 @@ spec:
             - mountPath: /etc/application-config
               name: application-config
               readOnly: true
-            - mountPath: /etc/marduk-pubsub-account
-              name: marduk-pubsub-key
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-          - name: nabu-service-account
-            secret:
-              secretName: nabu-service-account
-          - name: marduk-pubsub-key
-            secret:
-              secretName: marduk-pubsub-key
-          - configMap:
-              name: nabu-config
-            name: application-config
+        - name: nabu-service-account
+          secret:
+            defaultMode: 420
+            secretName: ror-nabu-sa-key
+        - name: application-config
+          configMap:
+            defaultMode: 420
+            name: nabu-config
