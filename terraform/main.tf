@@ -69,3 +69,31 @@ resource "kubernetes_secret" "ror-nabu-secret" {
     "nabu-keycloak-secret"     = var.ror-nabu-keycloak-secret
   }
 }
+
+# Create pubsub topics and subscriptions
+
+resource "google_pubsub_topic" "JobEventQueue" {
+  name = "JobEventQueue"
+  project = var.gcp_pubsub_project
+  labels = var.labels
+}
+
+resource "google_pubsub_subscription" "JobEventQueue" {
+  name = "JobEventQueue"
+  topic = google_pubsub_topic.JobEventQueue.name
+  project = var.gcp_pubsub_project
+  labels = var.labels
+}
+
+resource "google_pubsub_topic" "CrudEventQueue" {
+  name = "CrudEventQueue"
+  project = var.gcp_pubsub_project
+  labels = var.labels
+}
+
+resource "google_pubsub_subscription" "CrudEventQueue" {
+  name = "CrudEventQueue"
+  topic = google_pubsub_topic.CrudEventQueue.name
+  project = var.gcp_pubsub_project
+  labels = var.labels
+}

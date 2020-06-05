@@ -68,8 +68,6 @@ data:
     user.registry.rest.service.url=http://baba/services/organisations/users?full=true
     provider.registry.rest.service.url=http://baba/services/providers/
     quartz.enabled=true
-    queue.upload.destination.name=MardukInboundQueue
-    queue.gtfs.upload.destination.name=ExternalFileUploadQueue
     spring.main.allow-bean-definition-overriding=true
 kind: ConfigMap
 metadata:
