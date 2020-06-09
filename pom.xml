@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.rutebanken.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>1.0.8</version>
+        <version>1.0.10</version>
     </parent>
 
     <groupId>no.rutebanken</groupId>
@@ -46,7 +46,7 @@
     </repositories>
 
     <properties>
-        <entur.helpers.version>1.0.12</entur.helpers.version>
+        <entur.helpers.version>1.0.14</entur.helpers.version>
         <keycloak.version>4.8.3.Final</keycloak.version>
 
         <rest-assured.version>4.1.1</rest-assured.version>
@@ -63,7 +63,7 @@
         <swagger-jersey2.version>1.5.23</swagger-jersey2.version>
         <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
 
-        <!--H2 version set to 1.4.199 until the following issue is fixed :  https://hibernate.atlassian.net/projects/HHH/issues/HHH-13711-->
+        <!--H2 version set to 1.4.199 until the following issue is fixed :  https://hibernate.atlassian.net/projects/HHH/issues/HHH-13711 -->
         <com.h2database.version>1.4.199</com.h2database.version>
 
         <entur.google.pubsub.emulator.download.skip>false</entur.google.pubsub.emulator.download.skip>
