@@ -13,4 +13,4 @@ configMap:
     operator: https://operator.entur.org/
 
 ingress:
-  loadBalancerIP: 35.205.233.237
+  loadBalancerIP: 35.187.15.14
