@@ -1,7 +1,7 @@
 env: production
 
 sql:
-  instance: neon-1287:europe-west1:nabu-db-1=tcp:5432
+  instance: entur-ror-prod:europe-west1:nabu-db-1=tcp:5432
 
 configMap:
   pubsubProjectId: neon-1287
