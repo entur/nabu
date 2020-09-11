@@ -47,7 +47,7 @@
 
     <properties>
         <entur.helpers.version>1.0.22</entur.helpers.version>
-        <keycloak.version>4.8.3.Final</keycloak.version>
+        <keycloak.version>11.0.0</keycloak.version>
 
         <rest-assured.version>4.1.1</rest-assured.version>
         <geodb.version>0.9</geodb.version>
@@ -56,7 +56,7 @@
         <postgis-jdbc.version>2.3.0</postgis-jdbc.version>
         <wololo.version>0.13.0</wololo.version>
         <commons-io.version>2.7</commons-io.version>
-        <resteasy.version>3.6.1.Final</resteasy.version>
+        <resteasy.version>3.11.0.Final</resteasy.version>
 
         <guava.version>28.1-jre</guava.version>
 
@@ -66,7 +66,7 @@
         <entur.google.pubsub.emulator.download.skip>false</entur.google.pubsub.emulator.download.skip>
 
         <!-- empty argLine property, the value is set up by Jacoco during unit tests execution -->
-        <argLine></argLine>
+        <argLine/>
 
     </properties>
 
