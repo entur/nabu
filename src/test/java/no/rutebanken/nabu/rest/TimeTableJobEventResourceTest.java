@@ -26,13 +26,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TimeTableJobEventResourceTest {
+class TimeTableJobEventResourceTest {
 
     private static final String ACTION1="IMPORT";
     private static final String ACTION2="EXPORT";
     
     @Test
-    public void testGetStatusForProvider() {
+    void testGetStatusForProvider() {
 
         List<JobEvent> rawEvents = new ArrayList<>();
 

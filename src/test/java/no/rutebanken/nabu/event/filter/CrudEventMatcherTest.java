@@ -33,7 +33,7 @@ import org.locationtech.jts.geom.Polygon;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CrudEventMatcherTest {
+class CrudEventMatcherTest {
 
     private static final String STOP_ENTITY_TYPE = "StopPlace";
 
@@ -42,25 +42,25 @@ public class CrudEventMatcherTest {
     private AdministrativeZoneRepository administrativeZoneRepositoryMock;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         administrativeZoneRepositoryMock = mock(AdministrativeZoneRepository.class);
     }
 
     @Test
-    public void eventMatchingFilterWithoutAdminZonesSpecificType() {
+    void eventMatchingFilterWithoutAdminZonesSpecificType() {
         CrudEvent event = CrudEvent.builder().entityType(STOP_ENTITY_TYPE).entityClassifier(BUS_ENTITY_CLASSIFICATION).build();
         Assertions.assertTrue(new CrudEventMatcher(administrativeZoneRepositoryMock, filter(BUS_ENTITY_CLASSIFICATION)).matches(event));
     }
 
     @Test
-    public void eventMatchingFilterWithoutAdminZonesWildcardType() {
+    void eventMatchingFilterWithoutAdminZonesWildcardType() {
         CrudEvent event = CrudEvent.builder().entityType(STOP_ENTITY_TYPE).entityClassifier("whatever").build();
         Assertions.assertTrue(new CrudEventMatcher(administrativeZoneRepositoryMock, filter(EventMatcher.ALL_TYPES)).matches(event));
     }
 
 
     @Test
-    public void eventInAdminZoneMatching() {
+    void eventInAdminZoneMatching() {
         AdministrativeZone zone = adminZone();
         EventFilterDTO filterWithAdminZone = filter(BUS_ENTITY_CLASSIFICATION);
         filterWithAdminZone.getAdministrativeZoneRefs().add(zone.getId());
@@ -72,7 +72,7 @@ public class CrudEventMatcherTest {
     }
 
     @Test
-    public void eventOutsideAdminZoneNotMatching() {
+    void eventOutsideAdminZoneNotMatching() {
         AdministrativeZone zone = adminZone();
         EventFilterDTO filterWithAdminZone = filter(BUS_ENTITY_CLASSIFICATION);
         filterWithAdminZone.getAdministrativeZoneRefs().add(zone.getId());
@@ -86,13 +86,13 @@ public class CrudEventMatcherTest {
     }
 
     @Test
-    public void eventWrongTypeNotMatchingFilter() {
+    void eventWrongTypeNotMatchingFilter() {
         CrudEvent event = CrudEvent.builder().entityType("NotMatchingType").entityClassifier(BUS_ENTITY_CLASSIFICATION).build();
         Assertions.assertFalse(new CrudEventMatcher(administrativeZoneRepositoryMock, filter(EventMatcher.ALL_TYPES)).matches(event));
     }
 
     @Test
-    public void eventWrongClassificationNotMatchingFilter() {
+    void eventWrongClassificationNotMatchingFilter() {
         CrudEvent event = CrudEvent.builder().entityType(STOP_ENTITY_TYPE).entityClassifier("onstreetTram").build();
         Assertions.assertFalse(new CrudEventMatcher(administrativeZoneRepositoryMock, filter(BUS_ENTITY_CLASSIFICATION)).matches(event));
     }

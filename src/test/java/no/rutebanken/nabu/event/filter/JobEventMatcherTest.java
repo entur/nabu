@@ -24,16 +24,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-public class JobEventMatcherTest {
+class JobEventMatcherTest {
 
     @Test
-    public void eventMatchingFilterWithoutOrganisationSet() {
+    void eventMatchingFilterWithoutOrganisationSet() {
         EventFilterDTO filter = testFilter();
         Assertions.assertTrue(new JobEventMatcher(filter).matches(matchingJobEvent(filter)));
     }
 
     @Test
-    public void eventMatchingFilterWithOrganisationSet() {
+    void eventMatchingFilterWithOrganisationSet() {
         EventFilterDTO filter = testFilter(organisationDTO("KOK"));
         JobEvent orgSpaceEvent = matchingJobEvent(filter);
         Assertions.assertTrue(new JobEventMatcher(filter).matches(orgSpaceEvent));
@@ -44,7 +44,7 @@ public class JobEventMatcherTest {
     }
 
     @Test
-    public void eventWithoutRefNotNotMatchingFilterWithOrganisationSet() {
+    void eventWithoutRefNotNotMatchingFilterWithOrganisationSet() {
         EventFilterDTO filter = testFilter(organisationDTO("KOK"));
         JobEvent event = matchingJobEvent(filter);
         event.setReferential(null);
@@ -53,7 +53,7 @@ public class JobEventMatcherTest {
 
 
     @Test
-    public void eventWithOtherRefNotNotMatchingFilterWithOrganisationSet() {
+    void eventWithOtherRefNotNotMatchingFilterWithOrganisationSet() {
         EventFilterDTO filter = testFilter(organisationDTO("KOK"));
         JobEvent event = matchingJobEvent(filter);
         event.setReferential("otherRef");
@@ -62,7 +62,7 @@ public class JobEventMatcherTest {
 
 
     @Test
-    public void eventWithDifferentJobDomainNotMatchingFilterWithoutOrganisationSet() {
+    void eventWithDifferentJobDomainNotMatchingFilterWithoutOrganisationSet() {
         EventFilterDTO filter = testFilter();
         JobEvent event = matchingJobEvent(filter);
         event.setDomain("otherDomain");
@@ -70,7 +70,7 @@ public class JobEventMatcherTest {
     }
 
     @Test
-    public void eventWithDifferentActionNotMatchingFilterWithoutOrganisationSet() {
+    void eventWithDifferentActionNotMatchingFilterWithoutOrganisationSet() {
         EventFilterDTO filter = testFilter();
         JobEvent event = matchingJobEvent(filter);
         event.setAction("otherAction");
@@ -78,7 +78,7 @@ public class JobEventMatcherTest {
     }
 
     @Test
-    public void eventWithDifferentStateNotMatchingFilterWithoutOrganisationSet() {
+    void eventWithDifferentStateNotMatchingFilterWithoutOrganisationSet() {
         EventFilterDTO filter = testFilter();
         JobEvent event = matchingJobEvent(filter);
         event.setState(JobState.PENDING);
@@ -86,7 +86,7 @@ public class JobEventMatcherTest {
     }
 
     @Test
-    public void allStatesMatchingWildcardAction() {
+    void allStatesMatchingWildcardAction() {
         EventFilterDTO filter = testFilter();
         filter.actions = Set.of(EventMatcher.ALL_TYPES);
         JobEvent event = matchingJobEvent(filter);

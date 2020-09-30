@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 import static org.mockito.Mockito.when;
 
-public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
+class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private JobEventProcessor jobEventProcessor;
@@ -54,14 +54,14 @@ public class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
     private UserNotificationEventHandler userNotificationEventHandler;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         userNotificationEventHandler.setUserRepository(userRepositoryMock);
         when(userRepositoryMock.findAll()).thenReturn(new ArrayList<>());
     }
 
 
     @Test
-    public void jobEventUpdatesSystemJobStatus() {
+    void jobEventUpdatesSystemJobStatus() {
         Instant now = Instant.now();
         JobEventDTO firstPendingEvent = createEvent(JobState.PENDING, now);
         jobEventProcessor.processMessage(toJson(firstPendingEvent));

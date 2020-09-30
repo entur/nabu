@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public class EmailNotificationFormatterTest extends BaseIntegrationTest {
+class EmailNotificationFormatterTest extends BaseIntegrationTest {
 
     @Autowired
     private EmailNotificationFormatter emailNotificationFormatter;
@@ -45,7 +45,7 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
     private List<Provider> providerList = Collections.singletonList(new Provider(1011L, "ProviderName", null));
 
     @Test
-    public void formatMailInNorwegian() throws FileNotFoundException {
+    void formatMailInNorwegian() throws FileNotFoundException {
         Set<Notification> notifications = Set.of(jobNotification("file.xml"), maxCrudNotification("NSR:StopPlace:16688", Instant.now()));
 
         String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("no"), providerList);
@@ -61,7 +61,7 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void formatMailWithTooManyEvents() {
+    void formatMailWithTooManyEvents() {
         Instant now = Instant.now();
 
         Notification oldestEvent = maxCrudNotification("NSR:StopPlace:2", now.minusMillis(5000));

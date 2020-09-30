@@ -28,19 +28,19 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DataDeliveryTimeTableJobEventResourceTest {
+class DataDeliveryTimeTableJobEventResourceTest {
 
     private static final String JOB_DOMAIN = JobEvent.JobDomain.TIMETABLE.toString();
     Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
     @Test
-    public void testMapToDataDeliveryJobEventEmptyList() {
+    void testMapToDataDeliveryJobEventEmptyList() {
         DataDeliveryStatus dataDeliveryJobEvent = new LatestUploadResource().toDataDeliveryStatus(new ArrayList<>());
         Assertions.assertNull(dataDeliveryJobEvent.date);
         Assertions.assertNull(dataDeliveryJobEvent.state);
     }
 
     @Test
-    public void testMapToDataDeliveryJobEventSuccess() {
+    void testMapToDataDeliveryJobEventSuccess() {
         JobEvent s1 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.OK, "corr-id-1", now, "ost");
         JobEvent s2 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.BUILD_GRAPH.toString(), JobState.OK, "corr-id-1", now.plusMillis(1000), "ost");
         JobEvent s3 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.EXPORT_NETEX.toString(), JobState.PENDING, "corr-id-1", now.plusMillis(2000), "ost");
@@ -50,7 +50,7 @@ public class DataDeliveryTimeTableJobEventResourceTest {
     }
 
     @Test
-    public void testMapToDataDeliveryJobEventInProgress() {
+    void testMapToDataDeliveryJobEventInProgress() {
 
         JobEvent s1 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.OK, "corr-id-1", now, "ost");
         JobEvent s2 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.BUILD_GRAPH.toString(), JobState.STARTED, "corr-id-1", now.plusMillis(1000), "ost");
@@ -61,7 +61,7 @@ public class DataDeliveryTimeTableJobEventResourceTest {
     }
 
     @Test
-    public void testMapToDataDeliveryJobEventFailed() {
+    void testMapToDataDeliveryJobEventFailed() {
         JobEvent s1 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.OK, "corr-id-1", now, "ost");
         JobEvent s2 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.FILE_CLASSIFICATION.toString(), JobState.FAILED, "corr-id-1", now.plusMillis(1000), "ost");
         DataDeliveryStatus dataDeliveryJobEvent = new LatestUploadResource().toDataDeliveryStatus(Arrays.asList(s1, s2));

@@ -28,17 +28,17 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class AdminSummaryResourceTest {
+class AdminSummaryResourceTest {
 
 	@Test
-	public void testConvertToSystemStatusAggregationEmptyCollection() {
+	void testConvertToSystemStatusAggregationEmptyCollection() {
 		AdminSummaryResource resource = new AdminSummaryResource();
 		Collection<SystemStatusAggregation> aggregations = resource.convertToSystemStatusAggregation(new ArrayList<>());
 		Assertions.assertTrue(aggregations.isEmpty());
 	}
 
 	@Test
-	public void testConvertToSystemStatusAggregation() {
+	void testConvertToSystemStatusAggregation() {
 		AdminSummaryResource resource = new AdminSummaryResource();
 		List<SystemJobStatus> statusList = new ArrayList<>();
 		

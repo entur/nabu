@@ -27,14 +27,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class SystemJobStatusRepositoryImplTest extends BaseIntegrationTest {
+class SystemJobStatusRepositoryImplTest extends BaseIntegrationTest {
 
     @Autowired
     private SystemJobStatusRepository systemJobStatusRepository;
 
 
     @Test
-    public void testFind() {
+    void testFind() {
 
         SystemJobStatus s1 = new SystemJobStatus("dom1", "type1", JobState.PENDING, Instant.now());
         SystemJobStatus s2 = new SystemJobStatus("dom1", "type2", JobState.OK, Instant.now().plusMillis(1000));

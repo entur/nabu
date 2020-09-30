@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-public class EnumMapperTest {
+class EnumMapperTest {
 
     @Test
-    public void testEnumConversion() {
+    void testEnumConversion() {
         List<TimeTableAction> converted = EnumMapper.convertEnums(Arrays.asList(TimeTableAction.CLEAN, TimeTableAction.BUILD_GRAPH), TimeTableAction.class);
         Assertions.assertEquals(2, converted.size());
         Assertions.assertTrue(converted.contains(TimeTableAction.BUILD_GRAPH));

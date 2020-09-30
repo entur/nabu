@@ -31,7 +31,7 @@ import org.springframework.cloud.gcp.pubsub.core.PubSubTemplate;
 import static org.mockito.Mockito.timeout;
 
 
-public class PubSubEventIntegrationTest extends BaseIntegrationTest {
+class PubSubEventIntegrationTest extends BaseIntegrationTest {
 
 
     @Autowired
@@ -46,7 +46,7 @@ public class PubSubEventIntegrationTest extends BaseIntegrationTest {
 
 
     @Test
-    public void testConsumeJobEventFromPubSub() {
+    void testConsumeJobEventFromPubSub() {
 
         JobEventDTO jobEventDTO = new JobEventDTO();
         jobEventDTO.name = "testName";

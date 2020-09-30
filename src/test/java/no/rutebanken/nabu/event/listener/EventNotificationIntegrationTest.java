@@ -41,7 +41,7 @@ import java.util.Set;
 import static org.mockito.Mockito.when;
 
 
-public class EventNotificationIntegrationTest extends BaseIntegrationTest {
+class EventNotificationIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private JobEventProcessor jobEventProcessor;
 
@@ -55,12 +55,12 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
     private UserNotificationEventHandler userNotificationEventHandler;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         userNotificationEventHandler.setUserRepository(userRepositoryMock);
     }
 
     @Test
-    public void eventsTriggerNotifications() {
+    void eventsTriggerNotifications() {
         String activeFilterAction = "active";
         String inactiveFilterAction = "inActive";
 

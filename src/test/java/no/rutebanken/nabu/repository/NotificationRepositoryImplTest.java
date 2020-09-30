@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class NotificationRepositoryImplTest extends BaseIntegrationTest {
+class NotificationRepositoryImplTest extends BaseIntegrationTest {
 
     @Autowired
     EventRepository eventRepository;
@@ -44,7 +44,7 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
     EntityManager entityManager;
 
     @Test
-    public void clearAllRemovesAllNotificationsForJobDomain() {
+    void clearAllRemovesAllNotificationsForJobDomain() {
         JobEvent matchingEvent = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         JobEvent otherDomainEvent = JobEvent.builder().domain("otherDomain").providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         CrudEvent crudEvent = CrudEvent.builder().entityType("type").entityClassifier("classifier").version(1L).externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
@@ -65,7 +65,7 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void clearRemovesAllNotificationsForJobDomainAndProvider() {
+    void clearRemovesAllNotificationsForJobDomainAndProvider() {
         JobEvent matchingEvent = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         JobEvent otherProviderEvent = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(666L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         JobEvent otherDomainEvent = JobEvent.builder().domain("otherDomain").providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
@@ -89,7 +89,7 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void findByUserNameAndTypeAndStatus() {
+    void findByUserNameAndTypeAndStatus() {
         JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         eventRepository.saveAll(Set.of(event));
 
@@ -106,7 +106,7 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void findByTypeAndStatus() {
+    void findByTypeAndStatus() {
         JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(Instant.now()).build();
         eventRepository.saveAll(Set.of(event));
 
