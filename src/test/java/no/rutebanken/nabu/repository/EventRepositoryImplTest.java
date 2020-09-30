@@ -21,8 +21,8 @@ import no.rutebanken.nabu.domain.event.CrudEventSearch;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
@@ -97,8 +97,8 @@ public class EventRepositoryImplTest extends BaseIntegrationTest {
 
 
         List<JobEvent> statusList = repository.getLatestTimetableFileTransfer(3L);
-        Assert.assertEquals(2, statusList.size());
-        Assert.assertTrue(statusList.containsAll(Arrays.asList(s1, s2)));
+        Assertions.assertEquals(2, statusList.size());
+        Assertions.assertTrue(statusList.containsAll(Arrays.asList(s1, s2)));
     }
 
 
@@ -113,8 +113,8 @@ public class EventRepositoryImplTest extends BaseIntegrationTest {
 
         repository.clearAll(JobEvent.JobDomain.TIMETABLE.toString());
 
-        Assert.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(3L), null, null, null, null, null, null).isEmpty());
-        Assert.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(4L), null, null, null, null, null, null).isEmpty());
+        Assertions.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(3L), null, null, null, null, null, null).isEmpty());
+        Assertions.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(4L), null, null, null, null, null, null).isEmpty());
     }
 
     @Test
@@ -128,8 +128,8 @@ public class EventRepositoryImplTest extends BaseIntegrationTest {
 
         repository.clear(JobEvent.JobDomain.TIMETABLE.toString(), 3L);
 
-        Assert.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(3L), null, null, null, null, null, null).isEmpty());
-        Assert.assertEquals(1, repository.findTimetableJobEvents(Collections.singletonList(4L), null, null, null, null, null, null).size());
+        Assertions.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(3L), null, null, null, null, null, null).isEmpty());
+        Assertions.assertEquals(1, repository.findTimetableJobEvents(Collections.singletonList(4L), null, null, null, null, null, null).size());
     }
 
     @Test
@@ -157,7 +157,7 @@ public class EventRepositoryImplTest extends BaseIntegrationTest {
                         refTime);
 
         List<CrudEvent> crudEvents = repository.findCrudEvents(search);
-        Assert.assertEquals(1, crudEvents.size());
-        Assert.assertEquals(savedCrudEvent.getPk(), crudEvents.get(0).getPk());
+        Assertions.assertEquals(1, crudEvents.size());
+        Assertions.assertEquals(savedCrudEvent.getPk(), crudEvents.get(0).getPk());
     }
 }

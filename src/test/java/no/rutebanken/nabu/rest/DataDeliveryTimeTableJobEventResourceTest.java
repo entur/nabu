@@ -20,8 +20,8 @@ import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.rest.domain.DataDeliveryStatus;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -35,8 +35,8 @@ public class DataDeliveryTimeTableJobEventResourceTest {
     @Test
     public void testMapToDataDeliveryJobEventEmptyList() {
         DataDeliveryStatus dataDeliveryJobEvent = new LatestUploadResource().toDataDeliveryStatus(new ArrayList<>());
-        Assert.assertNull(dataDeliveryJobEvent.date);
-        Assert.assertNull(dataDeliveryJobEvent.state);
+        Assertions.assertNull(dataDeliveryJobEvent.date);
+        Assertions.assertNull(dataDeliveryJobEvent.state);
     }
 
     @Test
@@ -45,8 +45,8 @@ public class DataDeliveryTimeTableJobEventResourceTest {
         JobEvent s2 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.BUILD_GRAPH.toString(), JobState.OK, "corr-id-1", now.plusMillis(1000), "ost");
         JobEvent s3 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.EXPORT_NETEX.toString(), JobState.PENDING, "corr-id-1", now.plusMillis(2000), "ost");
         DataDeliveryStatus dataDeliveryJobEvent = new LatestUploadResource().toDataDeliveryStatus(Arrays.asList(s1, s2, s3));
-        Assert.assertEquals(s1.getEventTime(), dataDeliveryJobEvent.date.toInstant());
-        Assert.assertEquals(DataDeliveryStatus.State.OK, dataDeliveryJobEvent.state);
+        Assertions.assertEquals(s1.getEventTime(), dataDeliveryJobEvent.date.toInstant());
+        Assertions.assertEquals(DataDeliveryStatus.State.OK, dataDeliveryJobEvent.state);
     }
 
     @Test
@@ -56,8 +56,8 @@ public class DataDeliveryTimeTableJobEventResourceTest {
         JobEvent s2 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.BUILD_GRAPH.toString(), JobState.STARTED, "corr-id-1", now.plusMillis(1000), "ost");
         JobEvent s3 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.EXPORT_NETEX.toString(), JobState.OK, "corr-id-1", now.plusMillis(2000), "ost");
         DataDeliveryStatus dataDeliveryJobEvent = new LatestUploadResource().toDataDeliveryStatus(Arrays.asList(s1, s2, s3));
-        Assert.assertEquals(s1.getEventTime(), dataDeliveryJobEvent.date.toInstant());
-        Assert.assertEquals(DataDeliveryStatus.State.IN_PROGRESS, dataDeliveryJobEvent.state);
+        Assertions.assertEquals(s1.getEventTime(), dataDeliveryJobEvent.date.toInstant());
+        Assertions.assertEquals(DataDeliveryStatus.State.IN_PROGRESS, dataDeliveryJobEvent.state);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class DataDeliveryTimeTableJobEventResourceTest {
         JobEvent s1 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.OK, "corr-id-1", now, "ost");
         JobEvent s2 = new JobEvent(JOB_DOMAIN, "file1.zip", 3L, "1", TimeTableAction.FILE_CLASSIFICATION.toString(), JobState.FAILED, "corr-id-1", now.plusMillis(1000), "ost");
         DataDeliveryStatus dataDeliveryJobEvent = new LatestUploadResource().toDataDeliveryStatus(Arrays.asList(s1, s2));
-        Assert.assertEquals(s1.getEventTime(), dataDeliveryJobEvent.date.toInstant());
-        Assert.assertEquals(DataDeliveryStatus.State.FAILED, dataDeliveryJobEvent.state);
+        Assertions.assertEquals(s1.getEventTime(), dataDeliveryJobEvent.date.toInstant());
+        Assertions.assertEquals(DataDeliveryStatus.State.FAILED, dataDeliveryJobEvent.state);
     }
 }

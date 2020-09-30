@@ -20,8 +20,8 @@ import freemarker.template.SimpleObjectWrapper;
 import freemarker.template.TemplateModelException;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
@@ -102,9 +102,9 @@ public class JobLinkResolverMethodTest {
         try {
             Object link = jobLinkResolverMethod.exec(Collections.singletonList(new BeanModel(jobEvent, new SimpleObjectWrapper())));
             if (relativeExpectedLink == null) {
-                Assert.assertNull(link);
+                Assertions.assertNull(link);
             } else {
-                Assert.assertEquals(BASE_URL + relativeExpectedLink, link);
+                Assertions.assertEquals(BASE_URL + relativeExpectedLink, link);
             }
         } catch (TemplateModelException e) {
             throw new RuntimeException(e);

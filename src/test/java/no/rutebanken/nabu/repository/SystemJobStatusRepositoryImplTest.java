@@ -18,9 +18,8 @@ package no.rutebanken.nabu.repository;
 import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.SystemJobStatus;
 import no.rutebanken.nabu.domain.event.JobState;
-
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
@@ -43,10 +42,10 @@ public class SystemJobStatusRepositoryImplTest extends BaseIntegrationTest {
 
         systemJobStatusRepository.saveAll(Arrays.asList(s1, s2, s3));
 
-        Assert.assertEquals(3, systemJobStatusRepository.find(null, null).size());
+        Assertions.assertEquals(3, systemJobStatusRepository.find(null, null).size());
 
-        Assert.assertEquals(Collections.singletonList(s3), systemJobStatusRepository.find(Collections.singletonList("dom2"), null));
-        Assert.assertEquals(Collections.singletonList(s2), systemJobStatusRepository.find(new ArrayList<>(), Collections.singletonList("type2")));
-        Assert.assertEquals(Collections.singletonList(s1), systemJobStatusRepository.find(Collections.singletonList("dom1"), Collections.singletonList("type1")));
+        Assertions.assertEquals(Collections.singletonList(s3), systemJobStatusRepository.find(Collections.singletonList("dom2"), null));
+        Assertions.assertEquals(Collections.singletonList(s2), systemJobStatusRepository.find(new ArrayList<>(), Collections.singletonList("type2")));
+        Assertions.assertEquals(Collections.singletonList(s1), systemJobStatusRepository.find(Collections.singletonList("dom1"), Collections.singletonList("type1")));
     }
 }

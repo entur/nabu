@@ -22,8 +22,8 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.domain.event.NotificationType;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -59,9 +59,9 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
         notificationRepository.clearAll(matchingEvent.getDomain());
         entityManager.clear();
 
-        Assert.assertFalse(notificationRepository.findById(matchingEventNotification.getPk()).isPresent());
-        Assert.assertTrue(notificationRepository.findById(otherDomainEventNotification.getPk()).isPresent());
-        Assert.assertTrue(notificationRepository.findById(crudEventNotification.getPk()).isPresent());
+        Assertions.assertFalse(notificationRepository.findById(matchingEventNotification.getPk()).isPresent());
+        Assertions.assertTrue(notificationRepository.findById(otherDomainEventNotification.getPk()).isPresent());
+        Assertions.assertTrue(notificationRepository.findById(crudEventNotification.getPk()).isPresent());
     }
 
     @Test
@@ -82,10 +82,10 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
         notificationRepository.clear(matchingEvent.getDomain(), matchingEvent.getProviderId());
         entityManager.clear();
 
-        Assert.assertFalse(notificationRepository.findById(matchingEventNotification.getPk()).isPresent());
-        Assert.assertTrue(notificationRepository.findById(otherProviderEventNotification.getPk()).isPresent());
-        Assert.assertTrue(notificationRepository.findById(otherDomainEventNotification.getPk()).isPresent());
-        Assert.assertTrue(notificationRepository.findById(crudEventNotification.getPk()).isPresent());
+        Assertions.assertFalse(notificationRepository.findById(matchingEventNotification.getPk()).isPresent());
+        Assertions.assertTrue(notificationRepository.findById(otherProviderEventNotification.getPk()).isPresent());
+        Assertions.assertTrue(notificationRepository.findById(otherDomainEventNotification.getPk()).isPresent());
+        Assertions.assertTrue(notificationRepository.findById(crudEventNotification.getPk()).isPresent());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
 
 
         List<Notification> matchingNotifications = notificationRepository.findByUserNameAndTypeAndStatus("user1", NotificationType.WEB, Notification.NotificationStatus.READY);
-        Assert.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
+        Assertions.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
     }
 
     @Test
@@ -118,6 +118,6 @@ public class NotificationRepositoryImplTest extends BaseIntegrationTest {
 
 
         List<Notification> matchingNotifications = notificationRepository.findByTypeAndStatus(NotificationType.WEB, Notification.NotificationStatus.READY);
-        Assert.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
+        Assertions.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
     }
 }
