@@ -21,8 +21,8 @@ import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.provider.model.Provider;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public class EmailNotificationFormatterTest extends BaseIntegrationTest {
+class EmailNotificationFormatterTest extends BaseIntegrationTest {
 
     @Autowired
     private EmailNotificationFormatter emailNotificationFormatter;
@@ -45,7 +45,7 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
     private List<Provider> providerList = Collections.singletonList(new Provider(1011L, "ProviderName", null));
 
     @Test
-    public void formatMailInNorwegian() throws FileNotFoundException {
+    void formatMailInNorwegian() throws FileNotFoundException {
         Set<Notification> notifications = Set.of(jobNotification("file.xml"), maxCrudNotification("NSR:StopPlace:16688", Instant.now()));
 
         String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("no"), providerList);
@@ -53,15 +53,15 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
         PrintWriter out = new PrintWriter("target/email.html");
         out.write(msg);
         out.close();
-        Assert.assertTrue(msg.startsWith("<html>"));
-        Assert.assertFalse("Expected all message keys to have been resolved", msg.contains("notification.email"));
-        Assert.assertTrue(msg.contains("hendelser"));   // TODO norwegian still missing lots of values. How do we verify?
+        Assertions.assertTrue(msg.startsWith("<html>"));
+        Assertions.assertFalse(msg.contains("notification.email"), "Expected all message keys to have been resolved");
+        Assertions.assertTrue(msg.contains("hendelser"));   // TODO norwegian still missing lots of values. How do we verify?
 
-        Assert.assertTrue("Should be able to map providerId to name", msg.contains(providerList.get(0).getName()));
+        Assertions.assertTrue(msg.contains(providerList.get(0).getName()), "Should be able to map providerId to name");
     }
 
     @Test
-    public void formatMailWithTooManyEvents() {
+    void formatMailWithTooManyEvents() {
         Instant now = Instant.now();
 
         Notification oldestEvent = maxCrudNotification("NSR:StopPlace:2", now.minusMillis(5000));
@@ -72,13 +72,13 @@ public class EmailNotificationFormatterTest extends BaseIntegrationTest {
 
         String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("en"), providerList);
         System.out.println(msg);
-        Assert.assertTrue(msg.startsWith("<html>"));
-        Assert.assertFalse("Expected all message keys to have been resolved", msg.contains("notification.email"));
+        Assertions.assertTrue(msg.startsWith("<html>"));
+        Assertions.assertFalse(msg.contains("notification.email"), "Expected all message keys to have been resolved");
 
         String messageTooManyEvent =  messageSource.getMessage("notification.email.truncated", new String[] {"6","5"}, Locale.getDefault());
-        Assert.assertTrue(msg.contains(messageTooManyEvent));
+        Assertions.assertTrue(msg.contains(messageTooManyEvent));
 
-        Assert.assertFalse("Expected oldest event to be omitted", msg.contains(oldestEvent.getEvent().getName()));
+        Assertions.assertFalse(msg.contains(oldestEvent.getEvent().getName()), "Expected oldest event to be omitted");
     }
 
 

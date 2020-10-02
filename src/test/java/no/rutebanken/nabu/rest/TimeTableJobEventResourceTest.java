@@ -18,21 +18,21 @@ package no.rutebanken.nabu.rest;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.rest.domain.JobStatus;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TimeTableJobEventResourceTest {
+class TimeTableJobEventResourceTest {
 
     private static final String ACTION1="IMPORT";
     private static final String ACTION2="EXPORT";
     
     @Test
-    public void testGetStatusForProvider() {
+    void testGetStatusForProvider() {
 
         List<JobEvent> rawEvents = new ArrayList<>();
 
@@ -51,34 +51,34 @@ public class TimeTableJobEventResourceTest {
 
         List<JobStatus> listStatus = new TimeTableJobEventResource().convert(rawEvents);
 
-        Assert.assertNotNull(listStatus);
-        Assert.assertEquals(2, listStatus.size());
+        Assertions.assertNotNull(listStatus);
+        Assertions.assertEquals(2, listStatus.size());
 
         JobStatus a = listStatus.get(0);
 
-        Assert.assertEquals("a", a.getCorrelationId());
-        Assert.assertEquals(ACTION1, a.getEvents().get(0).action);
-        Assert.assertEquals(JobStatus.State.FAILED, a.getEndStatus());
-        Assert.assertEquals(3, a.getEvents().size());
-        Assert.assertEquals(Date.from(t0.plusMillis(1)), a.getFirstEvent());
-        Assert.assertEquals(Date.from(t0.plusMillis(3)), a.getLastEvent());
+        Assertions.assertEquals("a", a.getCorrelationId());
+        Assertions.assertEquals(ACTION1, a.getEvents().get(0).action);
+        Assertions.assertEquals(JobStatus.State.FAILED, a.getEndStatus());
+        Assertions.assertEquals(3, a.getEvents().size());
+        Assertions.assertEquals(Date.from(t0.plusMillis(1)), a.getFirstEvent());
+        Assertions.assertEquals(Date.from(t0.plusMillis(3)), a.getLastEvent());
 
-        Assert.assertEquals(Long.valueOf(2), a.getEvents().get(1).chouetteJobId);
+        Assertions.assertEquals(Long.valueOf(2), a.getEvents().get(1).chouetteJobId);
 
         JobStatus b = listStatus.get(1);
 
-        Assert.assertEquals("b", b.getCorrelationId());
-        Assert.assertEquals(ACTION2, b.getEvents().get(0).action);
-        Assert.assertEquals(JobStatus.State.OK, b.getEndStatus());
-        Assert.assertEquals(3, b.getEvents().size());
-        Assert.assertEquals(Date.from(t0.plusMillis(4)), b.getFirstEvent());
-        Assert.assertEquals(Date.from(t0.plusMillis(6)), b.getLastEvent());
+        Assertions.assertEquals("b", b.getCorrelationId());
+        Assertions.assertEquals(ACTION2, b.getEvents().get(0).action);
+        Assertions.assertEquals(JobStatus.State.OK, b.getEndStatus());
+        Assertions.assertEquals(3, b.getEvents().size());
+        Assertions.assertEquals(Date.from(t0.plusMillis(4)), b.getFirstEvent());
+        Assertions.assertEquals(Date.from(t0.plusMillis(6)), b.getLastEvent());
 
-        Assert.assertEquals("ost", b.getEvents().get(0).referential);
-        Assert.assertEquals(Long.valueOf(1), b.getEvents().get(1).chouetteJobId);
-        Assert.assertEquals("pb", b.getEvents().get(1).referential);
-        Assert.assertEquals(Long.valueOf(1), b.getEvents().get(2).chouetteJobId);
-        Assert.assertEquals("pb", b.getEvents().get(2).referential);
+        Assertions.assertEquals("ost", b.getEvents().get(0).referential);
+        Assertions.assertEquals(Long.valueOf(1), b.getEvents().get(1).chouetteJobId);
+        Assertions.assertEquals("pb", b.getEvents().get(1).referential);
+        Assertions.assertEquals(Long.valueOf(1), b.getEvents().get(2).chouetteJobId);
+        Assertions.assertEquals("pb", b.getEvents().get(2).referential);
     }
 
 

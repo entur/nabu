@@ -19,8 +19,8 @@ import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.event.EventService;
 import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
@@ -31,7 +31,7 @@ import org.springframework.cloud.gcp.pubsub.core.PubSubTemplate;
 import static org.mockito.Mockito.timeout;
 
 
-public class PubSubEventIntegrationTest extends BaseIntegrationTest {
+class PubSubEventIntegrationTest extends BaseIntegrationTest {
 
 
     @Autowired
@@ -46,7 +46,7 @@ public class PubSubEventIntegrationTest extends BaseIntegrationTest {
 
 
     @Test
-    public void testConsumeJobEventFromPubSub() {
+    void testConsumeJobEventFromPubSub() {
 
         JobEventDTO jobEventDTO = new JobEventDTO();
         jobEventDTO.name = "testName";
@@ -59,9 +59,9 @@ public class PubSubEventIntegrationTest extends BaseIntegrationTest {
         Mockito.verify(eventService, timeout(5000).times(1)).addEvent(captor.capture());
         Event event = captor.getValue();
 
-        Assert.assertEquals("testName", event.getName());
-        Assert.assertEquals("testAction", event.getAction());
-        Assert.assertEquals("testCorrelationId", event.getCorrelationId());
+        Assertions.assertEquals("testName", event.getName());
+        Assertions.assertEquals("testAction", event.getAction());
+        Assertions.assertEquals("testCorrelationId", event.getCorrelationId());
 
     }
 }

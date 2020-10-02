@@ -27,9 +27,9 @@ import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
 import no.rutebanken.nabu.event.user.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.event.user.dto.user.UserDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,7 +41,7 @@ import java.util.Set;
 import static org.mockito.Mockito.when;
 
 
-public class EventNotificationIntegrationTest extends BaseIntegrationTest {
+class EventNotificationIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private JobEventProcessor jobEventProcessor;
 
@@ -54,13 +54,13 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private UserNotificationEventHandler userNotificationEventHandler;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         userNotificationEventHandler.setUserRepository(userRepositoryMock);
     }
 
     @Test
-    public void eventsTriggerNotifications() {
+    void eventsTriggerNotifications() {
         String activeFilterAction = "active";
         String inactiveFilterAction = "inActive";
 
@@ -87,8 +87,8 @@ public class EventNotificationIntegrationTest extends BaseIntegrationTest {
 
         List<Notification> notifications = notificationRepository.findByUserNameAndTypeAndStatus(user.getUsername(), NotificationType.WEB, Notification.NotificationStatus.READY);
 
-        Assert.assertEquals(1, notifications.size());
-        Assert.assertEquals(notifications.get(0).getEvent().getEventTime(), matchingEvent.eventTime);
+        Assertions.assertEquals(1, notifications.size());
+        Assertions.assertEquals(notifications.get(0).getEvent().getEventTime(), matchingEvent.eventTime);
     }
 
     private EventFilterDTO jobEventFilter(String action, JobState jobState) {
