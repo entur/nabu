@@ -5,7 +5,7 @@ replicas: 1
 
 rollingUpdate:
   maxSurge: 1
-  maxUnavailable: 1
+  maxUnavailable: 0
 image:
   identifier: ${artifact.metadata.image}
   imagePullPolicy: Always
