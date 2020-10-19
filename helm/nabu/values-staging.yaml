@@ -4,7 +4,7 @@ sql:
   instance: entur-ror-test:europe-west1:nabu-db-1=tcp:5432
 
 configMap:
-  pubsubProjectId: radon-1287
+  pubsubProjectId: entur-ror-test
   keycloakUrl: https://kc-stage.devstage.entur.io/auth
   mail:
     stopPlace: https://stoppested-stage.entur.org/

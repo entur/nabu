@@ -62,8 +62,6 @@ resource "kubernetes_secret" "ror-nabu-secret" {
   }
 }
 
-/** Deactivate resource creation until workloads are moved to the new cluster.
-
 resource "google_pubsub_topic" "JobEventQueue" {
   name = "JobEventQueue"
   project = var.gcp_pubsub_project
@@ -89,4 +87,4 @@ resource "google_pubsub_subscription" "CrudEventQueue" {
   project = var.gcp_pubsub_project
   labels = var.labels
 }
-**/
+
