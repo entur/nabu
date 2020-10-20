@@ -73,7 +73,9 @@ resource "google_pubsub_subscription" "JobEventQueue" {
   topic = google_pubsub_topic.JobEventQueue.name
   project = var.gcp_pubsub_project
   labels = var.labels
-  retry_policy {}
+  retry_policy {
+    minimum_backoff = "10s"
+  }
 }
 
 resource "google_pubsub_topic" "CrudEventQueue" {
@@ -87,6 +89,8 @@ resource "google_pubsub_subscription" "CrudEventQueue" {
   topic = google_pubsub_topic.CrudEventQueue.name
   project = var.gcp_pubsub_project
   labels = var.labels
-  retry_policy {}
+  retry_policy {
+    minimum_backoff = "10s"
+  }
 }
 
