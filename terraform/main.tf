@@ -24,13 +24,6 @@ resource "google_project_iam_member" "cloudsql_iam_member" {
   member = "serviceAccount:${google_service_account.nabu_service_account.email}"
 }
 
-# add service account as member to pubsub service in the resources project
-resource "google_project_iam_member" "pubsub_project_iam_member" {
-  project = var.gcp_pubsub_project
-  role = var.service_account_pubsub_role
-  member = "serviceAccount:${google_service_account.nabu_service_account.email}"
-}
-
 # create key for service account
 resource "google_service_account_key" "nabu_service_account_key" {
   service_account_id = google_service_account.nabu_service_account.name
@@ -62,6 +55,8 @@ resource "kubernetes_secret" "ror-nabu-secret" {
   }
 }
 
+# PubSub resources configuration
+
 resource "google_pubsub_topic" "JobEventQueue" {
   name = "JobEventQueue"
   project = var.gcp_pubsub_project
@@ -78,6 +73,13 @@ resource "google_pubsub_subscription" "JobEventQueue" {
   }
 }
 
+resource "google_pubsub_subscription_iam_member" "pubsub_subscription_iam_member_subscriber_job_event_queue" {
+  project = var.gcp_pubsub_project
+  subscription = google_pubsub_subscription.JobEventQueue
+  role = "roles/pubsub.subscriber"
+  member = "serviceAccount:${google_service_account.nabu_service_account.email}"
+}
+
 resource "google_pubsub_topic" "CrudEventQueue" {
   name = "CrudEventQueue"
   project = var.gcp_pubsub_project
@@ -92,5 +94,12 @@ resource "google_pubsub_subscription" "CrudEventQueue" {
   retry_policy {
     minimum_backoff = "10s"
   }
+}
+
+resource "google_pubsub_subscription_iam_member" "pubsub_subscription_iam_member_subscriber_crud_event_queue" {
+  project = var.gcp_pubsub_project
+  subscription = google_pubsub_subscription.CrudEventQueue
+  role = "roles/pubsub.subscriber"
+  member = "serviceAccount:${google_service_account.nabu_service_account.email}"
 }
 
