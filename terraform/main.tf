@@ -75,7 +75,7 @@ resource "google_pubsub_subscription" "JobEventQueue" {
 
 resource "google_pubsub_subscription_iam_member" "pubsub_subscription_iam_member_subscriber_job_event_queue" {
   project = var.gcp_pubsub_project
-  subscription = google_pubsub_subscription.JobEventQueue
+  subscription = google_pubsub_subscription.JobEventQueue.name
   role = "roles/pubsub.subscriber"
   member = "serviceAccount:${google_service_account.nabu_service_account.email}"
 }
@@ -98,7 +98,7 @@ resource "google_pubsub_subscription" "CrudEventQueue" {
 
 resource "google_pubsub_subscription_iam_member" "pubsub_subscription_iam_member_subscriber_crud_event_queue" {
   project = var.gcp_pubsub_project
-  subscription = google_pubsub_subscription.CrudEventQueue
+  subscription = google_pubsub_subscription.CrudEventQueue.name
   role = "roles/pubsub.subscriber"
   member = "serviceAccount:${google_service_account.nabu_service_account.email}"
 }
