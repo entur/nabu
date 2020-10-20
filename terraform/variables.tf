@@ -56,7 +56,7 @@ variable "service_account_cloudsql_role" {
 
 variable "service_account_pubsub_role" {
   description = "Role of the Service Account - more about roles https://cloud.google.com/pubsub/docs/access-control"
-  default = "roles/pubsub.editor"
+  default = "roles/pubsub.subscriber"
 }
 
 variable "ror-nabu-db-username" {
