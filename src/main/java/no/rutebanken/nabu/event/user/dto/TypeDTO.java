@@ -19,5 +19,13 @@ public class TypeDTO extends BaseDTO {
 
 	public String name;
 
-
+	@Override
+	public String toString() {
+		return "TypeDTO{" +
+				"name='" + name + '\'' +
+				", id='" + id + '\'' +
+				", codeSpace='" + codeSpace + '\'' +
+				", privateCode='" + privateCode + '\'' +
+				'}';
+	}
 }

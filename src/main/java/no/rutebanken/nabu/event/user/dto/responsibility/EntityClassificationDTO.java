@@ -24,5 +24,16 @@ public class EntityClassificationDTO extends TypeDTO {
     public TypeDTO getEntityType() {
         return entityType;
     }
+
+    @Override
+    public String toString() {
+        return "EntityClassificationDTO{" +
+                "entityType=" + entityType +
+                ", name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", codeSpace='" + codeSpace + '\'' +
+                ", privateCode='" + privateCode + '\'' +
+                '}';
+    }
 }
 
