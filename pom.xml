@@ -50,7 +50,6 @@
         <keycloak.version>4.8.3.Final</keycloak.version>
 
         <rest-assured.version>4.1.1</rest-assured.version>
-        <geodb.version>0.9</geodb.version>
         <geotools.version>20.1</geotools.version>
 
         <postgis-jdbc.version>2.3.0</postgis-jdbc.version>
@@ -259,11 +258,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.opengeo</groupId>
-            <artifactId>geodb</artifactId>
-            <version>${geodb.version}</version>
         </dependency>
 
         <dependency>
