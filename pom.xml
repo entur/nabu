@@ -50,15 +50,12 @@
         <keycloak.version>4.8.3.Final</keycloak.version>
 
         <rest-assured.version>4.1.1</rest-assured.version>
-        <geotools.version>20.1</geotools.version>
 
         <postgis-jdbc.version>2.3.0</postgis-jdbc.version>
-        <wololo.version>0.13.0</wololo.version>
+        <wololo.version>0.14.3</wololo.version>
         <commons-io.version>2.8.0</commons-io.version>
         <resteasy.version>3.6.1.Final</resteasy.version>
-
         <swagger-jersey2.version>1.6.2</swagger-jersey2.version>
-        <javax.jdo.jdo2-api.version>2.3-eb</javax.jdo.jdo2-api.version>
 
         <entur.google.pubsub.emulator.download.skip>false</entur.google.pubsub.emulator.download.skip>
 
@@ -109,31 +106,17 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <!--Used by Spring Actuator to expose metrics to Prometheus-->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
-
-
-        <!--Spring Framework -->
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
-
-        <!--Spring Security -->
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
         </dependency>
 
         <!-- Keycloak -->
@@ -186,11 +169,6 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.jdo</groupId>
-            <artifactId>jdo2-api</artifactId>
-            <version>${javax.jdo.jdo2-api.version}</version>
         </dependency>
 
         <dependency>
@@ -251,24 +229,11 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-spatial</artifactId>
-            <version>${hibernate.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-geojson</artifactId>
-            <version>${geotools.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
 
         <dependency>
