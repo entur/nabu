@@ -45,41 +45,6 @@ import java.util.Properties;
 @Configuration
 @ConditionalOnProperty(name = "quartz.enabled")
 public class QuartzSchedulerConfig {
-    @Value("${org.quartz.jobStore.driverDelegateClass:org.quartz.impl.jdbcjobstore.PostgreSQLDelegate}")
-    private String jobStoreDriverDelegateClass;
-
-
-    @Bean
-    public JobFactory jobFactory(ApplicationContext applicationContext) {
-        AutowiringSpringBeanJobFactory jobFactory = new AutowiringSpringBeanJobFactory();
-        jobFactory.setApplicationContext(applicationContext);
-        return jobFactory;
-    }
-
-    @Bean
-    public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource, JobFactory jobFactory,
-                                                            @Qualifier("emailNotificationTrigger") Trigger emailNotificationTrigger) throws IOException {
-        SchedulerFactoryBean factory = new SchedulerFactoryBean();
-        // this allows to update triggers in DB when updating settings in config file:
-        factory.setOverwriteExistingJobs(true);
-        factory.setDataSource(dataSource);
-        factory.setJobFactory(jobFactory);
-
-        factory.setQuartzProperties(quartzProperties());
-        factory.setTriggers(emailNotificationTrigger);
-
-        return factory;
-    }
-
-    @Bean
-    public Properties quartzProperties() throws IOException {
-        PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
-        propertiesFactoryBean.setLocation(new ClassPathResource("/quartz.properties"));
-        propertiesFactoryBean.afterPropertiesSet();
-        Properties properties = propertiesFactoryBean.getObject();
-        properties.setProperty("org.quartz.jobStore.driverDelegateClass", jobStoreDriverDelegateClass);
-        return properties;
-    }
 
 
     @Bean

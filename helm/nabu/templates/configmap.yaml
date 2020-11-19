@@ -56,6 +56,16 @@ data:
     spring.cloud.gcp.pubsub.subscriber.max-ack-extension-period=36000
     entur.pubsub.subscriber.autocreate=false
 
+    #quartz config
+    quartz.enabled=true
+    spring.quartz.job-store-type=jdbc
+    spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+    spring.quartz.properties.org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+    spring.quartz.properties.org.quartz.jobStore.useProperties=false
+    spring.quartz.properties.org.quartz.jobStore.tablePrefix=QRTZ_
+    spring.quartz.properties.org.quartz.jobStore.isClustered=true
+    spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval=2000
+
     management.server.port=9001
     management.endpoints.enabled-by-default=false
     management.endpoint.info.enabled=true
@@ -68,7 +78,6 @@ data:
     administrative.zone.registry.rest.service.url=http://baba/services/organisations/administrative_zones/
     user.registry.rest.service.url=http://baba/services/organisations/users?full=true
     provider.registry.rest.service.url=http://baba/services/providers/
-    quartz.enabled=true
     spring.main.allow-bean-definition-overriding=true
 kind: ConfigMap
 metadata:
