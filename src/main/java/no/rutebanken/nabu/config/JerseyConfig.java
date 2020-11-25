@@ -116,7 +116,7 @@ public class JerseyConfig {
             config.setTitle("Nabu Health API");
             config.setVersion("v1");
             config.setSchemes(new String[]{"http", "https"});
-            config.setResourcePackage("no.rutebanken.baba.health");
+            config.setResourcePackage("no.rutebanken.nabu.health.rest");
             config.setPrettyPrint(true);
             config.setScan(true);
             config.setScannerId("health-scanner");
