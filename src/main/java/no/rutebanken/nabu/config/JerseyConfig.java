@@ -19,11 +19,10 @@ import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
 import no.rutebanken.nabu.filter.CorsResponseFilter;
-import no.rutebanken.nabu.health.rest.HealthResource;
+import no.rutebanken.nabu.rest.AdminSummaryResource;
 import no.rutebanken.nabu.rest.ChangeLogResource;
 import no.rutebanken.nabu.rest.LatestUploadResource;
 import no.rutebanken.nabu.rest.NotificationResource;
-import no.rutebanken.nabu.rest.AdminSummaryResource;
 import no.rutebanken.nabu.rest.TimeTableJobEventResource;
 import no.rutebanken.nabu.rest.exception.AccessDeniedExceptionMapper;
 import no.rutebanken.nabu.rest.exception.NotAuthenticatedExceptionMapper;
@@ -48,19 +47,6 @@ public class JerseyConfig {
         publicJersey.getInitParameters().put("swagger.config.id","events-swagger-doc");
         return publicJersey;
     }
-
-    @Bean
-    public ServletRegistrationBean privateJersey() {
-        ServletRegistrationBean privateJersey
-                = new ServletRegistrationBean(new ServletContainer(new HealthConfig()));
-        privateJersey.addUrlMappings("/health/*");
-        privateJersey.setName("PrivateJersey");
-        privateJersey.setLoadOnStartup(0);
-        privateJersey.getInitParameters().put("swagger.scanner.id", "health-scanner");
-        privateJersey.getInitParameters().put("swagger.config.id","nabu-health-swagger-doc");
-        return privateJersey;
-    }
-
 
     private static class ServicesConfig extends ResourceConfig {
 
@@ -96,32 +82,5 @@ public class JerseyConfig {
             config.setScannerId("events-scanner");
         }
     }
-
-
-    private static class HealthConfig extends ResourceConfig {
-
-        public HealthConfig() {
-            register(HealthResource.class);
-            configureSwagger();
-        }
-
-
-        private void configureSwagger() {
-            // Available at localhost:port/api/swagger.json
-            this.register(ApiListingResource.class);
-            this.register(SwaggerSerializers.class);
-
-            BeanConfig config = new BeanConfig();
-            config.setConfigId("nabu-health-swagger-doc");
-            config.setTitle("Nabu Health API");
-            config.setVersion("v1");
-            config.setSchemes(new String[]{"http", "https"});
-            config.setResourcePackage("no.rutebanken.nabu.health.rest");
-            config.setPrettyPrint(true);
-            config.setScan(true);
-            config.setScannerId("health-scanner");
-        }
-    }
-
 
 }
