@@ -15,6 +15,8 @@
 
 package no.rutebanken.nabu.exceptions;
 
+import java.io.IOException;
+
 public class NabuException extends RuntimeException {
 
 
@@ -26,4 +28,7 @@ public class NabuException extends RuntimeException {
         super(message, cause);
     }
 
+    public NabuException(Throwable cause) {
+        super(cause);
+    }
 }

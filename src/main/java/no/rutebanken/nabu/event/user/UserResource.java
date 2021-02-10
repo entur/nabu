@@ -16,14 +16,10 @@
 package no.rutebanken.nabu.event.user;
 
 import no.rutebanken.nabu.event.user.dto.user.UserDTO;
-import no.rutebanken.nabu.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -37,16 +33,17 @@ public class UserResource {
     private String restServiceUrl;
 
     @Autowired
-    private TokenService tokenService;
+    private WebClient webClient;
 
-    private RestTemplate restTemplate = new RestTemplate();
 
     public List<UserDTO> findAll() {
-        ResponseEntity<List<UserDTO>> rateResponse =
-                restTemplate.exchange(restServiceUrl,
-                        HttpMethod.GET, tokenService.getEntityWithAuthenticationToken(), new ParameterizedTypeReference<List<UserDTO>>() {
-                        });
-        return rateResponse.getBody();
+
+        return webClient.get()
+                .uri(restServiceUrl)
+                .retrieve()
+                .bodyToFlux(UserDTO.class)
+                .collectList().block();
+
     }
 
 

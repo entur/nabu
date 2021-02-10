@@ -15,30 +15,18 @@
 
 package no.rutebanken.nabu.config;
 
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import no.rutebanken.nabu.security.oauth2.JwtRoleAssignmentExtractor;
+import org.rutebanken.helper.organisation.KeycloakRoleAssignmentExtractor;
+import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class KeycloakClientConfig {
-
-    @Value("${keycloak.auth-server-url}")
-    private String authServerUrl;
-
-    @Value("${keycloak.realm:rutebanken}")
-    private String realm;
-
-    @Value("${iam.keycloak.client.secret}")
-    private String clientSecret;
-
-    @Value("${keycloak.resource}")
-    private String clientId;
+public class RoleAssignmentExtractorConfig {
 
     @Bean
-    public Keycloak keycloakClient() {
-        return KeycloakBuilder.builder().clientId(clientId).clientSecret(clientSecret)
-                       .realm(realm).serverUrl(authServerUrl).grantType("client_credentials").build();
+    public RoleAssignmentExtractor roleAssignmentExtractor() {
+        return new JwtRoleAssignmentExtractor();
     }
+
 }

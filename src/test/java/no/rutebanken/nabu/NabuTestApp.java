@@ -16,7 +16,6 @@
 package no.rutebanken.nabu;
 
 
-import no.rutebanken.nabu.config.NabuSecurityConfiguration;
 import org.entur.pubsub.base.config.GooglePubSubConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,11 +24,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @Import(GooglePubSubConfig.class)
 @ComponentScan(excludeFilters = {
-                                        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = NabuSecurityConfiguration.class),
-                                        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = App.class),
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = App.class),
 })
 public class NabuTestApp {
 
