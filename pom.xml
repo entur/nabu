@@ -46,7 +46,7 @@
     </repositories>
 
     <properties>
-        <entur.helpers.version>1.0.36</entur.helpers.version>
+        <entur.helpers.version>1.0.37</entur.helpers.version>
         <keycloak.version>4.8.3.Final</keycloak.version>
 
         <rest-assured.version>4.1.1</rest-assured.version>
@@ -90,24 +90,18 @@
             <version>${entur.helpers.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.entur.helpers</groupId>
+            <artifactId>oauth2</artifactId>
+            <version>${entur.helpers.version}</version>
+        </dependency>
+
         <!--Spring Boot -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -136,19 +130,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-resource-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-jose</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-client</artifactId>
         </dependency>
 
         <dependency>
