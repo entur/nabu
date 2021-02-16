@@ -11,8 +11,7 @@ configMap:
     ror:
       url: https://ror-entur-staging.eu.auth0.com/
       audience: https://ror.api.staging.entur.io
-      claim:
-        namespace: https://ror.api.staging.entur.io/claims/
+
   oauth2:
     client:
       id: nabu
