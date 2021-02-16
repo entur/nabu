@@ -17,17 +17,12 @@ package no.rutebanken.nabu.provider;
 
 
 import no.rutebanken.nabu.provider.model.Provider;
-import no.rutebanken.nabu.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Collection;
-import java.util.List;
 
 @Component
 public class ProviderResource {
@@ -37,17 +32,17 @@ public class ProviderResource {
 
 
     @Autowired
-    private TokenService tokenService;
+    private WebClient webClient;
 
 
     public Collection<Provider> getProviders() {
-        RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity<List<Provider>> rateResponse =
-                restTemplate.exchange(restServiceUrl,
-                        HttpMethod.GET, tokenService.getEntityWithAuthenticationToken(), new ParameterizedTypeReference<List<Provider>>() {
-                        });
-        return rateResponse.getBody();
+        return webClient.get()
+                .uri(restServiceUrl)
+                .retrieve()
+                .bodyToFlux(Provider.class)
+                .collectList().block();
+
     }
 
 }
