@@ -34,11 +34,20 @@ data:
     spring.datasource.platform=postgres
     spring.flyway.table=schema_version
 
-    #Keycloak config
-    keycloak.auth-server-url={{ .Values.configMap.keycloakUrl }}
-    keycloak.principal-attribute=preferred_username
-    keycloak.resource=nabu
-    keycloak.realm=rutebanken
+    #OAuth2 Resource Server
+    nabu.oauth2.resourceserver.auth0.ror.jwt.issuer-uri={{ .Values.configMap.auth0.ror.url }}
+    nabu.oauth2.resourceserver.auth0.ror.jwt.audience={{ .Values.configMap.auth0.ror.audience }}
+    nabu.oauth2.resourceserver.auth0.ror.claim.namespace={{ .Values.configMap.auth0.ror.claim.namespace }}
+
+    nabu.oauth2.resourceserver.keycloak.jwt.issuer-uri={{ .Values.configMap.keycloak.url }}/realms/rutebanken
+    nabu.oauth2.resourceserver.keycloak.jwt.jwkset-uri={{ .Values.configMap.keycloak.url }}/realms/rutebanken/protocol/openid-connect/certs
+    nabu.oauth2.resourceserver.keycloak.jwt.audience=account
+
+    #OAuth2 Client
+    spring.security.oauth2.client.registration.nabu.authorization-grant-type=client_credentials
+    spring.security.oauth2.client.registration.nabu.client-id={{ .Values.configMap.oauth2.client.id }}
+    spring.security.oauth2.client.provider.nabu.token-uri={{ .Values.configMap.oauth2.client.url }}
+    nabu.oauth2.client.audience={{ .Values.configMap.oauth2.client.audience }}
 
     #Logging config
     logging.level.org.hibernate.SQL=INFO

@@ -5,7 +5,19 @@ sql:
 
 configMap:
   pubsubProjectId: entur-ror-test
-  keycloakUrl: https://kc-stage.devstage.entur.io/auth
+  keycloak:
+    url:  https://kc-stage.devstage.entur.io/auth
+  auth0:
+    ror:
+      url: https://ror-entur-staging.eu.auth0.com/
+      audience: https://ror.api.staging.entur.io
+      claim:
+        namespace: https://ror.api.staging.entur.io/claims/
+  oauth2:
+    client:
+      id: nabu
+      url: https://kc-stage.devstage.entur.io/auth/realms/rutebanken/protocol/openid-connect/token
+      audience: account
   mail:
     stopPlace: https://stoppested-stage.entur.org/
     routedb: https://rutedb.staging.entur.org/
