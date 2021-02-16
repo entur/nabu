@@ -16,14 +16,10 @@
 package no.rutebanken.nabu.event.user;
 
 import no.rutebanken.nabu.event.user.dto.organisation.AdministrativeZoneDTO;
-import no.rutebanken.nabu.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class AdministrativeZoneResource {
@@ -32,16 +28,17 @@ public class AdministrativeZoneResource {
     private String restServiceUrl;
 
     @Autowired
-    private TokenService tokenService;
+    private WebClient webClient;
 
-    private RestTemplate restTemplate = new RestTemplate();
 
     public AdministrativeZoneDTO getAdministrativeZone(String id) {
-        ResponseEntity<AdministrativeZoneDTO> rateResponse =
-                restTemplate.exchange(restServiceUrl + id,
-                        HttpMethod.GET, tokenService.getEntityWithAuthenticationToken(), new ParameterizedTypeReference<AdministrativeZoneDTO>() {
-                        });
-        return rateResponse.getBody();
+
+        return webClient.get()
+                .uri(restServiceUrl)
+                .retrieve()
+                .bodyToMono(AdministrativeZoneDTO.class)
+                .block();
+
     }
 
 }
