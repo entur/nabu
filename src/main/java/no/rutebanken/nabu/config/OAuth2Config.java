@@ -21,7 +21,6 @@ import org.entur.oauth2.JwtRoleAssignmentExtractor;
 import org.entur.oauth2.MultiIssuerAuthenticationManagerResolver;
 import org.entur.oauth2.RorAuth0RolesClaimAdapter;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
@@ -44,8 +43,8 @@ public class OAuth2Config {
      * @return a WebClient for authorized API calls.
      */
     @Bean
-    WebClient webClient(OAuth2ClientProperties properties, @Value("${nabu.oauth2.client.audience}") String audience) {
-        return new AuthorizedWebClientBuilder()
+    WebClient webClient(WebClient.Builder webClientBuilder, OAuth2ClientProperties properties, @Value("${nabu.oauth2.client.audience}") String audience) {
+        return new AuthorizedWebClientBuilder(webClientBuilder)
                 .withOAuth2ClientProperties(properties)
                 .withAudience(audience)
                 .withClientRegistrationId("nabu")
@@ -54,6 +53,7 @@ public class OAuth2Config {
 
     /**
      * Extract role assignments from a JWT token.
+     *
      * @return
      */
     @Bean
@@ -63,6 +63,7 @@ public class OAuth2Config {
 
     /**
      * Adapt the JWT claims produced by the RoR Auth0 tenant to make them compatible with those produced by Keycloak.
+     *
      * @param rorAuth0ClaimNamespace
      * @return
      */
@@ -89,7 +90,7 @@ public class OAuth2Config {
                                                                                              @Value("${nabu.oauth2.resourceserver.keycloak.jwt.jwkset-uri}") String keycloakJwksetUri,
                                                                                              @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.audience}") String rorAuth0Audience,
                                                                                              @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.issuer-uri}") String rorAuth0Issuer,
-                                                                                             @Autowired RorAuth0RolesClaimAdapter rorAuth0RolesClaimAdapter) {
+                                                                                             RorAuth0RolesClaimAdapter rorAuth0RolesClaimAdapter) {
         return new MultiIssuerAuthenticationManagerResolver.Builder()
                 .withKeycloakAudience(keycloakAudience)
                 .withKeycloakIssuer(keycloakIssuer)
