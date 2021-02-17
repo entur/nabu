@@ -77,7 +77,7 @@ spec:
                 secretKeyRef:
                   key: nabu-db-password
                   name: ror-nabu-secret
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_NABU_CLIENT-SECRET
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_NABU_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   key: nabu-keycloak-secret
