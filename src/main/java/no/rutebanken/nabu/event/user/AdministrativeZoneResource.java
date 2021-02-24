@@ -34,7 +34,7 @@ public class AdministrativeZoneResource {
     public AdministrativeZoneDTO getAdministrativeZone(String id) {
 
         return webClient.get()
-                .uri(restServiceUrl)
+                .uri(restServiceUrl, uriBuilder -> uriBuilder.path("{id}").build(id))
                 .retrieve()
                 .bodyToMono(AdministrativeZoneDTO.class)
                 .block();
