@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -32,6 +33,8 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Configuration
 public class OAuth2Config {
+
+    private static final int MAX_DOWNLOAD_BUFFER_SIZE = 10 * 1024 * 1024;
 
     /**
      * Return a WebClient for authorized API calls.
@@ -44,6 +47,16 @@ public class OAuth2Config {
      */
     @Bean
     WebClient webClient(WebClient.Builder webClientBuilder, OAuth2ClientProperties properties, @Value("${nabu.oauth2.client.audience}") String audience) {
+
+        // increase buffer size for downloading polygons from Baba
+        webClientBuilder.exchangeStrategies(ExchangeStrategies.builder()
+                .codecs(configurer -> configurer
+                        .defaultCodecs()
+                        .maxInMemorySize(MAX_DOWNLOAD_BUFFER_SIZE))
+                .build())
+                .build();
+
+
         return new AuthorizedWebClientBuilder(webClientBuilder)
                 .withOAuth2ClientProperties(properties)
                 .withAudience(audience)
