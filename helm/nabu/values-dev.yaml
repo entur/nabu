@@ -14,9 +14,9 @@ configMap:
 
   oauth2:
     client:
-      id: nabu
-      url: https://kc-dev.devstage.entur.io/auth/realms/rutebanken/protocol/openid-connect/token
-      audience: account
+      id: riGzFJDW8fmm2G3cHpNUlIjlhoAM8i03
+      url: https://ror-entur-dev.eu.auth0.com/oauth/token
+      audience: https://ror.api.dev.entur.io
   mail:
     stopPlace: https://stoppested-test.entur.org/
     routedb: https://rutedb.dev.entur.org/

@@ -14,9 +14,9 @@ configMap:
 
   oauth2:
     client:
-      id: nabu
-      url: https://auth.entur.org/auth/realms/rutebanken/protocol/openid-connect/token
-      audience: account
+      id: 681gbNw7L020V7xFZag37qOlDp1QtIrF
+      url: https://ror-entur.eu.auth0.com/oauth/token
+      audience: https://ror.api.entur.io
   mail:
     stopPlace: https://stoppested.entur.org/
     routedb: https://rutedb.entur.org/

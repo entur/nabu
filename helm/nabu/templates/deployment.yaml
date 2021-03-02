@@ -80,7 +80,7 @@ spec:
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_NABU_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  key: nabu-keycloak-secret
+                  key: nabu-auth0-secret
                   name: ror-nabu-secret
           ports:
             - containerPort: {{ .Values.service.http.internalPort }}
