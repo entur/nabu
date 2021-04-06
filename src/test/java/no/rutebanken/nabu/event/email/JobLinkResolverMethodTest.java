@@ -16,6 +16,7 @@
 package no.rutebanken.nabu.event.email;
 
 import freemarker.ext.beans.BeanModel;
+import freemarker.template.Configuration;
 import freemarker.template.SimpleObjectWrapper;
 import freemarker.template.TemplateModelException;
 import no.rutebanken.nabu.domain.event.JobEvent;
@@ -100,7 +101,7 @@ class JobLinkResolverMethodTest {
 
     private void assertLink(JobEvent jobEvent, String relativeExpectedLink) {
         try {
-            Object link = jobLinkResolverMethod.exec(Collections.singletonList(new BeanModel(jobEvent, new SimpleObjectWrapper())));
+            Object link = jobLinkResolverMethod.exec(Collections.singletonList(new BeanModel(jobEvent, new SimpleObjectWrapper(Configuration.VERSION_2_3_31))));
             if (relativeExpectedLink == null) {
                 Assertions.assertNull(link);
             } else {
