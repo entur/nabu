@@ -20,11 +20,12 @@ import org.entur.pubsub.base.config.GooglePubSubConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
+@SpringBootApplication(exclude={UserDetailsServiceAutoConfiguration.class})
 @EntityScan(basePackageClasses = {SystemJobStatus.class, Jsr310JpaConverters.class})
 @EnableScheduling
 @Import(GooglePubSubConfig.class)

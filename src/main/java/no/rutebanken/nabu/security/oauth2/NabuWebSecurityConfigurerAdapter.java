@@ -47,7 +47,7 @@ public class NabuWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapt
         http.cors(withDefaults())
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/services/swagger.json").permitAll()
+                .antMatchers("/services/events/swagger.json").permitAll()
                 // exposed internally only, on a different port (pod-level)
                 .antMatchers("/actuator/prometheus").permitAll()
                 .antMatchers("/actuator/health").permitAll()
