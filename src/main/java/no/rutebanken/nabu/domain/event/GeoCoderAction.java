@@ -18,7 +18,7 @@ package no.rutebanken.nabu.domain.event;
 /**
  * Sub action types for GeoCoder job domain.
  */
-public enum GeoCoderAction {
+public enum GeoCoderAction implements EventAction {
     ADDRESS_DOWNLOAD, ADMINISTRATIVE_UNITS_DOWNLOAD,
     PLACE_NAMES_DOWNLOAD, TIAMAT_POI_UPDATE,
     TIAMAT_ADMINISTRATIVE_UNITS_UPDATE,
