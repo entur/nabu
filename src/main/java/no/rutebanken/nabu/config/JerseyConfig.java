@@ -37,9 +37,9 @@ public class JerseyConfig {
 
 
     @Bean
-    public ServletRegistrationBean publicJersey() {
-        ServletRegistrationBean publicJersey
-                = new ServletRegistrationBean(new ServletContainer(new ServicesConfig()));
+    public ServletRegistrationBean<ServletContainer> publicJersey() {
+        ServletRegistrationBean<ServletContainer> publicJersey
+                = new ServletRegistrationBean<>(new ServletContainer(new ServicesConfig()));
         publicJersey.addUrlMappings("/services/events/*");
         publicJersey.setName("PublicJersey");
         publicJersey.setLoadOnStartup(0);
