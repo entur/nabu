@@ -46,8 +46,7 @@
     </repositories>
 
     <properties>
-        <entur.helpers.version>1.0.54</entur.helpers.version>
-
+        <entur.helpers.version>1.0.55-SNAPSHOT</entur.helpers.version>
         <postgis-jdbc.version>2.3.0</postgis-jdbc.version>
         <wololo.version>0.16.1</wololo.version>
         <commons-io.version>2.10.0</commons-io.version>
@@ -66,12 +65,6 @@
             <groupId>org.entur.helpers</groupId>
             <artifactId>organisation</artifactId>
             <version>${entur.helpers.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.keycloak</groupId>
-                    <artifactId>keycloak-spring-security-adapter</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
