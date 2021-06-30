@@ -19,6 +19,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +32,25 @@ import java.io.StringWriter;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = NabuTestApp.class)
-@ActiveProfiles({"google-pubsub-emulator"})
+@ActiveProfiles({"google-pubsub-emulator", "test"})
 @Transactional
 public abstract class BaseIntegrationTest {
+
+    @TestConfiguration
+    @EnableWebSecurity
+    static class TestWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.csrf().disable()
+                    .authorizeRequests(authorizeRequests ->
+                            authorizeRequests
+                                    .anyRequest().permitAll()
+                    );
+
+        }
+
+    }
 
 
     protected String toJson(Object o) {

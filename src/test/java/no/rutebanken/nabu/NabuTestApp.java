@@ -16,6 +16,7 @@
 package no.rutebanken.nabu;
 
 
+import no.rutebanken.nabu.security.oauth2.NabuWebSecurityConfigurerAdapter;
 import org.entur.pubsub.base.config.GooglePubSubConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,6 +28,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @Import(GooglePubSubConfig.class)
 @ComponentScan(excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = NabuWebSecurityConfigurerAdapter.class),
         @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = App.class),
 })
 public class NabuTestApp {
