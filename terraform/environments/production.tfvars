@@ -4,4 +4,5 @@ gcp_pubsub_project = "entur-ror-prod"
 gcp_resources_project = "entur-ror-prod"
 kube_namespace = "production"
 location = "europe-west1"
+db_availability="REGIONAL"
 

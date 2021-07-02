@@ -4,7 +4,7 @@ terraform {
 }
 
 provider "google" {
-  version = "~> 3.70.0"
+  version = "~> 3.74.0"
 }
 provider "kubernetes" {
   load_config_file = var.load_config_file
@@ -103,5 +103,37 @@ resource "google_pubsub_subscription_iam_member" "pubsub_subscription_iam_member
   subscription = google_pubsub_subscription.CrudEventQueue.name
   role = "roles/pubsub.subscriber"
   member = "serviceAccount:${google_service_account.nabu_service_account.email}"
+}
+
+resource "google_sql_database_instance" "db_instance" {
+  name = "nabu-db-pg13"
+  project = var.gcp_cloudsql_project
+  region = "europe-west1"
+
+  settings {
+    tier = var.db_tier
+    user_labels = var.labels
+    availability_type = var.db_availability
+    backup_configuration {
+      enabled = true
+    }
+    ip_configuration {
+      require_ssl = true
+    }
+  }
+  database_version = "POSTGRES_13"
+}
+
+resource "google_sql_database" "db" {
+  name = "nabu"
+  project = var.gcp_cloudsql_project
+  instance = google_sql_database_instance.db_instance.name
+}
+
+resource "google_sql_user" "db-user" {
+  name = var.ror-nabu-db-username
+  project = var.gcp_cloudsql_project
+  instance = google_sql_database_instance.db_instance.name
+  password = var.ror-nabu-db-password
 }
 

@@ -82,3 +82,15 @@ variable "ror-nabu-keycloak-secret" {
 variable "ror-nabu-auth0-secret" {
   description = "nabu Auth0 secret"
 }
+
+variable "db_tier" {
+  description = "Database instance tier"
+  default = "db-custom-1-3840"
+}
+
+variable "db_availability" {
+  description = "Database availablity"
+  default = "ZONAL"
+}
+
+
