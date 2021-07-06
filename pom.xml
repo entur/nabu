@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.rutebanken.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>1.0.20-SNAPSHOT</version>
+        <version>1.0.25</version>
     </parent>
 
     <groupId>no.rutebanken</groupId>
@@ -46,13 +46,11 @@
     </repositories>
 
     <properties>
-        <entur.helpers.version>1.0.42-SNAPSHOT</entur.helpers.version>
-
-        <rest-assured.version>4.1.1</rest-assured.version>
+        <entur.helpers.version>1.0.53</entur.helpers.version>
 
         <postgis-jdbc.version>2.3.0</postgis-jdbc.version>
         <wololo.version>0.14.3</wololo.version>
-        <commons-io.version>2.8.0</commons-io.version>
+        <commons-io.version>2.9.0</commons-io.version>
         <swagger-jersey2.version>1.6.2</swagger-jersey2.version>
 
         <entur.google.pubsub.emulator.download.skip>false</entur.google.pubsub.emulator.download.skip>
@@ -222,56 +220,14 @@
         </dependency>
 
         <!--Test -->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>${rest-assured.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
 
