@@ -80,7 +80,7 @@ public class TimeTableJobEventResource {
         Instant instantFrom = from == null ? null : from.toInstant();
         Instant instantTo = to == null ? null : to.toInstant();
 
-        List<String> externalIds = jobIds == null ? null : jobIds.stream().map(jobId -> jobId.toString()).collect(Collectors.toList());
+        List<String> externalIds = jobIds == null ? null : jobIds.stream().map(Object::toString).collect(Collectors.toList());
         List<Long> relatedProviderIds = mapToAllRelatedProviderIds(providerId);
         try {
             List<JobEvent> eventsForProvider = eventService.findTimetableJobEvents(relatedProviderIds, instantFrom, instantTo,

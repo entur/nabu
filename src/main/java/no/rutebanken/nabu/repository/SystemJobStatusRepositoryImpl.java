@@ -64,7 +64,7 @@ public class SystemJobStatusRepositoryImpl extends SimpleJpaRepository<SystemJob
 
         TypedQuery<SystemJobStatus> query = entityManager.createQuery(jpql.toString(), SystemJobStatus.class);
         query.setHint(QueryHints.CACHEABLE, Boolean.TRUE);
-        parameters.forEach((key, value) -> query.setParameter(key, value));
+        parameters.forEach(query::setParameter);
         return query.getResultList();
     }
 

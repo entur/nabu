@@ -160,7 +160,7 @@ public abstract class Event implements Comparable<Event> {
         }
 
 
-        public EventBuilder<T>  action(Enum action) {
+        public EventBuilder<T>  action(EventAction action) {
             return action(action.name());
         }
 
