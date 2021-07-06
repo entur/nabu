@@ -1,7 +1,6 @@
 package no.rutebanken.nabu.security.oauth2;
 
-import org.entur.oauth2.MultiIssuerAuthenticationManagerResolver;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.entur.oauth2.RorAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,16 +19,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 /**
  * Authentication and authorization configuration for Nabu.
  * All requests must be authenticated except for the Swagger and Actuator endpoints.
- * The Oauth2 ID-provider (Keycloak or Auth0) is identified thanks to {@link MultiIssuerAuthenticationManagerResolver}.
  */
 @Profile("!test")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Component
 public class NabuWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-
-    @Autowired
-    MultiIssuerAuthenticationManagerResolver multiIssuerAuthenticationManagerResolver;
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -55,10 +50,10 @@ public class NabuWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapt
                 .antMatchers("/actuator/health/readiness").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .oauth2ResourceServer().authenticationManagerResolver(this.multiIssuerAuthenticationManagerResolver)
+                .oauth2ResourceServer().jwt().jwtAuthenticationConverter(new RorAuthenticationConverter())
+                .and()
                 .and()
                 .oauth2Client();
 
     }
-
 }
