@@ -93,7 +93,7 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
         sb.append(") ORDER by sf.correlationId, sf.eventTime");
         TypedQuery<JobEvent> query = entityManager.createQuery(sb.toString(), JobEvent.class);
         params.put("domain", JobEvent.JobDomain.TIMETABLE.toString());
-        params.forEach((param, value) -> query.setParameter(param, value));
+        params.forEach(query::setParameter);
 
         return query.getResultList();
     }
@@ -139,7 +139,7 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
 
         sb.append(" ORDER by e.eventTime");
         TypedQuery<CrudEvent> query = entityManager.createQuery(sb.toString(), CrudEvent.class);
-        params.forEach((param, value) -> query.setParameter(param, value));
+        params.forEach(query::setParameter);
 
         return query.getResultList();
     }
@@ -155,7 +155,7 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
         sb.append(" ORDER by e.eventTime desc");
         TypedQuery<JobEvent> query = entityManager.createQuery(sb.toString(), JobEvent.class);
         params.put("domain", domain);
-        params.forEach((param, value) -> query.setParameter(param, value));
+        params.forEach(query::setParameter);
         query.setMaxResults(maxResults);
         return query.getResultList();
     }
@@ -164,13 +164,14 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
     @Override
     public List<JobEvent> getLatestTimetableFileTransfer(Long providerId) {
         return this.entityManager.createQuery("select s1 from JobEvent s1 where s1.domain=:domain and s1.correlationId= " +
-                                                      "(select s2.correlationId from JobEvent s2 where  s2.domain=:domain and s2.action=:action and s2.eventTime=" +
-                                                      "(select max(s3.eventTime) from JobEvent s3 where  s3.domain=:domain and s3.providerId=:providerId and s3.action=:action and s3.name not like :fileNameExcludePattern))")
-                       .setParameter("action", TimeTableAction.FILE_TRANSFER.toString())
-                       .setParameter("providerId", providerId)
-                       .setParameter("fileNameExcludePattern", "reimport-%")
-                       .setParameter("domain", JobEvent.JobDomain.TIMETABLE.toString())
-                       .getResultList();
+                        "(select s2.correlationId from JobEvent s2 where  s2.domain=:domain and s2.action=:action and s2.eventTime=" +
+                        "(select max(s3.eventTime) from JobEvent s3 where  s3.domain=:domain and s3.providerId=:providerId and s3.action=:action and s3.name not like :fileNameExcludePattern))",
+                JobEvent.class)
+                .setParameter("action", TimeTableAction.FILE_TRANSFER.toString())
+                .setParameter("providerId", providerId)
+                .setParameter("fileNameExcludePattern", "reimport-%")
+                .setParameter("domain", JobEvent.JobDomain.TIMETABLE.toString())
+                .getResultList();
     }
 
     @Override
