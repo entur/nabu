@@ -60,7 +60,7 @@ public class UserNotificationEventHandler implements EventHandler {
         }
 
         user.getNotifications().stream()
-                .filter(notificationConfiguration -> notificationConfiguration.isEnabled())
+                .filter(NotificationConfigDTO::isEnabled)
                 .filter(notificationConfig -> eventMatcherFactory.createEventMatcher(notificationConfig.getEventFilter()).matches(event))
                 .forEach(notificationConfig -> createNotification(user, notificationConfig, event));
 
