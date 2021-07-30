@@ -49,10 +49,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
+
 @Component
 @Produces("application/json")
 @Path("notifications")
 @Api(tags = {"Notification resource"}, produces = "application/json")
+@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 public class NotificationResource {
 
     @Autowired
