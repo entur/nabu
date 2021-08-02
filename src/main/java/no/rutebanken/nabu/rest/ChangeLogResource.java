@@ -30,13 +30,14 @@ import javax.ws.rs.Produces;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
 
 @Component
 @Produces("application/json")
 @Path("change_log")
 @Api(tags = {"Change log resource"}, produces = "application/json")
-@PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
+@PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "," + ROLE_ORGANISATION_EDIT + "')")
 public class ChangeLogResource {
 
     @Autowired
