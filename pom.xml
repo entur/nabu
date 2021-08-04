@@ -46,7 +46,7 @@
     </repositories>
 
     <properties>
-        <entur.helpers.version>1.0.59-SNAPSHOT</entur.helpers.version>
+        <entur.helpers.version>1.0.59</entur.helpers.version>
 
         <postgis-jdbc.version>2.5.0</postgis-jdbc.version>
         <wololo.version>0.16.1</wololo.version>
