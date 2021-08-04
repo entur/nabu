@@ -75,10 +75,6 @@ variable "ror-nabu-smtp-password" {
   description = "nabu smtp password"
 }
 
-variable "ror-nabu-keycloak-secret" {
-  description = "nabu keycloak secret"
-}
-
 variable "ror-nabu-auth0-secret" {
   description = "nabu Auth0 secret"
 }
