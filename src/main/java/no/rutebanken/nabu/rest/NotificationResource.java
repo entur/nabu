@@ -49,10 +49,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
+
 @Component
 @Produces("application/json")
 @Path("notifications")
 @Api(tags = {"Notification resource"}, produces = "application/json")
+@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 public class NotificationResource {
 
     @Autowired
@@ -63,7 +66,7 @@ public class NotificationResource {
     @PreAuthorize("#userName == authentication.name")
     public List<ApiNotification> getWebNotificationsForUser(@PathParam("userName") String userName) {
         List<Notification> notifications = notificationRepository.findByUserNameAndTypeAndStatus(userName, NotificationType.WEB, Notification.NotificationStatus.READY);
-        return notifications.stream().map(notification -> toDTO(notification)).collect(Collectors.toList());
+        return notifications.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
 
@@ -128,9 +131,9 @@ public class NotificationResource {
         } else if (JobEvent.JobDomain.TIAMAT.equals(jobDomain)) {
             actions.addAll(Collections.singletonList("EXPORT"));
         } else if (JobEvent.JobDomain.GEOCODER.equals(jobDomain)) {
-            actions.addAll(Arrays.stream(GeoCoderAction.values()).map(value -> value.name()).collect(Collectors.toList()));
+            actions.addAll(Arrays.stream(GeoCoderAction.values()).map(Enum::name).collect(Collectors.toList()));
         } else if (JobEvent.JobDomain.TIMETABLE.equals(jobDomain)) {
-            actions.addAll(Arrays.stream(TimeTableAction.values()).map(value -> value.name()).collect(Collectors.toList()));
+            actions.addAll(Arrays.stream(TimeTableAction.values()).map(Enum::name).collect(Collectors.toList()));
         } else if (JobEvent.JobDomain.TIMETABLE_PUBLISH.equals(jobDomain)) {
             actions.addAll(Arrays.asList("EXPORT_NETEX_MERGED", "EXPORT_GOOGLE_GTFS"));
         } else {

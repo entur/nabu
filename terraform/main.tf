@@ -37,7 +37,7 @@ resource "kubernetes_secret" "nabu_service_account_credentials" {
     namespace = var.kube_namespace
   }
   data = {
-    "credentials.json" = "${base64decode(google_service_account_key.nabu_service_account_key.private_key)}"
+    "credentials.json" = base64decode(google_service_account_key.nabu_service_account_key.private_key)
   }
 }
 
@@ -52,7 +52,6 @@ resource "kubernetes_secret" "ror-nabu-secret" {
     "nabu-db-password" = var.ror-nabu-db-password
     "nabu-smtp-username" = var.ror-nabu-smtp-username
     "nabu-smtp-password" = var.ror-nabu-smtp-password
-    "nabu-keycloak-secret" = var.ror-nabu-keycloak-secret
     "nabu-auth0-secret" = var.ror-nabu-auth0-secret
   }
 }

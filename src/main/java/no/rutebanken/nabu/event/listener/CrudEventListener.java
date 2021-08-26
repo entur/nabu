@@ -23,11 +23,13 @@ import org.entur.pubsub.base.AbstractEnturGooglePubSubConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @Component
+@Profile("!pubsub-listener-disabled")
 public class CrudEventListener extends AbstractEnturGooglePubSubConsumer {
 
     public static final String CRUD_EVENT_QUEUE = "CrudEventQueue";
