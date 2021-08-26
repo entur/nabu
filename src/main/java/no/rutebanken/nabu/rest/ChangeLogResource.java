@@ -20,6 +20,7 @@ import no.rutebanken.nabu.domain.event.CrudEventSearch;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.ApiCrudEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.BeanParam;
@@ -29,10 +30,14 @@ import javax.ws.rs.Produces;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
+import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
+
 @Component
 @Produces("application/json")
 @Path("change_log")
 @Api(tags = {"Change log resource"}, produces = "application/json")
+@PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "," + ROLE_ORGANISATION_EDIT + "')")
 public class ChangeLogResource {
 
     @Autowired
