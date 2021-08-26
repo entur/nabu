@@ -17,11 +17,13 @@ package no.rutebanken.nabu.event.listener;
 
 import org.entur.pubsub.base.AbstractEnturGooglePubSubConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @Component
+@Profile("!pubsub-listener-disabled")
 public class JobEventListener extends AbstractEnturGooglePubSubConsumer {
 
     public static final String JOB_EVENT_QUEUE = "JobEventQueue";
