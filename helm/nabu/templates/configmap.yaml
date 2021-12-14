@@ -65,7 +65,7 @@ data:
     quartz.enabled=true
     spring.quartz.job-store-type=jdbc
     spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-    spring.quartz.properties.org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+    spring.quartz.properties.org.quartz.jobStore.class=org.springframework.scheduling.quartz.LocalDataSourceJobStore
     spring.quartz.properties.org.quartz.jobStore.useProperties=false
     spring.quartz.properties.org.quartz.jobStore.tablePrefix=QRTZ_
     spring.quartz.properties.org.quartz.jobStore.isClustered=true
