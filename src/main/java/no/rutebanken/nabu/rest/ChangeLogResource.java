@@ -37,7 +37,7 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Produces("application/json")
 @Path("change_log")
 @Api(tags = {"Change log resource"}, produces = "application/json")
-@PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "," + ROLE_ORGANISATION_EDIT + "')")
+@PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "','" + ROLE_ORGANISATION_EDIT + "')")
 public class ChangeLogResource {
 
     @Autowired
