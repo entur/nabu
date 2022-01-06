@@ -21,8 +21,3 @@ configMap:
     routedb: https://rutedb.staging.entur.org/
     notificationFrom: varsel-stage@entur.org
     operator: https://operator-stage.entur.org/
-
-ingress:
-  loadBalancerIP: 130.211.80.129
-
-

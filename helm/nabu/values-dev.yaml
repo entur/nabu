@@ -22,7 +22,5 @@ configMap:
     notificationFrom: varsel-test@entur.org
     operator: https://operator-test.entur.org/
 
-ingress:
-  loadBalancerIP: 35.205.170.68
 
 
