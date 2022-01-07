@@ -258,7 +258,7 @@
                 <artifactId>dependency-check-maven</artifactId>
             </plugin>
 
-      </plugins>
+        </plugins>
     </build>
 
 </project>
