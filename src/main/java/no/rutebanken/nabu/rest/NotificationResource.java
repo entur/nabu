@@ -76,7 +76,7 @@ public class NotificationResource {
     @PreAuthorize("#userName == authentication.name")
     public void markAsRead(@PathParam("userName") String userName, List<Long> notificationPks) {
         if (!CollectionUtils.isEmpty(notificationPks)) {
-            List<Notification> notifications = notificationPks.stream().map(pk -> notificationRepository.getOne(pk)).filter(n -> n.getUserName().equals(userName)).collect(Collectors.toList());
+            List<Notification> notifications = notificationPks.stream().map(pk -> notificationRepository.getById(pk)).filter(n -> n.getUserName().equals(userName)).collect(Collectors.toList());
 
             notifications.forEach(n -> n.setStatus(Notification.NotificationStatus.COMPLETE));
             notificationRepository.saveAll(notifications);
