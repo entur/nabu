@@ -59,6 +59,9 @@
     <logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>
     <logger name="org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration" level="WARN"/>
 
+    <logger name="com.google.cloud.spring.core.DefaultCredentialsProvider" level="ERROR"/>
+    <logger name="com.google.auth.oauth2.DefaultCredentialsProvider" level="ERROR"/>
+
     <logger name="no.rutebanken" level="DEBUG" />
 
     <root level="INFO">
