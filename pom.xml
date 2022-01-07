@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.rutebanken.superpom</groupId>
         <artifactId>superpom</artifactId>
-        <version>1.0.31</version>
+        <version>1.0.33</version>
     </parent>
 
     <groupId>no.rutebanken</groupId>
@@ -46,12 +46,12 @@
     </repositories>
 
     <properties>
-        <entur.helpers.version>1.0.62</entur.helpers.version>
+        <entur.helpers.version>1.0.64</entur.helpers.version>
 
         <postgis-jdbc.version>2.5.1</postgis-jdbc.version>
         <wololo.version>0.16.1</wololo.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <swagger-jersey2.version>1.6.2</swagger-jersey2.version>
+        <swagger-jersey2.version>1.6.4</swagger-jersey2.version>
 
         <entur.google.pubsub.emulator.download.skip>false</entur.google.pubsub.emulator.download.skip>
 
