@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   application.properties: |-
 
-    #Spring mail configuration
+    # Spring mail
     spring.mail.properties.mail.smtp.writetimeout=5000
     spring.mail.properties.mail.smtp.connecttimeout=5000
     spring.mail.properties.mail.smtp.timeout=3000
@@ -18,34 +18,35 @@ data:
     server.port=9004
     spring.mail.port=2525
 
-    # Database config
-    spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
+    # Database
     spring.database.driverClassName=org.postgresql.Driver
-    spring.jpa.open-in-view=false
     spring.datasource.url=jdbc:postgresql://localhost:5432/nabu
-    spring.jpa.database=POSTGRESQL
-    spring.jpa.hibernate.use-new-id-generator-mappings=true
-    spring.jpa.properties.hibernate.cache.use_second_level_cache=false
-    spring.jpa.properties.hibernate.cache.region.factory_class=com.hazelcast.hibernate.HazelcastCacheRegionFactory
-    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
-    spring.jpa.properties.hibernate.cache.use_minimal_puts=true
-    spring.jpa.properties.hibernate.cache.use_query_cache=false
-    spring.jpa.show-sql=false
     spring.datasource.platform=postgres
+    spring.jpa.database=POSTGRESQL
+    spring.jpa.open-in-view=false
+    spring.jpa.show-sql=false
+    spring.jpa.hibernate.use-new-id-generator-mappings=true
+    spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
+    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
     spring.flyway.table=schema_version
 
-    #OAuth2 Resource Server
+    # Provider and Organisation APIs
+    administrative.zone.registry.rest.service.url=http://baba/services/organisations/administrative_zones/
+    user.registry.rest.service.url=http://baba/services/organisations/users?full=true
+    provider.registry.rest.service.url=http://baba/services/providers/
+
+    # OAuth2 Resource Server
     spring.security.oauth2.resourceserver.jwt.issuer-uri={{ .Values.configMap.auth0.ror.url }}
     nabu.oauth2.resourceserver.auth0.ror.jwt.audience={{ .Values.configMap.auth0.ror.audience }}
     nabu.oauth2.resourceserver.auth0.ror.claim.namespace=https://ror.entur.io/
 
-    #OAuth2 Client
+    # OAuth2 Client
     spring.security.oauth2.client.registration.nabu.authorization-grant-type=client_credentials
     spring.security.oauth2.client.registration.nabu.client-id={{ .Values.configMap.oauth2.client.id }}
     spring.security.oauth2.client.provider.nabu.token-uri={{ .Values.configMap.oauth2.client.url }}
     nabu.oauth2.client.audience={{ .Values.configMap.oauth2.client.audience }}
 
-    #Logging config
+    # Logging
     logging.level.org.hibernate.SQL=INFO
     logging.level.org.hibernate.tool.hbm2ddl=INFO
     logging.level.no.rutebanken=INFO
@@ -53,7 +54,7 @@ data:
     logging.level.org.hibernate.type=WARN
     logging.level.org.springframework.orm.hibernate4.support=WARN
 
-    #pubsub config
+    # PubSub
     spring.cloud.gcp.pubsub.project-id={{ .Values.configMap.pubsubProjectId }}
     spring.cloud.gcp.pubsub.credentials.location=file:/etc/nabu-service-account/credentials.json
     spring.cloud.gcp.pubsub.subscriber.parallel-pull-count=1
@@ -61,7 +62,7 @@ data:
     spring.cloud.gcp.pubsub.subscriber.max-ack-extension-period=36000
     entur.pubsub.subscriber.autocreate=false
 
-    #quartz config
+    # Quartz
     quartz.enabled=true
     spring.quartz.job-store-type=jdbc
     spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
@@ -71,6 +72,7 @@ data:
     spring.quartz.properties.org.quartz.jobStore.isClustered=true
     spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval=2000
 
+    # Spring Boot Actuator
     management.server.port=9001
     management.endpoints.enabled-by-default=false
     management.endpoint.info.enabled=true
@@ -80,9 +82,6 @@ data:
     management.endpoints.web.exposure.include=info,health,prometheus
     management.health.mail.enabled=false
 
-    administrative.zone.registry.rest.service.url=http://baba/services/organisations/administrative_zones/
-    user.registry.rest.service.url=http://baba/services/organisations/users?full=true
-    provider.registry.rest.service.url=http://baba/services/providers/
 kind: ConfigMap
 metadata:
   name: {{ template "nabu.name" . }}-config
