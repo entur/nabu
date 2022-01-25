@@ -30,7 +30,9 @@ class TimeTableJobEventResourceTest {
 
     private static final String ACTION1="IMPORT";
     private static final String ACTION2="EXPORT";
-    
+    public static final String EXTERNAL_ID_1 = "1";
+    public static final String EXTERNAL_ID_2 = "2";
+
     @Test
     void testGetStatusForProvider() {
 
@@ -40,13 +42,13 @@ class TimeTableJobEventResourceTest {
 
         // Job "b" -> OK
         rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2L, null, ACTION2, JobState.PENDING, "b", t0.plusMillis(4), "ost"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2L, "1", ACTION2, JobState.STARTED, "b", t0.plusMillis(5), "pb"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2L, "1", ACTION2, JobState.OK, "b", t0.plusMillis(6), "pb"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2L, EXTERNAL_ID_1, ACTION2, JobState.STARTED, "b", t0.plusMillis(5), "pb"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename2", 2L, EXTERNAL_ID_1, ACTION2, JobState.OK, "b", t0.plusMillis(6), "pb"));
 
         // Job "a" -> FAILED
         rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2L, null, ACTION1, JobState.PENDING, "a", t0.plusMillis(1), "ost"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2L, "2", ACTION1, JobState.STARTED, "a", t0.plusMillis(2), "ost"));
-        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2L, "2", ACTION1, JobState.FAILED, "a", t0.plusMillis(3), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2L, EXTERNAL_ID_2, ACTION1, JobState.STARTED, "a", t0.plusMillis(2), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename1", 2L, EXTERNAL_ID_2, ACTION1, JobState.FAILED, "a", t0.plusMillis(3), "ost"));
 
 
         List<JobStatus> listStatus = new TimeTableJobEventResource().convert(rawEvents);
@@ -63,7 +65,7 @@ class TimeTableJobEventResourceTest {
         Assertions.assertEquals(Date.from(t0.plusMillis(1)), a.getFirstEvent());
         Assertions.assertEquals(Date.from(t0.plusMillis(3)), a.getLastEvent());
 
-        Assertions.assertEquals(Long.valueOf(2), a.getEvents().get(1).chouetteJobId);
+        Assertions.assertEquals(EXTERNAL_ID_2, a.getEvents().get(1).chouetteJobId);
 
         JobStatus b = listStatus.get(1);
 
@@ -75,9 +77,9 @@ class TimeTableJobEventResourceTest {
         Assertions.assertEquals(Date.from(t0.plusMillis(6)), b.getLastEvent());
 
         Assertions.assertEquals("ost", b.getEvents().get(0).referential);
-        Assertions.assertEquals(Long.valueOf(1), b.getEvents().get(1).chouetteJobId);
+        Assertions.assertEquals(EXTERNAL_ID_1, b.getEvents().get(1).chouetteJobId);
         Assertions.assertEquals("pb", b.getEvents().get(1).referential);
-        Assertions.assertEquals(Long.valueOf(1), b.getEvents().get(2).chouetteJobId);
+        Assertions.assertEquals(EXTERNAL_ID_1, b.getEvents().get(2).chouetteJobId);
         Assertions.assertEquals("pb", b.getEvents().get(2).referential);
     }
 

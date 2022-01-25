@@ -33,13 +33,13 @@ public class JobStatusEvent {
     public String action;
 
     @JsonProperty("chouetteJobId")
-    public Long chouetteJobId;
+    public String chouetteJobId;
 
     @JsonProperty("referential")
     public String referential;
 
 
-    public JobStatusEvent(String action, State state, Date date, Long chouetteJobId, String referential) {
+    public JobStatusEvent(String action, State state, Date date, String chouetteJobId, String referential) {
         this.action = action;
         this.state = state;
         this.date = date;
@@ -48,9 +48,8 @@ public class JobStatusEvent {
     }
 
     public static JobStatusEvent createFromJobEvent(JobEvent e) {
-        Long chouetteId = e.getExternalId() == null ? null : Long.parseLong(e.getExternalId());
         return new JobStatusEvent(e.getAction(),
-                                         JobStatus.State.valueOf(e.getState().name()), Date.from(e.getEventTime()), chouetteId
+                                         JobStatus.State.valueOf(e.getState().name()), Date.from(e.getEventTime()), e.getExternalId()
                                          , e.getReferential());
     }
 }
