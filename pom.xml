@@ -51,7 +51,7 @@
         <postgis-jdbc.version>2021.1.0</postgis-jdbc.version>
         <wololo.version>0.16.1</wololo.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <swagger-jersey2.version>1.6.4</swagger-jersey2.version>
+        <swagger-jersey2.version>1.6.5</swagger-jersey2.version>
 
         <entur.google.pubsub.emulator.download.skip>false</entur.google.pubsub.emulator.download.skip>
 
