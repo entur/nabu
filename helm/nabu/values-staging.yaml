@@ -6,6 +6,9 @@ sql:
 configMap:
   pubsubProjectId: entur-ror-test
 
+  baba:
+    service: http://baba.tst.entur.internal
+
   auth0:
     ror:
       url: https://ror-entur-staging.eu.auth0.com/

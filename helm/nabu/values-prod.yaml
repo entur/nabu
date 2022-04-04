@@ -6,6 +6,9 @@ sql:
 configMap:
   pubsubProjectId: entur-ror-prod
 
+  baba:
+    service: http://baba.prd.entur.internal
+
   auth0:
     ror:
       url: https://auth2.entur.org/

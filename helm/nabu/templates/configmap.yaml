@@ -31,9 +31,9 @@ data:
     spring.flyway.table=schema_version
 
     # Provider and Organisation APIs
-    administrative.zone.registry.rest.service.url=http://baba/services/organisations/administrative_zones/
-    user.registry.rest.service.url=http://baba/services/organisations/users?full=true
-    provider.registry.rest.service.url=http://baba/services/providers/
+    administrative.zone.registry.rest.service.url={{ .Values.configMap.baba.service }}/services/organisations/administrative_zones/
+    user.registry.rest.service.url={{ .Values.configMap.baba.service }}/services/organisations/users?full=true
+    provider.registry.rest.service.url={{ .Values.configMap.baba.service }}/services/providers/
 
     # OAuth2 Resource Server
     spring.security.oauth2.resourceserver.jwt.issuer-uri={{ .Values.configMap.auth0.ror.url }}
