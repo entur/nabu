@@ -77,7 +77,7 @@ data:
     management.endpoints.enabled-by-default=false
     management.endpoint.info.enabled=true
     management.endpoint.health.enabled=true
-    management.endpoint.health.group.readiness.include=readinessState,db,pubSub
+    management.endpoint.health.group.readiness.include=readinessState,db
     management.endpoint.prometheus.enabled=true
     management.endpoints.web.exposure.include=info,health,prometheus
     management.health.mail.enabled=false
