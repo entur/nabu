@@ -1,4 +1,4 @@
-env: staging
+env: test
 
 sql:
   instance: entur-ror-test:europe-west1:nabu-db-pg13=tcp:5432
