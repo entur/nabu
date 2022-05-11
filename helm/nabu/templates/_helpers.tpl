@@ -33,6 +33,7 @@ release: {{ .Release.Name }}
 team: ror
 slack: talk-ror
 type: events
+environment: {{.Values.env }}
 customLogRetention: enabled
 namespace: {{ .Release.Namespace }}
 {{- end }}
