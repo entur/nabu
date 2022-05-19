@@ -81,6 +81,7 @@ data:
     management.endpoint.prometheus.enabled=true
     management.endpoints.web.exposure.include=info,health,prometheus
     management.health.mail.enabled=false
+    management.health.pubsub.enabled=false
 
 kind: ConfigMap
 metadata:
