@@ -20,9 +20,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,18 +39,16 @@ public abstract class BaseIntegrationTest {
 
     @TestConfiguration
     @EnableWebSecurity
-    static class TestWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    static class TestWebSecurityConfiguration {
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
+        @Bean
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http.csrf().disable()
-                    .authorizeRequests(authorizeRequests ->
-                            authorizeRequests
-                                    .anyRequest().permitAll()
+                    .authorizeHttpRequests(authz -> authz
+                            .anyRequest().permitAll()
                     );
-
+            return http.build();
         }
-
     }
 
 
