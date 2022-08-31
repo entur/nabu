@@ -1,5 +1,17 @@
 {
   "extends": [
-    "config:base"
+    "github>entur/ror-renovate-config"
+  ],
+  "minor": {
+    "automerge": false
+  },
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "google/cloud-sdk"
+      ],
+      "automerge": true,
+      "separateMinorPatch": false
+    }
   ]
 }
