@@ -49,9 +49,9 @@ class PubSubEventIntegrationTest extends BaseIntegrationTest {
     void testConsumeJobEventFromPubSub() {
 
         JobEventDTO jobEventDTO = new JobEventDTO();
-        jobEventDTO.name = "testName";
-        jobEventDTO.action = "testAction";
-        jobEventDTO.correlationId = "testCorrelationId";
+        jobEventDTO.setName("testName");
+        jobEventDTO.setAction("testAction");
+        jobEventDTO.setCorrelationId("testCorrelationId");
         String testPayload = JobEventDTO.toString(jobEventDTO);
 
         pubSubTemplate.publish(JobEventListener.JOB_EVENT_QUEUE, testPayload);
