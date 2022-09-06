@@ -62,7 +62,9 @@ public abstract class Event implements Comparable<Event> {
     }
 
     public void setRegisteredTime(Instant registeredTime) {
-        this.registeredTime = registeredTime;
+        if(registeredTime != null) {
+            this.registeredTime = registeredTime.truncatedTo(ChronoUnit.MICROS);
+        }
     }
 
     public Instant getEventTime() {
