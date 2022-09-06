@@ -28,6 +28,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.Instant;
+
 import static org.mockito.Mockito.timeout;
 
 
@@ -49,9 +51,10 @@ class PubSubEventIntegrationTest extends BaseIntegrationTest {
     void testConsumeJobEventFromPubSub() {
 
         JobEventDTO jobEventDTO = new JobEventDTO();
-        jobEventDTO.name = "testName";
-        jobEventDTO.action = "testAction";
-        jobEventDTO.correlationId = "testCorrelationId";
+        jobEventDTO.setName("testName");
+        jobEventDTO.setAction("testAction");
+        jobEventDTO.setCorrelationId("testCorrelationId");
+        jobEventDTO.setEventTime(Instant.now());
         String testPayload = JobEventDTO.toString(jobEventDTO);
 
         pubSubTemplate.publish(JobEventListener.JOB_EVENT_QUEUE, testPayload);

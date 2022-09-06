@@ -53,17 +53,17 @@ public class EventMapper {
 
     public JobEvent toJobEvent(JobEventDTO dto) {
         JobEvent event = new JobEvent();
-        event.setAction(dto.action);
-        event.setCorrelationId(dto.correlationId);
-        event.setEventTime(dto.eventTime);
-        event.setExternalId(dto.externalId);
-        event.setName(dto.name);
-        event.setProviderId(dto.providerId);
-        event.setReferential(dto.referential);
-        event.setState(dto.state);
-        event.setDomain(dto.domain);
-        event.setUsername(dto.username);
-        event.setErrorCode(dto.errorCode);
+        event.setAction(dto.getAction());
+        event.setCorrelationId(dto.getCorrelationId());
+        event.setEventTime(dto.getEventTime());
+        event.setExternalId(dto.getExternalId());
+        event.setName(dto.getName());
+        event.setProviderId(dto.getProviderId());
+        event.setReferential(dto.getReferential());
+        event.setState(dto.getState());
+        event.setDomain(dto.getDomain());
+        event.setUsername(dto.getUsername());
+        event.setErrorCode(dto.getErrorCode());
 
         return event;
     }

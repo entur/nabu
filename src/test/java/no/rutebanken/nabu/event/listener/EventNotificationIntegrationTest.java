@@ -88,7 +88,7 @@ class EventNotificationIntegrationTest extends BaseIntegrationTest {
         List<Notification> notifications = notificationRepository.findByUserNameAndTypeAndStatus(user.getUsername(), NotificationType.WEB, Notification.NotificationStatus.READY);
 
         Assertions.assertEquals(1, notifications.size());
-        Assertions.assertEquals(notifications.get(0).getEvent().getEventTime(), matchingEvent.eventTime);
+        Assertions.assertEquals(notifications.get(0).getEvent().getEventTime(), matchingEvent.getEventTime());
     }
 
     private EventFilterDTO jobEventFilter(String action, JobState jobState) {
@@ -103,10 +103,10 @@ class EventNotificationIntegrationTest extends BaseIntegrationTest {
 
     protected JobEventDTO createEvent(JobState state, String action, Instant time) {
         JobEventDTO jobEvent = new JobEventDTO();
-        jobEvent.eventTime = time;
-        jobEvent.state = state;
-        jobEvent.action = action;
-        jobEvent.domain = JobEvent.JobDomain.TIMETABLE.toString();
+        jobEvent.setEventTime(time);
+        jobEvent.setState(state);
+        jobEvent.setAction(action);
+        jobEvent.setDomain(JobEvent.JobDomain.TIMETABLE.toString());
         return jobEvent;
     }
 }
