@@ -25,6 +25,8 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 @Entity
 @Table(indexes = {@Index(name = "i_event_provider", columnList = "providerId,correlationId,action,eventTime")})
@@ -35,7 +37,7 @@ public abstract class Event implements Comparable<Event> {
     private Long pk;
 
     @NotNull
-    private Instant registeredTime;
+    private final Instant registeredTime;
     @NotNull
     private Instant eventTime;
     @NotNull
@@ -51,16 +53,12 @@ public abstract class Event implements Comparable<Event> {
 
     private String errorCode;
 
-    public Event() {
-        registeredTime = Instant.now();
+    protected Event() {
+        registeredTime = Instant.now().truncatedTo(ChronoUnit.MICROS);
     }
 
     public Instant getRegisteredTime() {
         return registeredTime;
-    }
-
-    public void setRegisteredTime(Instant registeredTime) {
-        this.registeredTime = registeredTime;
     }
 
     public Instant getEventTime() {
@@ -68,7 +66,7 @@ public abstract class Event implements Comparable<Event> {
     }
 
     public void setEventTime(Instant eventTime) {
-        this.eventTime = eventTime;
+        this.eventTime = Objects.requireNonNull(eventTime).truncatedTo(ChronoUnit.MICROS);
     }
 
     public String getAction() {
@@ -153,7 +151,7 @@ public abstract class Event implements Comparable<Event> {
 
     public abstract static class EventBuilder<T extends Event> {
 
-        protected T event;
+        protected final T event;
 
         protected EventBuilder(T event) {
             this.event = event;

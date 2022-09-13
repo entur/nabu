@@ -23,6 +23,9 @@ import no.rutebanken.nabu.exceptions.NabuException;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JobEventDTO {
 
@@ -74,7 +77,7 @@ public class JobEventDTO {
     }
 
     public void setEventTime(Instant eventTime) {
-        this.eventTime = eventTime;
+        this.eventTime = Objects.requireNonNull(eventTime).truncatedTo(ChronoUnit.MICROS);
     }
 
     public String getCorrelationId() {

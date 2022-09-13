@@ -31,6 +31,7 @@ import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,11 +62,11 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
             sb.append("and s.providerId in (:providerIds)");
         }
         if (from != null) {
-            params.put("from", from);
+            params.put("from", from.truncatedTo(ChronoUnit.MICROS));
             sb.append(" and s.eventTime>=:from");
         }
         if (to != null) {
-            params.put("to", to);
+            params.put("to", to.truncatedTo(ChronoUnit.MICROS));
             sb.append(" and s.eventTime<=:to");
         }
         if (!CollectionUtils.isEmpty(actions)) {
