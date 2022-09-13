@@ -84,26 +84,26 @@ class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
         Assertions.assertEquals(4, eventRepository.findAll().size());
 
-        JobEvent queryEvent = JobEvent.builder().domain(firstPendingEvent.domain).build();
+        JobEvent queryEvent = JobEvent.builder().domain(firstPendingEvent.getDomain()).build();
         queryEvent.setRegisteredTime(null);
         Assertions.assertEquals(4, eventRepository.findAll(Example.of(queryEvent)).size());
 
     }
 
     protected void assertSystemJobStatus(JobEventDTO jobEvent) {
-        SystemJobStatus systemJobStatus = systemJobStatusRepository.findByJobDomainAndActionAndState(jobEvent.domain,
-                jobEvent.action, jobEvent.state);
+        SystemJobStatus systemJobStatus = systemJobStatusRepository.findByJobDomainAndActionAndState(jobEvent.getDomain(),
+                jobEvent.getAction(), jobEvent.getState());
 
-        Assertions.assertEquals(jobEvent.eventTime, systemJobStatus.getLastStatusTime());
-        Assertions.assertEquals(jobEvent.state, systemJobStatus.getState());
+        Assertions.assertEquals(jobEvent.getEventTime(), systemJobStatus.getLastStatusTime());
+        Assertions.assertEquals(jobEvent.getState(), systemJobStatus.getState());
     }
 
     protected JobEventDTO createEvent(JobState state, Instant time) {
         JobEventDTO jobEvent = new JobEventDTO();
-        jobEvent.eventTime = time;
-        jobEvent.state = state;
-        jobEvent.action = "action";
-        jobEvent.domain = "JobStatusListener";
+        jobEvent.setEventTime(time);
+        jobEvent.setState(state);
+        jobEvent.setAction("action");
+        jobEvent.setDomain("JobStatusListener");
         return jobEvent;
     }
 

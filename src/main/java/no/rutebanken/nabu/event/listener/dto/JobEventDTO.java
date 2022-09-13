@@ -26,26 +26,27 @@ import java.time.Instant;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JobEventDTO {
 
-    public Instant eventTime;
+    private Instant eventTime;
 
-    public String correlationId;
+    private String correlationId;
 
-    public String domain;
-    public String action;
-    public JobState state;
+    private String domain;
+    private String action;
+    private JobState state;
 
 
-    public String externalId;
 
-    public Long providerId;
+    private String externalId;
 
-    public String referential;
+    private Long providerId;
 
-    public String name;
+    private String referential;
 
-    public String username;
+    private String name;
 
-    public String errorCode;
+    private String username;
+
+    private String errorCode;
 
     public static JobEventDTO fromString(String string) {
         try {
@@ -65,6 +66,95 @@ public class JobEventDTO {
         } catch (IOException e) {
             throw new NabuException("Error while processing ", e);
         }
+    }
+
+
+    public Instant getEventTime() {
+        return eventTime;
+    }
+
+    public void setEventTime(Instant eventTime) {
+        this.eventTime = eventTime;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public JobState getState() {
+        return state;
+    }
+
+    public void setState(JobState state) {
+        this.state = state;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public Long getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(Long providerId) {
+        this.providerId = providerId;
+    }
+
+    public String getReferential() {
+        return referential;
+    }
+
+    public void setReferential(String referential) {
+        this.referential = referential;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 
 }
