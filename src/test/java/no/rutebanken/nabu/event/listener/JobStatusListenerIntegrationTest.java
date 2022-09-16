@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -85,8 +86,7 @@ class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertEquals(4, eventRepository.findAll().size());
 
         JobEvent queryEvent = JobEvent.builder().domain(firstPendingEvent.getDomain()).build();
-        queryEvent.setRegisteredTime(null);
-        Assertions.assertEquals(4, eventRepository.findAll(Example.of(queryEvent)).size());
+        Assertions.assertEquals(4, eventRepository.findAll(Example.of(queryEvent, ExampleMatcher.matching().withIgnorePaths("registeredTime"))).size());
 
     }
 
