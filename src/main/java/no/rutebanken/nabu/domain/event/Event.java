@@ -37,7 +37,7 @@ public abstract class Event implements Comparable<Event> {
     private Long pk;
 
     @NotNull
-    private Instant registeredTime;
+    private final Instant registeredTime;
     @NotNull
     private Instant eventTime;
     @NotNull
@@ -53,18 +53,12 @@ public abstract class Event implements Comparable<Event> {
 
     private String errorCode;
 
-    public Event() {
+    protected Event() {
         registeredTime = Instant.now().truncatedTo(ChronoUnit.MICROS);
     }
 
     public Instant getRegisteredTime() {
         return registeredTime;
-    }
-
-    public void setRegisteredTime(Instant registeredTime) {
-        if(registeredTime != null) {
-            this.registeredTime = registeredTime.truncatedTo(ChronoUnit.MICROS);
-        }
     }
 
     public Instant getEventTime() {
@@ -157,7 +151,7 @@ public abstract class Event implements Comparable<Event> {
 
     public abstract static class EventBuilder<T extends Event> {
 
-        protected T event;
+        protected final T event;
 
         protected EventBuilder(T event) {
             this.event = event;
