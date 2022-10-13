@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:alpine-jre
+FROM eclipse-temurin:17-jre-alpine
 RUN apk add --no-cache tini
 WORKDIR /deployments
 COPY target/nabu-*-SNAPSHOT.jar nabu.jar

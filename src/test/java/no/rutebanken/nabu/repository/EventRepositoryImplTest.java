@@ -66,16 +66,6 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
 
 
     @Test()
-        // Fails with JDK 15+ on Linux due to a bug in Hibernate. Fixed in Hibernate 6.0+
-        // Starting with JDK15 the JVM on Linux provides nanosecond precision for timestamps.
-        // PostgreSQL supports only microsecond precision for the TIMESTAMP data type.
-        // This has side effects on the way Hibernate compares Instant objects.
-        // https://hibernate.atlassian.net/browse/HHH-15166
-        // https://hibernate.atlassian.net/browse/HHH-15135
-        // https://discourse.hibernate.org/t/java-17-version-and-nanoseconds-truncation/6128
-        // https://bugs.openjdk.java.net/browse/JDK-8242504
-        // https://stackoverflow.com/questions/65594874/java-15-nanoseconds-precision-causing-issues-on-linux-environment
-        // https://www.postgresql.org/docs/13/datatype-datetime.html
     void testGetStatusWithAllCriteria() {
         JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, "corr-id-1", now, "ost");
         repository.save(s1);
