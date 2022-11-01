@@ -24,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
@@ -36,21 +37,27 @@ public abstract class Event implements Comparable<Event> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long pk;
 
-    @NotNull
+    @NotNull(message = "registeredTime cannot be null")
     private final Instant registeredTime;
-    @NotNull
+    @NotNull(message = "eventTime cannot be null")
     private Instant eventTime;
-    @NotNull
+    @NotNull(message = "action cannot be null")
+    @Size(max = 255, message = "action cannot be longer than 255 characters")
     private String action;
 
+    @Size(max = 255, message = "correlationId cannot be longer than 255 characters")
     private String correlationId;
 
+    @Size(max = 255, message = "name cannot be longer than 255 characters")
     private String name;
 
+    @Size(max = 255, message = "externalId cannot be longer than 255 characters")
     private String externalId;
 
+    @Size(max = 255, message = "username cannot be longer than 255 characters")
     private String username;
 
+    @Size(max = 255, message = "errorCode cannot be longer than 255 characters")
     private String errorCode;
 
     protected Event() {

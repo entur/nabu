@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -41,12 +42,22 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
     @Autowired
     EventRepositoryImpl repository;
 
-    private Instant now = Instant.now();
+    private final Instant now = Instant.now();
 
     @Test
     void testUpdate() {
         JobEvent input = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "00013-gtfs.zip", 2L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, "1234567", now, "ost");
+        Assertions.assertDoesNotThrow(() -> {
+            repository.save(input);
+            repository.flush();
+        });
+    }
+
+    @Test
+    void testSaveInvalidEvent() {
+        JobEvent input = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "X".repeat(500), 2L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, "1234567", now, "ost");
         repository.save(input);
+        Assertions.assertThrows(ConstraintViolationException.class, () -> repository.flush());
     }
 
     @Test

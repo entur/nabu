@@ -15,14 +15,7 @@
 
 package no.rutebanken.nabu.event.listener;
 
-import no.rutebanken.nabu.domain.event.Event;
-import no.rutebanken.nabu.event.EventService;
-import no.rutebanken.nabu.event.listener.dto.CrudEventDTO;
-import no.rutebanken.nabu.event.listener.mapper.EventMapper;
 import org.entur.pubsub.base.AbstractEnturGooglePubSubConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -34,12 +27,11 @@ public class CrudEventListener extends AbstractEnturGooglePubSubConsumer {
 
     public static final String CRUD_EVENT_QUEUE = "CrudEventQueue";
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final CrudeEventProcessor crudeEventProcessor;
 
-    @Autowired
-    private EventService eventService;
-
-    private EventMapper eventMapper = new EventMapper();
+    public CrudEventListener(CrudeEventProcessor crudeEventProcessor) {
+        this.crudeEventProcessor = crudeEventProcessor;
+    }
 
     @Override
     protected String getDestinationName() {
@@ -48,11 +40,7 @@ public class CrudEventListener extends AbstractEnturGooglePubSubConsumer {
 
     @Override
     public void onMessage(byte[] content, Map<String, String> headers) {
-
-        CrudEventDTO dto = CrudEventDTO.fromString(new String(content));
-        Event event = eventMapper.toCrudEvent(dto);
-        logger.info("Received crud event: {}", event);
-        eventService.addEvent(event);
+        crudeEventProcessor.processMessage(new String(content));
     }
 
 
