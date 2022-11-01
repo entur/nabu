@@ -16,7 +16,6 @@
 package no.rutebanken.nabu.event.listener;
 
 import org.entur.pubsub.base.AbstractEnturGooglePubSubConsumer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -28,8 +27,11 @@ public class JobEventListener extends AbstractEnturGooglePubSubConsumer {
 
     public static final String JOB_EVENT_QUEUE = "JobEventQueue";
 
-    @Autowired
-    private JobEventProcessor jobEventProcessor;
+    private final JobEventProcessor jobEventProcessor;
+
+    public JobEventListener(JobEventProcessor jobEventProcessor) {
+        this.jobEventProcessor = jobEventProcessor;
+    }
 
     @Override
     protected String getDestinationName() {

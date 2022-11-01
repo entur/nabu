@@ -22,6 +22,7 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.UserNotificationEventHandler;
 import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import no.rutebanken.nabu.event.user.UserRepository;
+import no.rutebanken.nabu.exceptions.NabuException;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import org.junit.jupiter.api.Assertions;
@@ -31,6 +32,8 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -90,7 +93,18 @@ class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
 
     }
 
-    protected void assertSystemJobStatus(JobEventDTO jobEvent) {
+    @Test
+    // Use propagation = never so that the transaction boundaries are within jobEventProcessor.processMessage()
+    @Transactional(propagation = Propagation.NEVER)
+    void saveInvalidJobEvent() {
+        Instant now = Instant.now();
+        JobEventDTO invalidEvent = createEvent(JobState.PENDING, now, "X".repeat(500), "domain");
+        String json = toJson(invalidEvent);
+        Assertions.assertThrows(NabuException.class, () -> jobEventProcessor.processMessage(json));
+    }
+
+
+        protected void assertSystemJobStatus(JobEventDTO jobEvent) {
         SystemJobStatus systemJobStatus = systemJobStatusRepository.findByJobDomainAndActionAndState(jobEvent.getDomain(),
                 jobEvent.getAction(), jobEvent.getState());
 
@@ -99,11 +113,15 @@ class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
     }
 
     protected JobEventDTO createEvent(JobState state, Instant time) {
+        return createEvent(state, time, "action", "JobStatusListener");
+    }
+
+    protected JobEventDTO createEvent(JobState state, Instant time, String action, String domain) {
         JobEventDTO jobEvent = new JobEventDTO();
         jobEvent.setEventTime(time);
         jobEvent.setState(state);
-        jobEvent.setAction("action");
-        jobEvent.setDomain("JobStatusListener");
+        jobEvent.setAction(action);
+        jobEvent.setDomain(domain);
         return jobEvent;
     }
 
