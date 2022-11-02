@@ -2,6 +2,7 @@ package no.rutebanken.nabu.event.listener;
 
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.event.EventService;
+import no.rutebanken.nabu.event.NabuEventValidationException;
 import no.rutebanken.nabu.event.listener.dto.CrudEventDTO;
 import no.rutebanken.nabu.event.listener.mapper.EventMapper;
 import no.rutebanken.nabu.exceptions.NabuException;
@@ -29,7 +30,9 @@ public class CrudeEventProcessor {
 
         try {
             eventService.addEvent(event);
-        } catch(Exception e) {
+        } catch (NabuEventValidationException e) {
+            logger.warn("Skipping CRUD event {} with validation errors: {}", event, e.validationErrors());
+        } catch (Exception e) {
             throw new NabuException("Error while saving CrudeEvent " + event, e);
         }
     }

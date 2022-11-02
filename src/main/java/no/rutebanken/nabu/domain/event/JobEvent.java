@@ -18,6 +18,7 @@ package no.rutebanken.nabu.domain.event;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 
 /**
@@ -33,10 +34,12 @@ public class JobEvent extends Event {
     private JobState state;
 
     @NotNull
+    @Size(max = 255, message = "domain cannot be longer than 255 characters")
     private String domain;
 
     private Long providerId;
 
+    @Size(max = 255, message = "referential cannot be longer than 255 characters")
     private String referential;
 
 
@@ -57,10 +60,6 @@ public class JobEvent extends Event {
 
     public String getDomain() {
         return domain;
-    }
-
-    public void setDomain(JobDomain domain) {
-        this.domain = domain == null ? null : domain.name();
     }
 
     public void setDomain(String domain) {

@@ -40,7 +40,7 @@ import java.util.Map;
 @Transactional
 public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implements EventRepository {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     @Value("${event.repository.max.results:10000}")
     public int maxResults;
@@ -175,14 +175,15 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
                 .getResultList();
     }
 
+
     @Override
-    public void clearAll(String domain) {
+    public void clearJobEvents(String domain) {
         this.entityManager.createQuery("delete from JobEvent je where je.domain=:domain").setParameter("domain", domain).executeUpdate();
     }
 
 
     @Override
-    public void clear(String domain, Long providerId) {
+    public void clearJobEvents(String domain, Long providerId) {
         this.entityManager.createQuery("delete from JobEvent je where je.domain=:domain and je.providerId=:providerId").setParameter("domain", domain).setParameter("providerId", providerId).executeUpdate();
     }
 

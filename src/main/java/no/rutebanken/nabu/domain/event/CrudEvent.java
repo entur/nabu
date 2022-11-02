@@ -19,6 +19,7 @@ import org.locationtech.jts.geom.Geometry;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Event representing creation, update or removal of an entity.
@@ -29,12 +30,15 @@ public class CrudEvent extends Event {
 
     // Type of entity (ie StopPlace or PlaceOfInterest)
     @NotNull
+    @Size(max = 255, message = "entityType cannot be longer than 255 characters")
     private String entityType;
 
     // Sub type of entity (ie busStop or church)
+    @Size(max = 255, message = "entityClassifier cannot be longer than 255 characters")
     private String entityClassifier;
 
     // What was changed?
+    @Size(max = 255, message = "changeType cannot be longer than 255 characters")
     private String changeType;
 
     // Current version after change
@@ -42,17 +46,21 @@ public class CrudEvent extends Event {
     private Long version;
 
     // Value before change (simple update only)
+    @Size(max = 255, message = "oldValue cannot be longer than 255 characters")
     private String oldValue;
 
     // Value after change (simple update only)
+    @Size(max = 255, message = "newValue cannot be longer than 255 characters")
     private String newValue;
 
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "geometry")
     private Geometry geometry;
 
+    @Size(max = 255, message = "comment cannot be longer than 255 characters")
     private String comment;
 
+    @Size(max = 255, message = "location cannot be longer than 255 characters")
     private String location;
 
     public String getLocation() {

@@ -22,7 +22,6 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.UserNotificationEventHandler;
 import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import no.rutebanken.nabu.event.user.UserRepository;
-import no.rutebanken.nabu.exceptions.NabuException;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import org.junit.jupiter.api.Assertions;
@@ -32,8 +31,6 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -61,6 +58,26 @@ class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
     void setUp() {
         userNotificationEventHandler.setUserRepository(userRepositoryMock);
         when(userRepositoryMock.findAll()).thenReturn(new ArrayList<>());
+    }
+
+    @Test
+    void saveValidJobEvent() {
+        Instant now = Instant.now();
+        JobEventDTO validEvent = createEvent(JobState.PENDING, now);
+        String json = toJson(validEvent);
+        jobEventProcessor.processMessage(json);
+        Assertions.assertDoesNotThrow(() -> eventRepository.flush());
+        Assertions.assertEquals(1, eventRepository.findAll().size());
+    }
+
+    @Test
+    void ignoreInvalidJobEvent() {
+        Instant now = Instant.now();
+        JobEventDTO invalidEvent = createEvent(JobState.PENDING, now, "X".repeat(500), "domain");
+        String json = toJson(invalidEvent);
+        jobEventProcessor.processMessage(json);
+        Assertions.assertDoesNotThrow(() -> eventRepository.flush());
+        Assertions.assertEquals(0, eventRepository.findAll().size());
     }
 
 
@@ -92,17 +109,6 @@ class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
         Assertions.assertEquals(4, eventRepository.findAll(Example.of(queryEvent, ExampleMatcher.matching().withIgnorePaths("registeredTime"))).size());
 
     }
-
-    @Test
-    // Use propagation = never so that the transaction boundaries are within jobEventProcessor.processMessage()
-    @Transactional(propagation = Propagation.NEVER)
-    void saveInvalidJobEvent() {
-        Instant now = Instant.now();
-        JobEventDTO invalidEvent = createEvent(JobState.PENDING, now, "X".repeat(500), "domain");
-        String json = toJson(invalidEvent);
-        Assertions.assertThrows(NabuException.class, () -> jobEventProcessor.processMessage(json));
-    }
-
 
         protected void assertSystemJobStatus(JobEventDTO jobEvent) {
         SystemJobStatus systemJobStatus = systemJobStatusRepository.findByJobDomainAndActionAndState(jobEvent.getDomain(),

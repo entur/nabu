@@ -20,48 +20,63 @@ import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.repository.NotificationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
 public class EventService {
 
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
 
-    @Autowired
-    private List<EventHandler> eventHandlers;
+    private final List<EventHandler> eventHandlers;
+    private final Validator validator;
+
+    public EventService(EventRepository eventRepository, NotificationRepository notificationRepository, List<EventHandler> eventHandlers) {
+        this.eventRepository = eventRepository;
+        this.notificationRepository = notificationRepository;
+        this.eventHandlers = eventHandlers;
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            this.validator = factory.getValidator();
+        }
+    }
 
 
     public List<JobEvent> findTimetableJobEvents(List<Long> providerIds, Instant from, Instant to, List<String> actions,
-                                                        List<JobState> states, List<String> externalIds, List<String> fileNames) {
+                                                 List<JobState> states, List<String> externalIds, List<String> fileNames) {
         return eventRepository.findTimetableJobEvents(providerIds, from, to, actions, states, externalIds, fileNames);
     }
 
 
-    public void addEvent(Event event) {
-        eventRepository.save(event);
-
-        eventHandlers.forEach(handler -> handler.onEvent(event));
+    public void addEvent(Event event) throws NabuEventValidationException {
+        Set<ConstraintViolation<Event>> validationErrors = validator.validate(event);
+        if (validationErrors.isEmpty()) {
+            eventRepository.save(event);
+            eventHandlers.forEach(handler -> handler.onEvent(event));
+        } else {
+            throw new NabuEventValidationException("Error while validating event", validationErrors);
+        }
     }
 
 
     public void clearAll(String domain) {
         notificationRepository.clearAll(domain);
-        eventRepository.clearAll(domain);
+        eventRepository.clearJobEvents(domain);
     }
 
 
     public void clear(String domain, Long providerId) {
         notificationRepository.clear(domain, providerId);
-        eventRepository.clear(domain, providerId);
+        eventRepository.clearJobEvents(domain, providerId);
     }
 }

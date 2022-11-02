@@ -35,8 +35,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<CrudEvent> findCrudEvents(CrudEventSearch search);
 
-    void clearAll(String domain);
+    void clearJobEvents(String domain);
 
-    void clear(String domain, Long providerId);
+    void clearJobEvents(String domain, Long providerId);
 
 }

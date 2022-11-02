@@ -122,7 +122,7 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
         JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
         repository.save(s3);
 
-        repository.clearAll(JobEvent.JobDomain.TIMETABLE.toString());
+        repository.clearJobEvents(JobEvent.JobDomain.TIMETABLE.toString());
 
         Assertions.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(3L), null, null, null, null, null, null).isEmpty());
         Assertions.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(4L), null, null, null, null, null, null).isEmpty());
@@ -137,7 +137,7 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
         JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
         repository.save(s3);
 
-        repository.clear(JobEvent.JobDomain.TIMETABLE.toString(), 3L);
+        repository.clearJobEvents(JobEvent.JobDomain.TIMETABLE.toString(), 3L);
 
         Assertions.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(3L), null, null, null, null, null, null).isEmpty());
         Assertions.assertEquals(1, repository.findTimetableJobEvents(Collections.singletonList(4L), null, null, null, null, null, null).size());
