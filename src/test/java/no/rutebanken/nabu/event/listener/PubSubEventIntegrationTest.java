@@ -19,6 +19,7 @@ import com.google.cloud.spring.pubsub.core.PubSubTemplate;
 import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.EventService;
 import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import org.junit.jupiter.api.Assertions;
@@ -59,6 +60,7 @@ class PubSubEventIntegrationTest extends BaseIntegrationTest {
         jobEventDTO.setName("testName");
         jobEventDTO.setAction("testAction");
         jobEventDTO.setCorrelationId("testCorrelationId");
+        jobEventDTO.setState(JobState.OK);
         jobEventDTO.setEventTime(Instant.now());
         String testPayload = JobEventDTO.toString(jobEventDTO);
 
@@ -74,7 +76,7 @@ class PubSubEventIntegrationTest extends BaseIntegrationTest {
         Assertions.assertEquals("testName", jobEvent.getName());
         Assertions.assertEquals("testAction", jobEvent.getAction());
         Assertions.assertEquals("testCorrelationId", jobEvent.getCorrelationId());
-
+        Assertions.assertEquals(JobState.OK, jobEvent.getState());
     }
 }
 
