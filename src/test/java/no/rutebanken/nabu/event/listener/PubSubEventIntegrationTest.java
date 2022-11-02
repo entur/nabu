@@ -23,6 +23,7 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.EventService;
 import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -53,6 +54,7 @@ class PubSubEventIntegrationTest extends BaseIntegrationTest {
 
 
     @Test
+    @Disabled
     void testConsumeJobEventFromPubSub() throws ExecutionException, InterruptedException {
 
         JobEventDTO jobEventDTO = new JobEventDTO();
