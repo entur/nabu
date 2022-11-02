@@ -40,8 +40,8 @@ public class SystemJobStatusUpdater implements EventHandler {
 
     @Override
     public void onEvent(Event event) {
-        if (event instanceof JobEvent) {
-            updateSystemJobStatus((JobEvent) event);
+        if (event instanceof JobEvent jobEvent) {
+            updateSystemJobStatus(jobEvent);
         }
     }
 

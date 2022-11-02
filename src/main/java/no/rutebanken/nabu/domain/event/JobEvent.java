@@ -62,10 +62,6 @@ public class JobEvent extends Event {
         return domain;
     }
 
-    public void setDomain(JobDomain domain) {
-        this.domain = domain == null ? null : domain.name();
-    }
-
     public void setDomain(String domain) {
         this.domain = domain;
     }

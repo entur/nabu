@@ -20,8 +20,6 @@ import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.repository.NotificationRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,14 +53,14 @@ public class EventService {
 
 
     public List<JobEvent> findTimetableJobEvents(List<Long> providerIds, Instant from, Instant to, List<String> actions,
-                                                        List<JobState> states, List<String> externalIds, List<String> fileNames) {
+                                                 List<JobState> states, List<String> externalIds, List<String> fileNames) {
         return eventRepository.findTimetableJobEvents(providerIds, from, to, actions, states, externalIds, fileNames);
     }
 
 
     public void addEvent(Event event) throws NabuEventValidationException {
         Set<ConstraintViolation<Event>> validationErrors = validator.validate(event);
-        if(validationErrors.isEmpty()) {
+        if (validationErrors.isEmpty()) {
             eventRepository.save(event);
             eventHandlers.forEach(handler -> handler.onEvent(event));
         } else {
