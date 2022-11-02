@@ -62,7 +62,7 @@ class PubSubEventIntegrationTest extends BaseIntegrationTest {
 
         pubSubTemplate.publish(JobEventListener.JOB_EVENT_QUEUE, testPayload);
 
-        Mockito.verify(eventService, timeout(5000).times(1)).addEvent(captor.capture());
+        Mockito.verify(eventService, timeout(10000).times(1)).addEvent(captor.capture());
         Event event = captor.getValue();
         Assert.isInstanceOf(JobEvent.class, event);
         JobEvent jobEvent = (JobEvent) event;
