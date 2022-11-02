@@ -44,8 +44,6 @@ public class EventService {
     private final List<EventHandler> eventHandlers;
     private final Validator validator;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     public EventService(EventRepository eventRepository, NotificationRepository notificationRepository, List<EventHandler> eventHandlers) {
         this.eventRepository = eventRepository;
         this.notificationRepository = notificationRepository;
@@ -62,16 +60,14 @@ public class EventService {
     }
 
 
-    public void addEvent(Event event) {
-
+    public void addEvent(Event event) throws NabuEventValidationException {
         Set<ConstraintViolation<Event>> validationErrors = validator.validate(event);
         if(validationErrors.isEmpty()) {
             eventRepository.save(event);
             eventHandlers.forEach(handler -> handler.onEvent(event));
         } else {
-            logger.warn("Skipping event {} with validation errors: {}", event, validationErrors);
+            throw new NabuEventValidationException("Error while validating event", validationErrors);
         }
-
     }
 
 
