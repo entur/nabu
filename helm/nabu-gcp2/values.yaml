@@ -1,0 +1,49 @@
+common:
+  app: nabu
+  shortname: nabu
+  team: ror
+  ingress:
+    enabled: false
+  service:
+    externalPort: 80
+    internalPort: 9004
+  container:
+    labels: { customLogRetention: enabled }
+    forceReplicas: 1
+    image: ${artifact.metadata.image}
+    envFrom:
+      - secretRef:
+           name: ror-nabu-secret
+    cpu: 0.1
+    memory: 1200
+    cpuLimit: 600m
+    memoryLimit: 1800
+    probes:
+      liveness:
+        path: /actuator/health/liveness
+      readiness:
+        path: /actuator/health/readiness
+    prometheus:
+      enabled: true
+      path: /actuator/prometheus
+    volumeMounts:
+      - mountPath: /etc/application-config
+        name: application-config
+        readOnly: true
+    volumes:
+      - configMap:
+          defaultMode: 420
+          name: nabu-application
+        name: application-config
+  postgres:
+    enabled: true
+    memory: 40Mi
+
+  configmap:
+    data:
+      JDK_JAVA_OPTIONS:  -server -Xmx768m -Xss512m
+        -Dspring.config.location=/etc/application-config/application.properties
+        -Dfile.encoding=UTF-8
+      TZ: Europe/Oslo
+    enabled: true
+    toEnv: true

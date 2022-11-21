@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    traffic-type: api
+    {{- include "nabu.common.labels" . | indent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  name: timetable-admin-v1-events
+  namespace: {{ .Release.Namespace }}
+spec:
+  rules:
+  - host: timetable-admin-v1-events{{ .Values.ingress.domainName }}
+    http:
+      paths:
+        - pathType: ImplementationSpecific
+          backend:
+            service:
+              name: nabu
+              port:
+                number: {{ .Values.common.service.externalPort }}

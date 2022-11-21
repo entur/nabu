@@ -1,0 +1,92 @@
+apiVersion: v1
+data:
+  application.properties: |-
+
+    # Spring mail
+    spring.mail.properties.mail.smtp.writetimeout=5000
+    spring.mail.properties.mail.smtp.connecttimeout=5000
+    spring.mail.properties.mail.smtp.timeout=3000
+    spring.mail.properties.mail.smtp.ssl.enable=false
+    spring.mail.properties.mail.smtp.starttls.enable=true
+    spring.mail.host=smtp.postmarkapp.com
+    notification.email.send.cron=0 0 * * * ?
+    new.user.email.enabled=true
+    email.link.stop.place={{ .Values.configMap.mail.stopPlace }}
+    email.link.routedb={{ .Values.configMap.mail.routedb }}
+    notification.email.from={{ .Values.configMap.mail.notificationFrom }}
+    email.link.operator={{ .Values.configMap.mail.operator }}
+    server.port= {{ .Values.common.service.internalPort }}
+    spring.mail.port=2525
+
+    # Database
+    spring.database.driverClassName=org.postgresql.Driver
+    spring.datasource.url=jdbc:postgresql://localhost:5432/nabu
+    spring.datasource.platform=postgres
+    spring.jpa.database=POSTGRESQL
+    spring.jpa.open-in-view=false
+    spring.jpa.show-sql=false
+    spring.jpa.hibernate.use-new-id-generator-mappings=true
+    spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
+    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
+    spring.flyway.table=schema_version
+
+    # Provider and Organisation APIs
+    administrative.zone.registry.rest.service.url={{ .Values.configMap.baba.service }}/services/organisations/administrative_zones/
+    user.registry.rest.service.url={{ .Values.configMap.baba.service }}/services/organisations/users?full=true
+    provider.registry.rest.service.url={{ .Values.configMap.baba.service }}/services/providers/
+
+    # OAuth2 Resource Server
+    spring.security.oauth2.resourceserver.jwt.issuer-uri={{ .Values.configMap.auth0.ror.url }}
+    nabu.oauth2.resourceserver.auth0.ror.jwt.audience={{ .Values.configMap.auth0.ror.audience }}
+    nabu.oauth2.resourceserver.auth0.ror.claim.namespace=https://ror.entur.io/
+
+    # OAuth2 Client
+    spring.security.oauth2.client.registration.nabu.authorization-grant-type=client_credentials
+    spring.security.oauth2.client.registration.nabu.client-id={{ .Values.configMap.oauth2.client.id }}
+    spring.security.oauth2.client.provider.nabu.token-uri={{ .Values.configMap.oauth2.client.url }}
+    nabu.oauth2.client.audience={{ .Values.configMap.oauth2.client.audience }}
+
+    # Logging
+    logging.level.org.hibernate.SQL=INFO
+    logging.level.org.hibernate.tool.hbm2ddl=INFO
+    logging.level.no.rutebanken=INFO
+    logging.level.org.apache=WARN
+    logging.level.org.hibernate.type=WARN
+    logging.level.org.springframework.orm.hibernate4.support=WARN
+
+    # PubSub
+    spring.cloud.gcp.pubsub.project-id={{ .Values.configMap.pubsubProjectId }}
+    spring.cloud.gcp.pubsub.subscriber.parallel-pull-count=1
+    spring.cloud.gcp.pubsub.subscriber.executor-threads=4
+    spring.cloud.gcp.pubsub.subscriber.flow-control.max-outstanding-element-count=4
+    spring.cloud.gcp.pubsub.subscriber.flow-control.limit-exceeded-behavior=Block
+    spring.cloud.gcp.pubsub.subscriber.max-ack-extension-period=36000
+    entur.pubsub.subscriber.autocreate=false
+
+    # Quartz
+    quartz.enabled=true
+    spring.quartz.job-store-type=jdbc
+    spring.quartz.properties.org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+    spring.quartz.properties.org.quartz.jobStore.class=org.springframework.scheduling.quartz.LocalDataSourceJobStore
+    spring.quartz.properties.org.quartz.jobStore.useProperties=false
+    spring.quartz.properties.org.quartz.jobStore.tablePrefix=QRTZ_
+    spring.quartz.properties.org.quartz.jobStore.isClustered=true
+    spring.quartz.properties.org.quartz.jobStore.clusterCheckinInterval=2000
+
+    # Spring Boot Actuator
+    management.server.port= {{ .Values.common.service.internalPort }}
+    management.endpoints.enabled-by-default=false
+    management.endpoint.info.enabled=true
+    management.endpoint.health.enabled=true
+    management.endpoint.health.group.readiness.include=readinessState,db
+    management.endpoint.prometheus.enabled=true
+    management.endpoints.web.exposure.include=info,health,prometheus
+    management.health.mail.enabled=false
+    management.health.pubsub.enabled=false
+
+kind: ConfigMap
+metadata:
+  name: nabu-application
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "nabu.common.labels" . | indent 4 }}
