@@ -10,20 +10,6 @@ provider "kubernetes" {
   version = ">= 2.13.1"
 }
 
-
-resource "kubernetes_secret" "ror-nabu-secret" {
-  metadata {
-    name = "${var.labels.team}-${var.labels.app}-secret"
-    namespace = var.kube_namespace
-  }
-
-  data = {
-    "SPRING_MAIL_USERNAME" = var.ror-nabu-smtp-username
-    "SPRING_MAIL_PASSWORD" = var.ror-nabu-smtp-password
-    "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_NABU_CLIENT_SECRET" = var.ror-nabu-auth0-secret
-  }
-}
-
 resource "kubernetes_secret" "nabu-psql-credentials" {
   metadata {
     name = "nabu-psql-credentials"
@@ -33,6 +19,9 @@ resource "kubernetes_secret" "nabu-psql-credentials" {
   data = {
     "SPRING_DATASOURCE_USERNAME" = var.ror-nabu-db-username
     "SPRING_DATASOURCE_PASSWORD" = var.ror-nabu-db-password
+    "SPRING_MAIL_USERNAME" = var.ror-nabu-smtp-username
+    "SPRING_MAIL_PASSWORD" = var.ror-nabu-smtp-password
+    "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_NABU_CLIENT_SECRET" = var.ror-nabu-auth0-secret
   }
 }
 

@@ -11,9 +11,6 @@ common:
     labels: { customLogRetention: enabled }
     forceReplicas: 1
     image: ${artifact.metadata.image}
-    envFrom:
-      - secretRef:
-           name: ror-nabu-secret
     cpu: 0.1
     memory: 1200
     cpuLimit: 600m
