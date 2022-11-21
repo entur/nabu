@@ -34,13 +34,11 @@ common:
         name: application-config
   postgres:
     enabled: true
-    memory: 40Mi
+    memory: 40
 
   configmap:
     data:
-      JDK_JAVA_OPTIONS:  -server -Xmx768m -Xss512m
-        -Dspring.config.location=/etc/application-config/application.properties
-        -Dfile.encoding=UTF-8
+      JDK_JAVA_OPTIONS: -server -Xmx768m -Xss512m -Dspring.config.location=/etc/application-config/application.properties-Dfile.encoding=UTF-8
       TZ: Europe/Oslo
     enabled: true
     toEnv: true
