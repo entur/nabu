@@ -7,7 +7,7 @@ ingress:
   domainName: -gcp2.entur.io
 
 sql:
-  instance: entur-ror-prod:europe-west1:nabu-db-pg13=tcp:5432
+  instance: ent-nabu-prd:europe-west1:nabu-db-pg13=tcp:5432
 
 configMap:
   pubsubProjectId: entur-ror-prod

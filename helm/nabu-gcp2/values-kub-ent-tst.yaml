@@ -6,7 +6,7 @@ ingress:
   domainName: -gcp2.staging.entur.io
 
 sql:
-  instance: entur-ror-test:europe-west1:nabu-db-pg13=tcp:5432
+  instance: ent-nabu-tst:europe-west1:nabu-db-pg13=tcp:5432
 
 configMap:
   pubsubProjectId: entur-ror-test
