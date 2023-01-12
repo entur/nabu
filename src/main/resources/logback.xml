@@ -21,7 +21,7 @@
     </then>
     <else>
         <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="org.entur.logger.logstash.LogstashEncoder">
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
                 <providers>
                     <pattern>
                         <pattern>
@@ -30,6 +30,7 @@
                                 "service": "nabu"
                             },
                             "message": "%message\n%ex{full}",
+                            "severity": "%level",
                             "reportLocation": {
                                 "filePath": "%logger",
                                 "lineNumber": "%line",
