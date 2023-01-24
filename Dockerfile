@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.5_8-jre-alpine
+FROM eclipse-temurin:17.0.6_10-jre-alpine
 RUN apk update && apk upgrade && apk add --no-cache tini
 WORKDIR /deployments
 COPY target/nabu-*-SNAPSHOT.jar nabu.jar
