@@ -21,7 +21,7 @@ resource "google_pubsub_topic_iam_member" "pubsub_topic_iam_member" {
   project = var.gcp_resources_project
   topic = google_pubsub_topic.CrudEventQueue.name
   role = var.service_account_pubsub_role
-  member = var.service_account
+  member = "serviceAccount:${var.service_account}"
 }
 
 resource "google_pubsub_subscription" "CrudEventQueue" {
