@@ -10,6 +10,22 @@ provider "kubernetes" {
   version = ">= 2.13.1"
 }
 
+resource "google_pubsub_topic" "CrudEventQueue" {
+  name = "CrudEventQueue"
+  project = var.gcp_resources_project
+  labels = var.labels
+}
+
+resource "google_pubsub_subscription" "CrudEventQueue" {
+  name = "CrudEventQueue"
+  topic = google_pubsub_topic.CrudEventQueue.name
+  project = var.gcp_resources_project
+  labels = var.labels
+  retry_policy {
+    minimum_backoff = "10s"
+  }
+}
+
 resource "kubernetes_secret" "nabu-psql-credentials" {
   metadata {
     name = "nabu-psql-credentials"
