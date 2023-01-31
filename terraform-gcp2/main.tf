@@ -16,6 +16,14 @@ resource "google_pubsub_topic" "CrudEventQueue" {
   labels = var.labels
 }
 
+# add service account as member to pubsub service in the resources project
+resource "google_pubsub_topic_iam_member" "pubsub_topic_iam_member" {
+  project = var.gcp_resources_project
+  topic = google_pubsub_topic.CrudEventQueue.name
+  role = var.service_account_pubsub_role
+  member = var.service_account
+}
+
 resource "google_pubsub_subscription" "CrudEventQueue" {
   name = "CrudEventQueue"
   topic = google_pubsub_topic.CrudEventQueue.name

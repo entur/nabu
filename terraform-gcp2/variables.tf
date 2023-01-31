@@ -19,6 +19,15 @@ variable "labels" {
   }
 }
 
+variable "service_account_pubsub_role" {
+  description = "Role of the Service Account - more about roles https://cloud.google.com/pubsub/docs/access-control"
+  default = "roles/pubsub.publisher"
+}
+
+variable "service_account" {
+  description = "Application gcp service account"
+}
+
 
 variable "ror-nabu-db-username" {
   description = "nabu database username"
