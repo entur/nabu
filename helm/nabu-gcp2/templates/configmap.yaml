@@ -20,8 +20,9 @@ data:
 
     # Database
     spring.database.driverClassName=org.postgresql.Driver
-    spring.datasource.url=jdbc:postgresql://localhost:5432/nabu
     spring.datasource.platform=postgres
+    spring.cloud.gcp.sql.database-name=nabu
+    spring.cloud.gcp.sql.instance-connection-name={{ .Values.sql.instance }}
     spring.jpa.database=POSTGRESQL
     spring.jpa.open-in-view=false
     spring.jpa.show-sql=false

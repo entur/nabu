@@ -32,9 +32,6 @@ common:
           defaultMode: 420
           name: nabu-application
         name: application-config
-  postgres:
-    enabled: true
-    memory: 40
 
   configmap:
     data:
