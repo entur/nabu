@@ -21,7 +21,7 @@ variable "labels" {
 
 variable "service_account_pubsub_role" {
   description = "Role of the Service Account - more about roles https://cloud.google.com/pubsub/docs/access-control"
-  default = "roles/pubsub.publisher"
+  default = "roles/pubsub.subscriber"
 }
 
 variable "service_account" {

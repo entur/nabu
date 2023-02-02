@@ -16,17 +16,43 @@ resource "google_pubsub_topic" "CrudEventQueue" {
   labels = var.labels
 }
 
-# add service account as member to pubsub service in the resources project
-resource "google_pubsub_topic_iam_member" "pubsub_topic_iam_member" {
+resource "google_pubsub_topic" "JobEventQueue" {
+  name = "JobEventQueue"
   project = var.gcp_resources_project
-  topic = google_pubsub_topic.CrudEventQueue.name
+  labels = var.labels
+}
+
+# add service account as member to pubsub service in the resources project
+
+resource "google_pubsub_subscription_iam_member" "CrudEventQueueSubscriber" {
+  project = var.gcp_resources_project
+  subscription = google_pubsub_subscription.CrudEventQueue.name
   role = var.service_account_pubsub_role
   member = "serviceAccount:${var.service_account}"
 }
 
+resource "google_pubsub_subscription_iam_member" "JobEventQueueSubscriber" {
+  project = var.gcp_resources_project
+  subscription = google_pubsub_subscription.JobEventQueue.name
+  role = var.service_account_pubsub_role
+  member = "serviceAccount:${var.service_account}"
+}
+
+
+
 resource "google_pubsub_subscription" "CrudEventQueue" {
   name = "CrudEventQueue"
   topic = google_pubsub_topic.CrudEventQueue.name
+  project = var.gcp_resources_project
+  labels = var.labels
+  retry_policy {
+    minimum_backoff = "10s"
+  }
+}
+
+resource "google_pubsub_subscription" "JobEventQueue" {
+  name = "JobEventQueue"
+  topic = google_pubsub_topic.JobEventQueue.name
   project = var.gcp_resources_project
   labels = var.labels
   retry_policy {
