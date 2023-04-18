@@ -9,7 +9,7 @@ sql:
   instance: ent-nabu-dev:europe-west1:nabu-db-pg13
 
 configMap:
-  pubsubProjectId:  entur-ror-dev
+  pubsubProjectId:  ent-nabu-dev
 
   baba:
     service: http://baba.dev.entur.internal
