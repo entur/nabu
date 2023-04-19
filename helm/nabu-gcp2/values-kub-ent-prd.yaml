@@ -10,7 +10,7 @@ sql:
   instance: ent-nabu-prd:europe-west1:nabu-db-pg13
 
 configMap:
-  pubsubProjectId: entur-ror-prod
+  pubsubProjectId: ent-nabu-prd
 
   baba:
     service: http://baba.prd.entur.internal
