@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.7_7-jre-alpine
+FROM bellsoft/liberica-openjdk-alpine:17.0.7-7
 RUN apk update && apk upgrade && apk add --no-cache tini
 WORKDIR /deployments
 COPY target/nabu-*-SNAPSHOT.jar nabu.jar
