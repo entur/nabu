@@ -25,7 +25,7 @@ public interface NotificationProcessor {
 
     /**
      * Handle a set not notifications for a user.
-     *
+     * <p>
      * Processor is expected to delete/mark as read notifications in a manner transactionally suitable to the processing.
      */
     void processNotificationsForUser(UserDTO user, Set<Notification> notifications);

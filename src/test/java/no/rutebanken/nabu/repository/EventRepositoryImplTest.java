@@ -32,7 +32,6 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +67,7 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
         repository.save(s2);
         JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
         repository.save(s3);
-        Collection<JobEvent> eventsForProvider2 = repository.findTimetableJobEvents(Collections.singletonList(2L), null, null, null, null, null, null);
+        Collection<JobEvent> eventsForProvider2 = repository.findTimetableJobEvents(List.of(2L), null, null, null, null, null, null);
         assertThat(eventsForProvider2).hasSize(2);
 
         Collection<JobEvent> allEvents = repository.findTimetableJobEvents(null, null, null, null, null, null, null);
@@ -85,12 +84,12 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
         JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
         repository.save(s3);
 
-        Collection<JobEvent> statusesQueryMatchingS1 = repository.findTimetableJobEvents(Collections.singletonList(3L), now, now, Collections.singletonList(TimeTableAction.IMPORT.toString()), Collections.singletonList(JobState.OK), Collections.singletonList("1"), Collections.singletonList("file1.zip"));
+        Collection<JobEvent> statusesQueryMatchingS1 = repository.findTimetableJobEvents(List.of(3L), now, now, List.of(TimeTableAction.IMPORT.toString()), List.of(JobState.OK), List.of("1"), List.of("file1.zip"));
         assertThat(statusesQueryMatchingS1)
                 .hasSize(2)
                 .contains(s1, s2);
 
-        Collection<JobEvent> statusesQueryMatchingS1andS3 = repository.findTimetableJobEvents(Collections.singletonList(3L), now, now, Arrays.asList(TimeTableAction.IMPORT.toString(), TimeTableAction.EXPORT.toString()),
+        Collection<JobEvent> statusesQueryMatchingS1andS3 = repository.findTimetableJobEvents(List.of(3L), now, now, Arrays.asList(TimeTableAction.IMPORT.toString(), TimeTableAction.EXPORT.toString()),
                 Arrays.asList(JobState.OK, JobState.TIMEOUT), null, Arrays.asList("file1.zip", "file2.zip"));
         assertThat(statusesQueryMatchingS1andS3).hasSize(3);
     }
@@ -124,8 +123,8 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
 
         repository.clearJobEvents(JobEvent.JobDomain.TIMETABLE.toString());
 
-        Assertions.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(3L), null, null, null, null, null, null).isEmpty());
-        Assertions.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(4L), null, null, null, null, null, null).isEmpty());
+        Assertions.assertTrue(repository.findTimetableJobEvents(List.of(3L), null, null, null, null, null, null).isEmpty());
+        Assertions.assertTrue(repository.findTimetableJobEvents(List.of(4L), null, null, null, null, null, null).isEmpty());
     }
 
     @Test
@@ -139,8 +138,8 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
 
         repository.clearJobEvents(JobEvent.JobDomain.TIMETABLE.toString(), 3L);
 
-        Assertions.assertTrue(repository.findTimetableJobEvents(Collections.singletonList(3L), null, null, null, null, null, null).isEmpty());
-        Assertions.assertEquals(1, repository.findTimetableJobEvents(Collections.singletonList(4L), null, null, null, null, null, null).size());
+        Assertions.assertTrue(repository.findTimetableJobEvents(List.of(3L), null, null, null, null, null, null).isEmpty());
+        Assertions.assertEquals(1, repository.findTimetableJobEvents(List.of(4L), null, null, null, null, null, null).size());
     }
 
     @Test

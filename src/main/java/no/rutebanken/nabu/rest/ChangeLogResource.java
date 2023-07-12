@@ -28,7 +28,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
@@ -45,6 +44,6 @@ public class ChangeLogResource {
 
     @GET
     public List<ApiCrudEvent> find(@BeanParam CrudEventSearch search) {
-        return eventRepository.findCrudEvents(search).stream().map(ApiCrudEvent::fromCrudEvent).collect(Collectors.toList());
+        return eventRepository.findCrudEvents(search).stream().map(ApiCrudEvent::fromCrudEvent).toList();
     }
 }

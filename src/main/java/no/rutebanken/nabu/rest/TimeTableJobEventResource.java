@@ -80,7 +80,7 @@ public class TimeTableJobEventResource {
         Instant instantFrom = from == null ? null : from.toInstant();
         Instant instantTo = to == null ? null : to.toInstant();
 
-        List<String> externalIds = jobIds == null ? null : jobIds.stream().map(Object::toString).collect(Collectors.toList());
+        List<String> externalIds = jobIds == null ? null : jobIds.stream().map(Object::toString).toList();
         List<Long> relatedProviderIds = mapToAllRelatedProviderIds(providerId);
         try {
             List<JobEvent> eventsForProvider = eventService.findTimetableJobEvents(relatedProviderIds, instantFrom, instantTo,
@@ -138,7 +138,7 @@ public class TimeTableJobEventResource {
         String correlationId = null;
         JobStatus currentAggregation = null;
 
-        List<JobEvent> sortedStatusForProvider = statusForProvider.stream().sorted(Comparator.comparing(JobEvent::getCorrelationId).thenComparing(JobEvent::getEventTime)).collect(Collectors.toList());
+        List<JobEvent> sortedStatusForProvider = statusForProvider.stream().sorted(Comparator.comparing(JobEvent::getCorrelationId).thenComparing(JobEvent::getEventTime)).toList();
 
         for (JobEvent in : sortedStatusForProvider) {
 

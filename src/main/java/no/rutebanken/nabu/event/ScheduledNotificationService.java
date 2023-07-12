@@ -36,7 +36,8 @@ import java.util.stream.Collectors;
 @Transactional
 public class ScheduledNotificationService {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private NotificationRepository notificationRepository;
 

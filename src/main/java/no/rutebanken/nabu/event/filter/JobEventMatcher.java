@@ -25,7 +25,7 @@ import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
  */
 public class JobEventMatcher implements EventMatcher {
 
-    private EventFilterDTO filter;
+    private final EventFilterDTO filter;
 
     public JobEventMatcher(EventFilterDTO jobEventFilter) {
         this.filter = jobEventFilter;
@@ -33,10 +33,9 @@ public class JobEventMatcher implements EventMatcher {
 
     @Override
     public boolean matches(Event event) {
-        if (!(event instanceof JobEvent)) {
+        if (!(event instanceof JobEvent jobEvent)) {
             return false;
         }
-        JobEvent jobEvent = (JobEvent) event;
 
         if (filter.getOrganisation() != null) {
             // TODO need to get providerid from organisationDTO for exact match

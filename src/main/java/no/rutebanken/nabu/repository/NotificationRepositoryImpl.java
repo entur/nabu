@@ -29,7 +29,7 @@ import java.util.List;
 @Transactional
 public class NotificationRepositoryImpl extends SimpleJpaRepository<Notification, Long> implements NotificationRepository {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public NotificationRepositoryImpl(@Autowired EntityManager em) {
         super(Notification.class, em);

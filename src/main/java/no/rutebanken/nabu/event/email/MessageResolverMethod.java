@@ -28,9 +28,9 @@ import java.util.Locale;
  */
 public class MessageResolverMethod implements TemplateMethodModelEx {
 
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
-    private Locale locale;
+    private final Locale locale;
 
     public MessageResolverMethod(MessageSource messageSource, Locale locale) {
         this.locale = locale;

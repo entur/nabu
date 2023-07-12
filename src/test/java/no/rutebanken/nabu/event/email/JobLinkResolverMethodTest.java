@@ -24,13 +24,13 @@ import no.rutebanken.nabu.domain.event.TimeTableAction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.List;
 
 class JobLinkResolverMethodTest {
 
     private static final String BASE_URL = "http://test/";
 
-    private JobLinkResolverMethod jobLinkResolverMethod = new JobLinkResolverMethod(BASE_URL);
+    private static final JobLinkResolverMethod JOB_LINK_RESOLVER_METHOD = new JobLinkResolverMethod(BASE_URL);
 
     @Test
     void testImportLink() {
@@ -101,7 +101,7 @@ class JobLinkResolverMethodTest {
 
     private void assertLink(JobEvent jobEvent, String relativeExpectedLink) {
         try {
-            Object link = jobLinkResolverMethod.exec(Collections.singletonList(new BeanModel(jobEvent, new SimpleObjectWrapper(Configuration.VERSION_2_3_31))));
+            Object link = JOB_LINK_RESOLVER_METHOD.exec(List.of(new BeanModel(jobEvent, new SimpleObjectWrapper(Configuration.VERSION_2_3_31))));
             if (relativeExpectedLink == null) {
                 Assertions.assertNull(link);
             } else {

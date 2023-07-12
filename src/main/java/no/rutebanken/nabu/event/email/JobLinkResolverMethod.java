@@ -25,7 +25,7 @@ import java.util.List;
 
 public class JobLinkResolverMethod implements TemplateMethodModelEx {
 
-    private String baseUrl;
+    private final String baseUrl;
 
     public JobLinkResolverMethod(String baseUrl) {
         this.baseUrl = baseUrl;
@@ -37,10 +37,9 @@ public class JobLinkResolverMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("Wrong number of arguments");
         }
         Object obj = ((BeanModel) arguments.get(0)).getWrappedObject();
-        if (!(obj instanceof JobEvent)) {
+        if (!(obj instanceof JobEvent jobEvent)) {
             throw new TemplateModelException("Wrong type of argument");
         }
-        JobEvent jobEvent = (JobEvent) obj;
 
         if (JobEvent.JobDomain.TIMETABLE.name().equals(jobEvent.getDomain())) {
             return formatTimetableJobLink(jobEvent);

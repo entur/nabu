@@ -29,12 +29,13 @@ import org.springframework.context.MessageSource;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 class EmailNotificationFormatterTest extends BaseIntegrationTest {
+
+    private static final List<Provider> PROVIDER_LIST = List.of(new Provider(1011L, "ProviderName", null));
 
     @Autowired
     private EmailNotificationFormatter emailNotificationFormatter;
@@ -42,13 +43,11 @@ class EmailNotificationFormatterTest extends BaseIntegrationTest {
     @Autowired
     private MessageSource messageSource;
 
-    private List<Provider> providerList = Collections.singletonList(new Provider(1011L, "ProviderName", null));
-
     @Test
     void formatMailInNorwegian() throws FileNotFoundException {
         Set<Notification> notifications = Set.of(jobNotification("file.xml"), maxCrudNotification("NSR:StopPlace:16688", Instant.now()));
 
-        String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("no"), providerList);
+        String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("no"), PROVIDER_LIST);
         System.out.println(msg);
         PrintWriter out = new PrintWriter("target/email.html");
         out.write(msg);
@@ -57,7 +56,7 @@ class EmailNotificationFormatterTest extends BaseIntegrationTest {
         Assertions.assertFalse(msg.contains("notification.email"), "Expected all message keys to have been resolved");
         Assertions.assertTrue(msg.contains("hendelser"));   // TODO norwegian still missing lots of values. How do we verify?
 
-        Assertions.assertTrue(msg.contains(providerList.get(0).getName()), "Should be able to map providerId to name");
+        Assertions.assertTrue(msg.contains(PROVIDER_LIST.get(0).getName()), "Should be able to map providerId to name");
     }
 
     @Test
@@ -70,12 +69,12 @@ class EmailNotificationFormatterTest extends BaseIntegrationTest {
         Set<Notification> notifications = Set.of(oldestEvent, jobNotification(null), maxCrudNotification("NSR:StopPlace:2", now.minusMillis(1000)), maxCrudNotification("NSR:StopPlace:1", now.minusMillis(2000)),
                 minCrudNotification("NSR:StopPlace:2", now.minusMillis(3000)), maxCrudNotification("NSR:StopPlace:3", now.minusMillis(4000)));
 
-        String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("en"), providerList);
+        String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("en"), PROVIDER_LIST);
         System.out.println(msg);
         Assertions.assertTrue(msg.startsWith("<html>"));
         Assertions.assertFalse(msg.contains("notification.email"), "Expected all message keys to have been resolved");
 
-        String messageTooManyEvent =  messageSource.getMessage("notification.email.truncated", new String[] {"6","5"}, Locale.getDefault());
+        String messageTooManyEvent = messageSource.getMessage("notification.email.truncated", new String[]{"6", "5"}, Locale.getDefault());
         Assertions.assertTrue(msg.contains(messageTooManyEvent));
 
         Assertions.assertFalse(msg.contains(oldestEvent.getEvent().getName()), "Expected oldest event to be omitted");
@@ -85,7 +84,7 @@ class EmailNotificationFormatterTest extends BaseIntegrationTest {
     private Notification jobNotification(String fileName) {
         Notification notification = new Notification();
 
-        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).state(JobState.FAILED).providerId(providerList.get(0).id).referential("rb_bra").action("IMPORT").externalId("3209").name(fileName).eventTime(Instant.now()).build();
+        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).state(JobState.FAILED).providerId(PROVIDER_LIST.get(0).id).referential("rb_bra").action("IMPORT").externalId("3209").name(fileName).eventTime(Instant.now()).build();
         event.setPk(pkCounter++);
         notification.setEvent(event);
 

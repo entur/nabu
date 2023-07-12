@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -102,7 +101,7 @@ class NotificationRepositoryImplTest extends BaseIntegrationTest {
 
 
         List<Notification> matchingNotifications = notificationRepository.findByUserNameAndTypeAndStatus("user1", NotificationType.WEB, Notification.NotificationStatus.READY);
-        Assertions.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
+        Assertions.assertEquals(List.of(matchingEventNotification), matchingNotifications);
     }
 
     @Test
@@ -118,6 +117,6 @@ class NotificationRepositoryImplTest extends BaseIntegrationTest {
 
 
         List<Notification> matchingNotifications = notificationRepository.findByTypeAndStatus(NotificationType.WEB, Notification.NotificationStatus.READY);
-        Assertions.assertEquals(Collections.singletonList(matchingEventNotification), matchingNotifications);
+        Assertions.assertEquals(List.of(matchingEventNotification), matchingNotifications);
     }
 }

@@ -69,7 +69,6 @@ public class OAuth2Config {
     /**
      * Extract role assignments from a JWT token.
      *
-     * @return
      */
     @Bean
     public RoleAssignmentExtractor roleAssignmentExtractor() {
