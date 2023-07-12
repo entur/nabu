@@ -34,7 +34,7 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class UserNotificationEventHandler implements EventHandler {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private UserRepository userRepository;

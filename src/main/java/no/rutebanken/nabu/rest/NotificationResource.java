@@ -45,9 +45,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
 
@@ -66,7 +64,7 @@ public class NotificationResource {
     @PreAuthorize("#userName == authentication.name")
     public List<ApiNotification> getWebNotificationsForUser(@PathParam("userName") String userName) {
         List<Notification> notifications = notificationRepository.findByUserNameAndTypeAndStatus(userName, NotificationType.WEB, Notification.NotificationStatus.READY);
-        return notifications.stream().map(this::toDTO).collect(Collectors.toList());
+        return notifications.stream().map(this::toDTO).toList();
     }
 
 
@@ -76,7 +74,7 @@ public class NotificationResource {
     @PreAuthorize("#userName == authentication.name")
     public void markAsRead(@PathParam("userName") String userName, List<Long> notificationPks) {
         if (!CollectionUtils.isEmpty(notificationPks)) {
-            List<Notification> notifications = notificationPks.stream().map(pk -> notificationRepository.getReferenceById(pk)).filter(n -> n.getUserName().equals(userName)).collect(Collectors.toList());
+            List<Notification> notifications = notificationPks.stream().map(pk -> notificationRepository.getReferenceById(pk)).filter(n -> n.getUserName().equals(userName)).toList();
 
             notifications.forEach(n -> n.setStatus(Notification.NotificationStatus.COMPLETE));
             notificationRepository.saveAll(notifications);
@@ -124,16 +122,16 @@ public class NotificationResource {
     @GET
     @Path("job_actions/{jobDomain}")
     public List<String> getJobActions(@PathParam("jobDomain") JobEvent.JobDomain jobDomain) {
-        List<String> actions = new ArrayList<>(Collections.singletonList(EventMatcher.ALL_TYPES));
+        List<String> actions = new ArrayList<>(List.of(EventMatcher.ALL_TYPES));
 
         if (JobEvent.JobDomain.GRAPH.equals(jobDomain)) {
             actions.addAll(Arrays.asList("BUILD_BASE", "BUILD_GRAPH"));
         } else if (JobEvent.JobDomain.TIAMAT.equals(jobDomain)) {
-            actions.addAll(Collections.singletonList("EXPORT"));
+            actions.add("EXPORT");
         } else if (JobEvent.JobDomain.GEOCODER.equals(jobDomain)) {
-            actions.addAll(Arrays.stream(GeoCoderAction.values()).map(Enum::name).collect(Collectors.toList()));
+            actions.addAll(Arrays.stream(GeoCoderAction.values()).map(Enum::name).toList());
         } else if (JobEvent.JobDomain.TIMETABLE.equals(jobDomain)) {
-            actions.addAll(Arrays.stream(TimeTableAction.values()).map(Enum::name).collect(Collectors.toList()));
+            actions.addAll(Arrays.stream(TimeTableAction.values()).map(Enum::name).toList());
         } else if (JobEvent.JobDomain.TIMETABLE_PUBLISH.equals(jobDomain)) {
             actions.addAll(Arrays.asList("EXPORT_NETEX_MERGED", "EXPORT_GOOGLE_GTFS"));
         } else {

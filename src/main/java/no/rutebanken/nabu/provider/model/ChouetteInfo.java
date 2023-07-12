@@ -61,8 +61,4 @@ public class ChouetteInfo {
                 '}';
     }
 
-    public boolean usesRegtopp(){
-        return "regtopp".equals(dataFormat);
-    }
-
 }

@@ -33,7 +33,7 @@ public class CrudEvent extends Event {
     @Size(max = 255, message = "entityType cannot be longer than 255 characters")
     private String entityType;
 
-    // Sub type of entity (ie busStop or church)
+    // Subtype of entity (ie busStop or church)
     @Size(max = 255, message = "entityClassifier cannot be longer than 255 characters")
     private String entityClassifier;
 

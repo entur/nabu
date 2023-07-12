@@ -45,8 +45,8 @@ public class TemporalAccessorFormatter implements TemplateMethodModelEx {
         if (obj == null) {
             return "";
         }
-        if (obj instanceof TemporalAccessor) {
-            return FORMATTER.format((TemporalAccessor) obj);
+        if (obj instanceof TemporalAccessor temporalAccessor) {
+            return FORMATTER.format(temporalAccessor);
         }
         throw new TemplateModelException("Invalid TemporalAccessor value '" + obj + "'");
     }

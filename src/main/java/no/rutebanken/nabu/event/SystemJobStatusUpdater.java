@@ -33,7 +33,7 @@ import java.util.Optional;
 @Service
 public class SystemJobStatusUpdater implements EventHandler {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private SystemJobStatusRepository systemJobStatusRepository;

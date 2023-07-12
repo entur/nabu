@@ -27,13 +27,12 @@ import org.slf4j.LoggerFactory;
  * Check whether an Event matches a given EventFilterDTO.
  */
 public class CrudEventMatcher implements EventMatcher {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private EventFilterDTO eventFilter;
-
     private static final String ENTITY_TYPE = "EntityType";
 
-    private AdministrativeZoneRepository administrativeZoneRepository;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final EventFilterDTO eventFilter;
+    private final AdministrativeZoneRepository administrativeZoneRepository;
 
     public CrudEventMatcher(AdministrativeZoneRepository administrativeZoneRepository, EventFilterDTO crudEventFilter) {
         this.eventFilter = crudEventFilter;
@@ -42,10 +41,9 @@ public class CrudEventMatcher implements EventMatcher {
 
     @Override
     public boolean matches(Event event) {
-        if (!(event instanceof CrudEvent)) {
+        if (!(event instanceof CrudEvent crudEvent)) {
             return false;
         }
-        CrudEvent crudEvent = (CrudEvent) event;
 
         return matchesEventClassifier(crudEvent) && matchesAdministrativeZone(crudEvent);
     }
@@ -85,7 +83,7 @@ public class CrudEventMatcher implements EventMatcher {
         if (crudEvent.getGeometry() == null || eventFilter.getAdministrativeZoneRefs().isEmpty()) {
             return true;
         }
-        return eventFilter.getAdministrativeZoneRefs().stream().map(azRef -> administrativeZoneRepository.getAdministrativeZone(azRef))
+        return eventFilter.getAdministrativeZoneRefs().stream().map(administrativeZoneRepository::getAdministrativeZone)
                        .anyMatch(az -> az.getPolygon().contains(crudEvent.getGeometry()));
     }
 

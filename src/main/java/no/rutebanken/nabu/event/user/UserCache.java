@@ -36,7 +36,7 @@ public class UserCache implements UserRepository {
     @Autowired
     private UserResource userResource;
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     @Value("${user.cache.max.size:1000}")

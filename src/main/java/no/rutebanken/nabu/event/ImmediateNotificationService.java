@@ -29,7 +29,7 @@ import java.util.Set;
 @Service
 public class ImmediateNotificationService {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private Map<NotificationType, NotificationProcessor> notificationSenders;

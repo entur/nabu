@@ -34,7 +34,6 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +70,7 @@ class EventNotificationIntegrationTest extends BaseIntegrationTest {
         user.username = "username";
         user.notifications = config;
 
-        when(userRepositoryMock.findAll()).thenReturn(Collections.singletonList(user));
+        when(userRepositoryMock.findAll()).thenReturn(List.of(user));
 
         // Matching action, but not state
         JobEventDTO notMatchingDifferentState = createEvent(JobState.PENDING, activeFilterAction, Instant.now());

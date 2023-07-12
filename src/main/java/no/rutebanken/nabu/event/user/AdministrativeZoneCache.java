@@ -29,7 +29,7 @@ import javax.annotation.PostConstruct;
 
 @Service
 public class AdministrativeZoneCache implements AdministrativeZoneRepository {
-    private GeoJSONReader reader = new GeoJSONReader();
+    private final GeoJSONReader reader = new GeoJSONReader();
 
     @Autowired
     private AdministrativeZoneResource administrativeZoneResource;

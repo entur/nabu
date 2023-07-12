@@ -20,11 +20,11 @@ import org.locationtech.jts.geom.Polygon;
 
 public class AdministrativeZone {
 
-    private String id;
+    private final String id;
 
-    private String name;
+    private final String name;
 
-    private Polygon polygon;
+    private final Polygon polygon;
 
     public AdministrativeZone(String id, String name, Polygon polygon) {
         this.id = id;
