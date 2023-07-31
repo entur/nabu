@@ -3,7 +3,7 @@ package no.rutebanken.nabu.event;
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.exceptions.NabuException;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 import java.util.Set;
 
 public class NabuEventValidationException extends NabuException {

@@ -17,15 +17,15 @@ package no.rutebanken.nabu.repository;
 
 import no.rutebanken.nabu.domain.SystemJobStatus;
 import no.rutebanken.nabu.domain.event.JobState;
-import org.hibernate.annotations.QueryHints;
+import org.hibernate.jpa.HibernateHints;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +63,7 @@ public class SystemJobStatusRepositoryImpl extends SimpleJpaRepository<SystemJob
         }
 
         TypedQuery<SystemJobStatus> query = entityManager.createQuery(jpql.toString(), SystemJobStatus.class);
-        query.setHint(QueryHints.CACHEABLE, Boolean.TRUE);
+        query.setHint(HibernateHints.HINT_CACHEABLE, Boolean.TRUE);
         parameters.forEach(query::setParameter);
         return query.getResultList();
     }
@@ -73,7 +73,7 @@ public class SystemJobStatusRepositoryImpl extends SimpleJpaRepository<SystemJob
         return entityManager.createQuery("select s from SystemJobStatus s where s.jobDomain=:jobDomain " +
                                                  "and s.action=:action and s.state=:state", SystemJobStatus.class)
                        .setParameter("jobDomain", jobDomain).setParameter("action", action)
-                       .setParameter("state", state).setHint(QueryHints.CACHEABLE, Boolean.TRUE).getSingleResult();
+                       .setParameter("state", state).setHint(HibernateHints.HINT_CACHEABLE, Boolean.TRUE).getSingleResult();
     }
 
     public EntityManager getEntityManager() {

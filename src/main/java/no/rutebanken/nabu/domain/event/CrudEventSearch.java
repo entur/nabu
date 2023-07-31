@@ -15,7 +15,7 @@
 
 package no.rutebanken.nabu.domain.event;
 
-import javax.ws.rs.QueryParam;
+import jakarta.ws.rs.QueryParam;
 import java.time.Instant;
 import java.util.Date;
 
