@@ -15,7 +15,9 @@
 
 package no.rutebanken.nabu.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
@@ -25,10 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import java.util.*;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
@@ -37,7 +39,9 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 @Produces("application/json")
 @Path("latest_upload")
-@Api(tags = {"Latest upload resource"}, produces = "application/json")
+@Tags(value = {
+        @Tag(name = "LatestUploadResource", description ="Latest upload resource")
+})
 public class LatestUploadResource {
 
     public static final Set<JobState> ERROR_JOB_STATES = Set.of(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED);
@@ -47,6 +51,7 @@ public class LatestUploadResource {
 
     @GET
     @Path("/{providerId}")
+    @Operation(summary = "Return the status of the latest dataset upload")
     @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
     public DataDeliveryStatus getLatestDataDeliveryStatus(@PathParam("providerId") Long providerId) {
 

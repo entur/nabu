@@ -30,9 +30,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.util.Assert;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import java.time.Instant;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static org.mockito.Mockito.timeout;
@@ -64,7 +64,7 @@ class PubSubEventIntegrationTest extends BaseIntegrationTest {
         jobEventDTO.setEventTime(Instant.now());
         String testPayload = JobEventDTO.toString(jobEventDTO);
 
-        ListenableFuture<String> listenableFuture = pubSubTemplate.publish(JobEventListener.JOB_EVENT_QUEUE, testPayload);
+        CompletableFuture<String> listenableFuture = pubSubTemplate.publish(JobEventListener.JOB_EVENT_QUEUE, testPayload);
         listenableFuture.get();
 
         Mockito.verify(eventService, timeout(10000).times(1)).addEvent(captor.capture());

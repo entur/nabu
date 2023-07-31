@@ -15,7 +15,7 @@
 
 package no.rutebanken.nabu.domain.event;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class Notification {

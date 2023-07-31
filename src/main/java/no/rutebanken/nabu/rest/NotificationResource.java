@@ -15,7 +15,8 @@
 
 package no.rutebanken.nabu.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.domain.event.GeoCoderAction;
@@ -37,12 +38,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +53,9 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORG
 @Component
 @Produces("application/json")
 @Path("notifications")
-@Api(tags = {"Notification resource"}, produces = "application/json")
+@Tags(value = {
+        @Tag(name = "NotificationResource", description ="Notification resource")
+})
 @PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
 public class NotificationResource {
 

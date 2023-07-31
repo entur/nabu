@@ -15,11 +15,11 @@
 
 package no.rutebanken.nabu.domain.event;
 
+import jakarta.persistence.*;
 import org.apache.commons.lang3.ObjectUtils;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
