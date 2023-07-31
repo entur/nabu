@@ -29,7 +29,7 @@
   -->
 
 <configuration>
-    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    <shutdownHook class="ch.qos.logback.core.hook.DefaultShutdownHook"/>
 
     <!-- default console pattern plus marker -->
     <property name="CONSOLE_LOG_PATTERN"

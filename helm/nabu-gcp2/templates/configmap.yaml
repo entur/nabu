@@ -25,7 +25,7 @@ data:
     spring.jpa.database=POSTGRESQL
     spring.jpa.open-in-view=false
     spring.jpa.show-sql=false
-    spring.jpa.properties.hibernate.dialect=org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
     spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
     spring.flyway.table=schema_version
 
