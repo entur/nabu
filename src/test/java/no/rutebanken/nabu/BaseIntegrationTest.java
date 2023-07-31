@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -45,7 +46,7 @@ public abstract class BaseIntegrationTest {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http.csrf().disable()
+            http.csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(authz -> authz
                             .anyRequest().permitAll()
                     );
