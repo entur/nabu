@@ -15,7 +15,9 @@
 
 package no.rutebanken.nabu.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.nabu.domain.event.CrudEventSearch;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.ApiCrudEvent;
@@ -23,10 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.BeanParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import java.util.List;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
@@ -35,7 +37,9 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 @Produces("application/json")
 @Path("change_log")
-@Api(tags = {"Change log resource"}, produces = "application/json")
+@Tags(value = {
+        @Tag(name = "ChangeLogResource", description ="Change log resource")
+})
 @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "','" + ROLE_ORGANISATION_EDIT + "')")
 public class ChangeLogResource {
 
@@ -43,6 +47,7 @@ public class ChangeLogResource {
     private EventRepository eventRepository;
 
     @GET
+    @Operation(summary = "Return the list of CRUD event for the given search parameters")
     public List<ApiCrudEvent> find(@BeanParam CrudEventSearch search) {
         return eventRepository.findCrudEvents(search).stream().map(ApiCrudEvent::fromCrudEvent).toList();
     }

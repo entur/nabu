@@ -15,7 +15,9 @@
 
 package no.rutebanken.nabu.rest;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.nabu.domain.SystemJobStatus;
 import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import no.rutebanken.nabu.rest.domain.SystemStatusAggregation;
@@ -26,10 +28,10 @@ import org.springframework.data.util.Pair;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +42,9 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @Component
 @Produces("application/json")
 @Path("admin_summary")
-@Api(tags = {"Admin summary resource"}, produces = "application/json")
+@Tags(value = {
+        @Tag(name = "AdminSummaryResource", description ="Admin summary resource")
+})
 @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
 public class AdminSummaryResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -51,6 +55,7 @@ public class AdminSummaryResource {
 
     @GET
     @Path("/status/aggregation")
+    @Operation(summary = "Return the status of the latest dataset import")
     public Collection<SystemStatusAggregation> getLatestSystemStatus(@QueryParam("jobDomain") List<String> jobDomains,
                                                                             @QueryParam("jobType") List<String> jobTypes
     ) {
