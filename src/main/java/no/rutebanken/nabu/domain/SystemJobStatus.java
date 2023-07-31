@@ -17,7 +17,7 @@ package no.rutebanken.nabu.domain;
 
 import no.rutebanken.nabu.domain.event.JobState;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.Objects;
 
