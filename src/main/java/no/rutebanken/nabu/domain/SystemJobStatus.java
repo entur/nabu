@@ -28,7 +28,8 @@ import java.util.Objects;
 public class SystemJobStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "system_job_status_seq")
+    @SequenceGenerator(name = "system_job_status_seq", sequenceName = "system_job_status_seq")
     private Long pk;
 
     private String jobDomain;

@@ -15,11 +15,7 @@
 
 package no.rutebanken.nabu.domain.event;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Notification {
@@ -27,7 +23,8 @@ public class Notification {
     public enum NotificationStatus {READY, COMPLETE}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notification_seq")
+    @SequenceGenerator(name = "notification_seq", sequenceName = "notification_seq")
     private Long pk;
 
     @ManyToOne
