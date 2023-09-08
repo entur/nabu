@@ -16,6 +16,9 @@ data:
     email.link.operator={{ .Values.configMap.mail.operator }}
     server.port= {{ .Values.common.service.internalPort }}
     spring.mail.port=2525
+    
+    # Spring web
+    server.compression.enabled=true
 
     # Database
     spring.database.driverClassName=org.postgresql.Driver
