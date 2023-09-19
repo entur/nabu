@@ -15,9 +15,7 @@
 
 package no.rutebanken.nabu.config;
 
-import io.swagger.jaxrs.config.BeanConfig;
-import io.swagger.jaxrs.listing.ApiListingResource;
-import io.swagger.jaxrs.listing.SwaggerSerializers;
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import no.rutebanken.nabu.filter.CorsResponseFilter;
 import no.rutebanken.nabu.rest.AdminSummaryResource;
 import no.rutebanken.nabu.rest.ChangeLogResource;
@@ -67,19 +65,9 @@ public class JerseyConfig {
 
 
         private void configureSwagger() {
-            // Available at localhost:port/api/swagger.json
-            this.register(ApiListingResource.class);
-            this.register(SwaggerSerializers.class);
+            packages("no.rutebanken.nabu.rest");
+            register(OpenApiResource.class);
 
-            BeanConfig config = new BeanConfig();
-            config.setConfigId("events-swagger-doc");
-            config.setTitle("Event API");
-            config.setVersion("v1");
-            config.setSchemes(new String[]{"http", "https"});
-            config.setResourcePackage("no.rutebanken.nabu.rest");
-            config.setPrettyPrint(true);
-            config.setScan(true);
-            config.setScannerId("events-scanner");
         }
     }
 
