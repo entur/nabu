@@ -60,15 +60,9 @@ public class JerseyConfig {
             register(NotAuthenticatedExceptionMapper.class);
             register(AccessDeniedExceptionMapper.class);
 
-            configureSwagger();
-        }
-
-
-        private void configureSwagger() {
-            packages("no.rutebanken.nabu.rest");
             register(OpenApiResource.class);
-
         }
+
     }
 
 }
