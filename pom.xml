@@ -47,7 +47,7 @@
 
     <properties>
         <entur.helpers.version>2.2</entur.helpers.version>
-        <spring-cloud-gcp-dependencies.version>4.7.1</spring-cloud-gcp-dependencies.version>
+        <spring-cloud-gcp-dependencies.version>4.7.2</spring-cloud-gcp-dependencies.version>
         <postgis-jdbc.version>2021.1.0</postgis-jdbc.version>
         <wololo.version>0.18.1</wololo.version>
         <commons-io.version>2.13.0</commons-io.version>
