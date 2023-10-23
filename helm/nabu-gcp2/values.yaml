@@ -16,7 +16,7 @@ common:
     image: ${artifact.metadata.image}
     cpu: 0.3
     memory: 1200
-    cpuLimit: 600m
+    cpuLimit: 1000m
     memoryLimit: 1800
     probes:
       liveness:
