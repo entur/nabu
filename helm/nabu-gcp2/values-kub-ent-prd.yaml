@@ -22,8 +22,8 @@ configMap:
 
   oauth2:
     client:
-      id: 681gbNw7L020V7xFZag37qOlDp1QtIrF
-      url: https://auth2.entur.org/oauth/token
+      id: UMNw5ExoUKIVDo8HHgYDYJp64wRcphls
+      url: https://internal.entur.org/oauth/token
       audience: https://ror.api.entur.io
   mail:
     stopPlace: https://stoppested.entur.org/

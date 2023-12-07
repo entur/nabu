@@ -21,8 +21,8 @@ configMap:
 
   oauth2:
     client:
-      id: QQQKCbhgPE1met2VDO8s9quG8U9Rb6q5
-      url: https://ror-entur-staging.eu.auth0.com/oauth/token
+      id: AQMH9Zwwe94P5hFgpspdkoERtgrQrViK
+      url: https://internal.staging.entur.org/oauth/token
       audience: https://ror.api.staging.entur.io
   mail:
     stopPlace: https://stoppested-stage.entur.org/
