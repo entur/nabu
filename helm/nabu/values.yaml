@@ -8,15 +8,11 @@ common:
     externalPort: 80
     internalPort: 9004
   container:
-    envFrom:
-      - secretRef:
-            name: nabu-psql-credentials
-    labels: { customLogRetention: enabled }
+    labels: {customLogRetention: enabled}
     forceReplicas: 1
-    image: ${artifact.metadata.image}
+    image: <+artifacts.primary.image>
     cpu: 0.3
     memory: 1200
-    cpuLimit: 1000m
     memoryLimit: 1800
     probes:
       liveness:
@@ -35,11 +31,19 @@ common:
           defaultMode: 420
           name: nabu-application
         name: application-config
-
   configmap:
     data:
-      JDK_JAVA_OPTIONS:  -server -Xmx768m -Xms512m -Dspring.config.location=/etc/application-config/application.properties
+      JDK_JAVA_OPTIONS: -server -Xmx768m -Xms512m -Dspring.config.location=/etc/application-config/application.properties
         -Dfile.encoding=UTF-8
       TZ: Europe/Oslo
     enabled: true
     toEnv: true
+  secrets:
+    psql-credentials: 
+      - SPRING_DATASOURCE_PASSWORD
+      - SPRING_DATASOURCE_USERNAME
+    smtp:
+      - SPRING_MAIL_PASSWORD
+      - SPRING_MAIL_USERNAME
+    auth:
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_NABU_CLIENT_SECRET

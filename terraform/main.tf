@@ -11,85 +11,69 @@ provider "kubernetes" {
 }
 
 resource "google_pubsub_topic" "CrudEventQueue" {
-  name = "CrudEventQueue"
+  name    = "CrudEventQueue"
   project = var.gcp_resources_project
-  labels = var.labels
+  labels  = var.labels
 }
 
 resource "google_pubsub_topic" "JobEventQueue" {
-  name = "JobEventQueue"
+  name    = "JobEventQueue"
   project = var.gcp_resources_project
-  labels = var.labels
+  labels  = var.labels
 }
 
 # add service account as member to pubsub service in the resources project
 
 resource "google_pubsub_subscription_iam_member" "CrudEventQueueSubscriber" {
-  project = var.gcp_resources_project
+  project      = var.gcp_resources_project
   subscription = google_pubsub_subscription.CrudEventQueue.name
-  role = var.service_account_pubsub_role
-  member = "serviceAccount:${var.service_account}"
+  role         = var.service_account_pubsub_role
+  member       = "serviceAccount:${var.service_account}"
 }
 
 resource "google_pubsub_subscription_iam_member" "JobEventQueueSubscriber" {
-  project = var.gcp_resources_project
+  project      = var.gcp_resources_project
   subscription = google_pubsub_subscription.JobEventQueue.name
-  role = var.service_account_pubsub_role
-  member = "serviceAccount:${var.service_account}"
+  role         = var.service_account_pubsub_role
+  member       = "serviceAccount:${var.service_account}"
 }
 
 
 
 resource "google_pubsub_subscription" "CrudEventQueue" {
-  name = "CrudEventQueue"
-  topic = google_pubsub_topic.CrudEventQueue.name
+  name    = "CrudEventQueue"
+  topic   = google_pubsub_topic.CrudEventQueue.name
   project = var.gcp_resources_project
-  labels = var.labels
+  labels  = var.labels
   retry_policy {
     minimum_backoff = "10s"
   }
 }
 
 resource "google_pubsub_subscription" "JobEventQueue" {
-  name = "JobEventQueue"
-  topic = google_pubsub_topic.JobEventQueue.name
+  name    = "JobEventQueue"
+  topic   = google_pubsub_topic.JobEventQueue.name
   project = var.gcp_resources_project
-  labels = var.labels
+  labels  = var.labels
   retry_policy {
     minimum_backoff = "10s"
   }
 }
 
-resource "kubernetes_secret" "nabu-psql-credentials" {
-  metadata {
-    name = "nabu-psql-credentials"
-    namespace = var.kube_namespace
-  }
-
-  data = {
-    "SPRING_DATASOURCE_USERNAME" = var.ror-nabu-db-username
-    "SPRING_DATASOURCE_PASSWORD" = var.ror-nabu-db-password
-    "SPRING_MAIL_USERNAME" = var.ror-nabu-smtp-username
-    "SPRING_MAIL_PASSWORD" = var.ror-nabu-smtp-password
-    "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_NABU_CLIENT_SECRET" = var.ror-nabu-auth0-secret
-  }
-}
-
-
 # Database resources configuration
 
 resource "google_sql_database_instance" "db_instance" {
-  name = "nabu-db-pg13"
+  name             = "nabu-db-pg13"
   database_version = "POSTGRES_13"
-  project = var.gcp_resources_project
-  region = var.db_region
+  project          = var.gcp_resources_project
+  region           = var.db_region
 
   settings {
     location_preference {
       zone = var.db_zone
     }
-    tier = var.db_tier
-    user_labels = var.labels
+    tier              = var.db_tier
+    user_labels       = var.labels
     availability_type = var.db_availability
     backup_configuration {
       enabled = true
@@ -109,15 +93,25 @@ resource "google_sql_database_instance" "db_instance" {
 }
 
 resource "google_sql_database" "db" {
-  name = "nabu"
-  project = var.gcp_resources_project
+  name     = "nabu"
+  project  = var.gcp_resources_project
   instance = google_sql_database_instance.db_instance.name
 }
 
-resource "google_sql_user" "db-user" {
-  name = var.ror-nabu-db-username
+data "google_secret_manager_secret_version" "db_username" {
+  secret  = "SPRING_DATASOURCE_USERNAME"
   project = var.gcp_resources_project
+}
+
+data "google_secret_manager_secret_version" "db_password" {
+  secret  = "SPRING_DATASOURCE_PASSWORD"
+  project = var.gcp_resources_project
+}
+
+resource "google_sql_user" "db-user" {
+  project  = var.gcp_resources_project
   instance = google_sql_database_instance.db_instance.name
-  password = var.ror-nabu-db-password
+  name     = data.google_secret_manager_secret_version.db_username.secret_data
+  password = data.google_secret_manager_secret_version.db_password.secret_data
 }
 
