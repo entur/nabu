@@ -20,7 +20,7 @@ configMap:
       audience: https://ror.api.dev.entur.io
 
     partner:
-      url: https://partner.dev.entur.org
+      url: https://partner.dev.entur.org/
       audience: https://api.dev.entur.io
 
   oauth2:

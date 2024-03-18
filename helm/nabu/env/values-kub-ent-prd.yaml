@@ -21,7 +21,7 @@ configMap:
       audience: https://ror.api.entur.io
 
     partner:
-      url: https://partner.entur.org
+      url: https://partner.entur.org/
       audience: https://api.entur.io
 
   oauth2:
