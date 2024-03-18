@@ -21,7 +21,6 @@ configMap:
 
     partner:
       url: https://partner.staging.entur.org/
-      audience: https://api.staging.entur.io
 
   oauth2:
     client:

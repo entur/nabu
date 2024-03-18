@@ -41,7 +41,7 @@ data:
 
     # OAuth2 Resource Server for Entur Partner tenant
     nabu.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri={{ .Values.configMap.auth0.partner.url }}
-    nabu.oauth2.resourceserver.auth0.entur.partner.jwt.audience={{ .Values.configMap.auth0.partner.audience }}
+    nabu.oauth2.resourceserver.auth0.entur.partner.jwt.audience={{ .Values.configMap.auth0.ror.audience }}
 
     # OAuth2 Resource Server for RoR tenant
     nabu.oauth2.resourceserver.auth0.ror.jwt.issuer-uri={{ .Values.configMap.auth0.ror.url }}
