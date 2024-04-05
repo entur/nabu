@@ -43,7 +43,7 @@ public class MessageResolverMethod implements TemplateMethodModelEx {
         if (arguments.isEmpty()) {
             throw new TemplateModelException("Wrong number of arguments");
         }
-        SimpleScalar arg = (SimpleScalar) arguments.get(0);
+        SimpleScalar arg = (SimpleScalar) arguments.getFirst();
         String code = arg.getAsString();
         if (code == null || code.isEmpty()) {
             throw new TemplateModelException("Invalid code value '" + code + "'");

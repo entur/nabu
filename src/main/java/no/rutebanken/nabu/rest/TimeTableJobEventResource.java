@@ -168,7 +168,7 @@ public class TimeTableJobEventResource {
         }
 
         for (JobStatus agg : list) {
-            JobStatusEvent event = agg.getEvents().get(agg.getEvents().size() - 1);
+            JobStatusEvent event = agg.getEvents().getLast();
             agg.setLastEvent(event.date);
             agg.setEndStatus(event.state);
             long durationMillis = agg.getLastEvent().getTime() - agg.getFirstEvent().getTime();

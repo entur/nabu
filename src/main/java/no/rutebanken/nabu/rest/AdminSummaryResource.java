@@ -23,7 +23,6 @@ import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import no.rutebanken.nabu.rest.domain.SystemStatusAggregation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
@@ -49,8 +48,11 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 public class AdminSummaryResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private SystemJobStatusRepository systemJobStatusRepository;
+    private final SystemJobStatusRepository systemJobStatusRepository;
+
+    public AdminSummaryResource(SystemJobStatusRepository systemJobStatusRepository) {
+        this.systemJobStatusRepository = systemJobStatusRepository;
+    }
 
 
     @GET

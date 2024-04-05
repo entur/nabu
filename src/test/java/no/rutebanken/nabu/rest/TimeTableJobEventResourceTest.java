@@ -56,10 +56,10 @@ class TimeTableJobEventResourceTest {
         Assertions.assertNotNull(listStatus);
         Assertions.assertEquals(2, listStatus.size());
 
-        JobStatus a = listStatus.get(0);
+        JobStatus a = listStatus.getFirst();
 
         Assertions.assertEquals("a", a.getCorrelationId());
-        Assertions.assertEquals(ACTION1, a.getEvents().get(0).action);
+        Assertions.assertEquals(ACTION1, a.getEvents().getFirst().action);
         Assertions.assertEquals(JobStatus.State.FAILED, a.getEndStatus());
         Assertions.assertEquals(3, a.getEvents().size());
         Assertions.assertEquals(Date.from(t0.plusMillis(1)), a.getFirstEvent());
@@ -70,7 +70,7 @@ class TimeTableJobEventResourceTest {
         JobStatus b = listStatus.get(1);
 
         Assertions.assertEquals("b", b.getCorrelationId());
-        Assertions.assertEquals(ACTION2, b.getEvents().get(0).action);
+        Assertions.assertEquals(ACTION2, b.getEvents().getFirst().action);
         Assertions.assertEquals(JobStatus.State.OK, b.getEndStatus());
         Assertions.assertEquals(3, b.getEvents().size());
         Assertions.assertEquals(Date.from(t0.plusMillis(4)), b.getFirstEvent());

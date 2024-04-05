@@ -67,8 +67,8 @@ public class EmailNotificationSender implements NotificationProcessor {
         }
 
         logger.info("Sending email to user: {} for notifications: {}", user.getUsername(), notifications);
-
-        Locale locale = new Locale(emailLanguageDefault); // TODO get users default from user
+        // TODO get users default from user
+        Locale locale = Locale.of(emailLanguageDefault);
 
         sendEmail(user.getContactDetails().getEmail(), formatter.getSubject(locale), formatter.formatMessage(notifications, locale));
 

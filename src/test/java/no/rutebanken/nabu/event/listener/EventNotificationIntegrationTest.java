@@ -20,7 +20,6 @@ import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.Notification;
 import no.rutebanken.nabu.domain.event.NotificationType;
-import no.rutebanken.nabu.event.UserNotificationEventHandler;
 import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import no.rutebanken.nabu.event.user.UserRepository;
 import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
@@ -28,10 +27,9 @@ import no.rutebanken.nabu.event.user.dto.user.NotificationConfigDTO;
 import no.rutebanken.nabu.event.user.dto.user.UserDTO;
 import no.rutebanken.nabu.repository.NotificationRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.Instant;
 import java.util.List;
@@ -47,16 +45,8 @@ class EventNotificationIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @Mock
+    @MockBean
     private UserRepository userRepositoryMock;
-
-    @Autowired
-    private UserNotificationEventHandler userNotificationEventHandler;
-
-    @BeforeEach
-    void setUp() {
-        userNotificationEventHandler.setUserRepository(userRepositoryMock);
-    }
 
     @Test
     void eventsTriggerNotifications() {
@@ -87,7 +77,7 @@ class EventNotificationIntegrationTest extends BaseIntegrationTest {
         List<Notification> notifications = notificationRepository.findByUserNameAndTypeAndStatus(user.getUsername(), NotificationType.WEB, Notification.NotificationStatus.READY);
 
         Assertions.assertEquals(1, notifications.size());
-        Assertions.assertEquals(notifications.get(0).getEvent().getEventTime(), matchingEvent.getEventTime());
+        Assertions.assertEquals(notifications.getFirst().getEvent().getEventTime(), matchingEvent.getEventTime());
     }
 
     private EventFilterDTO jobEventFilter(String action, JobState jobState) {

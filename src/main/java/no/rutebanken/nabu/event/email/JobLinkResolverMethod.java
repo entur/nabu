@@ -36,7 +36,7 @@ public class JobLinkResolverMethod implements TemplateMethodModelEx {
         if (arguments.isEmpty()) {
             throw new TemplateModelException("Wrong number of arguments");
         }
-        Object obj = ((BeanModel) arguments.get(0)).getWrappedObject();
+        Object obj = ((BeanModel) arguments.getFirst()).getWrappedObject();
         if (!(obj instanceof JobEvent jobEvent)) {
             throw new TemplateModelException("Wrong type of argument");
         }

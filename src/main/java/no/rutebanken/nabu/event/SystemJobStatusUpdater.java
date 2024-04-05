@@ -21,7 +21,6 @@ import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +34,11 @@ public class SystemJobStatusUpdater implements EventHandler {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private SystemJobStatusRepository systemJobStatusRepository;
+    private final SystemJobStatusRepository systemJobStatusRepository;
+
+    public SystemJobStatusUpdater(SystemJobStatusRepository systemJobStatusRepository) {
+        this.systemJobStatusRepository = systemJobStatusRepository;
+    }
 
     @Override
     public void onEvent(Event event) {
