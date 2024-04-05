@@ -168,6 +168,6 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
 
         List<CrudEvent> crudEvents = repository.findCrudEvents(search);
         Assertions.assertEquals(1, crudEvents.size());
-        Assertions.assertEquals(savedCrudEvent.getPk(), crudEvents.get(0).getPk());
+        Assertions.assertEquals(savedCrudEvent.getPk(), crudEvents.getFirst().getPk());
     }
 }

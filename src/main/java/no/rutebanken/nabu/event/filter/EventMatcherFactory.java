@@ -18,14 +18,16 @@ package no.rutebanken.nabu.event.filter;
 import no.rutebanken.nabu.event.user.AdministrativeZoneRepository;
 import no.rutebanken.nabu.event.user.dto.user.EventFilterDTO;
 import no.rutebanken.nabu.exceptions.NabuException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EventMatcherFactory {
 
-    @Autowired
-    private AdministrativeZoneRepository administrativeZoneRepository;
+    private final AdministrativeZoneRepository administrativeZoneRepository;
+
+    public EventMatcherFactory(AdministrativeZoneRepository administrativeZoneRepository) {
+        this.administrativeZoneRepository = administrativeZoneRepository;
+    }
 
     public EventMatcher createEventMatcher(EventFilterDTO eventFilter) {
 

@@ -32,14 +32,14 @@ class AdminSummaryResourceTest {
 
 	@Test
 	void testConvertToSystemStatusAggregationEmptyCollection() {
-		AdminSummaryResource resource = new AdminSummaryResource();
+		AdminSummaryResource resource = new AdminSummaryResource(null);
 		Collection<SystemStatusAggregation> aggregations = resource.convertToSystemStatusAggregation(new ArrayList<>());
 		Assertions.assertTrue(aggregations.isEmpty());
 	}
 
 	@Test
 	void testConvertToSystemStatusAggregation() {
-		AdminSummaryResource resource = new AdminSummaryResource();
+		AdminSummaryResource resource = new AdminSummaryResource(null);
 		List<SystemJobStatus> statusList = new ArrayList<>();
 		
 		Instant now= Instant.now();

@@ -19,7 +19,6 @@ import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.SystemJobStatus;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
-import no.rutebanken.nabu.event.UserNotificationEventHandler;
 import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import no.rutebanken.nabu.event.user.UserRepository;
 import no.rutebanken.nabu.repository.EventRepository;
@@ -27,8 +26,8 @@ import no.rutebanken.nabu.repository.SystemJobStatusRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 
@@ -48,15 +47,11 @@ class JobStatusListenerIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private SystemJobStatusRepository systemJobStatusRepository;
 
-    @Mock
+    @MockBean
     private UserRepository userRepositoryMock;
-
-    @Autowired
-    private UserNotificationEventHandler userNotificationEventHandler;
 
     @BeforeEach
     void setUp() {
-        userNotificationEventHandler.setUserRepository(userRepositoryMock);
         when(userRepositoryMock.findAll()).thenReturn(new ArrayList<>());
     }
 

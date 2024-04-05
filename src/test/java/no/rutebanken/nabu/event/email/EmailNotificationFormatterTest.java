@@ -47,7 +47,7 @@ class EmailNotificationFormatterTest extends BaseIntegrationTest {
     void formatMailInNorwegian() throws FileNotFoundException {
         Set<Notification> notifications = Set.of(jobNotification("file.xml"), maxCrudNotification("NSR:StopPlace:16688", Instant.now()));
 
-        String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("no"), PROVIDER_LIST);
+        String msg = emailNotificationFormatter.formatMessage(notifications, Locale.of("no"), PROVIDER_LIST);
         System.out.println(msg);
         PrintWriter out = new PrintWriter("target/email.html");
         out.write(msg);
@@ -56,7 +56,7 @@ class EmailNotificationFormatterTest extends BaseIntegrationTest {
         Assertions.assertFalse(msg.contains("notification.email"), "Expected all message keys to have been resolved");
         Assertions.assertTrue(msg.contains("hendelser"));   // TODO norwegian still missing lots of values. How do we verify?
 
-        Assertions.assertTrue(msg.contains(PROVIDER_LIST.get(0).getName()), "Should be able to map providerId to name");
+        Assertions.assertTrue(msg.contains(PROVIDER_LIST.getFirst().getName()), "Should be able to map providerId to name");
     }
 
     @Test
@@ -69,7 +69,7 @@ class EmailNotificationFormatterTest extends BaseIntegrationTest {
         Set<Notification> notifications = Set.of(oldestEvent, jobNotification(null), maxCrudNotification("NSR:StopPlace:2", now.minusMillis(1000)), maxCrudNotification("NSR:StopPlace:1", now.minusMillis(2000)),
                 minCrudNotification("NSR:StopPlace:2", now.minusMillis(3000)), maxCrudNotification("NSR:StopPlace:3", now.minusMillis(4000)));
 
-        String msg = emailNotificationFormatter.formatMessage(notifications, new Locale("en"), PROVIDER_LIST);
+        String msg = emailNotificationFormatter.formatMessage(notifications, Locale.of("en"), PROVIDER_LIST);
         System.out.println(msg);
         Assertions.assertTrue(msg.startsWith("<html>"));
         Assertions.assertFalse(msg.contains("notification.email"), "Expected all message keys to have been resolved");
@@ -84,7 +84,7 @@ class EmailNotificationFormatterTest extends BaseIntegrationTest {
     private Notification jobNotification(String fileName) {
         Notification notification = new Notification();
 
-        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).state(JobState.FAILED).providerId(PROVIDER_LIST.get(0).id).referential("rb_bra").action("IMPORT").externalId("3209").name(fileName).eventTime(Instant.now()).build();
+        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).state(JobState.FAILED).providerId(PROVIDER_LIST.getFirst().id).referential("rb_bra").action("IMPORT").externalId("3209").name(fileName).eventTime(Instant.now()).build();
         event.setPk(pkCounter++);
         notification.setEvent(event);
 

@@ -40,7 +40,7 @@ public class TemporalAccessorFormatter implements TemplateMethodModelEx {
         if (arguments.size() > 1) {
             throw new TemplateModelException("Wrong number of arguments");
         }
-        StringModel arg = (StringModel) arguments.get(0);
+        StringModel arg = (StringModel) arguments.getFirst();
         Object obj = arg.getWrappedObject();
         if (obj == null) {
             return "";

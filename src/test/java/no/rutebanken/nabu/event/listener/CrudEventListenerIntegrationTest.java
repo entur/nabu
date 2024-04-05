@@ -16,15 +16,14 @@
 package no.rutebanken.nabu.event.listener;
 
 import no.rutebanken.nabu.BaseIntegrationTest;
-import no.rutebanken.nabu.event.UserNotificationEventHandler;
 import no.rutebanken.nabu.event.listener.dto.CrudEventDTO;
 import no.rutebanken.nabu.event.user.UserRepository;
 import no.rutebanken.nabu.repository.EventRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -39,15 +38,11 @@ class CrudEventListenerIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private CrudeEventProcessor crudeEventProcessor;
 
-    @Mock
+    @MockBean
     private UserRepository userRepositoryMock;
-
-    @Autowired
-    private UserNotificationEventHandler userNotificationEventHandler;
 
     @BeforeEach
     void setUp() {
-        userNotificationEventHandler.setUserRepository(userRepositoryMock);
         when(userRepositoryMock.findAll()).thenReturn(new ArrayList<>());
     }
 

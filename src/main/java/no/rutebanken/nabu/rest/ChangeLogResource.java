@@ -21,7 +21,6 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.nabu.domain.event.CrudEventSearch;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.ApiCrudEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -43,8 +42,11 @@ import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROU
 @PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "','" + ROLE_ORGANISATION_EDIT + "')")
 public class ChangeLogResource {
 
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
+
+    public ChangeLogResource(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
 
     @GET
     @Operation(summary = "Return the list of CRUD event for the given search parameters")

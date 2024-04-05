@@ -20,7 +20,6 @@ import no.rutebanken.nabu.domain.event.NotificationType;
 import no.rutebanken.nabu.event.user.dto.user.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -31,8 +30,11 @@ public class ImmediateNotificationService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private Map<NotificationType, NotificationProcessor> notificationSenders;
+    private final Map<NotificationType, NotificationProcessor> notificationSenders;
+
+    public ImmediateNotificationService(Map<NotificationType, NotificationProcessor> notificationSenders) {
+        this.notificationSenders = notificationSenders;
+    }
 
     public void sendNotifications(Notification notification, UserDTO user) {
         NotificationType type = notification.getType();
