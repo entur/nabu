@@ -47,7 +47,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <entur.helpers.version>2.18</entur.helpers.version>
+        <entur.helpers.version>2.19</entur.helpers.version>
         <spring-cloud-gcp-dependencies.version>5.2.1</spring-cloud-gcp-dependencies.version>
         <postgis-jdbc.version>2023.1.0</postgis-jdbc.version>
         <wololo.version>0.18.1</wololo.version>
