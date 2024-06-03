@@ -63,7 +63,7 @@ public class AdminSummaryResource {
         try {
             return convertToSystemStatusAggregation(systemJobStatusRepository.find(jobDomains, jobTypes));
         } catch (Exception e) {
-            logger.error("Erring fetching system status: " + e.getMessage(), e);
+            logger.error("Erring fetching system status: {}", e.getMessage(), e);
             throw e;
         }
     }

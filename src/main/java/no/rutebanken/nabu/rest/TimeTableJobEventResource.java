@@ -93,7 +93,7 @@ public class TimeTableJobEventResource {
                     actions, convertEnums(states, JobState.class), externalIds, fileNames);
             return convert(eventsForProvider);
         } catch (Exception e) {
-            logger.error("Erring fetching status for provider with id " + providerId + ": " + e.getMessage(), e);
+            logger.error("Erring fetching status for provider with id {}: {}", providerId, e.getMessage(), e);
             throw e;
         }
     }
