@@ -16,6 +16,9 @@
 
 package no.rutebanken.nabu.config;
 
+import no.rutebanken.nabu.provider.ProviderRepository;
+import no.rutebanken.nabu.security.DefaultUserContextService;
+import no.rutebanken.nabu.security.UserContextService;
 import org.entur.oauth2.AuthorizedWebClientBuilder;
 import org.entur.oauth2.JwtRoleAssignmentExtractor;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolver;
@@ -74,18 +77,30 @@ public class OAuth2Config {
     }
 
     @Bean
+    public UserContextService userContextService(ProviderRepository providerRepository,
+                                                 RoleAssignmentExtractor roleAssignmentExtractor,
+                                                 @Value("${authorization.enabled:true}") boolean authorizationEnabled) {
+        return new DefaultUserContextService(
+                providerRepository,
+                roleAssignmentExtractor,
+                authorizationEnabled
+        );
+    }
+
+
+    @Bean
     @Profile("!test")
     public MultiIssuerAuthenticationManagerResolver multiIssuerAuthenticationManagerResolver(
-             @Value("${nabu.oauth2.resourceserver.auth0.entur.partner.jwt.audience:}")
-             String enturPartnerAuth0Audience,
-             @Value("${nabu.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri:}")
-             String enturPartnerAuth0Issuer,
-             @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.audience:}")
-             String rorAuth0Audience,
-             @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.issuer-uri:}")
-             String rorAuth0Issuer,
-             @Value("${nabu.oauth2.resourceserver.auth0.ror.claim.namespace:}")
-             String rorAuth0ClaimNamespace) {
+            @Value("${nabu.oauth2.resourceserver.auth0.entur.partner.jwt.audience:}")
+            String enturPartnerAuth0Audience,
+            @Value("${nabu.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri:}")
+            String enturPartnerAuth0Issuer,
+            @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.audience:}")
+            String rorAuth0Audience,
+            @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.issuer-uri:}")
+            String rorAuth0Issuer,
+            @Value("${nabu.oauth2.resourceserver.auth0.ror.claim.namespace:}")
+            String rorAuth0ClaimNamespace) {
 
         return new MultiIssuerAuthenticationManagerResolverBuilder()
                 .withEnturPartnerAuth0Issuer(enturPartnerAuth0Issuer)

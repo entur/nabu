@@ -33,9 +33,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import java.util.*;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_EDIT;
-
 @Component
 @Produces("application/json")
 @Path("latest_upload")
@@ -52,7 +49,7 @@ public class LatestUploadResource {
     @GET
     @Path("/{providerId}")
     @Operation(summary = "Return the status of the latest dataset upload")
-    @PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "') or @providerAuthenticationService.hasRoleForProvider(authentication,'" + ROLE_ROUTE_DATA_EDIT + "',#providerId)")
+    @PreAuthorize("@userContextService.canEditProvider(#providerId)")
     public DataDeliveryStatus getLatestDataDeliveryStatus(@PathParam("providerId") Long providerId) {
 
         List<JobEvent> statusList = eventRepository.getLatestTimetableFileTransfer(providerId);

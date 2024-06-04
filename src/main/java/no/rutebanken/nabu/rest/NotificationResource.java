@@ -48,15 +48,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
-
 @Component
 @Produces("application/json")
 @Path("notifications")
 @Tags(value = {
         @Tag(name = "NotificationResource", description ="Notification resource")
 })
-@PreAuthorize("hasRole('" + ROLE_ORGANISATION_EDIT + "')")
+@PreAuthorize("@userContextService.isOrganizationAdmin()")
 public class NotificationResource {
 
     @Autowired

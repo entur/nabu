@@ -30,16 +30,13 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import java.util.List;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ORGANISATION_EDIT;
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
-
 @Component
 @Produces("application/json")
 @Path("change_log")
 @Tags(value = {
         @Tag(name = "ChangeLogResource", description ="Change log resource")
 })
-@PreAuthorize("hasAnyRole('" + ROLE_ROUTE_DATA_ADMIN + "','" + ROLE_ORGANISATION_EDIT + "')")
+@PreAuthorize("@userContextService.isRouteDataAdmin() or @userContextService.isOrganizationAdmin()")
 public class ChangeLogResource {
 
     private final EventRepository eventRepository;

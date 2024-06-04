@@ -36,15 +36,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.rutebanken.helper.organisation.AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN;
-
 @Component
 @Produces("application/json")
 @Path("admin_summary")
 @Tags(value = {
         @Tag(name = "AdminSummaryResource", description ="Admin summary resource")
 })
-@PreAuthorize("hasRole('" + ROLE_ROUTE_DATA_ADMIN + "')")
+@PreAuthorize("@userContextService.isRouteDataAdmin()")
 public class AdminSummaryResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -65,7 +63,7 @@ public class AdminSummaryResource {
         try {
             return convertToSystemStatusAggregation(systemJobStatusRepository.find(jobDomains, jobTypes));
         } catch (Exception e) {
-            logger.error("Erring fetching system status: " + e.getMessage(), e);
+            logger.error("Erring fetching system status: {}", e.getMessage(), e);
             throw e;
         }
     }
