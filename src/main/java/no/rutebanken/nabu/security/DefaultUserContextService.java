@@ -11,6 +11,9 @@ import java.util.List;
 
 import static org.rutebanken.helper.organisation.AuthorizationConstants.*;
 
+/**
+ * Implementation of the UserContextService that retrieves user privileges from the user token
+ */
 public class DefaultUserContextService implements UserContextService {
 
     private final ProviderRepository providerRepository;

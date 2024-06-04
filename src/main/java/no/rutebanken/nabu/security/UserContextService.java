@@ -1,6 +1,9 @@
 package no.rutebanken.nabu.security;
 
 
+/**
+ * Service returning the privileges of the current user.
+ */
 public interface UserContextService {
 
   /**
