@@ -67,7 +67,7 @@ public class TimeTableJobEventResource {
 
     @GET
     @Path("/{providerId}")
-    @PreAuthorize("@userContextService.canEditProvider(#providerId)")
+    @PreAuthorize("@userContextService.canEditRouteData(#providerId)")
 
 
 
