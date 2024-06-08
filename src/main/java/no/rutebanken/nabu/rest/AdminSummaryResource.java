@@ -42,7 +42,7 @@ import java.util.Map;
 @Tags(value = {
         @Tag(name = "AdminSummaryResource", description ="Admin summary resource")
 })
-@PreAuthorize("@userContextService.isRouteDataAdmin()")
+@PreAuthorize("@authorizationService.isRouteDataAdmin()")
 public class AdminSummaryResource {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

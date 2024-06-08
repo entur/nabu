@@ -54,7 +54,7 @@ data:
     nabu.oauth2.client.audience={{ .Values.configMap.oauth2.client.audience }}
 
     # Authorization
-    nabu.security.user-context-service=token-based
+    nabu.security.authorization-service=token-based
 
     # Logging
     logging.level.org.hibernate.SQL=INFO
