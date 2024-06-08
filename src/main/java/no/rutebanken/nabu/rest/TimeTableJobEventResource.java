@@ -67,7 +67,7 @@ public class TimeTableJobEventResource {
 
     @GET
     @Path("/{providerId}")
-    @PreAuthorize("@userContextService.canEditRouteData(#providerId)")
+    @PreAuthorize("@authorizationService.canEditRouteData(#providerId)")
 
 
 
@@ -117,7 +117,7 @@ public class TimeTableJobEventResource {
     }
 
     @GET
-    @PreAuthorize("@userContextService.isRouteDataAdmin()")
+    @PreAuthorize("@authorizationService.isRouteDataAdmin()")
     public List<JobStatus> listStatus(@QueryParam("from") Date from,
                                              @QueryParam("to") Date to, @QueryParam("action") List<String> actions,
                                              @QueryParam("state") List<JobStatus.State> states, @QueryParam("chouetteJobId") List<Long> jobIds,
@@ -126,14 +126,14 @@ public class TimeTableJobEventResource {
     }
 
     @DELETE
-    @PreAuthorize("@userContextService.isRouteDataAdmin()")
+    @PreAuthorize("@authorizationService.isRouteDataAdmin()")
     public void clearAllStatus() {
         eventService.clearAll(STATUS_JOB_TYPE);
     }
 
     @DELETE
     @Path("/{providerId}")
-    @PreAuthorize("@userContextService.isRouteDataAdmin()")
+    @PreAuthorize("@authorizationService.isRouteDataAdmin()")
     public void clearStatusForProvider(@PathParam("providerId") Long providerId) {
         mapToAllRelatedProviderIds(providerId).forEach(clearProviderId -> eventService.clear(STATUS_JOB_TYPE, clearProviderId));
     }

@@ -17,9 +17,11 @@
 package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.provider.ProviderRepository;
-import org.entur.oauth2.authorization.FullAccessUserContextService;
-import org.entur.oauth2.authorization.OAuth2TokenUserContextService;
-import org.entur.oauth2.authorization.UserContextService;
+import org.entur.oauth2.JwtRoleAssignmentExtractor;
+import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
+import org.rutebanken.helper.organisation.authorization.AuthorizationService;
+import org.rutebanken.helper.organisation.authorization.DefaultAuthorizationService;
+import org.rutebanken.helper.organisation.authorization.FullAccessAuthorizationService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,24 +32,30 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AuthorizationConfig {
 
+    @Bean
+    public RoleAssignmentExtractor roleAssignmentExtractor() {
+        return new JwtRoleAssignmentExtractor();
+    }
+
     @ConditionalOnProperty(
-            value = "nabu.security.user-context-service",
+            value = "nabu.security.authorization-service",
             havingValue = "token-based"
     )
-    @Bean("userContextService")
-    public UserContextService<Long> tokenBasedUserContextService(ProviderRepository providerRepository) {
-        return new OAuth2TokenUserContextService<>(
-                providerId -> providerRepository.getProvider(providerId) == null ? null : providerRepository.getProvider(providerId).getChouetteInfo().xmlns
+    @Bean("authorizationService")
+    public AuthorizationService<Long> tokenBasedAuthorizationService(ProviderRepository providerRepository, RoleAssignmentExtractor roleAssignmentExtractor) {
+        return new DefaultAuthorizationService<>(
+                providerId -> providerRepository.getProvider(providerId) == null ? null : providerRepository.getProvider(providerId).getChouetteInfo().xmlns,
+                roleAssignmentExtractor
         );
     }
 
     @ConditionalOnProperty(
-            value = "nabu.security.user-context-service",
+            value = "nabu.security.authorization-service",
             havingValue = "full-access"
     )
-    @Bean("userContextService")
-    public UserContextService<Long> fullAccessUserContextService() {
-        return new FullAccessUserContextService();
+    @Bean("authorizationService")
+    public AuthorizationService<Long> fullAccessAuthorizationService() {
+        return new FullAccessAuthorizationService();
     }
 
 }
