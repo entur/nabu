@@ -16,14 +16,9 @@
 
 package no.rutebanken.nabu.config;
 
-import no.rutebanken.nabu.provider.ProviderRepository;
-import no.rutebanken.nabu.security.DefaultUserContextService;
-import no.rutebanken.nabu.security.UserContextService;
 import org.entur.oauth2.AuthorizedWebClientBuilder;
-import org.entur.oauth2.JwtRoleAssignmentExtractor;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolver;
 import org.entur.oauth2.multiissuer.MultiIssuerAuthenticationManagerResolverBuilder;
-import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
@@ -67,26 +62,6 @@ public class OAuth2Config {
                 .withClientRegistrationId("nabu")
                 .build();
     }
-
-    /**
-     * Extract role assignments from a JWT token.
-     */
-    @Bean
-    public RoleAssignmentExtractor roleAssignmentExtractor() {
-        return new JwtRoleAssignmentExtractor();
-    }
-
-    @Bean
-    public UserContextService userContextService(ProviderRepository providerRepository,
-                                                 RoleAssignmentExtractor roleAssignmentExtractor,
-                                                 @Value("${authorization.enabled:true}") boolean authorizationEnabled) {
-        return new DefaultUserContextService(
-                providerRepository,
-                roleAssignmentExtractor,
-                authorizationEnabled
-        );
-    }
-
 
     @Bean
     @Profile("!test")

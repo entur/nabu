@@ -49,7 +49,7 @@ public class LatestUploadResource {
     @GET
     @Path("/{providerId}")
     @Operation(summary = "Return the status of the latest dataset upload")
-    @PreAuthorize("@userContextService.canEditProvider(#providerId)")
+    @PreAuthorize("@authorizationService.canEditRouteData(#providerId)")
     public DataDeliveryStatus getLatestDataDeliveryStatus(@PathParam("providerId") Long providerId) {
 
         List<JobEvent> statusList = eventRepository.getLatestTimetableFileTransfer(providerId);

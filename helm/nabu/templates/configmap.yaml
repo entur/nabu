@@ -53,6 +53,9 @@ data:
     spring.security.oauth2.client.provider.nabu.token-uri={{ .Values.configMap.oauth2.client.url }}
     nabu.oauth2.client.audience={{ .Values.configMap.oauth2.client.audience }}
 
+    # Authorization
+    nabu.security.authorization-service=token-based
+
     # Logging
     logging.level.org.hibernate.SQL=INFO
     logging.level.org.hibernate.tool.hbm2ddl=INFO
