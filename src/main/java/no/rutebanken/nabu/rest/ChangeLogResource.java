@@ -36,7 +36,7 @@ import java.util.List;
 @Tags(value = {
         @Tag(name = "ChangeLogResource", description ="Change log resource")
 })
-@PreAuthorize("@authorizationService.isRouteDataAdmin() or @authorizationService.isOrganizationAdmin()")
+@PreAuthorize("@authorizationService.isRouteDataAdmin() or @authorizationService.isOrganisationAdmin()")
 public class ChangeLogResource {
 
     private final EventRepository eventRepository;
