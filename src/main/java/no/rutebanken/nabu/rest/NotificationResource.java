@@ -54,7 +54,7 @@ import java.util.List;
 @Tags(value = {
         @Tag(name = "NotificationResource", description ="Notification resource")
 })
-@PreAuthorize("@authorizationService.isOrganizationAdmin()")
+@PreAuthorize("@authorizationService.isOrganisationAdmin()")
 public class NotificationResource {
 
     @Autowired
