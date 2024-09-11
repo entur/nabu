@@ -17,7 +17,9 @@
 package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.provider.ProviderRepository;
-import org.entur.oauth2.JwtRoleAssignmentExtractor;
+import no.rutebanken.nabu.security.permissionstore.PermissionStoreClient;
+import no.rutebanken.nabu.security.permissionstore.PermissionStoreRestRoleAssignmentExtractor;
+import org.rutebanken.helper.organisation.AuthorizationConstants;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.authorization.AuthorizationService;
 import org.rutebanken.helper.organisation.authorization.DefaultAuthorizationService;
@@ -26,6 +28,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Set;
+
 /**
  * Configure authorization.
  */
@@ -33,8 +37,16 @@ import org.springframework.context.annotation.Configuration;
 public class AuthorizationConfig {
 
     @Bean
-    public RoleAssignmentExtractor roleAssignmentExtractor() {
-        return new JwtRoleAssignmentExtractor();
+    public RoleAssignmentExtractor roleAssignmentExtractor(
+            PermissionStoreClient permissionStoreClient
+    ) {
+        return new PermissionStoreRestRoleAssignmentExtractor(
+                permissionStoreClient,
+                "nabu",
+                Set.of(AuthorizationConstants.ROLE_ROUTE_DATA_EDIT,
+                        AuthorizationConstants.ROLE_ROUTE_DATA_ADMIN,
+                        AuthorizationConstants.ROLE_ORGANISATION_EDIT)
+        );
     }
 
     @ConditionalOnProperty(
