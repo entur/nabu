@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.entur.ror</groupId>
         <artifactId>superpom</artifactId>
-        <version>2.17</version>
+        <version>3.0</version>
     </parent>
 
     <groupId>no.rutebanken</groupId>
@@ -47,7 +47,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <entur.helpers.version>2.34</entur.helpers.version>
+        <entur.helpers.version>3.0</entur.helpers.version>
         <spring-cloud-gcp-dependencies.version>5.8.0</spring-cloud-gcp-dependencies.version>
         <postgis-jdbc.version>2024.1.0</postgis-jdbc.version>
         <wololo.version>0.18.1</wololo.version>
@@ -148,7 +148,8 @@
         <!-- Misc -->
         <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
