@@ -28,7 +28,7 @@ data:
     spring.jpa.database=POSTGRESQL
     spring.jpa.open-in-view=false
     spring.jpa.show-sql=false
-    spring.jpa.properties.hibernate.temp.use_jdbc_metadata_defaults=false
+    spring.jpa.properties.hibernate.boot.allow_jdbc_metadata_access=false
     spring.flyway.table=schema_version
 
     # Provider and Organisation APIs
