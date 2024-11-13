@@ -14,10 +14,12 @@ data:
     email.link.routedb={{ .Values.configMap.mail.routedb }}
     notification.email.from={{ .Values.configMap.mail.notificationFrom }}
     email.link.operator={{ .Values.configMap.mail.operator }}
-    server.port= {{ .Values.common.service.internalPort }}
     spring.mail.port=2525
     
     # Spring web
+    server.port= {{ .Values.common.service.internalPort }}
+    server.shutdown=graceful
+    spring.lifecycle.timeout-per-shutdown-phase=10s
     server.compression.enabled=true
 
     # Database
