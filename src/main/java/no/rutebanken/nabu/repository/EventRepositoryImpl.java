@@ -31,6 +31,8 @@ import org.springframework.util.CollectionUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -145,8 +147,12 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
         return query.getResultList();
     }
 
+    /**
+     * Simplified query when no criteria are provided.
+     * Look up at most 2 years back in time.
+     */
     private List<JobEvent> getJobEventsForDomainAndProvider(String domain, List<Long> providerIds) {
-        StringBuilder sb = new StringBuilder("SELECT e FROM JobEvent e WHERE e.domain=:domain ");
+        StringBuilder sb = new StringBuilder("SELECT e FROM JobEvent e WHERE e.domain=:domain and e.eventTime>=:from ");
         Map<String, Object> params = new HashMap<>();
         if (!CollectionUtils.isEmpty(providerIds)) {
             params.put("providerIds", providerIds);
@@ -156,11 +162,11 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
         sb.append(" ORDER by e.eventTime desc");
         TypedQuery<JobEvent> query = entityManager.createQuery(sb.toString(), JobEvent.class);
         params.put("domain", domain);
+        params.put("from", twoYearsAgo());
         params.forEach(query::setParameter);
         query.setMaxResults(maxResults);
         return query.getResultList();
     }
-
 
     @Override
     public List<JobEvent> getLatestTimetableFileTransfer(Long providerId) {
@@ -185,6 +191,10 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
     @Override
     public void clearJobEvents(String domain, Long providerId) {
         this.entityManager.createQuery("delete from JobEvent je where je.domain=:domain and je.providerId=:providerId").setParameter("domain", domain).setParameter("providerId", providerId).executeUpdate();
+    }
+
+    private static Instant twoYearsAgo() {
+        return LocalDate.now().minusYears(2).atStartOfDay(ZoneId.systemDefault()).toInstant();
     }
 
 
