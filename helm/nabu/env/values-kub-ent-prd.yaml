@@ -12,7 +12,10 @@ sql:
 configMap:
   pubsubProjectId: ent-nabu-prd
 
-  baba:
+  organisation:
+    service: http://baba.prd.entur.internal
+
+  provider:
     service: http://baba.prd.entur.internal
 
   auth0:
