@@ -15,7 +15,7 @@ configMap:
     service: http://baba.dev.entur.internal
 
   provider:
-    service: http://baba.dev.entur.internal
+    service: http://nanna.dev.entur.internal
 
   auth0:
     ror:
