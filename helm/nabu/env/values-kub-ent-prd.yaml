@@ -16,7 +16,7 @@ configMap:
     service: http://baba.prd.entur.internal
 
   provider:
-    service: http://baba.prd.entur.internal
+    service: http://nanna.prd.entur.internal
 
   auth0:
     ror:
