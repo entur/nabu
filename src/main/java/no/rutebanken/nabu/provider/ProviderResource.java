@@ -27,7 +27,7 @@ import java.util.Collection;
 @Component
 public class ProviderResource {
 
-    @Value("${provider.registry.rest.service.url:http://baba/services/providers/}")
+    @Value("${provider.registry.rest.service.url:http://nanna/services/providers/}")
     private String restServiceUrl;
 
 
