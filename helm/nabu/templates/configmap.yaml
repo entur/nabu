@@ -36,6 +36,7 @@ data:
     # Provider and Organisation APIs
     administrative.zone.registry.rest.service.url={{ .Values.configMap.organisation.service }}/services/organisations/administrative_zones/
     user.registry.rest.service.url={{ .Values.configMap.organisation.service }}/services/organisations/users?full=true
+    user.permission.rest.service.url={{ .Values.configMap.organisation.service }}/services/organisations/users
     provider.registry.rest.service.url={{ .Values.configMap.provider.service }}/services/providers/
 
     # OAuth2 Resource Server
