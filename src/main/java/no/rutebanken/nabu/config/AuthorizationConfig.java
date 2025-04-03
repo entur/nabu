@@ -18,13 +18,16 @@ package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.provider.ProviderRepository;
 import org.entur.oauth2.JwtRoleAssignmentExtractor;
+import org.entur.ror.permission.BabaRoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.authorization.AuthorizationService;
 import org.rutebanken.helper.organisation.authorization.DefaultAuthorizationService;
 import org.rutebanken.helper.organisation.authorization.FullAccessAuthorizationService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * Configure authorization.
@@ -32,9 +35,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AuthorizationConfig {
 
+    @ConditionalOnProperty(
+            value = "nabu.security.role.assignment.extractor",
+            havingValue = "jwt",
+            matchIfMissing = true
+    )
     @Bean
-    public RoleAssignmentExtractor roleAssignmentExtractor() {
+    public RoleAssignmentExtractor jwtRoleAssignmentExtractor() {
         return new JwtRoleAssignmentExtractor();
+    }
+
+    @ConditionalOnProperty(
+            value = "nabu.security.role.assignment.extractor",
+            havingValue = "baba"
+    )
+    @Bean
+    public RoleAssignmentExtractor babaRoleAssignmentExtractor(WebClient webClient ,
+                                                           @Value("${user.permission.rest.service.url}") String url) {
+        return new BabaRoleAssignmentExtractor(webClient, url);
     }
 
     @ConditionalOnProperty(
