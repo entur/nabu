@@ -18,7 +18,7 @@ package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.provider.ProviderRepository;
 import org.entur.oauth2.JwtRoleAssignmentExtractor;
-import org.entur.ror.permission.BabaRoleAssignmentExtractor;
+import org.entur.ror.permission.RemoteBabaRoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.authorization.AuthorizationService;
 import org.rutebanken.helper.organisation.authorization.DefaultAuthorizationService;
@@ -52,7 +52,7 @@ public class AuthorizationConfig {
     @Bean
     public RoleAssignmentExtractor babaRoleAssignmentExtractor(WebClient webClient ,
                                                            @Value("${user.permission.rest.service.url}") String url) {
-        return new BabaRoleAssignmentExtractor(webClient, url);
+        return new RemoteBabaRoleAssignmentExtractor(webClient, url);
     }
 
     @ConditionalOnProperty(
