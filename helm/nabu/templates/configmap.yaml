@@ -58,6 +58,7 @@ data:
 
     # Authorization
     nabu.security.authorization-service=token-based
+    nabu.security.role.assignment.extractor=baba
 
     # Logging
     logging.level.org.hibernate.SQL=INFO
