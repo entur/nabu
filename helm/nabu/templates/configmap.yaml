@@ -89,7 +89,7 @@ data:
 
     # Spring Boot Actuator
     management.server.port= {{ .Values.common.service.internalPort }}
-    management.endpoints.enabled-by-default=false
+    management.endpoints.access.default=none
     management.endpoint.info.enabled=true
     management.endpoint.health.enabled=true
     management.endpoint.health.group.readiness.include=readinessState,db
