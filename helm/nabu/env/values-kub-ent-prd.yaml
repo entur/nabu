@@ -26,6 +26,8 @@ configMap:
     partner:
       url: https://partner.entur.org/
 
+  roleAssignmentExtractor: jwt
+
   oauth2:
     client:
       id: UMNw5ExoUKIVDo8HHgYDYJp64wRcphls

@@ -58,7 +58,7 @@ data:
 
     # Authorization
     nabu.security.authorization-service=token-based
-    nabu.security.role.assignment.extractor=baba
+    nabu.security.role.assignment.extractor={{ .Values.configMap.roleAssignmentExtractor }}
 
     # Logging
     logging.level.org.hibernate.SQL=INFO

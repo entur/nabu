@@ -25,6 +25,8 @@ configMap:
     partner:
       url: https://partner.staging.entur.org/
 
+  roleAssignmentExtractor: jwt
+
   oauth2:
     client:
       id: AQMH9Zwwe94P5hFgpspdkoERtgrQrViK
