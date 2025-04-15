@@ -23,8 +23,7 @@ data:
     server.compression.enabled=true
 
     # Database
-    spring.database.driverClassName=org.postgresql.Driver
-    spring.datasource.platform=postgres
+    spring.datasource.driverClassName=org.postgresql.Driver
     spring.cloud.gcp.sql.database-name=nabu
     spring.cloud.gcp.sql.instance-connection-name={{ .Values.sql.instance }}
     spring.jpa.database=POSTGRESQL
