@@ -26,7 +26,7 @@ configMap:
     partner:
       url: https://partner.entur.org/
 
-  roleAssignmentExtractor: jwt
+  roleAssignmentExtractor: baba
 
   oauth2:
     client:
