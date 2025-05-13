@@ -54,8 +54,6 @@
         <commons-io.version>2.19.0</commons-io.version>
         <swagger-jersey2.version>2.2.30</swagger-jersey2.version>
 
-        <entur.google.pubsub.emulator.download.skip>false</entur.google.pubsub.emulator.download.skip>
-
         <!-- empty argLine property, the value is set up by Jacoco during unit tests execution -->
         <argLine/>
 
@@ -221,6 +219,16 @@
         </dependency>
 
         <!--Test -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>gcloud</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

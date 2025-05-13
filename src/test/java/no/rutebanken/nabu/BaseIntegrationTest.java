@@ -17,7 +17,11 @@ package no.rutebanken.nabu;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.entur.pubsub.base.EnturGooglePubSubAdmin;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -27,8 +31,13 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.PubSubEmulatorContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -36,9 +45,16 @@ import java.io.StringWriter;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = NabuTestApp.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles({"google-pubsub-emulator", "test"})
+@ActiveProfiles({"test"})
+@Testcontainers
 @Transactional
 public abstract class BaseIntegrationTest {
+
+    private static PubSubEmulatorContainer pubsubEmulator;
+
+    @Autowired
+    private EnturGooglePubSubAdmin enturGooglePubSubAdmin;
+
 
     @TestConfiguration
     @EnableWebSecurity
@@ -52,6 +68,35 @@ public abstract class BaseIntegrationTest {
                     );
             return http.build();
         }
+    }
+
+
+    @BeforeAll
+    public static void init() {
+        pubsubEmulator =
+                new PubSubEmulatorContainer(
+                        DockerImageName.parse(
+                                "gcr.io/google.com/cloudsdktool/cloud-sdk:emulators"
+                        )
+                );
+        pubsubEmulator.start();
+    }
+
+    @AfterAll
+    public static void teardown() {
+        pubsubEmulator.stop();
+    }
+
+    @DynamicPropertySource
+    static void emulatorProperties(DynamicPropertyRegistry registry) {
+        registry.add(
+                "spring.cloud.gcp.pubsub.emulator-host",
+                pubsubEmulator::getEmulatorEndpoint
+        );
+        registry.add(
+                "camel.component.google-pubsub.endpoint",
+                pubsubEmulator::getEmulatorEndpoint
+        );
     }
 
 
