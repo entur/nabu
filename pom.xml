@@ -52,7 +52,7 @@
         <postgis-jdbc.version>2024.1.0</postgis-jdbc.version>
         <wololo.version>0.18.1</wololo.version>
         <commons-io.version>2.19.0</commons-io.version>
-        <swagger-jersey2.version>2.2.31</swagger-jersey2.version>
+        <swagger-jersey2.version>2.2.32</swagger-jersey2.version>
 
         <!-- empty argLine property, the value is set up by Jacoco during unit tests execution -->
         <argLine/>
