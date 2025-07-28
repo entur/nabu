@@ -23,7 +23,6 @@ import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.DataDeliveryStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -43,8 +42,11 @@ public class LatestUploadResource {
 
     public static final Set<JobState> ERROR_JOB_STATES = Set.of(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED);
 
-    @Autowired
-    EventRepository eventRepository;
+    final EventRepository eventRepository;
+
+    public LatestUploadResource(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
 
     @GET
     @Path("/{providerId}")
@@ -67,7 +69,7 @@ public class LatestUploadResource {
             JobEvent firstEvent = sortedEvents.first();
             latestDeliveryDate = Date.from(firstEvent.getEventTime());
             fileName = firstEvent.getName();
-            if (sortedEvents.stream().anyMatch(e -> TimeTableAction.BUILD_GRAPH.toString().equals(e.getAction()) && JobState.OK.equals(e.getState()))) {
+            if (sortedEvents.stream().anyMatch(e -> TimeTableAction.OTP2_BUILD_GRAPH.toString().equals(e.getAction()) && JobState.OK.equals(e.getState()))) {
                 state = DataDeliveryStatus.State.OK;
             } else if (sortedEvents.stream().anyMatch(e -> ERROR_JOB_STATES.contains(e.getState()))) {
                 state = DataDeliveryStatus.State.FAILED;

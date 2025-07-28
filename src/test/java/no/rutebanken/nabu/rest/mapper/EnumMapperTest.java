@@ -26,9 +26,9 @@ class EnumMapperTest {
 
     @Test
     void testEnumConversion() {
-        List<TimeTableAction> converted = EnumMapper.convertEnums(Arrays.asList(TimeTableAction.CLEAN, TimeTableAction.BUILD_GRAPH), TimeTableAction.class);
+        List<TimeTableAction> converted = EnumMapper.convertEnums(Arrays.asList(TimeTableAction.CLEAN, TimeTableAction.OTP2_BUILD_GRAPH), TimeTableAction.class);
         Assertions.assertEquals(2, converted.size());
-        Assertions.assertTrue(converted.contains(TimeTableAction.BUILD_GRAPH));
+        Assertions.assertTrue(converted.contains(TimeTableAction.OTP2_BUILD_GRAPH));
         Assertions.assertTrue(converted.contains(TimeTableAction.CLEAN));
     }
 
