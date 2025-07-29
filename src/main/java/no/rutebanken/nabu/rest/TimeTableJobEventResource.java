@@ -27,7 +27,6 @@ import no.rutebanken.nabu.rest.domain.JobStatus;
 import no.rutebanken.nabu.rest.domain.JobStatusEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -57,20 +56,20 @@ public class TimeTableJobEventResource {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
 
-    @Autowired
-    private ProviderRepository providerRepository;
+    private final ProviderRepository providerRepository;
 
     private static final String STATUS_JOB_TYPE = JobEvent.JobDomain.TIMETABLE.name();
+
+    public TimeTableJobEventResource(EventService eventService, ProviderRepository providerRepository) {
+        this.eventService = eventService;
+        this.providerRepository = providerRepository;
+    }
 
     @GET
     @Path("/{providerId}")
     @PreAuthorize("@authorizationService.canEditRouteData(#providerId)")
-
-
-
     @Operation(summary = "Return the import for the given search parameters")
     public List<JobStatus> listStatus(@PathParam("providerId") Long providerId, @QueryParam("from") Date from,
                                              @QueryParam("to") Date to, @QueryParam("action") List<String> actions,
