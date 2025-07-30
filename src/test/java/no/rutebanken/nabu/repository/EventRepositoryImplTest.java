@@ -126,10 +126,10 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
         JobEvent sReimport = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "reimport-file1.zip", 3L, "6", TimeTableAction.FILE_TRANSFER.toString(), JobState.TIMEOUT, CORR_ID_3, now.plus(2, ChronoUnit.MINUTES), "ost");
         repository.save(sReimport);
 
-        List<JobEvent> statusList1 = repository.getCorrelatedTimetableEvents(3L, CORR_ID_1);
+        List<JobEvent> statusList1 = repository.getCorrelatedTimetableEvents(List.of(3L), CORR_ID_1);
         assertEquals(2, statusList1.size());
         assertTrue(statusList1.containsAll(Arrays.asList(s1, s2)));
-        List<JobEvent> statusList2 = repository.getCorrelatedTimetableEvents(3L, CORR_ID_2);
+        List<JobEvent> statusList2 = repository.getCorrelatedTimetableEvents(List.of(3L), CORR_ID_2);
         assertEquals(1, statusList2.size());
         assertTrue(statusList2.contains(s3));
     }

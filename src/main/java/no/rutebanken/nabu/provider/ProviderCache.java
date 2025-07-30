@@ -91,7 +91,11 @@ public class ProviderCache implements ProviderRepository {
     @Override
     @Nullable
     public Provider getProvider(String codespace) {
-        return cache.asMap().values().stream().filter(provider -> provider.chouetteInfo.xmlns.equalsIgnoreCase(codespace)).findFirst().orElse(null);
+        return cache.asMap()
+                .values()
+                .stream()
+                .filter(provider -> provider.chouetteInfo.xmlns.equalsIgnoreCase(codespace) && provider.chouetteInfo.migrateDataToProvider != null)
+                .findFirst().orElse(null);
     }
 
 
