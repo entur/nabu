@@ -84,12 +84,12 @@ public class LatestUploadResource {
         if (provider == null) {
             throw new IllegalStateException("Provider not found");
         }
-        List<JobEvent> statusList = eventRepository.getCorrelatedTimetableEvents(provider.getId(), correlationId);
-        if (statusList.isEmpty()) {
+        List<JobEvent> events = eventRepository.getCorrelatedTimetableEvents(List.of(provider.getId(), provider.getChouetteInfo().migrateDataToProvider), correlationId);
+        if (events.isEmpty()) {
             throw new NotFoundException("Correlation id not found");
         }
-        JobEvent firstEvent = statusList.stream().min(Comparator.comparing(Event::getEventTime)).orElseThrow();
-        return new DataDeliveryStatus(state(statusList), atDefaultZone(firstEvent.getEventTime()), firstEvent.getName());
+        JobEvent firstEvent = events.stream().min(Comparator.comparing(Event::getEventTime)).orElseThrow();
+        return new DataDeliveryStatus(state(events), atDefaultZone(firstEvent.getEventTime()), firstEvent.getName());
     }
 
 
