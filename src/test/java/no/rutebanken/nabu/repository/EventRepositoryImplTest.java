@@ -15,17 +15,16 @@
 
 package no.rutebanken.nabu.repository;
 
+import jakarta.validation.ConstraintViolationException;
 import no.rutebanken.nabu.BaseIntegrationTest;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.CrudEventSearch;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.TimeTableAction;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -35,8 +34,13 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EventRepositoryImplTest extends BaseIntegrationTest {
+
+    private static final String CORR_ID_1 = "corr-id-1";
+    private static final String CORR_ID_2 = "corr-id-2";
+    private static final String CORR_ID_3 = "corr-id-3";
 
     @Autowired
     EventRepositoryImpl repository;
@@ -46,7 +50,7 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
     @Test
     void testUpdate() {
         JobEvent input = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "00013-gtfs.zip", 2L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, "1234567", now, "ost");
-        Assertions.assertDoesNotThrow(() -> {
+        assertDoesNotThrow(() -> {
             repository.save(input);
             repository.flush();
         });
@@ -56,16 +60,16 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
     void testSaveInvalidEvent() {
         JobEvent input = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "X".repeat(500), 2L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, "1234567", now, "ost");
         repository.save(input);
-        Assertions.assertThrows(ConstraintViolationException.class, () -> repository.flush());
+        assertThrows(ConstraintViolationException.class, () -> repository.flush());
     }
 
     @Test
     void testFindJobEventsForProvider() {
-        JobEvent s1 = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId("corr-id-1").eventTime(now).build();
+        JobEvent s1 = JobEvent.builder().domain(JobEvent.JobDomain.TIMETABLE).providerId(2L).referential("ost").state(JobState.OK).name("file1.zip").externalId("1").action(TimeTableAction.IMPORT).correlationId(CORR_ID_1).eventTime(now).build();
         repository.save(s1);
-        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 2L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, "corr-id-1", now.plus(1, ChronoUnit.MINUTES), "ost");
+        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 2L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, CORR_ID_1, now.plus(1, ChronoUnit.MINUTES), "ost");
         repository.save(s2);
-        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
+        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, CORR_ID_2, now, "ost");
         repository.save(s3);
         Collection<JobEvent> eventsForProvider2 = repository.findTimetableJobEvents(List.of(2L), null, null, null, null, null, null);
         assertThat(eventsForProvider2).hasSize(2);
@@ -77,11 +81,11 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
 
     @Test()
     void testGetStatusWithAllCriteria() {
-        JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, "corr-id-1", now, "ost");
+        JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, CORR_ID_1, now, "ost");
         repository.save(s1);
-        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, "corr-id-1", now.plus(1, ChronoUnit.MINUTES), "ost");
+        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, CORR_ID_1, now.plus(1, ChronoUnit.MINUTES), "ost");
         repository.save(s2);
-        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
+        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, CORR_ID_2, now, "ost");
         repository.save(s3);
 
         Collection<JobEvent> statusesQueryMatchingS1 = repository.findTimetableJobEvents(List.of(3L), now, now, List.of(TimeTableAction.IMPORT.toString()), List.of(JobState.OK), List.of("1"), List.of("file1.zip"));
@@ -96,50 +100,69 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
 
     @Test
     void getLatestDeliveryStatusForProvider() {
-        JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.OK, "corr-id-1", now, "ost");
+        JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.OK, CORR_ID_1, now, "ost");
         repository.save(s1);
-        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, "corr-id-1", now.plus(1, ChronoUnit.MINUTES), "ost");
+        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, CORR_ID_1, now.plus(1, ChronoUnit.MINUTES), "ost");
         repository.save(s2);
-        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.TIMEOUT, "corr-id-2", now.minus(1, ChronoUnit.MINUTES), "ost");
+        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.TIMEOUT, CORR_ID_2, now.minus(1, ChronoUnit.MINUTES), "ost");
         repository.save(s3);
-        JobEvent sReimport = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "reimport-file1.zip", 3L, "6", TimeTableAction.FILE_TRANSFER.toString(), JobState.TIMEOUT, "corr-id-3", now.plus(2, ChronoUnit.MINUTES), "ost");
+        JobEvent sReimport = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "reimport-file1.zip", 3L, "6", TimeTableAction.FILE_TRANSFER.toString(), JobState.TIMEOUT, CORR_ID_3, now.plus(2, ChronoUnit.MINUTES), "ost");
         repository.save(sReimport);
 
 
         List<JobEvent> statusList = repository.getLatestTimetableFileTransfer(3L);
-        Assertions.assertEquals(2, statusList.size());
-        Assertions.assertTrue(statusList.containsAll(Arrays.asList(s1, s2)));
+        assertEquals(2, statusList.size());
+        assertTrue(statusList.containsAll(Arrays.asList(s1, s2)));
+    }
+
+    @Test
+    void getCorrelatedTimetableEvents() {
+        JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.OK, CORR_ID_1, now, "ost");
+        repository.save(s1);
+        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, CORR_ID_1, now.plus(1, ChronoUnit.MINUTES), "ost");
+        repository.save(s2);
+        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.TIMEOUT, CORR_ID_2, now.minus(1, ChronoUnit.MINUTES), "ost");
+        repository.save(s3);
+        JobEvent sReimport = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "reimport-file1.zip", 3L, "6", TimeTableAction.FILE_TRANSFER.toString(), JobState.TIMEOUT, CORR_ID_3, now.plus(2, ChronoUnit.MINUTES), "ost");
+        repository.save(sReimport);
+
+        List<JobEvent> statusList1 = repository.getCorrelatedTimetableEvents(3L, CORR_ID_1);
+        assertEquals(2, statusList1.size());
+        assertTrue(statusList1.containsAll(Arrays.asList(s1, s2)));
+        List<JobEvent> statusList2 = repository.getCorrelatedTimetableEvents(3L, CORR_ID_2);
+        assertEquals(1, statusList2.size());
+        assertTrue(statusList2.contains(s3));
     }
 
 
     @Test
     void testClearAll() {
-        JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, "corr-id-1", now, "ost");
+        JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, CORR_ID_1, now, "ost");
         repository.save(s1);
-        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 4L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, "corr-id-1", now.plus(1, ChronoUnit.MINUTES), "ost");
+        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 4L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, CORR_ID_1, now.plus(1, ChronoUnit.MINUTES), "ost");
         repository.save(s2);
-        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
+        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, CORR_ID_2, now, "ost");
         repository.save(s3);
 
         repository.clearJobEvents(JobEvent.JobDomain.TIMETABLE.toString());
 
-        Assertions.assertTrue(repository.findTimetableJobEvents(List.of(3L), null, null, null, null, null, null).isEmpty());
-        Assertions.assertTrue(repository.findTimetableJobEvents(List.of(4L), null, null, null, null, null, null).isEmpty());
+        assertTrue(repository.findTimetableJobEvents(List.of(3L), null, null, null, null, null, null).isEmpty());
+        assertTrue(repository.findTimetableJobEvents(List.of(4L), null, null, null, null, null, null).isEmpty());
     }
 
     @Test
     void testClearForProvider() {
-        JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, "corr-id-1", now, "ost");
+        JobEvent s1 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.OK, CORR_ID_1, now, "ost");
         repository.save(s1);
-        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 4L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, "corr-id-1", now.plus(1, ChronoUnit.MINUTES), "ost");
+        JobEvent s2 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 4L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, CORR_ID_1, now.plus(1, ChronoUnit.MINUTES), "ost");
         repository.save(s2);
-        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, "corr-id-2", now, "ost");
+        JobEvent s3 = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.IMPORT.toString(), JobState.TIMEOUT, CORR_ID_2, now, "ost");
         repository.save(s3);
 
         repository.clearJobEvents(JobEvent.JobDomain.TIMETABLE.toString(), 3L);
 
-        Assertions.assertTrue(repository.findTimetableJobEvents(List.of(3L), null, null, null, null, null, null).isEmpty());
-        Assertions.assertEquals(1, repository.findTimetableJobEvents(List.of(4L), null, null, null, null, null, null).size());
+        assertTrue(repository.findTimetableJobEvents(List.of(3L), null, null, null, null, null, null).isEmpty());
+        assertEquals(1, repository.findTimetableJobEvents(List.of(4L), null, null, null, null, null, null).size());
     }
 
     @Test
@@ -167,7 +190,7 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
                         refTime);
 
         List<CrudEvent> crudEvents = repository.findCrudEvents(search);
-        Assertions.assertEquals(1, crudEvents.size());
-        Assertions.assertEquals(savedCrudEvent.getPk(), crudEvents.getFirst().getPk());
+        assertEquals(1, crudEvents.size());
+        assertEquals(savedCrudEvent.getPk(), crudEvents.getFirst().getPk());
     }
 }
