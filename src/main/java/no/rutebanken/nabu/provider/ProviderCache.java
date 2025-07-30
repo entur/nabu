@@ -27,6 +27,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.ResourceAccessException;
 
+import javax.annotation.Nullable;
 import java.net.ConnectException;
 import java.util.Collection;
 
@@ -82,8 +83,15 @@ public class ProviderCache implements ProviderRepository {
     }
 
     @Override
+    @Nullable
     public Provider getProvider(Long id) {
         return cache.getIfPresent(id);
+    }
+
+    @Override
+    @Nullable
+    public Provider getProvider(String codespace) {
+        return cache.asMap().values().stream().filter(provider -> provider.chouetteInfo.xmlns.equalsIgnoreCase(codespace)).findFirst().orElse(null);
     }
 
 

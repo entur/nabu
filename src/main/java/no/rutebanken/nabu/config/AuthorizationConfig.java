@@ -17,11 +17,11 @@
 package no.rutebanken.nabu.config;
 
 import no.rutebanken.nabu.provider.ProviderRepository;
+import no.rutebanken.nabu.security.oauth2.DefaultNabuAuthorizationService;
 import org.entur.oauth2.JwtRoleAssignmentExtractor;
 import org.entur.ror.permission.RemoteBabaRoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.RoleAssignmentExtractor;
 import org.rutebanken.helper.organisation.authorization.AuthorizationService;
-import org.rutebanken.helper.organisation.authorization.DefaultAuthorizationService;
 import org.rutebanken.helper.organisation.authorization.FullAccessAuthorizationService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -61,8 +61,8 @@ public class AuthorizationConfig {
     )
     @Bean("authorizationService")
     public AuthorizationService<Long> tokenBasedAuthorizationService(ProviderRepository providerRepository, RoleAssignmentExtractor roleAssignmentExtractor) {
-        return new DefaultAuthorizationService<>(
-                providerId -> providerRepository.getProvider(providerId) == null ? null : providerRepository.getProvider(providerId).getChouetteInfo().xmlns,
+        return new DefaultNabuAuthorizationService(
+                providerRepository,
                 roleAssignmentExtractor
         );
     }

@@ -32,6 +32,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<JobEvent> getLatestTimetableFileTransfer(Long providerId);
 
+    /**
+     * Return the unordered list of timetable job events for the given provider and correlation id.
+     */
+    List<JobEvent> getCorrelatedTimetableEvents(Long providerId, String correlationId);
 
     List<CrudEvent> findCrudEvents(CrudEventSearch search);
 

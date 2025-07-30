@@ -15,9 +15,10 @@
 
 package no.rutebanken.nabu.rest.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 public class DataDeliveryStatus {
 
@@ -27,12 +28,13 @@ public class DataDeliveryStatus {
     public DataDeliveryStatus.State state;
 
     @JsonProperty("date")
-    public Date date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    public ZonedDateTime date;
 
     @JsonProperty("fileName")
     public String fileName;
 
-    public DataDeliveryStatus(DataDeliveryStatus.State state, Date date, String fileName) {
+    public DataDeliveryStatus(DataDeliveryStatus.State state, ZonedDateTime date, String fileName) {
         this.state = state;
         this.date = date;
         this.fileName = fileName;
