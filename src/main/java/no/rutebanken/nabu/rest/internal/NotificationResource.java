@@ -13,7 +13,7 @@
  * limitations under the Licence.
  */
 
-package no.rutebanken.nabu.rest;
+package no.rutebanken.nabu.rest.internal;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;

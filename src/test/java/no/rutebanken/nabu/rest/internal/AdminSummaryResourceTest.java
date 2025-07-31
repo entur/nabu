@@ -13,7 +13,7 @@
  * limitations under the Licence.
  */
 
-package no.rutebanken.nabu.rest;
+package no.rutebanken.nabu.rest.internal;
 
 
 import no.rutebanken.nabu.domain.SystemJobStatus;
@@ -41,9 +41,9 @@ class AdminSummaryResourceTest {
 	void testConvertToSystemStatusAggregation() {
 		AdminSummaryResource resource = new AdminSummaryResource(null);
 		List<SystemJobStatus> statusList = new ArrayList<>();
-		
+
 		Instant now= Instant.now();
-		
+
 		statusList.add(new SystemJobStatus("job1", "", JobState.STARTED, now));
 		statusList.add(new SystemJobStatus("job1", "", JobState.STARTED,now.plusMillis(2)));
 		statusList.add(new SystemJobStatus("job1", "", JobState.STARTED, now.plusMillis(5)));

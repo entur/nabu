@@ -17,12 +17,36 @@ package no.rutebanken.nabu.rest.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.domain.event.TimeTableAction;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
+
+import static no.rutebanken.nabu.domain.event.JobState.ERROR_JOB_STATES;
 
 public class DataDeliveryStatus {
 
-    public enum State {IN_PROGRESS, FAILED, OK}
+    public enum State {
+        IN_PROGRESS, FAILED, OK;
+
+        /**
+         * Return the state of the delivery given a set of statuses.
+         * Some steps in the import pipeline can run in parallel, thus the chronological order is arbitrary.
+         * In particular, the OTP build graph event is not necessarily the last event recorded in the pipeline.
+         */
+        public static DataDeliveryStatus.State of(Collection<JobEvent> statuses) {
+            if (statuses.stream().anyMatch(e -> TimeTableAction.OTP2_BUILD_GRAPH.toString().equals(e.getAction()) && JobState.OK.equals(e.getState()))) {
+                return DataDeliveryStatus.State.OK;
+            } else if (statuses.stream().anyMatch(e -> ERROR_JOB_STATES.contains(e.getState()))) {
+                return DataDeliveryStatus.State.FAILED;
+            } else {
+                return DataDeliveryStatus.State.IN_PROGRESS;
+            }
+        }
+
+    }
 
     @JsonProperty("state")
     public DataDeliveryStatus.State state;
@@ -42,4 +66,6 @@ public class DataDeliveryStatus {
 
     public DataDeliveryStatus() {
     }
+
+
 }
