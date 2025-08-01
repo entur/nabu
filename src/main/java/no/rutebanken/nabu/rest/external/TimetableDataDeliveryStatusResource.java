@@ -29,8 +29,6 @@ import no.rutebanken.nabu.provider.ProviderRepository;
 import no.rutebanken.nabu.provider.model.Provider;
 import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.domain.DataDeliveryStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -41,14 +39,11 @@ import static no.rutebanken.nabu.event.support.DateUtils.atDefaultZone;
 
 @Component
 @Produces("application/json")
-@Path("status")
+@Path("delivery_status")
 @Tags(value = {
         @Tag(name = "TimetableDataDeliveryStatus", description = "Status of a timetable data delivery")
 })
 public class TimetableDataDeliveryStatusResource {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
 
     private final EventRepository eventRepository;
     private final ProviderRepository providerRepository;
@@ -60,25 +55,19 @@ public class TimetableDataDeliveryStatusResource {
 
     @GET
     @Path("/{codespace}/{correlationId}")
-    @Operation(summary = "Return the status of the delivery identified by its codespace and correlation id")
+    @Operation(summary = "Return the status of the delivery identified by its correlation id")
     @PreAuthorize("@authorizationService.canViewTimetableDataEvent(#codespace)")
     public DataDeliveryStatus getDataDeliveryStatus(@PathParam("codespace") String codespace, @PathParam("correlationId") String correlationId) {
-        logger.info("Returning status for codespace {} and correlation id {}", codespace, correlationId);
-        try {
-            Provider provider = providerRepository.getProvider(codespace);
-            if (provider == null) {
-                throw new IllegalStateException("Provider not found");
-            }
-            List<JobEvent> events = eventRepository.getCorrelatedTimetableEvents(List.of(provider.getId(), provider.getChouetteInfo().migrateDataToProvider), correlationId);
-            if (events.isEmpty()) {
-                throw new NotFoundException("Correlation id not found");
-            }
-            JobEvent firstEvent = events.stream().min(Comparator.comparing(Event::getEventTime)).orElseThrow();
-            return new DataDeliveryStatus(DataDeliveryStatus.State.of(events), atDefaultZone(firstEvent.getEventTime()), firstEvent.getName());
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-
+        Provider provider = providerRepository.getProvider(codespace);
+        if (provider == null) {
+            throw new IllegalStateException("Provider not found");
         }
+        List<JobEvent> events = eventRepository.getCorrelatedTimetableEvents(List.of(provider.getId(), provider.getChouetteInfo().migrateDataToProvider), correlationId);
+        if (events.isEmpty()) {
+            throw new NotFoundException("Correlation id not found");
+        }
+        JobEvent firstEvent = events.stream().min(Comparator.comparing(Event::getEventTime)).orElseThrow();
+        return new DataDeliveryStatus(DataDeliveryStatus.State.of(events), atDefaultZone(firstEvent.getEventTime()), firstEvent.getName());
     }
+
 }
