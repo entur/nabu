@@ -15,6 +15,11 @@
 
 package no.rutebanken.nabu.domain.event;
 
+import java.util.Set;
+
 public enum JobState {
-    PENDING, STARTED, TIMEOUT, FAILED, OK, DUPLICATE, CANCELLED
-}
+    PENDING, STARTED, TIMEOUT, FAILED, OK, DUPLICATE, CANCELLED;
+
+    public static final Set<JobState> ERROR_JOB_STATES = Set.of(JobState.DUPLICATE, JobState.FAILED, JobState.TIMEOUT, JobState.CANCELLED);
+
+    }

@@ -45,6 +45,7 @@ public class NabuWebSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/services/events/openapi.json")).permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/services/events-external/openapi.json")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/prometheus")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/health")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/actuator/health/liveness")).permitAll()

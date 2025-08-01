@@ -18,6 +18,7 @@ package no.rutebanken.nabu.rest;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.rest.domain.JobStatus;
+import no.rutebanken.nabu.rest.internal.TimeTableJobEventResource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
