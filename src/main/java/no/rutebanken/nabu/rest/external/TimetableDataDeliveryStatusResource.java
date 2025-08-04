@@ -39,7 +39,7 @@ import static no.rutebanken.nabu.event.support.DateUtils.atDefaultZone;
 
 @Component
 @Produces("application/json")
-@Path("delivery_status")
+@Path("status")
 @Tags(value = {
         @Tag(name = "TimetableDataDeliveryStatus", description = "Status of a timetable data delivery")
 })
