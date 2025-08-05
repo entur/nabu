@@ -53,6 +53,7 @@ public class OAuth2Config {
                                 .defaultCodecs()
                                 .maxInMemorySize(MAX_DOWNLOAD_BUFFER_SIZE))
                         .build())
+                .defaultHeader("Et-Client-Name", "entur-nabu")
                 .build();
 
 
