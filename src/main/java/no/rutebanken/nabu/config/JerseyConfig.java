@@ -17,6 +17,7 @@ package no.rutebanken.nabu.config;
 
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import no.rutebanken.nabu.filter.CorsResponseFilter;
+import no.rutebanken.nabu.rest.external.ExternalOpenApiResource;
 import no.rutebanken.nabu.rest.internal.AdminSummaryResource;
 import no.rutebanken.nabu.rest.internal.ChangeLogResource;
 import no.rutebanken.nabu.rest.internal.LatestUploadResource;
@@ -86,13 +87,12 @@ public class JerseyConfig {
             register(CorsResponseFilter.class);
 
             register(TimetableDataDeliveryStatusResource.class);
+            register(ExternalOpenApiResource.class);
+
 
             register(NotAuthenticatedExceptionMapper.class);
             register(AccessDeniedExceptionMapper.class);
 
-            OpenApiResource openApiResource = new OpenApiResource();
-            openApiResource.resourcePackages(Set.of("no.rutebanken.nabu.rest.external"));
-            register(openApiResource);
         }
 
     }

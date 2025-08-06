@@ -15,35 +15,27 @@
 
 package no.rutebanken.nabu.rest.external;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
 import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.domain.event.JobState;
+import no.rutebanken.nabu.domain.event.TimeTableAction;
 import no.rutebanken.nabu.provider.ProviderRepository;
 import no.rutebanken.nabu.provider.model.Provider;
 import no.rutebanken.nabu.repository.EventRepository;
-import no.rutebanken.nabu.rest.domain.DataDeliveryStatus;
+import no.rutebanken.nabu.rest.openapi.api.StatusApi;
+import no.rutebanken.nabu.rest.openapi.model.DataDeliveryStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
 
-import static no.rutebanken.nabu.event.support.DateUtils.atDefaultZone;
+import static no.rutebanken.nabu.domain.event.JobState.ERROR_JOB_STATES;
+import static no.rutebanken.nabu.event.support.DateUtils.atDefaultOffset;
 
 @Component
-@Produces("application/json")
-@Path("status")
-@Tags(value = {
-        @Tag(name = "TimetableDataDeliveryStatus", description = "Status of a timetable data delivery")
-})
-public class TimetableDataDeliveryStatusResource {
+public class TimetableDataDeliveryStatusResource implements StatusApi {
 
     private final EventRepository eventRepository;
     private final ProviderRepository providerRepository;
@@ -53,11 +45,9 @@ public class TimetableDataDeliveryStatusResource {
         this.providerRepository = providerRepository;
     }
 
-    @GET
-    @Path("/{codespace}/{correlationId}")
-    @Operation(summary = "Return the status of the delivery identified by its correlation id")
+    @Override
     @PreAuthorize("@authorizationService.canViewTimetableDataEvent(#codespace)")
-    public DataDeliveryStatus getDataDeliveryStatus(@PathParam("codespace") String codespace, @PathParam("correlationId") String correlationId) {
+    public DataDeliveryStatus getDataDeliveryStatus(String codespace, String correlationId) {
         Provider provider = providerRepository.getProvider(codespace);
         if (provider == null) {
             throw new IllegalStateException("Provider not found");
@@ -67,7 +57,30 @@ public class TimetableDataDeliveryStatusResource {
             throw new NotFoundException("Correlation id not found");
         }
         JobEvent firstEvent = events.stream().min(Comparator.comparing(Event::getEventTime)).orElseThrow();
-        return new DataDeliveryStatus(DataDeliveryStatus.State.of(events), atDefaultZone(firstEvent.getEventTime()), firstEvent.getName());
+
+        return new DataDeliveryStatus()
+                .date(atDefaultOffset(firstEvent.getEventTime()))
+                .fileName(firstEvent.getName())
+                .state(state(events));
+
     }
+
+
+    /**
+     * Return the state of the delivery given a set of statuses.
+     * Some steps in the import pipeline can run in parallel, thus the chronological order is arbitrary.
+     * In particular, the OTP build graph event is not necessarily the last event recorded in the pipeline.
+     */
+
+    private static DataDeliveryStatus.StateEnum state(List<JobEvent> statuses) {
+        if (statuses.stream().anyMatch(e -> TimeTableAction.OTP2_BUILD_GRAPH.toString().equals(e.getAction()) && JobState.OK.equals(e.getState()))) {
+            return DataDeliveryStatus.StateEnum.OK;
+        } else if (statuses.stream().anyMatch(e -> ERROR_JOB_STATES.contains(e.getState()))) {
+            return DataDeliveryStatus.StateEnum.FAILED;
+        } else {
+            return DataDeliveryStatus.StateEnum.IN_PROGRESS;
+        }
+    }
+
 
 }

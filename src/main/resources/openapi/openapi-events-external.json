@@ -1,0 +1,93 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Timetable events API",
+    "description": "Status of a timetable data delivery",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.dev.entur.io/timetable/v1/timetable-events",
+      "description": "Development"
+    },
+    {
+      "url": "https://api.staging.entur.io/timetable/v1/timetable-events",
+      "description": "Staging"
+    },
+    {
+      "url": "https://api.entur.io/timetable/v1/timetable-events",
+      "description": "Production"
+    }
+  ],
+  "tags": [
+    {
+      "name": "TimetableDataDeliveryStatus",
+      "description": "Status of a timetable data delivery"
+    }
+  ],
+  "paths": {
+    "/status/{codespace}/{correlationId}": {
+      "get": {
+        "tags": [
+          "TimetableDataDeliveryStatus"
+        ],
+        "description": "Return the status of the delivery identified by its correlation id",
+        "operationId": "getDataDeliveryStatus",
+        "parameters": [
+          {
+            "name": "codespace",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "correlationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataDeliveryStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DataDeliveryStatus": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "IN_PROGRESS",
+              "FAILED",
+              "OK"
+            ]
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fileName": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
