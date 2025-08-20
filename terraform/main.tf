@@ -95,7 +95,7 @@ resource "google_sql_database_instance" "db_instance" {
       hour = 2
     }
     ip_configuration {
-      ssl_mode = "ENCRYPTED_ONLY"
+      ssl_mode = "TRUSTED_CLIENT_CERTIFICATE_REQUIRED"
     }
     database_flags {
       name  = "work_mem"
