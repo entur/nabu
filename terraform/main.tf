@@ -72,7 +72,7 @@ resource "google_pubsub_subscription" "JobEventQueue" {
 
 resource "google_sql_database_instance" "db_instance" {
   name             = "nabu-db-pg13"
-  database_version = "POSTGRES_13"
+  database_version = "POSTGRES_17"
   project          = var.gcp_resources_project
   region           = var.db_region
 
