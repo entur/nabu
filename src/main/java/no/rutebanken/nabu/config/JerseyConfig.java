@@ -89,6 +89,7 @@ public class JerseyConfig {
             register(TimetableDataDeliveryStatusResource.class);
             register(ExternalOpenApiResource.class);
 
+            register(JacksonConfig.class);
 
             register(NotAuthenticatedExceptionMapper.class);
             register(AccessDeniedExceptionMapper.class);
