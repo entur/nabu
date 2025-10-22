@@ -15,7 +15,7 @@ data:
     notification.email.from={{ .Values.configMap.mail.notificationFrom }}
     email.link.operator={{ .Values.configMap.mail.operator }}
     spring.mail.port=2525
-    
+
     # Spring web
     server.port= {{ .Values.common.service.internalPort }}
     server.shutdown=graceful
@@ -43,7 +43,7 @@ data:
 
     # OAuth2 Resource Server for Entur Partner tenant
     nabu.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri={{ .Values.configMap.auth0.partner.url }}
-    nabu.oauth2.resourceserver.auth0.entur.partner.jwt.audience={{ .Values.configMap.auth0.ror.audience }}
+    nabu.oauth2.resourceserver.auth0.entur.partner.jwt.audience={{ .Values.configMap.auth0.partner.audience }}
 
     # OAuth2 Resource Server for RoR tenant
     nabu.oauth2.resourceserver.auth0.ror.jwt.issuer-uri={{ .Values.configMap.auth0.ror.url }}
