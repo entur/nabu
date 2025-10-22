@@ -25,6 +25,7 @@ configMap:
 
     partner:
       url: https://partner.entur.org/
+      audience: https://api.entur.io
 
   roleAssignmentExtractor: baba
 

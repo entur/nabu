@@ -64,29 +64,6 @@ public class OAuth2Config {
                 .build();
     }
 
-    @Bean
-    @Profile("!test")
-    public MultiIssuerAuthenticationManagerResolver multiIssuerAuthenticationManagerResolver(
-            @Value("${nabu.oauth2.resourceserver.auth0.entur.partner.jwt.audience:}")
-            String enturPartnerAuth0Audience,
-            @Value("${nabu.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri:}")
-            String enturPartnerAuth0Issuer,
-            @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.audience:}")
-            String rorAuth0Audience,
-            @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.issuer-uri:}")
-            String rorAuth0Issuer,
-            @Value("${nabu.oauth2.resourceserver.auth0.ror.claim.namespace:}")
-            String rorAuth0ClaimNamespace) {
-
-        return new MultiIssuerAuthenticationManagerResolverBuilder()
-                .withEnturPartnerAuth0Issuer(enturPartnerAuth0Issuer)
-                .withEnturPartnerAuth0Audience(enturPartnerAuth0Audience)
-                .withRorAuth0Issuer(rorAuth0Issuer)
-                .withRorAuth0Audience(rorAuth0Audience)
-                .withRorAuth0ClaimNamespace(rorAuth0ClaimNamespace)
-                .build();
-    }
-
 
 }
 
