@@ -51,7 +51,7 @@
         <spring-cloud-gcp-dependencies.version>5.13.7</spring-cloud-gcp-dependencies.version>
         <postgis-jdbc.version>2025.1.1</postgis-jdbc.version>
         <wololo.version>0.18.1</wololo.version>
-        <commons-io.version>2.20.0</commons-io.version>
+        <commons-io.version>2.21.0</commons-io.version>
         <swagger-jersey2.version>2.2.40</swagger-jersey2.version>
         <openapi-generator-version>7.16.0</openapi-generator-version>
 
