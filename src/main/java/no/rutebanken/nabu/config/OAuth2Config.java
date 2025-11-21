@@ -27,6 +27,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
+
 /**
  * Configure Spring Beans for OAuth2 resource server and OAuth2 client security.
  */
@@ -61,6 +63,24 @@ public class OAuth2Config {
                 .withOAuth2ClientProperties(properties)
                 .withAudience(audience)
                 .withClientRegistrationId("nabu")
+                .build();
+    }
+
+    @Bean
+    @Profile("!test")
+    public MultiIssuerAuthenticationManagerResolver multiIssuerResolver(
+            @Value("${nabu.oauth2.resourceserver.auth0.entur.partner.jwt.audience}") String enturPartnerAuth0Audience,
+            @Value("${nabu.oauth2.resourceserver.auth0.entur.partner.jwt.issuer-uri}") String enturPartnerAuth0Issuer,
+            @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.audience}") String rorAuth0Audience,
+            @Value("${nabu.oauth2.resourceserver.auth0.ror.jwt.issuer-uri}") String rorAuth0Issuer,
+            @Value("${nabu.oauth2.resourceserver.auth0.ror.claim.namespace}") String rorAuth0ClaimNamespace) {
+
+        return new MultiIssuerAuthenticationManagerResolverBuilder()
+                .withEnturPartnerAuth0Audiences(List.of(enturPartnerAuth0Audience, rorAuth0Audience))
+                .withEnturPartnerAuth0Issuer(enturPartnerAuth0Issuer)
+                .withRorAuth0Audience(rorAuth0Audience)
+                .withRorAuth0Issuer(rorAuth0Issuer)
+                .withRorAuth0ClaimNamespace(rorAuth0ClaimNamespace)
                 .build();
     }
 
