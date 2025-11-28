@@ -15,7 +15,7 @@
 
 package no.rutebanken.nabu.event.email;
 
-import freemarker.ext.beans.StringModel;
+import freemarker.ext.beans.GenericObjectModel;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 import org.springframework.util.CollectionUtils;
@@ -40,7 +40,7 @@ public class TemporalAccessorFormatter implements TemplateMethodModelEx {
         if (arguments.size() > 1) {
             throw new TemplateModelException("Wrong number of arguments");
         }
-        StringModel arg = (StringModel) arguments.getFirst();
+        GenericObjectModel arg = (GenericObjectModel) arguments.getFirst();
         Object obj = arg.getWrappedObject();
         if (obj == null) {
             return "";

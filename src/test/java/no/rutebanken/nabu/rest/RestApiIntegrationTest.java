@@ -133,7 +133,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
         // Parse as JSON and verify structure
         var jsonArray = objectMapper.readTree(response.getBody());
         assertTrue(jsonArray.isArray(), "Response should be a JSON array");
-        assertTrue(jsonArray.size() > 0, "Should have at least one aggregation");
+        assertTrue(!jsonArray.isEmpty(), "Should have at least one aggregation");
 
         var firstAggregation = jsonArray.get(0);
         assertEquals("TEST_DOMAIN", firstAggregation.get("jobDomain").asText());
