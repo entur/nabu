@@ -29,7 +29,7 @@ import no.rutebanken.nabu.repository.NotificationRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.Instant;
 import java.util.List;
@@ -45,7 +45,7 @@ class EventNotificationIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @MockBean
+    @MockitoBean
     private UserRepository userRepositoryMock;
 
     @Test
