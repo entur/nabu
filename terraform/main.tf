@@ -7,15 +7,10 @@ terraform {
       source = "hashicorp/google"
       version = "~> 6.49.0"
     }
-    kubernetes = {
-      source = "hashicorp/kubernetes"
-      version = ">= 2.13.1"
-    }
   }
 }
 
 provider "google" {}
-provider "kubernetes" {}
 
 
 resource "google_pubsub_topic" "CrudEventQueue" {
