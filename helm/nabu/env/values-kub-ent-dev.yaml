@@ -28,7 +28,7 @@ configMap:
     client:
       id: v1mVZ7K1TvGcFWDXCvHjKwj4ElYIhOyE
       url: https://internal.dev.entur.org/oauth/token
-      audience: https://ror.api.dev.entur.io
+      audience: https://api.dev.entur.io
   mail:
     stopPlace: https://stoppested-test.entur.org/
     routedb: https://rutedb.dev.entur.org/
