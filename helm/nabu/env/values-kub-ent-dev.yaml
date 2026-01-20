@@ -20,7 +20,7 @@ configMap:
   auth0:
     partner:
       url: https://partner.dev.entur.org/
-      audience: https://api.dev.entur.io,https://portal.dev.entur.org/
+      audience: https://api.dev.entur.io,https://portal.dev.entur.org
 
   roleAssignmentExtractor: baba
 
