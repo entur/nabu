@@ -53,7 +53,7 @@
         <wololo.version>0.18.1</wololo.version>
         <commons-io.version>2.21.0</commons-io.version>
         <swagger-jersey2.version>2.2.43</swagger-jersey2.version>
-        <openapi-generator-version>7.16.0</openapi-generator-version>
+        <openapi-generator-version>7.20.0</openapi-generator-version>
 
         <!-- empty argLine property, the value is set up by Jacoco during unit tests execution -->
         <argLine/>
