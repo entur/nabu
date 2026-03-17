@@ -29,6 +29,8 @@
                             "serviceContext": {
                                 "service": "nabu"
                             },
+                            "correlationId": "%X{correlationId:-}",
+                            "codespace": "%X{codespace:-}",
                             "message": "%message\n%ex{full}",
                             "severity": "%level",
                             "reportLocation": {

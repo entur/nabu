@@ -8,6 +8,7 @@ import no.rutebanken.nabu.event.listener.mapper.EventMapper;
 import no.rutebanken.nabu.exceptions.NabuException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,15 +26,22 @@ public class CrudeEventProcessor {
 
     public void processMessage(String content) {
         CrudEventDTO dto = CrudEventDTO.fromString(content);
-        Event event = eventMapper.toCrudEvent(dto);
-        logger.info("Received crud event: {}", event);
-
         try {
-            eventService.addEvent(event);
-        } catch (NabuEventValidationException e) {
-            logger.warn("Skipping CRUD event {} with validation errors: {}", event, e.validationErrors());
-        } catch (Exception e) {
-            throw new NabuException("Error while saving CrudeEvent " + event, e);
+            if (dto.correlationId != null) {
+                MDC.put("correlationId", dto.correlationId);
+            }
+            Event event = eventMapper.toCrudEvent(dto);
+            logger.info("Received crud event: {}", event);
+
+            try {
+                eventService.addEvent(event);
+            } catch (NabuEventValidationException e) {
+                logger.warn("Skipping CRUD event {} with validation errors: {}", event, e.validationErrors());
+            } catch (Exception e) {
+                throw new NabuException("Error while saving CrudeEvent " + event, e);
+            }
+        } finally {
+            MDC.clear();
         }
     }
 }

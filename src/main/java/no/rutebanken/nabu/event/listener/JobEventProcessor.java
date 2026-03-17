@@ -8,6 +8,7 @@ import no.rutebanken.nabu.event.listener.mapper.EventMapper;
 import no.rutebanken.nabu.exceptions.NabuException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,15 +24,25 @@ public class JobEventProcessor {
 
     public void processMessage(String content) {
         JobEventDTO dto = JobEventDTO.fromString(content);
-        Event event = eventMapper.toJobEvent(dto);
-        logger.info("Received job event: {}", event);
-
         try {
-            eventService.addEvent(event);
-        } catch (NabuEventValidationException e) {
-            logger.warn("Skipping job event {} with validation errors: {}", event, e.validationErrors());
-        } catch (Exception e) {
-            throw new NabuException("Error while saving JobEvent " + event, e);
+            if (dto.getCorrelationId() != null) {
+                MDC.put("correlationId", dto.getCorrelationId());
+            }
+            if (dto.getReferential() != null) {
+                MDC.put("codespace", dto.getReferential());
+            }
+            Event event = eventMapper.toJobEvent(dto);
+            logger.info("Received job event: {}", event);
+
+            try {
+                eventService.addEvent(event);
+            } catch (NabuEventValidationException e) {
+                logger.warn("Skipping job event {} with validation errors: {}", event, e.validationErrors());
+            } catch (Exception e) {
+                throw new NabuException("Error while saving JobEvent " + event, e);
+            }
+        } finally {
+            MDC.clear();
         }
     }
 }
