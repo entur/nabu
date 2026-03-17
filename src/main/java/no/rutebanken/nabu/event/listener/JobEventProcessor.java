@@ -42,7 +42,8 @@ public class JobEventProcessor {
                 throw new NabuException("Error while saving JobEvent " + event, e);
             }
         } finally {
-            MDC.clear();
+            MDC.remove("correlationId");
+            MDC.remove("codespace");
         }
     }
 }

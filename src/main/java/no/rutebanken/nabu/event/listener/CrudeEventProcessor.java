@@ -41,7 +41,7 @@ public class CrudeEventProcessor {
                 throw new NabuException("Error while saving CrudeEvent " + event, e);
             }
         } finally {
-            MDC.clear();
+            MDC.remove("correlationId");
         }
     }
 }
