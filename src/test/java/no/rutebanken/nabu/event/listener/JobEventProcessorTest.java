@@ -141,8 +141,9 @@ class JobEventProcessorTest {
         doThrow(new RuntimeException("something failed"))
                 .when(eventService).addEvent(any());
 
+        String json = toJson(createEvent("corr-abc", "rb_kok"));
         Assertions.assertThrows(NabuException.class,
-                () -> processor.processMessage(toJson(createEvent("corr-abc", "rb_kok"))));
+                () -> processor.processMessage(json));
 
         Assertions.assertNull(MDC.get("correlationId"));
         Assertions.assertNull(MDC.get("codespace"));

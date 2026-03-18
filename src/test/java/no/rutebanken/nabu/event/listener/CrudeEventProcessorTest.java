@@ -100,8 +100,9 @@ class CrudeEventProcessorTest {
         doThrow(new RuntimeException("something failed"))
                 .when(eventService).addEvent(any());
 
+        String json = toJson(createEvent("corr-abc"));
         Assertions.assertThrows(NabuException.class,
-                () -> processor.processMessage(toJson(createEvent("corr-abc"))));
+                () -> processor.processMessage(json));
 
         Assertions.assertNull(MDC.get("correlationId"));
     }
