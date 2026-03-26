@@ -11,8 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class JobEventProcessor {
+
+    private static final String DATASET_REFERENTIAL = "EnturDatasetReferential";
+    private static final String CHOUETTE_REFERENTIAL = "RutebankenChouetteReferential";
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final EventService eventService;
@@ -23,13 +28,24 @@ public class JobEventProcessor {
     }
 
     public void processMessage(String content) {
+        processMessage(content, Map.of());
+    }
+
+    public void processMessage(String content, Map<String, String> headers) {
         JobEventDTO dto = JobEventDTO.fromString(content);
         try {
             if (dto.getCorrelationId() != null) {
                 MDC.put("correlationId", dto.getCorrelationId());
             }
-            if (dto.getReferential() != null) {
-                MDC.put("codespace", dto.getReferential());
+            String codespace = dto.getReferential();
+            if (codespace == null || codespace.isEmpty()) {
+                codespace = headers.get(DATASET_REFERENTIAL);
+            }
+            if (codespace == null || codespace.isEmpty()) {
+                codespace = headers.get(CHOUETTE_REFERENTIAL);
+            }
+            if (codespace != null && !codespace.isEmpty()) {
+                MDC.put("codespace", codespace);
             }
             Event event = eventMapper.toJobEvent(dto);
             logger.info("Received job event: {}", event);

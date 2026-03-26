@@ -26,9 +26,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.MDC;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -83,6 +86,24 @@ class JobEventProcessorTest {
 
         Assertions.assertNull(capturedCorrelationId.get());
         Assertions.assertNull(capturedCodespace.get());
+    }
+
+    @ParameterizedTest(name = "codespace fallback: {0}")
+    @CsvSource({
+            "DTO referential wins over headers,    rb_flt, RutebankenChouetteReferential, flt,  rb_flt",
+            "falls back to EnturDatasetReferential,,       EnturDatasetReferential,        flt,  flt",
+            "falls back to ChouetteReferential,,           RutebankenChouetteReferential,  flt,  flt",
+    })
+    void mdcCodespaceHeaderFallback(String description, String dtoReferential, String headerKey, String headerValue, String expected) {
+        AtomicReference<String> capturedCodespace = new AtomicReference<>();
+        doAnswer(invocation -> {
+            capturedCodespace.set(MDC.get("codespace"));
+            return null;
+        }).when(eventService).addEvent(any());
+
+        processor.processMessage(toJson(createEvent("corr-123", dtoReferential)), Map.of(headerKey, headerValue));
+
+        Assertions.assertEquals(expected, capturedCodespace.get());
     }
 
     @Test
