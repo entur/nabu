@@ -40,6 +40,6 @@ public class JobEventListener extends AbstractEnturGooglePubSubConsumer {
 
     @Override
     public void onMessage(byte[] content, Map<String, String> headers) {
-        jobEventProcessor.processMessage(new String(content));
+        jobEventProcessor.processMessage(new String(content), headers);
     }
 }
