@@ -1,9 +1,13 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Timetable events API",
+    "title": "Timetable Delivery Status",
     "description": "Status of a timetable data delivery",
-    "version": "1.0",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Entur",
+      "url": "https://developer.entur.org"
+    },
     "x-entur-metadata": {
       "id": "timetable-delivery-status",
       "audience": "partner",
@@ -36,6 +40,7 @@
         "tags": [
           "timetable-delivery-status"
         ],
+        "summary": "Get the status of a timetable data delivery",
         "description": "Return the status of the delivery identified by its correlation id",
         "operationId": "getDataDeliveryStatus",
         "parameters": [
@@ -43,6 +48,7 @@
             "name": "codespace",
             "in": "path",
             "required": true,
+            "description": "Codespace identifying the data provider (e.g. 'RUT').",
             "schema": {
               "type": "string"
             }
@@ -51,6 +57,7 @@
             "name": "correlationId",
             "in": "path",
             "required": true,
+            "description": "Correlation id assigned to the delivery when it was submitted.",
             "schema": {
               "type": "string"
             }
@@ -58,11 +65,16 @@
         ],
         "responses": {
           "200": {
-            "description": "default response",
+            "description": "Delivery status for the requested correlation id.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DataDeliveryStatus"
+                },
+                "example": {
+                  "state": "OK",
+                  "date": "2026-04-17T10:30:00Z",
+                  "fileName": "rut-netex_202604171030.zip"
                 }
               }
             }
