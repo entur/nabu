@@ -51,7 +51,6 @@
         <spring-cloud-gcp-dependencies.version>7.4.6</spring-cloud-gcp-dependencies.version>
         <postgis-jdbc.version>2025.1.1</postgis-jdbc.version>
         <wololo.version>0.18.1</wololo.version>
-        <commons-io.version>2.21.0</commons-io.version>
         <swagger-jersey2.version>2.2.46</swagger-jersey2.version>
         <openapi-generator-version>7.21.0</openapi-generator-version>
 
@@ -165,11 +164,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
         </dependency>
@@ -200,12 +194,6 @@
             <artifactId>jts2geojson</artifactId>
             <version>${wololo.version}</version>
         </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
