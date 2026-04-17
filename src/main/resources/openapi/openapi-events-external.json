@@ -3,7 +3,12 @@
   "info": {
     "title": "Timetable events API",
     "description": "Status of a timetable data delivery",
-    "version": "1.0"
+    "version": "1.0",
+    "x-entur-metadata": {
+      "id": "timetable-delivery-status",
+      "audience": "partner",
+      "owner": "team-ror"
+    }
   },
   "servers": [
     {
@@ -21,7 +26,7 @@
   ],
   "tags": [
     {
-      "name": "TimetableDataDeliveryStatus",
+      "name": "timetable-delivery-status",
       "description": "Status of a timetable data delivery"
     }
   ],
@@ -29,7 +34,7 @@
     "/status/{codespace}/{correlationId}": {
       "get": {
         "tags": [
-          "TimetableDataDeliveryStatus"
+          "timetable-delivery-status"
         ],
         "description": "Return the status of the delivery identified by its correlation id",
         "operationId": "getDataDeliveryStatus",
