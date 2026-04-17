@@ -60,6 +60,24 @@ class EmailNotificationFormatterTest extends BaseIntegrationTest {
     }
 
     @Test
+    void formatMailEscapesUserContentForXss() {
+        String scriptPayload = "<script>alert('xss')</script>";
+        String attrBreakoutPayload = "\" onmouseover=alert(1) x=\"";
+
+        Notification notification = new Notification();
+        CrudEvent event = CrudEvent.builder().entityType("StopPlace").entityClassifier("onstreetBus").version(1L).comment(scriptPayload).changeType("NAME").oldValue(attrBreakoutPayload).newValue(scriptPayload).username(scriptPayload).action("CREATE").name(scriptPayload).externalId("NSR:StopPlace:1").eventTime(Instant.now()).build();
+        event.setLocation(scriptPayload);
+        event.setPk(pkCounter++);
+        notification.setEvent(event);
+
+        String msg = emailNotificationFormatter.formatMessage(Set.of(notification), Locale.of("no"), PROVIDER_LIST);
+
+        Assertions.assertFalse(msg.contains(scriptPayload), "Raw <script> payload must not appear in rendered HTML");
+        Assertions.assertFalse(msg.contains(attrBreakoutPayload), "Raw attribute-breakout payload must not appear in rendered HTML");
+        Assertions.assertTrue(msg.contains("&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;"), "Expected HTML-escaped script payload");
+    }
+
+    @Test
     void formatMailWithTooManyEvents() {
         Instant now = Instant.now();
 
