@@ -42,6 +42,7 @@ import static no.rutebanken.nabu.event.support.DateUtils.atDefaultZone;
 @Tags(value = {
         @Tag(name = "LatestUploadResource", description = "Latest upload resource")
 })
+@PreAuthorize("@authorizationService.isRouteDataAdmin()")
 public class LatestUploadResource {
 
     private final EventRepository eventRepository;
