@@ -119,7 +119,7 @@ public class EmailNotificationFormatter {
         try {
 
             return FreeMarkerTemplateUtils.processTemplateIntoString(
-                    freemarkerConfiguration.getTemplate("fm_email_notification_template.ftl"), model);
+                    freemarkerConfiguration.getTemplate("fm_email_notification_template.ftlh"), model);
         } catch (Exception e) {
             throw new NabuException("Exception occurred while processing email template", e);
         }

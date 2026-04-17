@@ -54,6 +54,6 @@ public class MessageResolverMethod implements TemplateMethodModelEx {
             argsArray = arguments.subList(1, arguments.size()).toArray();
         }
 
-        return messageSource.getMessage(code, argsArray, code, locale);
+        return messageSource.getMessage(code, argsArray, "", locale);
     }
 }
