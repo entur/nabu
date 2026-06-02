@@ -130,3 +130,14 @@ resource "google_sql_user" "db-user" {
   password = data.google_secret_manager_secret_version.db_password.secret_data
 }
 
+
+// Add service account as member to pubsub topic in the resources project
+
+resource "google_pubsub_topic_iam_member" "nabu_topic_iam_member" {
+  for_each = var.crud_event_publishers
+  project  = var.gcp_resources_project
+  member   = each.value
+  role     = var.crud_event_pusub_role
+  topic    = google_pubsub_topic.CrudEventQueue.name
+}
+

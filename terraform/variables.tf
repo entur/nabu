@@ -24,6 +24,16 @@ variable "service_account_pubsub_role" {
   default     = "roles/pubsub.subscriber"
 }
 
+variable "crud_event_pusub_role" {
+  description = "pubsub role for crud events topic "
+  default     = "roles/pubsub.publisher"
+}
+
+variable "crud_event_publishers" {
+    description = "Service accounts that will publish to crud event topic"
+    type        = set(string)
+}
+
 variable "service_account" {
   description = "Application gcp service account"
 }
