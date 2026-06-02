@@ -8,4 +8,7 @@ labels = {
   app         = "nabu"
   environment = "prd"
 }
+crud_event_publishers = [
+  "serviceAccount:application@ent-irkalla-prd.iam.gserviceaccount.com"
+]
 
