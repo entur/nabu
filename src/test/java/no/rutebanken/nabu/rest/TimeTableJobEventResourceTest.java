@@ -84,5 +84,64 @@ class TimeTableJobEventResourceTest {
         Assertions.assertEquals("pb", b.getEvents().get(2).referential);
     }
 
+    /**
+     * A service (e.g. servicelinker) emits STARTED then SUCCESS, but the relayed event times can
+     * arrive inverted when Pub/Sub delivers the two messages out of order. The OK event then has an
+     * earlier event time than the STARTED event. The aggregation must still end in OK, with the
+     * stale STARTED dropped, rather than appearing stuck at STARTED.
+     */
+    @Test
+    void staleStartedAfterTerminalIsDropped() {
+
+        List<JobEvent> rawEvents = new ArrayList<>();
+
+        Instant t0 = Instant.now().minusMillis(2000);
+
+        String action = "LINKING";
+        // event times are inverted: OK precedes STARTED
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename", 2L, null, action, JobState.PENDING, "c", t0.plusMillis(1), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename", 2L, null, action, JobState.OK, "c", t0.plusMillis(2), "ost"));
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename", 2L, null, action, JobState.STARTED, "c", t0.plusMillis(3), "ost"));
+
+        List<JobStatus> listStatus = new TimeTableJobEventResource(null, null).convert(rawEvents);
+
+        Assertions.assertEquals(1, listStatus.size());
+        JobStatus c = listStatus.getFirst();
+        Assertions.assertEquals(JobStatus.State.OK, c.getEndStatus());
+        Assertions.assertEquals(2, c.getEvents().size());
+        Assertions.assertEquals(JobStatus.State.OK, c.getEvents().getLast().state);
+    }
+
+    /**
+     * Same inversion as above, but for the FAILED terminal path: a stale STARTED arriving after a
+     * FAILED must not resurrect the action to "Started", and must not clobber the error code with
+     * the STARTED event's null.
+     */
+    @Test
+    void staleStartedAfterFailedIsDroppedAndErrorCodePreserved() {
+
+        List<JobEvent> rawEvents = new ArrayList<>();
+
+        Instant t0 = Instant.now().minusMillis(2000);
+
+        String action = "LINKING";
+        JobEvent failed = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename", 2L, null, action, JobState.FAILED, "d", t0.plusMillis(2), "ost");
+        failed.setErrorCode("OSRM timeout");
+
+        // event times are inverted: FAILED precedes STARTED
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename", 2L, null, action, JobState.PENDING, "d", t0.plusMillis(1), "ost"));
+        rawEvents.add(failed);
+        rawEvents.add(new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "filename", 2L, null, action, JobState.STARTED, "d", t0.plusMillis(3), "ost"));
+
+        List<JobStatus> listStatus = new TimeTableJobEventResource(null, null).convert(rawEvents);
+
+        Assertions.assertEquals(1, listStatus.size());
+        JobStatus d = listStatus.getFirst();
+        Assertions.assertEquals(JobStatus.State.FAILED, d.getEndStatus());
+        Assertions.assertEquals(2, d.getEvents().size());
+        Assertions.assertEquals(JobStatus.State.FAILED, d.getEvents().getLast().state);
+        Assertions.assertEquals("OSRM timeout", d.getErrorCode());
+    }
+
 
 }

@@ -40,9 +40,12 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import static no.rutebanken.nabu.domain.event.JobState.ERROR_JOB_STATES;
 import static no.rutebanken.nabu.rest.mapper.EnumMapper.convertEnums;
 
 
@@ -142,6 +145,12 @@ public class TimeTableJobEventResource {
         // Map from internal Status object to Rest service JobStatusEvent object
         String correlationId = null;
         JobStatus currentAggregation = null;
+        // Actions that have already reached a terminal state (OK/FAILED/...) within the current
+        // correlation. Used to drop a STARTED/PENDING event that sorts after the terminal one,
+        // which happens when Pub/Sub delivers a service's STARTED/SUCCESS messages out of order
+        // and the relayed event times end up inverted. Without this guard such a stale STARTED
+        // would become the last event for the action and the UI would show it as still running.
+        Set<String> terminalActions = null;
 
         List<JobEvent> sortedStatusForProvider = statusForProvider.stream().sorted(Comparator.comparing(JobEvent::getCorrelationId).thenComparing(JobEvent::getEventTime)).toList();
 
@@ -150,6 +159,7 @@ public class TimeTableJobEventResource {
             if (!in.getCorrelationId().equals(correlationId)) {
 
                 correlationId = in.getCorrelationId();
+                terminalActions = new HashSet<>();
 
                 // Create new Aggregation
                 currentAggregation = new JobStatus();
@@ -160,6 +170,15 @@ public class TimeTableJobEventResource {
                 currentAggregation.setUsername(in.getUsername());
 
                 list.add(currentAggregation);
+            }
+
+            boolean terminal = JobState.OK.equals(in.getState()) || ERROR_JOB_STATES.contains(in.getState());
+            if (terminal) {
+                terminalActions.add(in.getAction());
+            } else if (terminalActions.contains(in.getAction())) {
+                // Stale non-terminal event arriving after the action already finished — skip it
+                // so it cannot clobber the terminal state or error code.
+                continue;
             }
 
             // errorCode overwritten when processing each event so that only the error code for the last event is sent.
