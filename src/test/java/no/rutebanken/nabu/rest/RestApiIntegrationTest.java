@@ -71,6 +71,9 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
     @MockitoBean
     private ProviderRepository providerRepository;
 
+    // Fixed reference time so tests don't depend on the system clock.
+    private static final Instant FIXED_TIME = Instant.parse("2024-01-15T10:30:00Z");
+
     private String baseUrl;
 
     @BeforeEach
@@ -119,7 +122,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
     @Test
     void testInternalAdminSummaryEndpointReturnsData() throws Exception {
         transactionTemplate.execute(status -> {
-            SystemJobStatus jobStatus = new SystemJobStatus("TEST_DOMAIN", "TEST_ACTION", JobState.OK, Instant.now());
+            SystemJobStatus jobStatus = new SystemJobStatus("TEST_DOMAIN", "TEST_ACTION", JobState.OK, FIXED_TIME);
             systemJobStatusRepository.save(jobStatus);
             return null;
         });
@@ -147,8 +150,8 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
     @Test
     void testInternalAdminSummaryEndpointWithMultipleStatuses() throws Exception {
         transactionTemplate.execute(status -> {
-            SystemJobStatus status1 = new SystemJobStatus("TIMETABLE_DOMAIN", "IMPORT_ACTION", JobState.OK, Instant.now());
-            SystemJobStatus status2 = new SystemJobStatus("TIMETABLE_DOMAIN", "EXPORT_ACTION", JobState.STARTED, Instant.now());
+            SystemJobStatus status1 = new SystemJobStatus("TIMETABLE_DOMAIN", "IMPORT_ACTION", JobState.OK, FIXED_TIME);
+            SystemJobStatus status2 = new SystemJobStatus("TIMETABLE_DOMAIN", "EXPORT_ACTION", JobState.STARTED, FIXED_TIME);
             systemJobStatusRepository.save(status1);
             systemJobStatusRepository.save(status2);
             return null;
@@ -194,7 +197,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
         Long providerId = 1L;
         String testFileName = "upload-test.xml";
         String testCorrelationId = "test-correlation-upload";
-        Instant baseTime = Instant.now();
+        Instant baseTime = FIXED_TIME;
 
         transactionTemplate.execute(status -> {
             // Create FILE_TRANSFER event (this is used as the anchor for finding latest upload)
@@ -286,7 +289,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
         String codespace = "ent";
         String correlationId = "test-correlation-123";
         String testFileName = "test-file.xml";
-        Instant baseTime = Instant.now();
+        Instant baseTime = FIXED_TIME;
 
         transactionTemplate.execute(status -> {
             // Create FILE_TRANSFER event for both provider IDs
@@ -339,7 +342,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
         String codespace = "TEST";
         String correlationId = "test-correlation-failed-456";
         String testFileName = "failed-file.xml";
-        Instant baseTime = Instant.now();
+        Instant baseTime = FIXED_TIME;
 
         transactionTemplate.execute(status -> {
             // Create FILE_TRANSFER event
@@ -388,7 +391,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
         String codespace = "TEST";
         String correlationId = "test-correlation-progress-789";
         String testFileName = "in-progress-file.xml";
-        Instant baseTime = Instant.now();
+        Instant baseTime = FIXED_TIME;
 
         transactionTemplate.execute(status -> {
             // Create FILE_TRANSFER event
