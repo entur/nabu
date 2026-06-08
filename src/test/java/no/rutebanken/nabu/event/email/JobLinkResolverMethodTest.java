@@ -95,7 +95,9 @@ class JobLinkResolverMethodTest {
 
     @Test
     void testNonTimetableDomainYieldsNoLink() {
-        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.GEOCODER).referential("ref").action(TimeTableAction.IMPORT.name()).externalId("id").build();
+        // GRAPH is a representative non-TIMETABLE domain: only TIMETABLE events resolve to a link,
+        // so any other domain must yield none.
+        JobEvent event = JobEvent.builder().domain(JobEvent.JobDomain.GRAPH).referential("ref").action(TimeTableAction.IMPORT.name()).externalId("id").build();
         assertLink(event, null);
     }
 

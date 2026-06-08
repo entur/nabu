@@ -40,6 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -443,6 +445,67 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
                 "Should return 404 when correlation ID is not found");
+    }
+
+    @Test
+    void testJobDomainsEndpointAdvertisesSupportedDomainsAndExcludesGeocoder() throws Exception {
+        ResponseEntity<String> response = restTemplate.getForEntity(
+                baseUrl + "/services/events/notifications/job_domains",
+                String.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+
+        var jsonArray = objectMapper.readTree(response.getBody());
+        assertTrue(jsonArray.isArray(), "Response should be a JSON array");
+
+        List<String> domains = new ArrayList<>();
+        jsonArray.forEach(node -> domains.add(node.asText()));
+
+        assertEquals(List.of("TIMETABLE", "GRAPH", "TIAMAT", "TIMETABLE_PUBLISH"), domains,
+                "job_domains must advertise exactly the supported domains");
+        assertFalse(domains.contains("GEOCODER"),
+                "Retired GEOCODER domain must no longer be advertised");
+    }
+
+    @Test
+    void testEveryAdvertisedJobDomainResolvesToJobActions() throws Exception {
+        // Mirrors the ninkasi admin GUI flow: it fetches job_domains, then job_actions for each
+        // domain. Every advertised domain must resolve to a non-empty action list (no 4xx), or
+        // the permissions UI breaks. Guards against an advertised-but-unhandled JobDomain.
+        ResponseEntity<String> domainsResponse = restTemplate.getForEntity(
+                baseUrl + "/services/events/notifications/job_domains",
+                String.class
+        );
+        assertEquals(HttpStatus.OK, domainsResponse.getStatusCode());
+
+        for (var domainNode : objectMapper.readTree(domainsResponse.getBody())) {
+            String domain = domainNode.asText();
+            ResponseEntity<String> actionsResponse = restTemplate.getForEntity(
+                    baseUrl + "/services/events/notifications/job_actions/" + domain,
+                    String.class
+            );
+
+            assertEquals(HttpStatus.OK, actionsResponse.getStatusCode(),
+                    "job_actions must resolve for advertised domain " + domain);
+            var actions = objectMapper.readTree(actionsResponse.getBody());
+            assertTrue(actions.isArray() && !actions.isEmpty(),
+                    "Domain " + domain + " should return a non-empty action list");
+        }
+    }
+
+    @Test
+    void testJobActionsForRetiredGeocoderDomainIsRejected() {
+        // GEOCODER was removed from JobEvent.JobDomain; a legacy request must be rejected
+        // (Jersey can no longer coerce the path param to the enum), not silently served.
+        ResponseEntity<String> response = restTemplate.getForEntity(
+                baseUrl + "/services/events/notifications/job_actions/GEOCODER",
+                String.class
+        );
+
+        assertTrue(response.getStatusCode().is4xxClientError(),
+                "Retired GEOCODER domain should be rejected with a 4xx, was " + response.getStatusCode());
     }
 
     @Test
