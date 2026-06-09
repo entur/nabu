@@ -110,7 +110,6 @@ The core of Nabu is its event processing system that handles various types of ev
 - **CrudEvent**: Monitors create/read/update/delete operations
 - **Notification**: Manages user notifications about job outcomes
 - **TimeTableAction**: Specific actions related to timetable processing
-- **GeoCoderAction**: Geocoding-related events
 
 ### 2. REST API Endpoints
 
@@ -364,6 +363,8 @@ Licensed under the **EUPL v1.2** (European Union Public Licence)
 9. **Entur Ecosystem**: This service is part of Entur's larger data processing pipeline. Changes may affect other services.
 
 10. **Monitoring**: All significant operations should emit metrics and logs for observability.
+
+11. **Retired GEOCODER domain**: Geocoder v1 (Pelias) was decommissioned in the v1->v3 migration. `GEOCODER` was removed from `JobEvent.JobDomain` (and the ninkasi UI / marduk job logic). The `domain` column is a plain `String`, not an enum ordinal, so historical rows with `domain='GEOCODER'` remain readable; new code simply never produces or advertises it. Do not reintroduce a GEOCODER job domain here.
 
 ## Common Development Tasks
 

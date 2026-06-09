@@ -40,6 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -68,6 +70,9 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
 
     @MockitoBean
     private ProviderRepository providerRepository;
+
+    // Fixed reference time so tests don't depend on the system clock.
+    private static final Instant FIXED_TIME = Instant.parse("2024-01-15T10:30:00Z");
 
     private String baseUrl;
 
@@ -117,7 +122,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
     @Test
     void testInternalAdminSummaryEndpointReturnsData() throws Exception {
         transactionTemplate.execute(status -> {
-            SystemJobStatus jobStatus = new SystemJobStatus("TEST_DOMAIN", "TEST_ACTION", JobState.OK, Instant.now());
+            SystemJobStatus jobStatus = new SystemJobStatus("TEST_DOMAIN", "TEST_ACTION", JobState.OK, FIXED_TIME);
             systemJobStatusRepository.save(jobStatus);
             return null;
         });
@@ -145,8 +150,8 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
     @Test
     void testInternalAdminSummaryEndpointWithMultipleStatuses() throws Exception {
         transactionTemplate.execute(status -> {
-            SystemJobStatus status1 = new SystemJobStatus("TIMETABLE_DOMAIN", "IMPORT_ACTION", JobState.OK, Instant.now());
-            SystemJobStatus status2 = new SystemJobStatus("TIMETABLE_DOMAIN", "EXPORT_ACTION", JobState.STARTED, Instant.now());
+            SystemJobStatus status1 = new SystemJobStatus("TIMETABLE_DOMAIN", "IMPORT_ACTION", JobState.OK, FIXED_TIME);
+            SystemJobStatus status2 = new SystemJobStatus("TIMETABLE_DOMAIN", "EXPORT_ACTION", JobState.STARTED, FIXED_TIME);
             systemJobStatusRepository.save(status1);
             systemJobStatusRepository.save(status2);
             return null;
@@ -192,7 +197,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
         Long providerId = 1L;
         String testFileName = "upload-test.xml";
         String testCorrelationId = "test-correlation-upload";
-        Instant baseTime = Instant.now();
+        Instant baseTime = FIXED_TIME;
 
         transactionTemplate.execute(status -> {
             // Create FILE_TRANSFER event (this is used as the anchor for finding latest upload)
@@ -284,7 +289,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
         String codespace = "ent";
         String correlationId = "test-correlation-123";
         String testFileName = "test-file.xml";
-        Instant baseTime = Instant.now();
+        Instant baseTime = FIXED_TIME;
 
         transactionTemplate.execute(status -> {
             // Create FILE_TRANSFER event for both provider IDs
@@ -337,7 +342,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
         String codespace = "TEST";
         String correlationId = "test-correlation-failed-456";
         String testFileName = "failed-file.xml";
-        Instant baseTime = Instant.now();
+        Instant baseTime = FIXED_TIME;
 
         transactionTemplate.execute(status -> {
             // Create FILE_TRANSFER event
@@ -386,7 +391,7 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
         String codespace = "TEST";
         String correlationId = "test-correlation-progress-789";
         String testFileName = "in-progress-file.xml";
-        Instant baseTime = Instant.now();
+        Instant baseTime = FIXED_TIME;
 
         transactionTemplate.execute(status -> {
             // Create FILE_TRANSFER event
@@ -443,6 +448,67 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
                 "Should return 404 when correlation ID is not found");
+    }
+
+    @Test
+    void testJobDomainsEndpointAdvertisesSupportedDomainsAndExcludesGeocoder() throws Exception {
+        ResponseEntity<String> response = restTemplate.getForEntity(
+                baseUrl + "/services/events/notifications/job_domains",
+                String.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+
+        var jsonArray = objectMapper.readTree(response.getBody());
+        assertTrue(jsonArray.isArray(), "Response should be a JSON array");
+
+        List<String> domains = new ArrayList<>();
+        jsonArray.forEach(node -> domains.add(node.asText()));
+
+        assertEquals(List.of("TIMETABLE", "GRAPH", "TIAMAT", "TIMETABLE_PUBLISH"), domains,
+                "job_domains must advertise exactly the supported domains");
+        assertFalse(domains.contains("GEOCODER"),
+                "Retired GEOCODER domain must no longer be advertised");
+    }
+
+    @Test
+    void testEveryAdvertisedJobDomainResolvesToJobActions() throws Exception {
+        // Mirrors the ninkasi admin GUI flow: it fetches job_domains, then job_actions for each
+        // domain. Every advertised domain must resolve to a non-empty action list (no 4xx), or
+        // the permissions UI breaks. Guards against an advertised-but-unhandled JobDomain.
+        ResponseEntity<String> domainsResponse = restTemplate.getForEntity(
+                baseUrl + "/services/events/notifications/job_domains",
+                String.class
+        );
+        assertEquals(HttpStatus.OK, domainsResponse.getStatusCode());
+
+        for (var domainNode : objectMapper.readTree(domainsResponse.getBody())) {
+            String domain = domainNode.asText();
+            ResponseEntity<String> actionsResponse = restTemplate.getForEntity(
+                    baseUrl + "/services/events/notifications/job_actions/" + domain,
+                    String.class
+            );
+
+            assertEquals(HttpStatus.OK, actionsResponse.getStatusCode(),
+                    "job_actions must resolve for advertised domain " + domain);
+            var actions = objectMapper.readTree(actionsResponse.getBody());
+            assertTrue(actions.isArray() && !actions.isEmpty(),
+                    "Domain " + domain + " should return a non-empty action list");
+        }
+    }
+
+    @Test
+    void testJobActionsForRetiredGeocoderDomainIsRejected() {
+        // GEOCODER was removed from JobEvent.JobDomain; a legacy request must be rejected
+        // (Jersey can no longer coerce the path param to the enum), not silently served.
+        ResponseEntity<String> response = restTemplate.getForEntity(
+                baseUrl + "/services/events/notifications/job_actions/GEOCODER",
+                String.class
+        );
+
+        assertTrue(response.getStatusCode().is4xxClientError(),
+                "Retired GEOCODER domain should be rejected with a 4xx, was " + response.getStatusCode());
     }
 
     @Test

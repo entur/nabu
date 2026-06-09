@@ -19,7 +19,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.nabu.domain.event.CrudEvent;
 import no.rutebanken.nabu.domain.event.Event;
-import no.rutebanken.nabu.domain.event.GeoCoderAction;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.domain.event.Notification;
@@ -38,7 +37,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -124,20 +122,16 @@ public class NotificationResource {
     @Path("job_actions/{jobDomain}")
     public List<String> getJobActions(@PathParam("jobDomain") JobEvent.JobDomain jobDomain) {
         List<String> actions = new ArrayList<>(List.of(EventMatcher.ALL_TYPES));
-
-        if (JobEvent.JobDomain.GRAPH.equals(jobDomain)) {
-            actions.addAll(Arrays.asList("BUILD_BASE", "BUILD_GRAPH"));
-        } else if (JobEvent.JobDomain.TIAMAT.equals(jobDomain)) {
-            actions.add("EXPORT");
-        } else if (JobEvent.JobDomain.GEOCODER.equals(jobDomain)) {
-            actions.addAll(Arrays.stream(GeoCoderAction.values()).map(Enum::name).toList());
-        } else if (JobEvent.JobDomain.TIMETABLE.equals(jobDomain)) {
-            actions.addAll(Arrays.stream(TimeTableAction.values()).map(Enum::name).toList());
-        } else if (JobEvent.JobDomain.TIMETABLE_PUBLISH.equals(jobDomain)) {
-            actions.addAll(Arrays.asList("EXPORT_NETEX_MERGED", "EXPORT_GOOGLE_GTFS"));
-        } else {
-            throw new EntityNotFoundException("Unknown job domain: " + jobDomain);
-        }
+        // Exhaustive over JobEvent.JobDomain: adding a new domain without a branch here is a
+        // compile error, so every domain advertised by job_domains is guaranteed to resolve
+        // to an action list. Unknown values can't reach this method - Jersey rejects a
+        // @PathParam that does not match an enum constant before the body runs.
+        actions.addAll(switch (jobDomain) {
+            case GRAPH -> List.of("BUILD_BASE", "BUILD_GRAPH");
+            case TIAMAT -> List.of("EXPORT");
+            case TIMETABLE -> Arrays.stream(TimeTableAction.values()).map(Enum::name).toList();
+            case TIMETABLE_PUBLISH -> List.of("EXPORT_NETEX_MERGED", "EXPORT_GOOGLE_GTFS");
+        });
         return actions;
     }
 
