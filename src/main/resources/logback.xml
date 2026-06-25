@@ -15,6 +15,15 @@
   -->
 
 <configuration>
+    <!--
+      Jersey's Spring bridge re-scans every registered resource and tries to resolve it from the
+      Spring context by type. Our REST resources carry @PreAuthorize and are therefore CGLIB
+      proxies, which it cannot match by their generated proxy class, so it logs a misleading ERROR
+      ("None or multiple beans found ... skipping the type") at startup. The resources are in fact
+      registered as bean instances by JerseyConfig and work correctly, so this noise is suppressed.
+    -->
+    <logger name="org.glassfish.jersey.server.spring.SpringComponentProvider" level="OFF"/>
+
     <condition class="ch.qos.logback.core.boolex.ExpressionPropertyCondition">
         <expression>propertyContains("env", "dev")</expression>
     </condition>
