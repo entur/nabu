@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.entur.ror</groupId>
         <artifactId>superpom</artifactId>
-        <version>5.6.0</version>
+        <version>6.5.0</version>
     </parent>
 
     <groupId>no.rutebanken</groupId>
@@ -47,7 +47,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <entur.helpers.version>5.50.0</entur.helpers.version>
+        <entur.helpers.version>7.2.0</entur.helpers.version>
         <spring-cloud-gcp-dependencies.version>7.4.6</spring-cloud-gcp-dependencies.version>
         <postgis-jdbc.version>2025.1.1</postgis-jdbc.version>
         <wololo.version>0.18.1</wololo.version>
@@ -151,6 +151,12 @@
         </dependency>
 
         <!-- Misc -->
+        <!-- Spring Boot 4 moved Flyway auto-configuration into its own module;
+             without it the migrations are never run. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-flyway</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-database-postgresql</artifactId>
@@ -202,6 +208,12 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
         </dependency>
+        <!-- Spring Boot 4 moved FreeMarker auto-configuration (the freemarker.template.Configuration
+             bean used for e-mail templates) into its own module. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-freemarker</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-spatial</artifactId>
@@ -215,17 +227,29 @@
         <!--Test -->
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>gcloud</artifactId>
+            <artifactId>testcontainers-gcloud</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Spring Boot 4 moved TestRestTemplate/RestTestClient support into its own module -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-resttestclient</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Provides RestTemplateBuilder used by TestRestTemplate -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-restclient</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -25,7 +25,6 @@ import no.rutebanken.nabu.event.listener.dto.JobEventDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -48,9 +47,6 @@ class PubSubEventIntegrationTest extends BaseIntegrationTest {
     @MockitoBean
     private EventService eventService;
 
-    @Captor
-    ArgumentCaptor<Event> captor;
-
 
     @Test
    void testConsumeJobEventFromPubSub() throws ExecutionException, InterruptedException {
@@ -67,6 +63,7 @@ class PubSubEventIntegrationTest extends BaseIntegrationTest {
         CompletableFuture<String> listenableFuture = pubSubTemplate.publish(JobEventListener.JOB_EVENT_QUEUE, testPayload);
         listenableFuture.get();
 
+        ArgumentCaptor<Event> captor = ArgumentCaptor.forClass(Event.class);
         Mockito.verify(eventService, timeout(10000).times(1)).addEvent(captor.capture());
         Event event = captor.getValue();
         Assert.isInstanceOf(JobEvent.class, event);
