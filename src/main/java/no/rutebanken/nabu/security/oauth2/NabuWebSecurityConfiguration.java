@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -44,12 +43,12 @@ public class NabuWebSecurityConfiguration {
         http.cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/services/events/openapi.json")).permitAll()
-                        .requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/services/events-external/openapi.json")).permitAll()
-                        .requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/actuator/prometheus")).permitAll()
-                        .requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/actuator/health")).permitAll()
-                        .requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/liveness")).permitAll()
-                        .requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/actuator/health/readiness")).permitAll()
+                        .requestMatchers("/services/events/openapi.json").permitAll()
+                        .requestMatchers("/services/events-external/openapi.json").permitAll()
+                        .requestMatchers("/actuator/prometheus").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/actuator/health/liveness").permitAll()
+                        .requestMatchers("/actuator/health/readiness").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(configurer -> configurer.authenticationManagerResolver(multiIssuerAuthenticationManagerResolver))

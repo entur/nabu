@@ -20,7 +20,7 @@ import no.rutebanken.nabu.security.oauth2.NabuWebSecurityConfiguration;
 import org.entur.pubsub.base.config.GooglePubSubConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;

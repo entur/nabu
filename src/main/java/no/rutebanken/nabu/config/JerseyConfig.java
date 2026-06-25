@@ -31,6 +31,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.Set;
 
@@ -39,9 +40,19 @@ public class JerseyConfig {
 
 
     @Bean
-    public ServletRegistrationBean<ServletContainer> internalJersey() {
+    public ServletRegistrationBean<ServletContainer> internalJersey(
+            @Lazy TimeTableJobEventResource timeTableJobEventResource,
+            @Lazy AdminSummaryResource adminSummaryResource,
+            @Lazy LatestUploadResource latestUploadResource,
+            @Lazy NotificationResource notificationResource,
+            @Lazy ChangeLogResource changeLogResource) {
         ServletRegistrationBean<ServletContainer> internalJersey
-                = new ServletRegistrationBean<>(new ServletContainer(new InternalServicesConfig()));
+                = new ServletRegistrationBean<>(new ServletContainer(new InternalServicesConfig(
+                timeTableJobEventResource,
+                adminSummaryResource,
+                latestUploadResource,
+                notificationResource,
+                changeLogResource)));
         internalJersey.addUrlMappings("/services/events/*");
         internalJersey.setName("InternalJersey");
         internalJersey.setLoadOnStartup(0);
@@ -50,9 +61,13 @@ public class JerseyConfig {
 
 
     @Bean
-    public ServletRegistrationBean<ServletContainer> externalJersey() {
+    public ServletRegistrationBean<ServletContainer> externalJersey(
+            @Lazy TimetableDataDeliveryStatusResource timetableDataDeliveryStatusResource,
+            @Lazy ExternalOpenApiResource externalOpenApiResource) {
         ServletRegistrationBean<ServletContainer> externalJersey
-                = new ServletRegistrationBean<>(new ServletContainer(new ExternalServicesConfig()));
+                = new ServletRegistrationBean<>(new ServletContainer(new ExternalServicesConfig(
+                timetableDataDeliveryStatusResource,
+                externalOpenApiResource)));
         externalJersey.addUrlMappings("/services/events-external/*");
         externalJersey.setName("ExternalJersey");
         externalJersey.setLoadOnStartup(0);
@@ -62,14 +77,22 @@ public class JerseyConfig {
 
     private static class InternalServicesConfig extends ResourceConfig {
 
-        InternalServicesConfig() {
+        InternalServicesConfig(
+                TimeTableJobEventResource timeTableJobEventResource,
+                AdminSummaryResource adminSummaryResource,
+                LatestUploadResource latestUploadResource,
+                NotificationResource notificationResource,
+                ChangeLogResource changeLogResource) {
             register(CorsResponseFilter.class);
 
-            register(TimeTableJobEventResource.class);
-            register(AdminSummaryResource.class);
-            register(LatestUploadResource.class);
-            register(NotificationResource.class);
-            register(ChangeLogResource.class);
+            // Register the Spring-managed bean instances (not the classes) so they are fully
+            // initialised by Spring (incl. @PreAuthorize proxying). The Jersey/Spring bridge in
+            // Boot 4.0 no longer runs @PostConstruct / @PreAuthorize on resources registered by class.
+            register(timeTableJobEventResource);
+            register(adminSummaryResource);
+            register(latestUploadResource);
+            register(notificationResource);
+            register(changeLogResource);
 
             register(NotAuthenticatedExceptionMapper.class);
             register(AccessDeniedExceptionMapper.class);
@@ -83,11 +106,13 @@ public class JerseyConfig {
 
     private static class ExternalServicesConfig extends ResourceConfig {
 
-        ExternalServicesConfig() {
+        ExternalServicesConfig(
+                TimetableDataDeliveryStatusResource timetableDataDeliveryStatusResource,
+                ExternalOpenApiResource externalOpenApiResource) {
             register(CorsResponseFilter.class);
 
-            register(TimetableDataDeliveryStatusResource.class);
-            register(ExternalOpenApiResource.class);
+            register(timetableDataDeliveryStatusResource);
+            register(externalOpenApiResource);
 
             register(JacksonConfig.class);
 
