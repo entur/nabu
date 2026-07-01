@@ -96,3 +96,5 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "nabu.common.labels" . | indent 4 }}
+  annotations:
+    {{- include "nabu.common.annotations" . | indent 4 }}

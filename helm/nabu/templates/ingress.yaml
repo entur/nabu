@@ -6,6 +6,7 @@ metadata:
     {{- include "nabu.common.labels" . | indent 4 }}
   annotations:
     kubernetes.io/ingress.class: traefik
+    {{- include "nabu.common.annotations" . | indent 4 }}
   name: timetable-admin-v1-events
   namespace: {{ .Release.Namespace }}
 spec:
