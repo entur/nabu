@@ -30,8 +30,8 @@ variable "crud_event_pusub_role" {
 }
 
 variable "crud_event_publishers" {
-    description = "Service accounts that will publish to crud event topic"
-    type        = set(string)
+  description = "Service accounts that will publish to crud event topic"
+  type        = set(string)
 }
 
 variable "service_account" {
