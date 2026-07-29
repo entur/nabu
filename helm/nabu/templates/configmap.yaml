@@ -82,10 +82,10 @@ data:
     # Spring Boot Actuator
     management.server.port= {{ .Values.common.service.internalPort }}
     management.endpoints.access.default=none
-    management.endpoint.info.enabled=true
-    management.endpoint.health.enabled=true
+    management.endpoint.info.access=unrestricted
+    management.endpoint.health.access=unrestricted
     management.endpoint.health.group.readiness.include=readinessState,db
-    management.endpoint.prometheus.enabled=true
+    management.endpoint.prometheus.access=unrestricted
     management.endpoints.web.exposure.include=info,health,prometheus
     management.health.mail.enabled=false
     management.health.pubsub.enabled=false
