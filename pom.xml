@@ -73,6 +73,10 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-webclient</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.entur.ror.helpers</groupId>
