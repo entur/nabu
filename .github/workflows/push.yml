@@ -12,15 +12,15 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6.1.0
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v5.6.0
+      - uses: actions/setup-java@v5.7.0
         with:
-          java-version: 21.0.5+11
+          java-version: 25.0.4
           distribution: liberica
       - name: Cache Maven dependencies
-        uses: actions/cache@v5.1.0
+        uses: actions/cache@v6.1.0
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -57,6 +57,26 @@ jobs:
       path: 'src/main/resources/openapi/openapi-events-external.json'
       upload_to_bucket: ${{ github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
 
+  docker-smoke:
+    needs: [maven-verify]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/download-artifact@v8.0.1
+        with:
+          name: artifact
+          path: target
+      - run: docker build -t nabu:smoke .
+      # Nothing else in CI runs the image. Reaching Spring's startup line proves the JRE loaded the
+      # application bytecode; it then fails on config that only exists in the cluster, which is fine.
+      # A wrong class file version or an unusable base image never gets that far.
+      - run: |
+          timeout 180 docker run --rm -e SPRING_CLOUD_GCP_SQL_ENABLED=false nabu:smoke 2>&1 | tee smoke.log || true
+          grep -q "using Java" smoke.log
+
   docker-build:
     if: github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: [maven-verify]
@@ -65,7 +85,7 @@ jobs:
       build_artifact_name: artifact
       build_artifact_path: target
   docker-push:
-    needs: [docker-build]
+    needs: [docker-build, docker-smoke]
     uses: entur/gha-docker/.github/workflows/push.yml@v1.11.0
 
   helm-lint:

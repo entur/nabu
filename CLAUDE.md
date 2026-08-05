@@ -13,8 +13,8 @@
 ## Technology Stack
 
 ### Core Technologies
-- **Language**: Java 21
-- **Framework**: Spring Boot 3.x
+- **Language**: Java 25
+- **Framework**: Spring Boot 4.1
 - **Web Layer**: Jersey (JAX-RS) for REST APIs
 - **Database**: PostgreSQL with PostGIS spatial extensions
 - **ORM**: Hibernate/JPA with Spatial support
@@ -224,7 +224,7 @@ The project uses GitHub Actions (`.github/workflows/push.yml`) with the followin
 
 1. **maven-verify**: 
    - Builds and tests the application
-   - Runs on Ubuntu 24.04 with Java 21
+   - Runs on Ubuntu 24.04 with Java 25
    - Caches Maven dependencies
    - Uploads build artifacts
    - Performs SonarCloud code analysis
