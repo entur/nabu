@@ -33,7 +33,7 @@ common:
         name: application-config
   configmap:
     data:
-      JDK_JAVA_OPTIONS: -server -Xmx768m -Xms512m -Dspring.config.location=/etc/application-config/application.properties
+      JDK_JAVA_OPTIONS: -server -Xmx768m -Xms512m -XX:+IgnoreUnrecognizedVMOptions --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow -Dspring.config.location=/etc/application-config/application.properties
         -Dfile.encoding=UTF-8
       TZ: Europe/Oslo
     enabled: true

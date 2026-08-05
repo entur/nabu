@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.entur.ror</groupId>
         <artifactId>superpom</artifactId>
-        <version>6.5.0</version>
+        <version>7.0.0</version>
     </parent>
 
     <groupId>no.rutebanken</groupId>
@@ -46,9 +46,8 @@
     </repositories>
 
     <properties>
-        <java.version>21</java.version>
         <entur.helpers.version>7.2.0</entur.helpers.version>
-        <spring-cloud-gcp-dependencies.version>7.4.10</spring-cloud-gcp-dependencies.version>
+        <spring-cloud-gcp-dependencies.version>8.1.0</spring-cloud-gcp-dependencies.version>
         <postgis-jdbc.version>2025.1.1</postgis-jdbc.version>
         <wololo.version>0.18.1</wololo.version>
         <swagger-jersey2.version>2.2.52</swagger-jersey2.version>
@@ -62,8 +61,9 @@
     <dependencyManagement>
         <dependencies>
             <!--
-              Must precede spring-cloud-gcp-dependencies, which pins opentelemetry-api to an older
-              version than the rest of the opentelemetry modules resolve to. First declaration wins.
+              Keeps the whole opentelemetry graph on one version when spring-cloud-gcp and Spring Boot
+              disagree on it. First declaration wins, so this pins every module to Boot's
+              opentelemetry.version.
             -->
             <dependency>
                 <groupId>io.opentelemetry</groupId>
