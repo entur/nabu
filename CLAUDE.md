@@ -14,7 +14,7 @@
 
 ### Core Technologies
 - **Language**: Java 25
-- **Framework**: Spring Boot 3.x
+- **Framework**: Spring Boot 4.1
 - **Web Layer**: Jersey (JAX-RS) for REST APIs
 - **Database**: PostgreSQL with PostGIS spatial extensions
 - **ORM**: Hibernate/JPA with Spatial support
