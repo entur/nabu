@@ -51,7 +51,7 @@ jobs:
 
   Openapi-lint:
     needs: [ maven-verify ]
-    uses: entur/gha-api/.github/workflows/lint.yml@v6.3.1
+    uses: entur/gha-api/.github/workflows/lint.yml@v6.3.2
     secrets: inherit
     with:
       path: 'src/main/resources/openapi/openapi-events-external.json'
