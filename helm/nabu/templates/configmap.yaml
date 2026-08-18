@@ -68,6 +68,9 @@ data:
     spring.cloud.gcp.pubsub.subscriber.flow-control.limit-exceeded-behavior=Block
     spring.cloud.gcp.pubsub.subscriber.max-ack-extension-period=36000
     entur.pubsub.subscriber.autocreate=false
+    # A subscriber that fails on a non-retryable status never restarts. Break liveness so
+    # the pod is replaced; the ERROR line alone would leave it running and consuming nothing.
+    entur.pubsub.consumer.break-liveness-on-terminal-failure=true
 
     # Quartz
     quartz.enabled=true
