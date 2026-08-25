@@ -499,6 +499,25 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void testGraphJobActionsMatchTheActionsMardukPublishes() throws Exception {
+        // JobEventMatcher compares filter actions to JobEvent.getAction() as plain strings, so an
+        // advertised name that marduk never publishes can only ever match via the "*" wildcard.
+        ResponseEntity<String> response = restTemplate.getForEntity(
+                baseUrl + "/services/events/notifications/job_actions/GRAPH",
+                String.class
+        );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        List<String> actions = new ArrayList<>();
+        objectMapper.readTree(response.getBody()).forEach(node -> actions.add(node.asText()));
+
+        assertTrue(actions.contains("OTP2_BUILD_GRAPH"), "advertised GRAPH actions were " + actions);
+        assertTrue(actions.contains("OTP2_BUILD_BASE"), "advertised GRAPH actions were " + actions);
+        assertFalse(actions.contains("BUILD_GRAPH"), "BUILD_GRAPH is published by nothing in the pipeline");
+        assertFalse(actions.contains("BUILD_BASE"), "BUILD_BASE is published by nothing in the pipeline");
+    }
+
+    @Test
     void testJobActionsForRetiredGeocoderDomainIsRejected() {
         // GEOCODER was removed from JobEvent.JobDomain; a legacy request must be rejected
         // (Jersey can no longer coerce the path param to the enum), not silently served.
