@@ -127,10 +127,12 @@ public class NotificationResource {
         // to an action list. Unknown values can't reach this method - Jersey rejects a
         // @PathParam that does not match an enum constant before the body runs.
         actions.addAll(switch (jobDomain) {
-            case GRAPH -> List.of("BUILD_BASE", "BUILD_GRAPH");
+            // These must match the action names marduk publishes, see JobEvent.TimetableAction in that repo.
+            // Nothing here can be derived from a local enum, so a rename in marduk silently breaks filtering.
+            case GRAPH -> List.of("OTP2_BUILD_GRAPH", "OTP2_BUILD_BASE");
             case TIAMAT -> List.of("EXPORT");
             case TIMETABLE -> Arrays.stream(TimeTableAction.values()).map(Enum::name).toList();
-            case TIMETABLE_PUBLISH -> List.of("EXPORT_NETEX_MERGED", "EXPORT_GOOGLE_GTFS");
+            case TIMETABLE_PUBLISH -> List.of("EXPORT_NETEX_MERGED", "EXPORT_GTFS_MERGED");
         });
         return actions;
     }
