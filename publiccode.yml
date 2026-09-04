@@ -1,0 +1,52 @@
+publiccodeYmlVersion: "0.5.0"
+
+name: Nabu
+url: https://github.com/entur/nabu
+landingURL: https://github.com/entur/nabu
+
+platforms:
+  - linux
+  - web
+
+categories:
+  - data-collection
+  - it-management
+
+developmentStatus: stable
+softwareType: standalone/backend
+
+organisation:
+  name: Entur AS
+  uri: https://entur.no
+
+usedBy:
+  - Norway (nationwide), Entur
+
+description:
+  en:
+    localisedName: Nabu
+    shortDescription: Event and status registry for the timetable data pipeline.
+    longDescription: >
+      Nabu stores the events every pipeline step emits and serves them over a REST API, giving a queryable history
+      of each delivery: when it arrived, which steps it passed and where it failed.
+    documentation: https://github.com/entur/nabu/blob/master/README.md
+    features:
+      - Persistent event log for all pipeline steps
+      - REST API for job status and delivery history
+      - Per-provider status aggregation
+
+legal:
+  license: EUPL-1.2
+  mainCopyrightOwner: Entur AS
+
+maintenance:
+  type: internal
+  contacts:
+    - name: Entur Open Data and Journey Planning
+      email: kollektivdata@entur.org
+      affiliation: Entur AS
+
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - en
