@@ -75,17 +75,29 @@ mvn test
 ```
 
 ### Docker Build
+The image is built from the root `Dockerfile`: a Liberica JRE builder stage extracts the Spring Boot
+layered jar, and the runtime stage is `gcr.io/distroless/java25-debian13:nonroot` (Temurin JRE, no
+shell, no package manager, uid 65532). JVM flags are passed with `JDK_JAVA_OPTIONS`, which the
+`java` launcher reads itself; the runtime config file is mounted at
+`/etc/application-config/application.properties`, matching the Helm chart.
+
 ```bash
-# Build Docker image (with H2 profile)
-mvn -Pf8-build,h2
+# Build the jar, then the image
+mvn verify
+docker build -t nabu:latest .
 
 # Run in Docker (development)
-docker run -it --name nabu \
-  -e JAVA_OPTIONS="-Xmx1280m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" \
-  -p 5005:5005 \
-  -v /path/to/application.properties:/app/config/application.properties:ro \
+docker run -it --rm --name nabu \
+  -e JDK_JAVA_OPTIONS="-Xmx1280m -Dspring.config.location=/etc/application-config/application.properties -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" \
+  -e TZ=Europe/Oslo \
+  -p 9004:9004 -p 5005:5005 \
+  -v /path/to/application.properties:/etc/application-config/application.properties:ro \
   nabu:latest
 ```
+
+There is no shell in the image. To inspect it, temporarily build with the
+`gcr.io/distroless/java25-debian13:debug-nonroot` tag (busybox), or use `kubectl debug` with an
+ephemeral container in the cluster.
 
 ### Configuration
 Example `application.properties` for development:

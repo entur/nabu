@@ -55,8 +55,8 @@ spring.datasource.initializationFailFast=false
 * Building
 `mvn clean install`
 
-* Building docker image (using profile h2 for in-memory DB)
-`mvn -Pf8-build,h2`
+* Building docker image (distroless runtime, see `Dockerfile`)
+`mvn verify && docker build -t nabu:latest .`
 
 * Running
 `mvn spring-boot:run -Ph2 -Dspring.config.location=/path/to/application.properties`
@@ -65,10 +65,9 @@ spring.datasource.initializationFailFast=false
 `curl -vX POST -F "file=@\"avinor-netex_201609291122.zip\"" http://localhost:9004/jersey/files/21`
 
 * Running in docker (development)
-`docker rm -f nabu ; docker run -it --name nabu -e JAVA_OPTIONS="-Xmx1280m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" -p 5005:5005 -v /git/config/nabu/dev/application.properties:/app/config/application.properties:ro dr.rutebanken.org/rutebanken/nabu:0.0.1-SNAPSHOT`
+`docker run -it --rm --name nabu -e JDK_JAVA_OPTIONS="-Xmx1280m -Dspring.config.location=/etc/application-config/application.properties -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005" -e TZ=Europe/Oslo -p 9004:9004 -p 5005:5005 -v /path/to/application.properties:/etc/application-config/application.properties:ro nabu:latest`
 
-* Running in docker (test ++)
-`docker run -it --name nabu -e JAVA_OPTIONS="-Xmx1280m" --link some-postgres -v /git/config/nabu/test/application.properties:/app/config/application.properties:ro dr.rutebanken.org/rutebanken/nabu:0.0.1-SNAPSHOT`
+The runtime image is distroless: no shell or package manager. For a shell, build with the `debug-nonroot` tag of the same base image.
 
 
 # Flyway
