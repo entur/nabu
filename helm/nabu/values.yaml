@@ -19,6 +19,10 @@ common:
         path: /actuator/health/liveness
       readiness:
         path: /actuator/health/readiness
+      # Give Flyway room to build the event index (V6) at startup before
+      # liveness kicks in. 600 x 1s instead of the chart default 300.
+      startup:
+        failureThreshold: 600
     prometheus:
       enabled: true
       path: /actuator/prometheus
