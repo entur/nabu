@@ -287,16 +287,19 @@
           "startedAt": {
             "type": "string",
             "format": "date-time",
+            "nullable": true,
             "description": "When the stage started. Null if no start was recorded, which happens when the stage's final event was relayed ahead of its start event."
           },
           "completedAt": {
             "type": "string",
             "format": "date-time",
+            "nullable": true,
             "description": "When the stage reached its final state. Null while the stage is unfinished."
           },
           "errorCode": {
             "type": "string",
             "description": "Why the stage failed. Null unless status is FAILED, and null on a FAILED stage that never reported a reason. Deliberately not an enumeration: new codes are added upstream and are additive.",
+            "nullable": true,
             "example": "ERROR_FILE_INVALID_XML_CONTENT"
           }
         }
