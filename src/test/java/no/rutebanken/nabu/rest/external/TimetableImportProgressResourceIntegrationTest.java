@@ -112,8 +112,12 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
     }
 
     private void saveEvent(String correlationId, Long providerId, String action, JobState state, long secondsAfterT0) {
+        saveEvent(JobEvent.JobDomain.TIMETABLE, correlationId, providerId, action, state, secondsAfterT0);
+    }
+
+    private void saveEvent(JobEvent.JobDomain domain, String correlationId, Long providerId, String action, JobState state, long secondsAfterT0) {
         transactionTemplate.execute(status -> {
-            JobEvent event = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file.zip", providerId,
+            JobEvent event = new JobEvent(domain.toString(), "file.zip", providerId,
                     null, action, state, correlationId, T0.plusSeconds(secondsAfterT0), "ost");
             eventRepository.save(event);
             return null;
@@ -277,6 +281,24 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
         String correlationId = "corr-auto-import-disabled";
         saveEvent(correlationId, PROVIDER_A, "FILE_TRANSFER", JobState.OK, 0);
         saveEvent(correlationId, PROVIDER_A, "IMPORT", JobState.CANCELLED, 1);
+
+        when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
+
+        JsonNode stages = objectMapper.readTree(get(correlationId).getBody()).get("stages");
+
+        assertEquals(1, stages.size());
+        assertEquals("FILE_TRANSFER", stages.get(0).get("stage").asText());
+    }
+
+    /**
+     * An event recorded under a domain unrelated to a timetable import must not be picked up just
+     * because it happens to share the correlation id.
+     */
+    @Test
+    void anEventFromAnUnrelatedDomainIsNotIncluded() throws Exception {
+        String correlationId = "corr-with-unrelated-domain-event";
+        saveEvent(correlationId, PROVIDER_A, "FILE_TRANSFER", JobState.OK, 0);
+        saveEvent(JobEvent.JobDomain.TIAMAT, correlationId, PROVIDER_A, "EXPORT", JobState.OK, 1);
 
         when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
 

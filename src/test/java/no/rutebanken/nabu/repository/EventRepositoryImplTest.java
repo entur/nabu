@@ -147,7 +147,7 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
         repository.save(provider4Event);
         JobEvent otherCorrelation = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.TIMEOUT, CORR_ID_2, now, "ost");
         repository.save(otherCorrelation);
-        JobEvent otherDomain = new JobEvent(JobEvent.JobDomain.GRAPH.toString(), "file1.zip", 3L, "3", TimeTableAction.OTP2_BUILD_GRAPH.toString(), JobState.OK, CORR_ID_1, now, "ost");
+        JobEvent otherDomain = new JobEvent(JobEvent.JobDomain.TIAMAT.toString(), "file1.zip", 3L, "3", "EXPORT", JobState.OK, CORR_ID_1, now, "ost");
         repository.save(otherDomain);
 
         List<JobEvent> events = repository.getCorrelatedTimetableEvents(CORR_ID_1);
