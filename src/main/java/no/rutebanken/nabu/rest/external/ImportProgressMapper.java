@@ -127,13 +127,16 @@ final class ImportProgressMapper {
             return Optional.empty();
         }
 
+        Instant completedAt = JobEventAggregation.isTerminal(latest.getState()) ? latest.getEventTime() : null;
+
+        // Not every step reports a start of its own; some publish only their terminal event. Such a
+        // stage falls back to the time it finished, so a stage that has demonstrably run never
+        // reports a null start. That leaves startedAt null only while the stage is still PENDING.
         Instant startedAt = eventsForAction.stream()
                 .filter(event -> JobState.STARTED.equals(event.getState()))
                 .map(JobEvent::getEventTime)
                 .min(Comparator.naturalOrder())
-                .orElse(null);
-
-        Instant completedAt = JobEventAggregation.isTerminal(latest.getState()) ? latest.getEventTime() : null;
+                .orElse(completedAt);
 
         // marduk reads whatever JOB_ERROR_CODE sits on the exchange, so a code can be inherited from
         // an earlier step. Keyed on JobState.FAILED, not the external FAILED that TIMEOUT also maps

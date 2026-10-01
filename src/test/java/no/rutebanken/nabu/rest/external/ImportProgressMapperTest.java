@@ -210,17 +210,39 @@ class ImportProgressMapperTest {
         assertNull(stage.getCompletedAt());
     }
 
+    /**
+     * Some steps publish only their terminal event. Reporting no start for a stage that has
+     * demonstrably run would be misleading, so it falls back to the time it finished.
+     */
     @Test
-    void leavesStartedAtNullWhenTheTerminalEventOvertookTheStartEvent() {
+    void aStageThatOnlyReportedItsTerminalEventStartsWhenItFinished() {
+        ImportProgressStage stage = onlyStage(List.of(
+                event("FILE_TRANSFER", JobState.OK, 4)));
+
+        assertEquals(ImportProgressStage.StatusEnum.COMPLETED, stage.getStatus());
+        assertEquals(OffsetDateTime.parse("2026-09-30T10:30:04Z"), stage.getStartedAt());
+        assertEquals(OffsetDateTime.parse("2026-09-30T10:30:04Z"), stage.getCompletedAt());
+    }
+
+    @Test
+    void fallsBackToTheCompletionTimeWhenTheTerminalEventOvertookTheStartEvent() {
         // The OK at +1 precedes the STARTED at +2, so the STARTED is dropped as stale and the stage
-        // never reports a start.
+        // has no start of its own left to report.
         ImportProgressStage stage = onlyStage(List.of(
                 event("LINKING", JobState.OK, 1),
                 event("LINKING", JobState.STARTED, 2)));
 
         assertEquals(ImportProgressStage.StatusEnum.COMPLETED, stage.getStatus());
-        assertNull(stage.getStartedAt());
+        assertEquals(OffsetDateTime.parse("2026-09-30T10:30:01Z"), stage.getStartedAt());
         assertEquals(OffsetDateTime.parse("2026-09-30T10:30:01Z"), stage.getCompletedAt());
+    }
+
+    /**
+     * The flip side of the fallback: startedAt is null only while a stage is still queued.
+     */
+    @Test
+    void startedAtIsNullOnlyWhileAStageIsPending() {
+        assertNull(onlyStage(List.of(event("LINKING", JobState.PENDING, 1))).getStartedAt());
     }
 
     @Test

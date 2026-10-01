@@ -288,7 +288,7 @@
             "type": "string",
             "format": "date-time",
             "nullable": true,
-            "description": "When the stage started. Null if no start was recorded, which happens when the stage's final event was relayed ahead of its start event."
+            "description": "When the stage started. Not every step reports a start of its own, and one that does not falls back to the time it finished. Null only while the stage is still PENDING."
           },
           "completedAt": {
             "type": "string",

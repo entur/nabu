@@ -320,6 +320,8 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
 
         assertEquals(1, stages.size());
         assertEquals("COMPLETED", stages.get(0).get("status").asText());
-        assertTrue(stages.get(0).get("startedAt").isNull());
+        // The STARTED was dropped as stale, so the stage falls back to the time it finished.
+        assertEquals("2026-09-30T10:30:02Z", stages.get(0).get("startedAt").asText());
+        assertEquals("2026-09-30T10:30:02Z", stages.get(0).get("completedAt").asText());
     }
 }
