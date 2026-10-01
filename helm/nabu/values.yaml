@@ -9,7 +9,7 @@ common:
     internalPort: 9004
   container:
     labels: {customLogRetention: enabled}
-    forceReplicas: 1
+    replicas: 1
     image: <+artifacts.primary.image>
     cpu: 0.3
     memory: 1200
@@ -19,6 +19,10 @@ common:
         path: /actuator/health/liveness
       readiness:
         path: /actuator/health/readiness
+      # Give Flyway room to build the event index (V6) at startup before
+      # liveness kicks in. 600 x 1s instead of the chart default 300.
+      startup:
+        failureThreshold: 600
     prometheus:
       enabled: true
       path: /actuator/prometheus

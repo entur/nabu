@@ -1,6 +1,9 @@
 common:
   env: prd
   replicas: 1
+  container:
+    # Chart forces HPA in prd unless forceReplicas is set, and Recreate if it is 1
+    forceReplicas: 2
 
 
 ingress:
