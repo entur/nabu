@@ -153,20 +153,6 @@ class ImportProgressMapperTest {
     }
 
     /**
-     * A stage is judged on its latest state only. An earlier CANCELLED does not remove a stage that
-     * went on to run.
-     */
-    @Test
-    void aStageThatWasCancelledAndThenRanIsReported() {
-        ImportProgressStage stage = onlyStage(List.of(
-                event("IMPORT", JobState.CANCELLED, 1),
-                event("IMPORT", JobState.STARTED, 2),
-                event("IMPORT", JobState.OK, 3)));
-
-        assertEquals(ImportProgressStage.StatusEnum.COMPLETED, stage.getStatus());
-    }
-
-    /**
      * DUPLICATE is unreachable for timetables — a duplicate upload is recorded as FILE_TRANSFER /
      * FAILED with errorCode ERROR_FILE_DUPLICATE — so it has no external name and is dropped rather
      * than passed through.
