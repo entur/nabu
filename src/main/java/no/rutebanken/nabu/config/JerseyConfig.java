@@ -24,6 +24,7 @@ import no.rutebanken.nabu.rest.internal.LatestUploadResource;
 import no.rutebanken.nabu.rest.internal.NotificationResource;
 import no.rutebanken.nabu.rest.internal.TimeTableJobEventResource;
 import no.rutebanken.nabu.rest.external.TimetableDataDeliveryStatusResource;
+import no.rutebanken.nabu.rest.external.TimetableImportProgressResource;
 import no.rutebanken.nabu.rest.exception.AccessDeniedExceptionMapper;
 import no.rutebanken.nabu.rest.exception.NotAuthenticatedExceptionMapper;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -63,10 +64,12 @@ public class JerseyConfig {
     @Bean
     public ServletRegistrationBean<ServletContainer> externalJersey(
             @Lazy TimetableDataDeliveryStatusResource timetableDataDeliveryStatusResource,
+            @Lazy TimetableImportProgressResource timetableImportProgressResource,
             @Lazy ExternalOpenApiResource externalOpenApiResource) {
         ServletRegistrationBean<ServletContainer> externalJersey
                 = new ServletRegistrationBean<>(new ServletContainer(new ExternalServicesConfig(
                 timetableDataDeliveryStatusResource,
+                timetableImportProgressResource,
                 externalOpenApiResource)));
         externalJersey.addUrlMappings("/services/events-external/*");
         externalJersey.setName("ExternalJersey");
@@ -108,10 +111,12 @@ public class JerseyConfig {
 
         ExternalServicesConfig(
                 TimetableDataDeliveryStatusResource timetableDataDeliveryStatusResource,
+                TimetableImportProgressResource timetableImportProgressResource,
                 ExternalOpenApiResource externalOpenApiResource) {
             register(CorsResponseFilter.class);
 
             register(timetableDataDeliveryStatusResource);
+            register(timetableImportProgressResource);
             register(externalOpenApiResource);
 
             register(JacksonConfig.class);
