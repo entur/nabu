@@ -9,7 +9,7 @@ common:
     internalPort: 9004
   container:
     labels: {customLogRetention: enabled}
-    forceReplicas: 1
+    replicas: 1
     image: <+artifacts.primary.image>
     cpu: 0.3
     memory: 1200
