@@ -43,6 +43,8 @@ import java.time.Instant;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -178,8 +180,10 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
     }
 
     /**
-     * An import that crossed into a migration target dataspace still records the originating
-     * provider on its events, so it authorizes against the originating codespace.
+     * An import that crossed into a migration target dataspace records events under two providers.
+     * The provider is resolved from the earliest event, so both the authorization check and the
+     * reported codespace settle on the originating provider rather than on whichever row the
+     * database happened to return first.
      */
     @Test
     void anImportThatCrossedIntoAMigrationDataspaceIsAuthorizedAgainstTheOriginatingCodespace() {
@@ -188,11 +192,12 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
         saveEvent(correlationId, PROVIDER_A_MIGRATION_TARGET, "DATASPACE_TRANSFER", JobState.OK, 10);
 
         when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
-        when(authorizationService.canEditRouteData(PROVIDER_A_MIGRATION_TARGET)).thenReturn(true);
 
         ResponseEntity<String> response = get(correlationId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        verify(authorizationService).canEditRouteData(PROVIDER_A);
+        verify(authorizationService, never()).canEditRouteData(PROVIDER_A_MIGRATION_TARGET);
     }
 
     // ---- Response ------------------------------------------------------------------------------
