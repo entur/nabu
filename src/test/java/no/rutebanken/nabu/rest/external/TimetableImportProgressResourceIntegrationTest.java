@@ -333,11 +333,11 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
     }
 
     /**
-     * A cancelled stage is not exposed at all, so a provider with auto-import disabled sees the
-     * transfer and nothing after it.
+     * A cancelled stage reports FAILED, so a provider with auto-import disabled sees the transfer
+     * complete and the import fail on every delivery.
      */
     @Test
-    void aCancelledStageIsAbsentFromTheResponse() throws Exception {
+    void aCancelledStageReportsFailed() throws Exception {
         String correlationId = "corr-auto-import-disabled";
         saveEvent(correlationId, PROVIDER_A, "FILE_TRANSFER", JobState.OK, 0);
         saveEvent(correlationId, PROVIDER_A, "IMPORT", JobState.CANCELLED, 1);
@@ -346,8 +346,11 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
 
         JsonNode stages = objectMapper.readTree(get(correlationId).getBody()).get("stages");
 
-        assertEquals(1, stages.size());
+        assertEquals(2, stages.size());
         assertEquals("FILE_TRANSFER", stages.get(0).get("stage").asText());
+        assertEquals("IMPORT", stages.get(1).get("stage").asText());
+        assertEquals("FAILED", stages.get(1).get("status").asText());
+        assertTrue(stages.get(1).get("errorCode").isNull());
     }
 
     /**

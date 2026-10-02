@@ -62,15 +62,10 @@ public class TimetableImportProgressResource implements ProgressApi {
             throw new NotFoundException("Correlation id not found");
         }
 
-        Provider provider;
-        try {
-            provider = resolveProvider(events, correlationId);
-        } catch (IllegalStateException e) {
-            // Only the unexpected path is logged. An unknown correlation id and an unentitled caller
-            // are ordinary outcomes of a polled endpoint, and logging those would bury this one.
-            logger.error("Could not resolve the provider for correlation id '{}': {}", correlationId, e.getMessage(), e);
-            throw e;
-        }
+        // Both failures resolveProvider can raise name the correlation id and the provider in their
+        // message, and the servlet container logs an unmapped exception with its root cause, so
+        // catching to log here would only duplicate the stack trace.
+        Provider provider = resolveProvider(events, correlationId);
         String codespace = provider.getChouetteInfo().xmlns;
 
         // Runs here rather than in a @PreAuthorize because the codespace is resolved from the events

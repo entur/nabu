@@ -121,16 +121,18 @@ class ImportProgressMapperTest {
     // ---- Status vocabulary ---------------------------------------------------------------------
 
     /**
-     * TIMEOUT is folded into FAILED: a stage that never came back is a failure, and the distinction
-     * is not one an external consumer can act on.
+     * TIMEOUT and CANCELLED are folded into FAILED: a stage that never came back and one that was
+     * called off both failed to produce a result, and the distinction is not one an external
+     * consumer can act on.
      */
     @ParameterizedTest
     @CsvSource({
-            "PENDING, PENDING",
-            "STARTED, IN_PROGRESS",
-            "OK,      COMPLETED",
-            "FAILED,  FAILED",
-            "TIMEOUT, FAILED"
+            "PENDING,   PENDING",
+            "STARTED,   IN_PROGRESS",
+            "OK,        COMPLETED",
+            "FAILED,    FAILED",
+            "TIMEOUT,   FAILED",
+            "CANCELLED, FAILED"
     })
     void mapsEveryExposedJobStateToItsExternalStatus(String state, String expectedStatus) {
         assertEquals(ImportProgressStage.StatusEnum.valueOf(expectedStatus),
@@ -144,7 +146,7 @@ class ImportProgressMapperTest {
      */
     @Test
     void everyJobStateIsEitherMappedOrDeliberatelyDropped() {
-        Set<JobState> deliberatelyDropped = Set.of(JobState.CANCELLED, JobState.DUPLICATE);
+        Set<JobState> deliberatelyDropped = Set.of(JobState.DUPLICATE);
 
         List<JobState> unaccounted = Arrays.stream(JobState.values())
                 .filter(state -> !deliberatelyDropped.contains(state))
@@ -155,19 +157,39 @@ class ImportProgressMapperTest {
     }
 
     /**
-     * CANCELLED is not exposed. It conflates "deliberately not performed for this provider" with
-     * "abandoned by a fault" and carries no error code either way, so there is nothing a partner
-     * could do with it; the stage is dropped rather than given a status that misleads.
+     * A stage called off after being queued reports FAILED, and carries no reason because a
+     * cancellation gives none of its own.
      */
     @Test
-    void aCancelledStageIsOmitted() {
+    void aCancelledStageReportsFailedWithoutAnErrorCode() {
         List<ImportProgressStage> stages = ImportProgressMapper.toImportProgress(CODESPACE, CORR_ID, List.of(
                 event("FILE_TRANSFER", JobState.OK, 1),
                 event("IMPORT", JobState.PENDING, 2),
                 event("IMPORT", JobState.CANCELLED, 3))).getStages();
 
-        assertEquals(List.of(ImportProgressStage.StageEnum.FILE_TRANSFER),
+        assertEquals(List.of(ImportProgressStage.StageEnum.FILE_TRANSFER, ImportProgressStage.StageEnum.IMPORT),
                 stages.stream().map(ImportProgressStage::getStage).toList());
+        assertEquals(ImportProgressStage.StatusEnum.FAILED, stages.getLast().getStatus());
+        assertNull(stages.getLast().getErrorCode());
+        // The stage never reported a start, so it falls back to the moment it was called off and
+        // both timestamps are the cancellation time.
+        assertEquals(OffsetDateTime.parse("2026-09-30T10:30:03Z"), stages.getLast().getStartedAt());
+        assertEquals(OffsetDateTime.parse("2026-09-30T10:30:03Z"), stages.getLast().getCompletedAt());
+    }
+
+    /**
+     * A cancellation gives no reason of its own, so any code sitting on the event was inherited from
+     * an earlier step and must not be presented as the cause.
+     */
+    @Test
+    void suppressesAnInheritedErrorCodeOnACancelledStage() {
+        JobEvent cancelled = event("IMPORT", JobState.CANCELLED, 2);
+        cancelled.setErrorCode("NO_JOURNEYS_IN_NETEX_DATASET");
+
+        ImportProgressStage stage = onlyStage(List.of(cancelled));
+
+        assertEquals(ImportProgressStage.StatusEnum.FAILED, stage.getStatus());
+        assertNull(stage.getErrorCode());
     }
 
     /**

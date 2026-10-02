@@ -88,7 +88,7 @@
           "timetable-delivery-status"
         ],
         "summary": "Get the per-stage progress of a timetable data delivery",
-        "description": "Return one element per pipeline stage observed for the delivery identified by its correlation id, each with its current status and, when it failed, the error code.\n\nThe response describes what happened, not what was planned. There is no fixed list of stages an import will run — which stages apply depends on the data provider and on the dataset — so only stages that actually reported something are returned. A stage absent from the response is one the import has not reached, or was not run for this provider, or that stopped the pipeline before it could start.\n\nThe GRAPH_BUILD stage reports a single Entur-wide graph build that is shared by all data providers.",
+        "description": "Return one element per pipeline stage observed for the delivery identified by its correlation id, each with its current status and, when it failed, the error code.\n\nThe response describes what happened, not what was planned. There is no fixed list of stages an import will run — which stages apply depends on the data provider and on the dataset — so only stages that actually reported something are returned. A stage absent from the response is one that recorded nothing at all: either the import has not reached it, or it does not apply to this provider or this dataset, or an earlier failure stopped the pipeline before it could start.\n\nThe GRAPH_BUILD stage reports a single Entur-wide graph build that is shared by all data providers.",
         "operationId": "getImportProgress",
         "parameters": [
           {
@@ -228,6 +228,11 @@
       "ImportProgress": {
         "type": "object",
         "description": "Per-stage progress of one timetable data delivery.",
+        "required": [
+          "codespace",
+          "correlationId",
+          "stages"
+        ],
         "properties": {
           "codespace": {
             "type": "string",
@@ -276,7 +281,7 @@
           },
           "status": {
             "type": "string",
-            "description": "FAILED covers both a stage that reported an error and one that never came back. An errorCode is present only in the first case.",
+            "description": "FAILED covers a stage that reported an error, one that never came back, and one that was called off before it could run — for example an import step on a provider that does not have automatic import enabled. An errorCode is present only in the first case. A delivery containing any such stage is also reported as FAILED by the status endpoint.",
             "enum": [
               "PENDING",
               "IN_PROGRESS",

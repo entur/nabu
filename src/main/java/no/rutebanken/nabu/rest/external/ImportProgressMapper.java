@@ -77,17 +77,19 @@ final class ImportProgressMapper {
             Map.entry("OTP2_BUILD_GRAPH", ImportProgressStage.StageEnum.GRAPH_BUILD));
 
     /**
-     * Internal job state to external status. TIMEOUT folds into FAILED. CANCELLED and DUPLICATE have
-     * no external name, so those stages are dropped rather than reported — CANCELLED because it
-     * conflates "not run for this provider" with "aborted by a fault" and carries no error code
-     * either way, DUPLICATE because it is unreachable for timetables.
+     * Internal job state to external status. TIMEOUT and CANCELLED fold into FAILED: whatever the
+     * reason, the stage did not succeed and will not run again under this correlation id, which is
+     * what a partner can act on. DUPLICATE has no external name and its stage is dropped instead,
+     * because it is unreachable for timetables — a duplicate upload is recorded as FILE_TRANSFER /
+     * FAILED with errorCode ERROR_FILE_DUPLICATE.
      */
     private static final Map<JobState, ImportProgressStage.StatusEnum> STATUS_BY_STATE = Map.of(
             JobState.PENDING, ImportProgressStage.StatusEnum.PENDING,
             JobState.STARTED, ImportProgressStage.StatusEnum.IN_PROGRESS,
             JobState.OK, ImportProgressStage.StatusEnum.COMPLETED,
             JobState.FAILED, ImportProgressStage.StatusEnum.FAILED,
-            JobState.TIMEOUT, ImportProgressStage.StatusEnum.FAILED);
+            JobState.TIMEOUT, ImportProgressStage.StatusEnum.FAILED,
+            JobState.CANCELLED, ImportProgressStage.StatusEnum.FAILED);
 
     private ImportProgressMapper() {
     }
@@ -149,8 +151,9 @@ final class ImportProgressMapper {
                 .orElse(completedAt);
 
         // marduk reads whatever JOB_ERROR_CODE sits on the exchange, so a code can be inherited from
-        // an earlier step. Keyed on JobState.FAILED, not the external FAILED that TIMEOUT also maps
-        // to: a timed-out stage gives no reason of its own, so any code on it was inherited.
+        // an earlier step. Keyed on JobState.FAILED, not the external FAILED that TIMEOUT and
+        // CANCELLED also map to: neither of those gives a reason of its own, so any code sitting on
+        // one of them was inherited.
         String errorCode = JobState.FAILED.equals(latest.getState()) ? latest.getErrorCode() : null;
 
         return Optional.of(new ImportProgressStage()
