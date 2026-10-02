@@ -24,6 +24,8 @@ import no.rutebanken.nabu.repository.EventRepository;
 import no.rutebanken.nabu.rest.openapi.api.ProgressApi;
 import no.rutebanken.nabu.rest.openapi.model.ImportProgress;
 import org.rutebanken.helper.organisation.authorization.AuthorizationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +38,8 @@ import java.util.List;
  */
 @Component
 public class TimetableImportProgressResource implements ProgressApi {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final EventRepository eventRepository;
     private final ProviderRepository providerRepository;
@@ -51,12 +55,22 @@ public class TimetableImportProgressResource implements ProgressApi {
 
     @Override
     public ImportProgress getImportProgress(String correlationId) {
+        logger.debug("Returning import progress for correlation id '{}'", correlationId);
+
         List<JobEvent> events = eventRepository.getCorrelatedTimetableEvents(correlationId);
         if (events.isEmpty()) {
             throw new NotFoundException("Correlation id not found");
         }
 
-        Provider provider = resolveProvider(events, correlationId);
+        Provider provider;
+        try {
+            provider = resolveProvider(events, correlationId);
+        } catch (IllegalStateException e) {
+            // Only the unexpected path is logged. An unknown correlation id and an unentitled caller
+            // are ordinary outcomes of a polled endpoint, and logging those would bury this one.
+            logger.error("Could not resolve the provider for correlation id '{}': {}", correlationId, e.getMessage(), e);
+            throw e;
+        }
         String codespace = provider.getChouetteInfo().xmlns;
 
         // Runs here rather than in a @PreAuthorize because the codespace is resolved from the events
@@ -71,9 +85,10 @@ public class TimetableImportProgressResource implements ProgressApi {
     }
 
     /**
-     * Assumes every event under one correlation id belongs to the same provider, which holds because
-     * every event is written by an Entur-internal publisher and correlation ids are random UUIDs.
-     * Not enforced.
+     * Resolve the provider that owns the import from its earliest event. The events of one
+     * correlation id need not all carry the same provider — an import that crosses into a migration
+     * target dataspace records the target on its later events — so the earliest one decides, which
+     * is the provider the data was delivered to.
      */
     private Provider resolveProvider(List<JobEvent> events, String correlationId) {
         Long providerId = events.stream()

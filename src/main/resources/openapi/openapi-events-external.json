@@ -298,9 +298,9 @@
           },
           "errorCode": {
             "type": "string",
-            "description": "Why the stage failed. Null unless status is FAILED, and null on a FAILED stage that never reported a reason. Deliberately not an enumeration: new codes are added upstream and are additive.",
+            "description": "Why the stage failed. Null unless status is FAILED, and null on a FAILED stage that never reported a reason — a failed validation is always one of those, because what was wrong with the data is answered by the validation report for the same correlation id rather than by a code here. Deliberately not an enumeration: new codes are added upstream and are additive.",
             "nullable": true,
-            "example": "ERROR_FILE_INVALID_XML_CONTENT"
+            "example": "NO_JOURNEYS_IN_NETEX_DATASET"
           }
         }
       }

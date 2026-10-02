@@ -200,6 +200,42 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
         verify(authorizationService, never()).canEditRouteData(PROVIDER_A_MIGRATION_TARGET);
     }
 
+    // ---- Provider resolution -------------------------------------------------------------------
+
+    /**
+     * Events exist but none names a provider, so there is no codespace to authorize against. The
+     * data is inconsistent rather than the request being wrong, so this is a server error and the
+     * caller is told nothing about the import.
+     */
+    @Test
+    void anImportWhoseEventsCarryNoProviderIsAServerError() {
+        String correlationId = "corr-without-provider";
+        saveEvent(correlationId, null, "FILE_TRANSFER", JobState.OK, 0);
+
+        when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
+
+        ResponseEntity<String> response = get(correlationId);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertFalse(String.valueOf(response.getBody()).contains("FILE_TRANSFER"),
+                "no stage data may leak into the error, body was: " + response.getBody());
+    }
+
+    /**
+     * The events name a provider the provider repository does not know, so no codespace can be
+     * resolved. Authorization must not be reached, let alone passed.
+     */
+    @Test
+    void anImportNamingAnUnknownProviderIsAServerError() {
+        String correlationId = "corr-with-unknown-provider";
+        saveEvent(correlationId, 404L, "FILE_TRANSFER", JobState.OK, 0);
+
+        ResponseEntity<String> response = get(correlationId);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        verify(authorizationService, never()).canEditRouteData(404L);
+    }
+
     // ---- Response ------------------------------------------------------------------------------
 
     /**

@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -134,6 +135,23 @@ class ImportProgressMapperTest {
     void mapsEveryExposedJobStateToItsExternalStatus(String state, String expectedStatus) {
         assertEquals(ImportProgressStage.StatusEnum.valueOf(expectedStatus),
                 onlyStage(List.of(event("LINKING", JobState.valueOf(state), 1))).getStatus());
+    }
+
+    /**
+     * The state counterpart of {@link #everyKnownTimeTableActionExceptCleanIsMapped}. CANCELLED and
+     * DUPLICATE are deliberately dropped; a state added to the enum without a mapping would
+     * otherwise silently remove its stage from the response, with nothing to notice it.
+     */
+    @Test
+    void everyJobStateIsEitherMappedOrDeliberatelyDropped() {
+        Set<JobState> deliberatelyDropped = Set.of(JobState.CANCELLED, JobState.DUPLICATE);
+
+        List<JobState> unaccounted = Arrays.stream(JobState.values())
+                .filter(state -> !deliberatelyDropped.contains(state))
+                .filter(state -> ImportProgressMapper.toImportProgress(CODESPACE, CORR_ID, List.of(event("LINKING", state, 1))).getStages().isEmpty())
+                .toList();
+
+        assertTrue(unaccounted.isEmpty(), "JobState values with no external status: " + unaccounted);
     }
 
     /**
