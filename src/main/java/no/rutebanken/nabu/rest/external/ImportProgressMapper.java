@@ -30,6 +30,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static no.rutebanken.nabu.event.support.DateUtils.atDefaultOffset;
@@ -40,6 +42,13 @@ import static no.rutebanken.nabu.event.support.DateUtils.atDefaultOffset;
 final class ImportProgressMapper {
 
     private static final Logger logger = LoggerFactory.getLogger(ImportProgressMapper.class);
+
+    /**
+     * Actions already reported as having no external stage name. The endpoint is polled, so without
+     * this the same deployment skew would log once per request for as long as it lasts. Bounded by
+     * marduk's action vocabulary, and cleared on restart so a deploy reports the skew afresh.
+     */
+    private static final Set<String> UNMAPPED_ACTIONS_LOGGED = ConcurrentHashMap.newKeySet();
 
     /**
      * Internal action name to external stage name.
@@ -116,14 +125,15 @@ final class ImportProgressMapper {
         if (stage == null) {
             // Deployment skew: marduk emits a step nabu has not been taught about. Monitoring this
             // log line is how a real pipeline step missing from the response gets noticed.
-            logger.warn("No external stage name for timetable action '{}' (correlation id '{}'); omitting it from the import progress response.", action, correlationId);
+            if (UNMAPPED_ACTIONS_LOGGED.add(action)) {
+                logger.warn("No external stage name for timetable action '{}' (correlation id '{}'); omitting it from the import progress response.", action, correlationId);
+            }
             return Optional.empty();
         }
 
         JobEvent latest = eventsForAction.getLast();
         ImportProgressStage.StatusEnum status = STATUS_BY_STATE.get(latest.getState());
         if (status == null) {
-            logger.info("Job state '{}' on timetable action '{}' (correlation id '{}') has no external status; omitting the stage from the import progress response.", latest.getState(), action, correlationId);
             return Optional.empty();
         }
 
