@@ -37,6 +37,16 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      */
     List<JobEvent> getCorrelatedTimetableEvents(List<Long> providerIds, String correlationId);
 
+    /**
+     * Return the unordered list of timetable job events for the given correlation id, across all
+     * providers.
+     * <p>
+     * Unlike {@link #getCorrelatedTimetableEvents(List, String)} this does not take a provider
+     * scope, because the caller of the import progress endpoint supplies only a correlation id and
+     * the owning codespace is resolved from the events themselves.
+     */
+    List<JobEvent> getCorrelatedTimetableEvents(String correlationId);
+
     List<CrudEvent> findCrudEvents(CrudEventSearch search);
 
     void clearJobEvents(String domain);

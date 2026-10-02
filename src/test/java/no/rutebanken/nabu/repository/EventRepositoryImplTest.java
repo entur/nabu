@@ -134,6 +134,28 @@ class EventRepositoryImplTest extends BaseIntegrationTest {
         assertTrue(statusList2.contains(s3));
     }
 
+    /**
+     * The import progress endpoint resolves the codespace from the events, so it cannot scope the
+     * query by provider. The lookup must therefore return every domain TIMETABLE event sharing the
+     * correlation id, whichever provider recorded it, and must not leak other domains.
+     */
+    @Test
+    void getCorrelatedTimetableEventsAcrossAllProviders() {
+        JobEvent provider3Event = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.OK, CORR_ID_1, now, "ost");
+        repository.save(provider3Event);
+        JobEvent provider4Event = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file1.zip", 4L, "2", TimeTableAction.EXPORT.toString(), JobState.FAILED, CORR_ID_1, now.plus(1, ChronoUnit.MINUTES), "ost");
+        repository.save(provider4Event);
+        JobEvent otherCorrelation = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file2.zip", 3L, "1", TimeTableAction.FILE_TRANSFER.toString(), JobState.TIMEOUT, CORR_ID_2, now, "ost");
+        repository.save(otherCorrelation);
+        JobEvent otherDomain = new JobEvent(JobEvent.JobDomain.TIAMAT.toString(), "file1.zip", 3L, "3", "EXPORT", JobState.OK, CORR_ID_1, now, "ost");
+        repository.save(otherDomain);
+
+        List<JobEvent> events = repository.getCorrelatedTimetableEvents(CORR_ID_1);
+
+        assertEquals(2, events.size());
+        assertTrue(events.containsAll(Arrays.asList(provider3Event, provider4Event)));
+    }
+
 
     @Test
     void testClearAll() {
