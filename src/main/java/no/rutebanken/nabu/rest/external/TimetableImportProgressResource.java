@@ -84,13 +84,19 @@ public class TimetableImportProgressResource implements ProgressApi {
      * correlation id need not all carry the same provider — an import that crosses into a migration
      * target dataspace records the target on its later events — so the earliest one decides, which
      * is the provider the data was delivered to.
+     * <p>
+     * The earliest event must name that provider itself. Every timetable event marduk publishes
+     * carries one, so an import whose first event does not is inconsistent, and falling through to a
+     * later event would authorize against a provider the delivery was not made to.
      */
     private Provider resolveProvider(List<JobEvent> events, String correlationId) {
-        Long providerId = events.stream()
-                .filter(event -> event.getProviderId() != null)
-                .min(JobEventAggregation.BY_EVENT_TIME)
-                .map(JobEvent::getProviderId)
-                .orElseThrow(() -> new IllegalStateException("No event for correlation id " + correlationId + " carries a provider id"));
+        // The caller has already rejected an empty list.
+        JobEvent earliest = events.stream().min(JobEventAggregation.BY_EVENT_TIME).orElseThrow();
+
+        Long providerId = earliest.getProviderId();
+        if (providerId == null) {
+            throw new IllegalStateException("The earliest event for correlation id " + correlationId + " carries no provider id");
+        }
 
         Provider provider = providerRepository.getProvider(providerId);
         if (provider == null || provider.getChouetteInfo() == null || provider.getChouetteInfo().xmlns == null) {

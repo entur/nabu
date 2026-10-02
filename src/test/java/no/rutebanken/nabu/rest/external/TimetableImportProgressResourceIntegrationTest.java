@@ -222,6 +222,25 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
     }
 
     /**
+     * Ownership is decided by the earliest event alone. A later event naming a provider does not
+     * stand in for a first event that names none: authorizing against a provider the delivery was
+     * not made to would be worse than refusing to answer.
+     */
+    @Test
+    void anImportWhoseEarliestEventCarriesNoProviderIsAServerError() {
+        String correlationId = "corr-with-provider-only-on-a-later-event";
+        saveEvent(correlationId, null, "FILE_TRANSFER", JobState.OK, 0);
+        saveEvent(correlationId, PROVIDER_A, "DATASPACE_TRANSFER", JobState.OK, 10);
+
+        when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
+
+        ResponseEntity<String> response = get(correlationId);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        verify(authorizationService, never()).canEditRouteData(PROVIDER_A);
+    }
+
+    /**
      * The events name a provider the provider repository does not know, so no codespace can be
      * resolved. Authorization must not be reached, let alone passed.
      */
