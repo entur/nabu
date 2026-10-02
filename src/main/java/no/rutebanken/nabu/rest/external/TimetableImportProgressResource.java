@@ -65,7 +65,7 @@ public class TimetableImportProgressResource implements ProgressApi {
         // canViewTimetableDataEvent, which delegates to canEditRouteData once it has resolved the
         // provider we already hold.
         if (!authorizationService.canEditRouteData(provider.getId())) {
-            throw new AccessDeniedException("Insufficient privileges for codespace " + codespace);
+            throw new AccessDeniedException("Insufficient privileges for correlation id " + correlationId);
         }
 
         return ImportProgressMapper.toImportProgress(codespace, correlationId, events);
