@@ -275,13 +275,28 @@ class ImportProgressMapperTest {
 
     @Test
     void reportsTheErrorCodeOfAFailedStage() {
-        JobEvent failed = event("PREVALIDATION", JobState.FAILED, 2);
-        failed.setErrorCode("ERROR_FILE_INVALID_XML_CONTENT");
+        JobEvent failed = event("FILTERING", JobState.FAILED, 2);
+        failed.setErrorCode("NO_JOURNEYS_IN_NETEX_DATASET");
 
-        ImportProgressStage stage = onlyStage(List.of(event("PREVALIDATION", JobState.STARTED, 1), failed));
+        ImportProgressStage stage = onlyStage(List.of(event("FILTERING", JobState.STARTED, 1), failed));
 
         assertEquals(ImportProgressStage.StatusEnum.FAILED, stage.getStatus());
-        assertEquals("ERROR_FILE_INVALID_XML_CONTENT", stage.getErrorCode());
+        assertEquals("NO_JOURNEYS_IN_NETEX_DATASET", stage.getErrorCode());
+    }
+
+    /**
+     * Prevalidation reports no error code. What was wrong with the data is answered by the
+     * validation report, which partners fetch separately under the same correlation id, so FAILED
+     * with a null errorCode is a complete answer rather than a missing one.
+     */
+    @Test
+    void reportsAFailedStageThatCarriesNoErrorCode() {
+        ImportProgressStage stage = onlyStage(List.of(
+                event("PREVALIDATION", JobState.STARTED, 1),
+                event("PREVALIDATION", JobState.FAILED, 2)));
+
+        assertEquals(ImportProgressStage.StatusEnum.FAILED, stage.getStatus());
+        assertNull(stage.getErrorCode());
     }
 
     /**

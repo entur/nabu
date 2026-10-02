@@ -244,21 +244,17 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
 
     /**
      * An import stopped by a failed validation. Nothing follows the failed stage, because the
-     * pipeline never started anything else. Mirrors the "failedPrevalidation" example in the spec.
+     * pipeline never started anything else. Mirrors the "failedPrevalidation" example in the spec:
+     * prevalidation reports no error code, because what was wrong with the data is answered by the
+     * validation report rather than here.
      */
     @Test
-    void reportsTheErrorCodeOfTheStageThatStoppedTheImport() throws Exception {
+    void reportsTheStageThatStoppedTheImport() throws Exception {
         String correlationId = "corr-failed-prevalidation";
         saveEvent(correlationId, PROVIDER_A, "FILE_TRANSFER", JobState.STARTED, 0);
         saveEvent(correlationId, PROVIDER_A, "FILE_TRANSFER", JobState.OK, 4);
         saveEvent(correlationId, PROVIDER_A, "PREVALIDATION", JobState.STARTED, 5);
-        transactionTemplate.execute(status -> {
-            JobEvent failed = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file.zip", PROVIDER_A,
-                    null, "PREVALIDATION", JobState.FAILED, correlationId, T0.plusSeconds(252), "ost");
-            failed.setErrorCode("ERROR_FILE_INVALID_XML_CONTENT");
-            eventRepository.save(failed);
-            return null;
-        });
+        saveEvent(correlationId, PROVIDER_A, "PREVALIDATION", JobState.FAILED, 252);
 
         when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
 
@@ -269,7 +265,30 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
         assertTrue(stages.get(0).get("errorCode").isNull());
         assertEquals("PREVALIDATION", stages.get(1).get("stage").asText());
         assertEquals("FAILED", stages.get(1).get("status").asText());
-        assertEquals("ERROR_FILE_INVALID_XML_CONTENT", stages.get(1).get("errorCode").asText());
+        assertTrue(stages.get(1).get("errorCode").isNull());
+    }
+
+    @Test
+    void reportsTheErrorCodeOfAFailedStage() throws Exception {
+        String correlationId = "corr-failed-filtering";
+        saveEvent(correlationId, PROVIDER_A, "FILE_TRANSFER", JobState.OK, 0);
+        saveEvent(correlationId, PROVIDER_A, "FILTERING", JobState.STARTED, 5);
+        transactionTemplate.execute(status -> {
+            JobEvent failed = new JobEvent(JobEvent.JobDomain.TIMETABLE.toString(), "file.zip", PROVIDER_A,
+                    null, "FILTERING", JobState.FAILED, correlationId, T0.plusSeconds(252), "ost");
+            failed.setErrorCode("NO_JOURNEYS_IN_NETEX_DATASET");
+            eventRepository.save(failed);
+            return null;
+        });
+
+        when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
+
+        JsonNode stages = objectMapper.readTree(get(correlationId).getBody()).get("stages");
+
+        assertEquals(2, stages.size());
+        assertEquals("FILTERING", stages.get(1).get("stage").asText());
+        assertEquals("FAILED", stages.get(1).get("status").asText());
+        assertEquals("NO_JOURNEYS_IN_NETEX_DATASET", stages.get(1).get("errorCode").asText());
     }
 
     /**
