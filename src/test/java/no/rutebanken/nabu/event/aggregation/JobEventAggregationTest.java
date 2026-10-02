@@ -82,16 +82,35 @@ class JobEventAggregationTest {
     }
 
     /**
-     * The sort must be stable and keyed on event time alone. TimeTableJobEventResource hands in
-     * events already ordered by (correlationId, eventTime) and relies on events sharing an event
-     * time staying in the order they arrived.
+     * Events that were never persisted have no primary key to break a tie on, so a stable sort
+     * leaves them in the order they arrived.
      */
     @Test
-    void eventsWithEqualTimesKeepTheOrderTheyWereGivenIn() {
+    void eventsWithEqualTimesAndNoKeyKeepTheOrderTheyWereGivenIn() {
         List<JobEvent> kept = JobEventAggregation.withoutStaleNonTerminalEvents(List.of(
                 event("LINKING", JobState.STARTED, 1),
                 event("FILTERING", JobState.STARTED, 1)));
 
         assertEquals(List.of("LINKING", "FILTERING"), kept.stream().map(JobEvent::getAction).toList());
+    }
+
+    /**
+     * Event times are truncated to microseconds, so two events of one action can share one. The
+     * primary key settles which of them is the action's last event, so the outcome does not depend
+     * on the order the database returned the rows in.
+     */
+    @Test
+    void eventsWithEqualTimesAreOrderedByPrimaryKey() {
+        JobEvent ok = event("LINKING", JobState.OK, 1);
+        ok.setPk(1L);
+        JobEvent staleStarted = event("LINKING", JobState.STARTED, 1);
+        staleStarted.setPk(2L);
+
+        assertEquals(List.of(JobState.OK),
+                JobEventAggregation.withoutStaleNonTerminalEvents(List.of(ok, staleStarted))
+                        .stream().map(JobEvent::getState).toList());
+        assertEquals(List.of(JobState.OK),
+                JobEventAggregation.withoutStaleNonTerminalEvents(List.of(staleStarted, ok))
+                        .stream().map(JobEvent::getState).toList());
     }
 }

@@ -31,6 +31,17 @@ import static no.rutebanken.nabu.domain.event.JobState.ERROR_JOB_STATES;
  */
 public final class JobEventAggregation {
 
+    /**
+     * Chronological order of job events.
+     * <p>
+     * Event times are truncated to microseconds, so two events of one action can share one. The
+     * primary key breaks the tie, which orders them by insertion. Unsaved events have no key and
+     * compare equal, leaving them in whatever order a stable sort was given them in.
+     */
+    public static final Comparator<JobEvent> BY_EVENT_TIME =
+            Comparator.comparing(JobEvent::getEventTime)
+                    .thenComparing(JobEvent::getPk, Comparator.nullsLast(Comparator.naturalOrder()));
+
     private JobEventAggregation() {
     }
 
@@ -49,15 +60,15 @@ public final class JobEventAggregation {
      * relayed event times end up inverted, and without this guard the stale STARTED becomes the
      * action's last event and a finished stage reports as still running.
      * <p>
-     * The sort is stable and keyed on event time alone, so events sharing an event time keep the
-     * order they were given in.
+     * Ordering is {@link #BY_EVENT_TIME}, so which of two events sharing an event time counts as
+     * the action's last does not depend on the order the caller supplied them in.
      *
      * @param eventsOfOneCorrelation events sharing a single correlation id, in any order
      * @return the surviving events, ordered by event time
      */
     public static List<JobEvent> withoutStaleNonTerminalEvents(List<JobEvent> eventsOfOneCorrelation) {
         List<JobEvent> sorted = eventsOfOneCorrelation.stream()
-                .sorted(Comparator.comparing(JobEvent::getEventTime))
+                .sorted(BY_EVENT_TIME)
                 .toList();
 
         Set<String> terminalActions = new HashSet<>();

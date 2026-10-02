@@ -16,8 +16,8 @@
 package no.rutebanken.nabu.rest.external;
 
 import jakarta.ws.rs.NotFoundException;
-import no.rutebanken.nabu.domain.event.Event;
 import no.rutebanken.nabu.domain.event.JobEvent;
+import no.rutebanken.nabu.event.aggregation.JobEventAggregation;
 import no.rutebanken.nabu.provider.ProviderRepository;
 import no.rutebanken.nabu.provider.model.Provider;
 import no.rutebanken.nabu.repository.EventRepository;
@@ -27,7 +27,6 @@ import org.rutebanken.helper.organisation.authorization.AuthorizationService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -79,7 +78,7 @@ public class TimetableImportProgressResource implements ProgressApi {
     private Provider resolveProvider(List<JobEvent> events, String correlationId) {
         Long providerId = events.stream()
                 .filter(event -> event.getProviderId() != null)
-                .min(Comparator.comparing(Event::getEventTime))
+                .min(JobEventAggregation.BY_EVENT_TIME)
                 .map(JobEvent::getProviderId)
                 .orElseThrow(() -> new IllegalStateException("No event for correlation id " + correlationId + " carries a provider id"));
 
