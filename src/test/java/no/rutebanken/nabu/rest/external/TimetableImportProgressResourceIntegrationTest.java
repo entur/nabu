@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Propagation;
@@ -130,6 +131,22 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
         return restTemplate.getForEntity(baseUrl + correlationId, String.class);
     }
 
+    /**
+     * Assert that a failure is the RFC 9457 problem the OpenAPI contract declares. The content type
+     * is asserted alongside the body, because a correct-looking body served as application/json is
+     * still not what a partner's generated client is waiting for.
+     */
+    private JsonNode assertProblemDetail(ResponseEntity<String> response, HttpStatus expectedStatus) throws Exception {
+        assertEquals(expectedStatus, response.getStatusCode());
+        assertTrue(MediaType.APPLICATION_PROBLEM_JSON.isCompatibleWith(response.getHeaders().getContentType()),
+                "expected application/problem+json, was: " + response.getHeaders().getContentType());
+
+        JsonNode problem = objectMapper.readTree(response.getBody());
+        assertEquals(expectedStatus.getReasonPhrase(), problem.get("title").asText());
+        assertEquals(expectedStatus.value(), problem.get("status").asInt());
+        return problem;
+    }
+
     // ---- Authorization -------------------------------------------------------------------------
 
     /**
@@ -139,7 +156,7 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
      * import.
      */
     @Test
-    void aCallerAskingAboutAnotherCodespacesImportIsRefused() {
+    void aCallerAskingAboutAnotherCodespacesImportIsRefused() throws Exception {
         String correlationId = "corr-belonging-to-b";
         saveEvent(correlationId, PROVIDER_B, "FILE_TRANSFER", JobState.OK, 0);
 
@@ -148,10 +165,12 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
 
         ResponseEntity<String> response = get(correlationId);
 
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode(),
-                "must be 403, not 404 and above all not data");
+        // 403, not 404 and above all not data.
+        assertProblemDetail(response, HttpStatus.FORBIDDEN);
         assertFalse(String.valueOf(response.getBody()).contains("FILE_TRANSFER"),
                 "no stage data may leak into the refusal, body was: " + response.getBody());
+        assertFalse(String.valueOf(response.getBody()).contains(CODESPACE_B),
+                "the refusal must not name the codespace it is protecting, body was: " + response.getBody());
     }
 
     @Test
@@ -171,12 +190,12 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
      * to return 403 here is a deliberate one rather than a drift.
      */
     @Test
-    void anUnknownCorrelationIdIsNotFoundForAnyone() {
+    void anUnknownCorrelationIdIsNotFoundForAnyone() throws Exception {
         when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
-        assertEquals(HttpStatus.NOT_FOUND, get("no-such-correlation-id").getStatusCode());
+        assertProblemDetail(get("no-such-correlation-id"), HttpStatus.NOT_FOUND);
 
         when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(false);
-        assertEquals(HttpStatus.NOT_FOUND, get("no-such-correlation-id").getStatusCode());
+        assertProblemDetail(get("no-such-correlation-id"), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -208,7 +227,7 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
      * caller is told nothing about the import.
      */
     @Test
-    void anImportWhoseEventsCarryNoProviderIsAServerError() {
+    void anImportWhoseEventsCarryNoProviderIsAServerError() throws Exception {
         String correlationId = "corr-without-provider";
         saveEvent(correlationId, null, "FILE_TRANSFER", JobState.OK, 0);
 
@@ -216,9 +235,31 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
 
         ResponseEntity<String> response = get(correlationId);
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertProblemDetail(response, HttpStatus.INTERNAL_SERVER_ERROR);
         assertFalse(String.valueOf(response.getBody()).contains("FILE_TRANSFER"),
                 "no stage data may leak into the error, body was: " + response.getBody());
+    }
+
+    /**
+     * A 5xx is our fault, and the exception behind it names provider ids and the state of the data.
+     * None of that is the caller's business, so the problem body says no more than the status code
+     * does. Pinned because passing the exception message through as {@code detail} is the obvious
+     * implementation and reads as helpful.
+     */
+    @Test
+    void aServerErrorRepeatsNothingFromTheExceptionBehindIt() throws Exception {
+        String correlationId = "corr-without-provider-detail";
+        saveEvent(correlationId, null, "FILE_TRANSFER", JobState.OK, 0);
+
+        when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
+
+        JsonNode problem = assertProblemDetail(get(correlationId), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        assertTrue(problem.hasNonNull("detail"), "a 500 still has to say something");
+        assertFalse(problem.get("detail").asText().contains("carries no provider id"),
+                "the exception message must not be echoed, detail was: " + problem.get("detail").asText());
+        assertFalse(problem.get("detail").asText().contains(correlationId),
+                "detail was: " + problem.get("detail").asText());
     }
 
     /**
@@ -227,7 +268,7 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
      * not made to would be worse than refusing to answer.
      */
     @Test
-    void anImportWhoseEarliestEventCarriesNoProviderIsAServerError() {
+    void anImportWhoseEarliestEventCarriesNoProviderIsAServerError() throws Exception {
         String correlationId = "corr-with-provider-only-on-a-later-event";
         saveEvent(correlationId, null, "FILE_TRANSFER", JobState.OK, 0);
         saveEvent(correlationId, PROVIDER_A, "DATASPACE_TRANSFER", JobState.OK, 10);
@@ -236,7 +277,7 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
 
         ResponseEntity<String> response = get(correlationId);
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertProblemDetail(response, HttpStatus.INTERNAL_SERVER_ERROR);
         verify(authorizationService, never()).canEditRouteData(PROVIDER_A);
     }
 
@@ -245,13 +286,15 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
      * resolved. Authorization must not be reached, let alone passed.
      */
     @Test
-    void anImportNamingAnUnknownProviderIsAServerError() {
+    void anImportNamingAnUnknownProviderIsAServerError() throws Exception {
         String correlationId = "corr-with-unknown-provider";
         saveEvent(correlationId, 404L, "FILE_TRANSFER", JobState.OK, 0);
 
         ResponseEntity<String> response = get(correlationId);
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertProblemDetail(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        assertFalse(String.valueOf(response.getBody()).contains("Provider 404"),
+                "the unresolvable provider id must not leak, body was: " + response.getBody());
         verify(authorizationService, never()).canEditRouteData(404L);
     }
 

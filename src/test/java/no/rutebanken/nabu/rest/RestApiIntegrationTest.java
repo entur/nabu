@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Propagation;
@@ -448,6 +449,28 @@ class RestApiIntegrationTest extends BaseIntegrationTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(),
                 "Should return 404 when correlation ID is not found");
+    }
+
+    /**
+     * The progress endpoint answers its errors as RFC 9457 problem details. The status endpoint,
+     * published at 1.0.0 and shipped to partners long before that, does not, and whether it should
+     * is a decision for its own change rather than a side effect of its neighbour's.
+     * <p>
+     * This pins the boundary, because the obvious way to give the progress endpoint problem details
+     * is a JAX-RS ExceptionMapper — which is registered per Jersey application, not per resource,
+     * and would silently take this endpoint with it. The two share an application.
+     */
+    @Test
+    void theStatusEndpointStillAnswersErrorsInItsOriginalFormat() {
+        ResponseEntity<String> response = restTemplate.getForEntity(
+                baseUrl + "/services/events-external/status/TEST/non-existent-correlation-id",
+                String.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertFalse(MediaType.APPLICATION_PROBLEM_JSON.isCompatibleWith(response.getHeaders().getContentType()),
+                "the published status endpoint must not have been converted to problem+json, content type was: "
+                        + response.getHeaders().getContentType());
     }
 
     @Test

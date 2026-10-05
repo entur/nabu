@@ -191,13 +191,64 @@
             }
           },
           "401": {
-            "description": "No or invalid access token."
+            "description": "No or invalid access token.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "No or invalid access token."
+                }
+              }
+            }
           },
           "403": {
-            "description": "The delivery exists, but the caller is not entitled to edit route data for the codespace that owns it."
+            "description": "The delivery exists, but the caller is not entitled to edit route data for the codespace that owns it.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Insufficient privileges for correlation id 9f3c1b2e-7a44-4f10-9c1d-2b8e5a6f0d13"
+                }
+              }
+            }
           },
           "404": {
-            "description": "No events are recorded for this correlation id."
+            "description": "No events are recorded for this correlation id.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "title": "Not Found",
+                  "status": 404,
+                  "detail": "Correlation id not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The delivery could not be reported on. Most often the events recorded for this correlation id are inconsistent, but any internal fault ends here. The fault is ours and the caller can do nothing about it, so the body says no more than the status does and a retry is unlikely to help.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "The request could not be completed because of an internal error."
+                }
+              }
+            }
           }
         }
       }
@@ -205,6 +256,32 @@
   },
   "components": {
     "schemas": {
+      "ProblemDetail": {
+        "type": "object",
+        "description": "RFC 9457 problem details, carried by the error responses that declare it. Those are the errors of the progress operation; the status operation was published before this format and answers its own errors in its own way.\n\nNeither `type` nor `instance` is carried. Both must be absolute URIs, and neither would say anything the status code and the request do not: no problem type is minted for these failures, and the only resource a request can concern is the one its own path names.",
+        "required": [
+          "title",
+          "status"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The HTTP reason phrase of the status code.",
+            "example": "Not Found"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The HTTP status code, repeated in the body.",
+            "example": 404
+          },
+          "detail": {
+            "type": "string",
+            "description": "What went wrong on this particular request. Absent when there is nothing to add to the status code. It repeats back only what the caller already sent — never the codespace, which the progress operation resolves from the stored events rather than from the request.",
+            "example": "Correlation id not found"
+          }
+        }
+      },
       "DataDeliveryStatus": {
         "type": "object",
         "properties": {

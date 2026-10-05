@@ -15,7 +15,7 @@
 
 package no.rutebanken.nabu.rest.external;
 
-import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.event.aggregation.JobEventAggregation;
 import no.rutebanken.nabu.provider.ProviderRepository;
@@ -26,7 +26,6 @@ import no.rutebanken.nabu.rest.openapi.model.ImportProgress;
 import org.rutebanken.helper.organisation.authorization.AuthorizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -53,18 +52,35 @@ public class TimetableImportProgressResource implements ProgressApi {
         this.authorizationService = authorizationService;
     }
 
+    /**
+     * Every failure leaves here as a {@link jakarta.ws.rs.WebApplicationException} carrying a
+     * problem+json response, which is what the OpenAPI contract declares for this operation. The
+     * catch-all is what makes that true of a fault nobody anticipated as well as of the two this
+     * method raises on purpose, and it is confined to this method so that the status endpoint
+     * sharing the Jersey application keeps answering exactly as it does today.
+     */
     @Override
     public ImportProgress getImportProgress(String correlationId) {
         logger.debug("Returning import progress for correlation id '{}'", correlationId);
 
+        try {
+            return importProgress(correlationId);
+        } catch (WebApplicationException alreadyAProblem) {
+            throw alreadyAProblem;
+        } catch (RuntimeException e) {
+            // Nothing below logs, because every message worth logging is one that must not be
+            // returned: they name provider ids and the state of the stored events.
+            logger.error("Could not return import progress for correlation id '{}'", correlationId, e);
+            throw ProblemDetails.internalError();
+        }
+    }
+
+    private ImportProgress importProgress(String correlationId) {
         List<JobEvent> events = eventRepository.getCorrelatedTimetableEvents(correlationId);
         if (events.isEmpty()) {
-            throw new NotFoundException("Correlation id not found");
+            throw ProblemDetails.notFound("Correlation id not found");
         }
 
-        // Both failures resolveProvider can raise name the correlation id and the provider in their
-        // message, and the servlet container logs an unmapped exception with its root cause, so
-        // catching to log here would only duplicate the stack trace.
         Provider provider = resolveProvider(events, correlationId);
         String codespace = provider.getChouetteInfo().xmlns;
 
@@ -73,7 +89,9 @@ public class TimetableImportProgressResource implements ProgressApi {
         // canViewTimetableDataEvent, which delegates to canEditRouteData once it has resolved the
         // provider we already hold.
         if (!authorizationService.canEditRouteData(provider.getId())) {
-            throw new AccessDeniedException("Insufficient privileges for correlation id " + correlationId);
+            // Names the correlation id, which the caller sent, and not the codespace, which it is
+            // being refused.
+            throw ProblemDetails.forbidden("Insufficient privileges for correlation id " + correlationId);
         }
 
         return ImportProgressMapper.toImportProgress(codespace, correlationId, events);
