@@ -62,13 +62,25 @@ jobs:
     secrets: inherit
     with:
       path: 'src/main/resources/openapi/openapi-events-external.json'
-  openapi-publish:
-    if: github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/master'
-    needs: [ openapi-lint, openapi-validate ]
+  # There is no staging equivalent: gha-api's publish workflow accepts dev or prd and fails on
+  # anything else. Staging is covered by the server entry in the spec, not by a publication.
+  openapi-publish-dev:
+    if: ${{ github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.deploy-dev.result == 'success' }}
+    needs: [ openapi-validate, deploy-dev ]
     uses: entur/gha-api/.github/workflows/publish.yml@v6.8.0
     secrets: inherit
     with:
       path: 'src/main/resources/openapi/openapi-events-external.json'
+      env: dev
+
+  openapi-publish-prd:
+    if: ${{ github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.deploy-prd.result == 'success' }}
+    needs: [ openapi-validate, deploy-prd ]
+    uses: entur/gha-api/.github/workflows/publish.yml@v6.8.0
+    secrets: inherit
+    with:
+      path: 'src/main/resources/openapi/openapi-events-external.json'
+      env: prd
 
   docker-smoke:
     needs: [maven-verify]
