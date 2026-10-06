@@ -3,7 +3,7 @@
   "info": {
     "title": "Timetable Delivery Status",
     "description": "Status of a timetable data delivery",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "contact": {
       "name": "Entur",
       "url": "https://developer.entur.org"
