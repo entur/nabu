@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
@@ -19,8 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -59,14 +58,15 @@ public class NabuWebSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            MultiIssuerAuthenticationManagerResolver multiIssuerAuthenticationManagerResolver,
-                                           ObjectMapper objectMapper) throws Exception {
+                                           ObjectMapper objectMapper) {
         // Only the progress endpoint declares problem+json, so only the progress endpoint gets it.
         // Every other path keeps the body Spring Security has always sent — which is none — because
         // an empty 401 is what the services and the operations UI calling this application were
         // written against, and a 401 is not where to find out otherwise.
-        DelegatingAuthenticationEntryPoint entryPoint = new DelegatingAuthenticationEntryPoint(
-                new LinkedHashMap<>(Map.of(PROGRESS_ENDPOINT, new ProblemDetailAuthenticationEntryPoint(objectMapper))));
-        entryPoint.setDefaultEntryPoint(new BearerTokenAuthenticationEntryPoint());
+        AuthenticationEntryPoint entryPoint = DelegatingAuthenticationEntryPoint.builder()
+                .addEntryPointFor(new ProblemDetailAuthenticationEntryPoint(objectMapper), PROGRESS_ENDPOINT)
+                .defaultEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                .build();
 
         http.cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
