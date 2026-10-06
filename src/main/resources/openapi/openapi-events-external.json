@@ -333,6 +333,10 @@
       "ImportProgressStage": {
         "type": "object",
         "description": "The latest known state of one pipeline stage.",
+        "required": [
+          "stage",
+          "status"
+        ],
         "properties": {
           "stage": {
             "type": "string",
