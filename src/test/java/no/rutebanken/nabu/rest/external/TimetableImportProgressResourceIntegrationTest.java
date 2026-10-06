@@ -27,10 +27,15 @@ import no.rutebanken.nabu.repository.EventRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.rutebanken.helper.organisation.authorization.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -145,6 +150,35 @@ class TimetableImportProgressResourceIntegrationTest extends BaseIntegrationTest
         assertEquals(expectedStatus.getReasonPhrase(), problem.get("title").asText());
         assertEquals(expectedStatus.value(), problem.get("status").asInt());
         return problem;
+    }
+
+    /**
+     * Declaring problem+json on the error responses widened the generated {@code @Produces} from one
+     * media type to two, so a successful response's content type is negotiated where it used to be
+     * the only thing on offer. A partner asking for JSON must still be given JSON, under every
+     * Accept header a generated client is likely to send.
+     */
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "*/*",
+            "application/json",
+            "application/json, text/plain, */*",
+            "application/json, application/*+json",
+            "application/*"
+    })
+    void aSuccessfulResponseIsStillPlainJson(String accept) {
+        String correlationId = "corr-accept";
+        saveEvent(correlationId, PROVIDER_A, "FILE_TRANSFER", JobState.OK, 0);
+        when(authorizationService.canEditRouteData(PROVIDER_A)).thenReturn(true);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, accept);
+        ResponseEntity<String> response = restTemplate.exchange(
+                baseUrl + correlationId, HttpMethod.GET, new HttpEntity<>(headers), String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getHeaders().getContentType().equalsTypeAndSubtype(MediaType.APPLICATION_JSON),
+                "Accept: " + accept + " was answered with " + response.getHeaders().getContentType());
     }
 
     // ---- Authorization -------------------------------------------------------------------------

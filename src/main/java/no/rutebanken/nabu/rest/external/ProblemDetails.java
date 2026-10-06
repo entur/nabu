@@ -31,22 +31,35 @@ import no.rutebanken.nabu.rest.openapi.model.ProblemDetail;
  */
 final class ProblemDetails {
 
-    static final String APPLICATION_PROBLEM_JSON = "application/problem+json";
+    private static final String APPLICATION_PROBLEM_JSON = "application/problem+json";
 
     /**
      * What a caller is told when the fault is ours. Deliberately uniform: every 5xx reads the same,
      * so no caller can tell two internal faults apart from the outside.
      */
-    static final String INTERNAL_ERROR_DETAIL = "The request could not be completed because of an internal error.";
+    private static final String INTERNAL_ERROR_DETAIL = "The request could not be completed because of an internal error.";
 
     private ProblemDetails() {
     }
 
-    static WebApplicationException notFound(String detail) {
+    /**
+     * A {@link WebApplicationException} whose response is known to be one of these. Only this class
+     * can construct one, so the resource can let it through its catch-all on sight; any other
+     * JAX-RS exception raised inside the operation is an unanticipated fault and becomes a 500
+     * rather than leaving with a body the contract does not declare.
+     */
+    static final class ProblemException extends WebApplicationException {
+
+        private ProblemException(Response response) {
+            super(response);
+        }
+    }
+
+    static ProblemException notFound(String detail) {
         return problem(Response.Status.NOT_FOUND, detail);
     }
 
-    static WebApplicationException forbidden(String detail) {
+    static ProblemException forbidden(String detail) {
         return problem(Response.Status.FORBIDDEN, detail);
     }
 
@@ -55,16 +68,16 @@ final class ProblemDetails {
      * the stored events — the cross-tenant facts this endpoint exists to keep apart — so it is
      * logged and never repeated to the caller.
      */
-    static WebApplicationException internalError() {
+    static ProblemException internalError() {
         return problem(Response.Status.INTERNAL_SERVER_ERROR, INTERNAL_ERROR_DETAIL);
     }
 
-    private static WebApplicationException problem(Response.Status status, String detail) {
+    private static ProblemException problem(Response.Status status, String detail) {
         ProblemDetail problemDetail = new ProblemDetail(status.getReasonPhrase(), status.getStatusCode())
                 .detail(detail);
-        return new WebApplicationException(Response.status(status)
-                                                   .type(APPLICATION_PROBLEM_JSON)
-                                                   .entity(problemDetail)
-                                                   .build());
+        return new ProblemException(Response.status(status)
+                                            .type(APPLICATION_PROBLEM_JSON)
+                                            .entity(problemDetail)
+                                            .build());
     }
 }

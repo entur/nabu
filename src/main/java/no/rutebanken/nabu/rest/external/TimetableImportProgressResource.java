@@ -15,7 +15,6 @@
 
 package no.rutebanken.nabu.rest.external;
 
-import jakarta.ws.rs.WebApplicationException;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.event.aggregation.JobEventAggregation;
 import no.rutebanken.nabu.provider.ProviderRepository;
@@ -53,11 +52,13 @@ public class TimetableImportProgressResource implements ProgressApi {
     }
 
     /**
-     * Every failure leaves here as a {@link jakarta.ws.rs.WebApplicationException} carrying a
-     * problem+json response, which is what the OpenAPI contract declares for this operation. The
-     * catch-all is what makes that true of a fault nobody anticipated as well as of the two this
-     * method raises on purpose, and it is confined to this method so that the status endpoint
-     * sharing the Jersey application keeps answering exactly as it does today.
+     * Every failure raised below leaves here as a problem+json response, which is what the OpenAPI
+     * contract declares for this operation. The catch-all is what makes that true of a fault nobody
+     * anticipated as well as of the two raised on purpose, and it is confined to this method so that
+     * the status endpoint sharing the Jersey application keeps answering exactly as it does today.
+     * <p>
+     * It does not reach what happens outside the call: a response that fails to serialize does so
+     * after this method has returned, and an {@link Error} is deliberately left to the container.
      */
     @Override
     public ImportProgress getImportProgress(String correlationId) {
@@ -65,7 +66,7 @@ public class TimetableImportProgressResource implements ProgressApi {
 
         try {
             return importProgress(correlationId);
-        } catch (WebApplicationException alreadyAProblem) {
+        } catch (ProblemDetails.ProblemException alreadyAProblem) {
             throw alreadyAProblem;
         } catch (RuntimeException e) {
             // Nothing below logs, because every message worth logging is one that must not be

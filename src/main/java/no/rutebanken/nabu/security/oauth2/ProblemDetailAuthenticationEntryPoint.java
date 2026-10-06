@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import no.rutebanken.nabu.rest.openapi.model.ProblemDetail;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -39,8 +40,8 @@ import java.io.IOException;
  * <p>
  * The challenge itself still comes from Spring Security. Delegating keeps the {@code
  * WWW-Authenticate} header, which is the specified part of a 401 and carries why the token was
- * rejected, and it keeps the status: a malformed request or an insufficient scope is a 400 or a 403
- * rather than a 401, and the body then reports what was actually sent instead of a 401 that was not.
+ * rejected, and it keeps the 403 of an insufficient scope, so the body reports what was actually
+ * sent instead of a 401 that was not.
  */
 public class ProblemDetailAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -63,12 +64,18 @@ public class ProblemDetailAuthenticationEntryPoint implements AuthenticationEntr
             return;
         }
 
-        int status = response.getStatus();
-        HttpStatus resolved = HttpStatus.resolve(status);
-        ProblemDetail problemDetail = new ProblemDetail(resolved != null ? resolved.getReasonPhrase() : "Error", status)
-                .detail(detailFor(resolved));
+        // 401 and 403 are the statuses this operation's contract declares for a rejected
+        // credential. Anything else the delegate chooses is a failure to present a usable access
+        // token, which is a 401.
+        HttpStatus status = HttpStatus.resolve(response.getStatus()) == HttpStatus.FORBIDDEN
+                ? HttpStatus.FORBIDDEN
+                : HttpStatus.UNAUTHORIZED;
+        response.setStatus(status.value());
 
-        response.setContentType("application/problem+json");
+        ProblemDetail problemDetail = new ProblemDetail(status.getReasonPhrase(), status.value())
+                .detail(detailFor(status));
+
+        response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
         objectMapper.writeValue(response.getOutputStream(), problemDetail);
     }
 
@@ -77,18 +84,12 @@ public class ProblemDetailAuthenticationEntryPoint implements AuthenticationEntr
      * credential rather than about the request, so the caller is told only that the credential did
      * not work. The specifics stay in {@code WWW-Authenticate}, where they are specified.
      * <p>
-     * The three cases are the three the delegate can produce. They are worth telling apart: a
-     * caller whose token is sound but too narrowly scoped would waste its time re-authenticating if
-     * the body said its token was invalid.
+     * The two are worth telling apart: a caller whose token is sound but too narrowly scoped would
+     * waste its time re-authenticating if the body said its token was invalid.
      */
     private static String detailFor(HttpStatus status) {
-        if (status == null) {
-            return null;
-        }
-        return switch (status) {
-            case BAD_REQUEST -> "The Authorization header is not a well-formed bearer token.";
-            case FORBIDDEN -> "The access token does not carry the scope this request requires.";
-            default -> "No or invalid access token.";
-        };
+        return status == HttpStatus.FORBIDDEN
+                ? "The access token does not carry the scope this request requires."
+                : "No or invalid access token.";
     }
 }

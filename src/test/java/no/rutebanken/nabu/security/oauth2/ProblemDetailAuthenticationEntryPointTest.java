@@ -23,6 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.server.resource.BearerTokenErrors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -38,11 +41,15 @@ class ProblemDetailAuthenticationEntryPointTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private MockHttpServletResponse commence() throws Exception {
+        return commence(new InsufficientAuthenticationException("Full authentication is required to access this resource"));
+    }
+
+    private MockHttpServletResponse commence(AuthenticationException authException) throws Exception {
         MockHttpServletResponse response = new MockHttpServletResponse();
         new ProblemDetailAuthenticationEntryPoint(objectMapper).commence(
                 new MockHttpServletRequest("GET", "/services/events-external/progress/some-correlation-id"),
                 response,
-                new InsufficientAuthenticationException("Full authentication is required to access this resource"));
+                authException);
         return response;
     }
 
@@ -72,6 +79,26 @@ class ProblemDetailAuthenticationEntryPointTest {
 
         assertTrue(challenge != null && challenge.startsWith("Bearer"),
                 "the delegate's challenge must survive, header was: " + challenge);
+    }
+
+    /**
+     * The contract declares 401, 403, 404 and 500. Spring Security answers an unreadable bearer
+     * token with a 400, which is none of them, so it is answered as the 401 it amounts to — with
+     * the reason left in the challenge, where it is specified.
+     */
+    @Test
+    void anUnreadableBearerTokenIsAnsweredAsAnInvalidOne() throws Exception {
+        MockHttpServletResponse response = commence(new OAuth2AuthenticationException(
+                BearerTokenErrors.invalidRequest("Found multiple bearer tokens in the request")));
+
+        assertEquals(401, response.getStatus());
+
+        JsonNode problem = objectMapper.readTree(response.getContentAsString());
+        assertEquals("Unauthorized", problem.get("title").asText());
+        assertEquals(401, problem.get("status").asInt());
+
+        assertTrue(String.valueOf(response.getHeader(HttpHeaders.WWW_AUTHENTICATE)).contains("invalid_request"),
+                "the error code must survive in the challenge");
     }
 
     /**
