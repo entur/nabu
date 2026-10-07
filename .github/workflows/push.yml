@@ -64,8 +64,12 @@ jobs:
       path: 'src/main/resources/openapi/openapi-events-external.json'
   # There is no staging equivalent: gha-api's publish workflow accepts dev or prd and fails on
   # anything else. Staging is covered by the server entry in the spec, not by a publication.
+  # deploy-* reports 'skipped' even on a clean deploy: gha-helm's deploy.yml skips an inner job and
+  # GitHub leaks that to the caller. !cancelled() lifts the needs gate, !failure() keeps the guard.
   openapi-publish-dev:
-    if: ${{ github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.deploy-dev.result == 'success' }}
+    if: >-
+      ${{ !cancelled() && !failure() && github.repository_owner == 'entur'
+      && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     needs: [ openapi-validate, deploy-dev ]
     uses: entur/gha-api/.github/workflows/publish.yml@v6.8.0
     secrets: inherit
@@ -74,7 +78,9 @@ jobs:
       env: dev
 
   openapi-publish-prd:
-    if: ${{ github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/master' && needs.deploy-prd.result == 'success' }}
+    if: >-
+      ${{ !cancelled() && !failure() && github.repository_owner == 'entur'
+      && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     needs: [ openapi-validate, deploy-prd ]
     uses: entur/gha-api/.github/workflows/publish.yml@v6.8.0
     secrets: inherit
