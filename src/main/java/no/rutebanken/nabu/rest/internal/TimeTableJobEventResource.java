@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tags;
 import no.rutebanken.nabu.domain.event.JobEvent;
 import no.rutebanken.nabu.domain.event.JobState;
 import no.rutebanken.nabu.event.EventService;
+import no.rutebanken.nabu.event.aggregation.JobEventAggregation;
 import no.rutebanken.nabu.provider.ProviderRepository;
 import no.rutebanken.nabu.provider.model.Provider;
 import no.rutebanken.nabu.rest.domain.JobStatus;
@@ -40,12 +41,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import static no.rutebanken.nabu.domain.event.JobState.ERROR_JOB_STATES;
 import static no.rutebanken.nabu.rest.mapper.EnumMapper.convertEnums;
 
 
@@ -141,49 +141,34 @@ public class TimeTableJobEventResource {
     }
 
     public List<JobStatus> convert(List<JobEvent> statusForProvider) {
+        // Group by correlation id, preserving (correlationId, eventTime) encounter order so the
+        // aggregates come out in the same order as before the stale-event guard was extracted.
+        Map<String, List<JobEvent>> eventsByCorrelationId = statusForProvider.stream()
+                .sorted(Comparator.comparing(JobEvent::getCorrelationId).thenComparing(JobEvent::getEventTime))
+                .collect(Collectors.groupingBy(JobEvent::getCorrelationId, LinkedHashMap::new, Collectors.toList()));
+
         List<JobStatus> list = new ArrayList<>();
-        // Map from internal Status object to Rest service JobStatusEvent object
-        String correlationId = null;
-        JobStatus currentAggregation = null;
-        // Actions that have already reached a terminal state (OK/FAILED/...) within the current
-        // correlation. Used to drop a STARTED/PENDING event that sorts after the terminal one,
-        // which happens when Pub/Sub delivers a service's STARTED/SUCCESS messages out of order
-        // and the relayed event times end up inverted. Without this guard such a stale STARTED
-        // would become the last event for the action and the UI would show it as still running.
-        Set<String> terminalActions = null;
+        for (List<JobEvent> correlatedEvents : eventsByCorrelationId.values()) {
+            List<JobEvent> events = JobEventAggregation.withoutStaleNonTerminalEvents(correlatedEvents);
 
-        List<JobEvent> sortedStatusForProvider = statusForProvider.stream().sorted(Comparator.comparing(JobEvent::getCorrelationId).thenComparing(JobEvent::getEventTime)).toList();
+            // The earliest event can never be stale (nothing terminal precedes it), so the earliest
+            // surviving event is the earliest event.
+            JobEvent firstEvent = events.getFirst();
 
-        for (JobEvent in : sortedStatusForProvider) {
+            JobStatus currentAggregation = new JobStatus();
+            currentAggregation.setFirstEvent(Date.from(firstEvent.getEventTime()));
+            currentAggregation.setFileName(firstEvent.getName());
+            currentAggregation.setCorrelationId(firstEvent.getCorrelationId());
+            currentAggregation.setProviderId(firstEvent.getProviderId());
+            currentAggregation.setUsername(firstEvent.getUsername());
 
-            if (!in.getCorrelationId().equals(correlationId)) {
-
-                correlationId = in.getCorrelationId();
-                terminalActions = new HashSet<>();
-
-                // Create new Aggregation
-                currentAggregation = new JobStatus();
-                currentAggregation.setFirstEvent(Date.from(in.getEventTime()));
-                currentAggregation.setFileName(in.getName());
-                currentAggregation.setCorrelationId(in.getCorrelationId());
-                currentAggregation.setProviderId(in.getProviderId());
-                currentAggregation.setUsername(in.getUsername());
-
-                list.add(currentAggregation);
+            for (JobEvent in : events) {
+                // errorCode overwritten when processing each event so that only the error code for the last event is sent.
+                currentAggregation.setErrorCode(in.getErrorCode());
+                currentAggregation.addEvent(JobStatusEvent.createFromJobEvent(in));
             }
 
-            boolean terminal = JobState.OK.equals(in.getState()) || ERROR_JOB_STATES.contains(in.getState());
-            if (terminal) {
-                terminalActions.add(in.getAction());
-            } else if (terminalActions.contains(in.getAction())) {
-                // Stale non-terminal event arriving after the action already finished — skip it
-                // so it cannot clobber the terminal state or error code.
-                continue;
-            }
-
-            // errorCode overwritten when processing each event so that only the error code for the last event is sent.
-            currentAggregation.setErrorCode(in.getErrorCode());
-            currentAggregation.addEvent(JobStatusEvent.createFromJobEvent(in));
+            list.add(currentAggregation);
         }
 
         for (JobStatus agg : list) {

@@ -193,6 +193,16 @@ public class EventRepositoryImpl extends SimpleJpaRepository<Event, Long> implem
 
 
     @Override
+    public List<JobEvent> getCorrelatedTimetableEvents(String correlationId) {
+        return this.entityManager.createQuery("select s1 from JobEvent s1 where s1.domain=:domain and s1.correlationId=:correlationId",
+                                JobEvent.class)
+                .setParameter("correlationId", correlationId)
+                .setParameter("domain", JobEvent.JobDomain.TIMETABLE.toString())
+                .getResultList();
+    }
+
+
+    @Override
     public void clearJobEvents(String domain) {
         this.entityManager.createQuery("delete from JobEvent je where je.domain=:domain").setParameter("domain", domain).executeUpdate();
     }

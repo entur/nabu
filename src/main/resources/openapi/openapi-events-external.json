@@ -3,7 +3,7 @@
   "info": {
     "title": "Timetable Delivery Status",
     "description": "Status of a timetable data delivery",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "contact": {
       "name": "Entur",
       "url": "https://developer.entur.org"
@@ -81,10 +81,207 @@
           }
         }
       }
+    },
+    "/progress/{correlationId}": {
+      "get": {
+        "tags": [
+          "timetable-delivery-status"
+        ],
+        "summary": "Get the per-stage progress of a timetable data delivery",
+        "description": "Return one element per pipeline stage observed for the delivery identified by its correlation id, each with its current status and, when it failed, the error code.\n\nThe response describes what happened, not what was planned. There is no fixed list of stages an import will run — which stages apply depends on the data provider and on the dataset — so only stages that actually reported something are returned. A stage absent from the response is one that recorded nothing at all: either the import has not reached it, or it does not apply to this provider or this dataset, or an earlier failure stopped the pipeline before it could start.\n\nThe GRAPH_BUILD stage reports a single Entur-wide graph build that is shared by all data providers.",
+        "operationId": "getImportProgress",
+        "parameters": [
+          {
+            "name": "correlationId",
+            "in": "path",
+            "required": true,
+            "description": "Correlation id assigned to the delivery when it was submitted.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stages observed for the requested correlation id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportProgress"
+                },
+                "examples": {
+                  "inProgress": {
+                    "summary": "An import still running",
+                    "description": "Everything up to the export has finished and the shared graph build is queued. Stages the import has not reached are simply absent.",
+                    "value": {
+                      "codespace": "RUT",
+                      "correlationId": "9f3c1b2e-7a44-4f10-9c1d-2b8e5a6f0d13",
+                      "stages": [
+                        {
+                          "stage": "FILE_TRANSFER",
+                          "status": "COMPLETED",
+                          "startedAt": "2026-09-30T10:30:00Z",
+                          "completedAt": "2026-09-30T10:30:04Z",
+                          "errorCode": null
+                        },
+                        {
+                          "stage": "FILE_CLASSIFICATION",
+                          "status": "COMPLETED",
+                          "startedAt": "2026-09-30T10:30:04Z",
+                          "completedAt": "2026-09-30T10:30:05Z",
+                          "errorCode": null
+                        },
+                        {
+                          "stage": "PREVALIDATION",
+                          "status": "COMPLETED",
+                          "startedAt": "2026-09-30T10:30:05Z",
+                          "completedAt": "2026-09-30T10:34:12Z",
+                          "errorCode": null
+                        },
+                        {
+                          "stage": "NETEX_EXPORT",
+                          "status": "COMPLETED",
+                          "startedAt": "2026-09-30T10:34:13Z",
+                          "completedAt": "2026-09-30T10:36:48Z",
+                          "errorCode": null
+                        },
+                        {
+                          "stage": "GRAPH_BUILD",
+                          "status": "PENDING",
+                          "startedAt": null,
+                          "completedAt": null,
+                          "errorCode": null
+                        }
+                      ]
+                    }
+                  },
+                  "failedPrevalidation": {
+                    "summary": "An import stopped by a failed validation",
+                    "description": "Prevalidation rejected the dataset, so the pipeline stopped there and no later stage ever ran. Nothing follows the failed stage.",
+                    "value": {
+                      "codespace": "RUT",
+                      "correlationId": "2d7a4e91-3c05-4b68-88ff-6e1a0c4b7d52",
+                      "stages": [
+                        {
+                          "stage": "FILE_TRANSFER",
+                          "status": "COMPLETED",
+                          "startedAt": "2026-09-30T10:30:00Z",
+                          "completedAt": "2026-09-30T10:30:04Z",
+                          "errorCode": null
+                        },
+                        {
+                          "stage": "FILE_CLASSIFICATION",
+                          "status": "COMPLETED",
+                          "startedAt": "2026-09-30T10:30:04Z",
+                          "completedAt": "2026-09-30T10:30:05Z",
+                          "errorCode": null
+                        },
+                        {
+                          "stage": "PREVALIDATION",
+                          "status": "FAILED",
+                          "startedAt": "2026-09-30T10:30:05Z",
+                          "completedAt": "2026-09-30T10:34:12Z",
+                          "errorCode": null
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "No or invalid access token.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "title": "Unauthorized",
+                  "status": 401,
+                  "detail": "No or invalid access token."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The delivery exists, but the caller is not entitled to edit route data for the codespace that owns it.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "title": "Forbidden",
+                  "status": 403,
+                  "detail": "Insufficient privileges for correlation id 9f3c1b2e-7a44-4f10-9c1d-2b8e5a6f0d13"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No events are recorded for this correlation id.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "title": "Not Found",
+                  "status": 404,
+                  "detail": "Correlation id not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "The delivery could not be reported on. Most often the events recorded for this correlation id are inconsistent, but any internal fault ends here. The fault is ours and the caller can do nothing about it, so the body says no more than the status does and a retry is unlikely to help.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetail"
+                },
+                "example": {
+                  "title": "Internal Server Error",
+                  "status": 500,
+                  "detail": "The request could not be completed because of an internal error."
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "ProblemDetail": {
+        "type": "object",
+        "description": "RFC 9457 problem details, carried by the error responses that declare it. Those are the errors of the progress operation; the status operation was published before this format and answers its own errors in its own way.\n\nNeither `type` nor `instance` is carried. Both must be absolute URIs, and neither would say anything the status code and the request do not: no problem type is minted for these failures, and the only resource a request can concern is the one its own path names.",
+        "required": [
+          "title",
+          "status"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The HTTP reason phrase of the status code.",
+            "example": "Not Found"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The HTTP status code, repeated in the body.",
+            "example": 404
+          },
+          "detail": {
+            "type": "string",
+            "description": "What went wrong on this particular request. Absent when there is nothing to add to the status code. It repeats back only what the caller already sent — never the codespace, which the progress operation resolves from the stored events rather than from the request.",
+            "example": "Correlation id not found"
+          }
+        }
+      },
       "DataDeliveryStatus": {
         "type": "object",
         "properties": {
@@ -102,6 +299,94 @@
           },
           "fileName": {
             "type": "string"
+          }
+        }
+      },
+      "ImportProgress": {
+        "type": "object",
+        "description": "Per-stage progress of one timetable data delivery.",
+        "required": [
+          "codespace",
+          "correlationId",
+          "stages"
+        ],
+        "properties": {
+          "codespace": {
+            "type": "string",
+            "description": "Codespace of the data provider that owns the delivery. Resolved from the correlation id; it is not supplied by the caller.",
+            "example": "RUT"
+          },
+          "correlationId": {
+            "type": "string",
+            "description": "The correlation id from the request path.",
+            "example": "9f3c1b2e-7a44-4f10-9c1d-2b8e5a6f0d13"
+          },
+          "stages": {
+            "type": "array",
+            "description": "One element per pipeline stage observed for this delivery, ordered by the stage's earliest recorded event.",
+            "items": {
+              "$ref": "#/components/schemas/ImportProgressStage"
+            }
+          }
+        }
+      },
+      "ImportProgressStage": {
+        "type": "object",
+        "description": "The latest known state of one pipeline stage.",
+        "required": [
+          "stage",
+          "status"
+        ],
+        "properties": {
+          "stage": {
+            "type": "string",
+            "description": "The pipeline stage. IMPORT, VALIDATION_LEVEL_1, VALIDATION_LEVEL_2 and DATASPACE_TRANSFER are steps of the legacy import path and will disappear when it is retired.",
+            "enum": [
+              "FILE_TRANSFER",
+              "FILE_CLASSIFICATION",
+              "PREVALIDATION",
+              "IMPORT",
+              "VALIDATION_LEVEL_1",
+              "VALIDATION_LEVEL_2",
+              "DATASPACE_TRANSFER",
+              "LINKING",
+              "FILTERING",
+              "NETEX_EXPORT",
+              "POSTVALIDATION",
+              "BLOCKS_EXPORT",
+              "BLOCKS_POSTVALIDATION",
+              "MERGED_POSTVALIDATION",
+              "GTFS_EXPORT",
+              "GRAPH_BUILD"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "FAILED covers a stage that reported an error, one that never came back, and one that was called off before it could run — for example an import step on a provider that does not have automatic import enabled. An errorCode is present only in the first case. A delivery containing any such stage is also reported as FAILED by the status endpoint.",
+            "enum": [
+              "PENDING",
+              "IN_PROGRESS",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the stage started. Not every step reports a start of its own, and one that does not falls back to the time it finished. Null only while the stage is still PENDING."
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the stage reached its final state. Null while the stage is unfinished."
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "Why the stage failed. Null unless status is FAILED, and null on a FAILED stage that never reported a reason — a failed validation is always one of those, because what was wrong with the data is answered by the validation report for the same correlation id rather than by a code here. Deliberately not an enumeration: new codes are added upstream and are additive.",
+            "nullable": true,
+            "example": "NO_JOURNEYS_IN_NETEX_DATASET"
           }
         }
       }

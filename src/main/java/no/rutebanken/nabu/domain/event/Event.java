@@ -25,7 +25,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Entity
-@Table(indexes = {@Index(name = "i_event_provider", columnList = "providerId,correlationId,action,eventTime")})
+@Table(indexes = {
+        @Index(name = "i_event_provider", columnList = "providerId,correlationId,action,eventTime"),
+        @Index(name = "i_event_correlation_id", columnList = "correlationId")
+})
 public abstract class Event implements Comparable<Event> {
 
     @Id
