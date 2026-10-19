@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v6.0.1
+      - uses: actions/setup-java@v6.1.0
         with:
           java-version: 25.0.4
           distribution: liberica
@@ -51,14 +51,14 @@ jobs:
 
   openapi-lint:
     needs: [ maven-verify ]
-    uses: entur/gha-api/.github/workflows/lint.yml@v6.9.0
+    uses: entur/gha-api/.github/workflows/lint.yml@v6.10.1
     secrets: inherit
     with:
       path: 'src/main/resources/openapi/openapi-events-external.json'
       upload_to_bucket: ${{ github.repository_owner == 'entur' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
   openapi-validate:
     needs: [ maven-verify ]
-    uses: entur/gha-api/.github/workflows/validate.yml@v6.9.0
+    uses: entur/gha-api/.github/workflows/validate.yml@v6.10.1
     secrets: inherit
     with:
       path: 'src/main/resources/openapi/openapi-events-external.json'
@@ -71,7 +71,7 @@ jobs:
       ${{ !cancelled() && !failure() && github.repository_owner == 'entur'
       && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     needs: [ openapi-validate, deploy-dev ]
-    uses: entur/gha-api/.github/workflows/publish.yml@v6.9.0
+    uses: entur/gha-api/.github/workflows/publish.yml@v6.10.1
     secrets: inherit
     with:
       path: 'src/main/resources/openapi/openapi-events-external.json'
@@ -82,7 +82,7 @@ jobs:
       ${{ !cancelled() && !failure() && github.repository_owner == 'entur'
       && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
     needs: [ openapi-validate, deploy-prd ]
-    uses: entur/gha-api/.github/workflows/publish.yml@v6.9.0
+    uses: entur/gha-api/.github/workflows/publish.yml@v6.10.1
     secrets: inherit
     with:
       path: 'src/main/resources/openapi/openapi-events-external.json'
