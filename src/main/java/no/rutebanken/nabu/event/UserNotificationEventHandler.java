@@ -72,7 +72,12 @@ public class UserNotificationEventHandler implements EventHandler {
         Notification notification = new Notification(user.getUsername(), notificationConfig.getNotificationType(), event);
 
         if (notification.getType().isImmediate()) {
-            immediateNotificationService.sendNotifications(notification, user);
+            // A failed notification must not roll back the event, or the event is never stored
+            try {
+                immediateNotificationService.sendNotifications(notification, user);
+            } catch (RuntimeException e) {
+                logger.error("Failed to send immediate notification to user {} for event {}", user.getUsername(), event, e);
+            }
         } else {
             logger.debug("Registered new notification: {}", notification);
             notificationRepository.save(notification);
