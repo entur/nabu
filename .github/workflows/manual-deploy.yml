@@ -3,10 +3,12 @@ run-name: "Manual deploy ${{ inputs.tag }} → ${{ inputs.environment }}"
 
 # Manually deploy a previously-built image to a chosen environment.
 #
-# The git tag produced by the build pipeline (gha-docker) is identical to the
-# pushed image tag, e.g. `master.20260612-SHA4d22692`. So a single `tag` input is
-# used both as the chart `git_ref` (so the deployed Helm config matches the
-# tagged source) and as the tag of the pre-built image that is rolled out.
+# The build pipeline's git tag and image tag are identical, so one `tag` input
+# serves as both the chart `git_ref` and the image tag.
+#
+# gha-helm takes `image` as `app:tag` and prepends the registry itself, so the
+# name must stay bare. A registry prefix here gets doubled and nothing can pull
+# the result.
 on:
   workflow_dispatch:
     inputs:
@@ -22,11 +24,6 @@ on:
           - dev
           - tst
           - prd
-      image_name:
-        description: "Image registry path (override only if it differs from the default)"
-        required: false
-        default: "eu.gcr.io/entur-system-1287/nabu"
-        type: string
 
 # Avoid two concurrent manual deploys racing the same environment.
 concurrency:
@@ -73,7 +70,7 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       git_ref: ${{ inputs.tag }}
-      image: ${{ inputs.image_name }}:${{ inputs.tag }}
+      image: nabu:${{ inputs.tag }}
       chart: helm/nabu
       namespace: nabu
       release_name: nabu
