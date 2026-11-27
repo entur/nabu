@@ -4,3 +4,6 @@ crud_event_publishers = [
   "serviceAccount:application@ent-irkalla-tst.iam.gserviceaccount.com"
 ]
 
+job_event_publishers = [
+  "serviceAccount:application@ent-marduk-tst.iam.gserviceaccount.com"
+]

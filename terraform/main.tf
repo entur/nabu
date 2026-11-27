@@ -141,3 +141,13 @@ resource "google_pubsub_topic_iam_member" "nabu_topic_iam_member" {
   topic    = google_pubsub_topic.CrudEventQueue.name
 }
 
+# marduk publishes its job status events to JobEventQueue. kakka grants itself the same role in its own
+# terraform (entur/kakka). This grant replaces marduk's team-wide folder rule
+# (tf-gcp-iam application_rules/ror-marduk-<env>.yaml), so marduk keeps this access when that rule is removed.
+resource "google_pubsub_topic_iam_member" "job_event_publisher" {
+  for_each = var.job_event_publishers
+  project  = var.gcp_resources_project
+  member   = each.value
+  role     = "roles/pubsub.publisher"
+  topic    = google_pubsub_topic.JobEventQueue.name
+}
