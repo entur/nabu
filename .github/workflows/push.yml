@@ -175,7 +175,7 @@ jobs:
     secrets: inherit
 
   supersede-tst:
-    if: ${{ success() && github.ref == 'refs/heads/master' }}
+    if: ${{ !cancelled() && needs.deploy-dev.result == 'success' && github.ref == 'refs/heads/master' }}
     needs: [ deploy-dev ]
     uses: ./.github/workflows/supersede.yml
     permissions:
@@ -235,7 +235,7 @@ jobs:
     secrets: inherit
 
   supersede-prd:
-    if: ${{ success() && github.ref == 'refs/heads/master' }}
+    if: ${{ !cancelled() && needs.deploy-tst.result == 'success' && github.ref == 'refs/heads/master' }}
     needs: [ deploy-tst ]
     uses: ./.github/workflows/supersede.yml
     permissions:
