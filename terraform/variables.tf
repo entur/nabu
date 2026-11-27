@@ -34,6 +34,11 @@ variable "crud_event_publishers" {
   type        = set(string)
 }
 
+variable "job_event_publishers" {
+  description = "Service accounts that will publish to the job event topic"
+  type        = set(string)
+}
+
 variable "service_account" {
   description = "Application gcp service account"
 }
